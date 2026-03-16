@@ -14,6 +14,7 @@ import {
   Activity01Icon,
   DashboardSpeed01Icon,
   ArrowDown01Icon,
+  LeftToRightListBulletIcon,
 } from "@hugeicons/core-free-icons"
 import {
   Sidebar,
@@ -127,6 +128,12 @@ const sections = [
       { title: "Session Timeline", id: "session-timeline" },
       { title: "Error Log", id: "error-log" },
     ],
+  },
+  {
+    title: "Thread Timeline",
+    path: "/thread-timeline",
+    icon: LeftToRightListBulletIcon,
+    subs: [],
   },
 ]
 
