@@ -15,7 +15,7 @@ A vertical timeline gutter for thread navigation. Thin vertical lines represent 
 
 ## Component API
 
-Compound component pattern matching ToolTree/ToolCall architecture.
+Compound component pattern matching ToolTree/ToolCall architecture. Uses React Context to share state between root and children (same pattern as `ToolTreeContext` / `ToolCallContext`).
 
 ### Usage
 
@@ -33,13 +33,35 @@ Compound component pattern matching ToolTree/ToolCall architecture.
     What about FDP_IFC.1?
   </ThreadTimelineLine>
 </ThreadTimeline>
+
+{/* Controlled visibility */}
+<ThreadTimeline visible={showTimeline} onVisibleChange={setShowTimeline}>
+  ...
+</ThreadTimeline>
 ```
+
+### ThreadTimelineContext
+
+Shared via React Context between `ThreadTimeline` and `ThreadTimelineLine`:
+
+```ts
+interface ThreadTimelineContext {
+  onLineClick: ((turnId: string) => void) | undefined
+  cursorY: MotionValue<number>        // Cursor Y position within gutter
+  closestTurnId: string | null        // Currently hovered turn
+  setClosestTurnId: (id: string | null) => void
+}
+```
+
+Access via `useThreadTimeline()` hook (throws if used outside provider, matching `useToolTree` / `useToolCall` pattern).
 
 ### ThreadTimeline Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `threshold` | `number` | `6` | Minimum turn count before timeline becomes visible |
+| `threshold` | `number` | `6` | Minimum turn count before timeline becomes visible (uncontrolled mode) |
+| `visible` | `boolean` | - | Controlled visibility. Overrides threshold when provided |
+| `onVisibleChange` | `(visible: boolean) => void` | - | Called when visibility changes (threshold crossed) |
 | `onLineClick` | `(turnId: string) => void` | - | Called when a line is clicked. Consumer handles scrolling |
 | `className` | `string` | - | Additional classes on the gutter container |
 | `children` | `ReactNode` | required | `ThreadTimelineLine` elements |
@@ -69,7 +91,7 @@ Compound component pattern matching ToolTree/ToolCall architecture.
 
 - Width at rest: `1.5px`
 - Width at max scale: `3px` (scaleX driven by proximity)
-- Height: proportional to turn content length (min 16px, max 48px)
+- Height: derived from children text length. Formula: `clamp(Math.round(textLength * 0.4), 16, 48)` where textLength is the character count of the children string. This gives short questions (~40 chars) a 16px line and long messages (~120+ chars) the max 48px
 - Color at rest: `var(--muted-foreground)` at 25% opacity
 - Color at max proximity: `var(--muted-foreground)` at 70% opacity
 - Border-radius: `1px`
@@ -89,7 +111,7 @@ Compound component pattern matching ToolTree/ToolCall architecture.
 - Background: `var(--popover)`
 - Border: `1px solid var(--border)`
 - Border-radius: `var(--radius-lg)`
-- Shadow: `0 8px 32px rgba(0,0,0,0.3)`
+- Shadow: light mode `0 8px 32px rgba(0,0,0,0.12)`, dark mode `0 8px 32px rgba(0,0,0,0.5)`. Use a CSS variable `--thread-timeline-tooltip-shadow` defined alongside the existing `--tool-tree-connector` in `src/components/ui/composer.css` (where component-level CSS variables live)
 - Padding: `10px 12px`
 - Entrance: opacity 0 to 1, 120ms
 - Content: turn number + timestamp (muted, 10px) above user message (13px)
@@ -203,7 +225,7 @@ src/
 registry/
   base-nova/
     ui/
-      thread-timeline.tsx      # Symlink to src/components/ui/thread-timeline.tsx
+      thread-timeline.tsx      # Symlink to be created during implementation
 ```
 
 ### Registry entry
@@ -212,8 +234,8 @@ Add `thread-timeline` to the shadcn registry with dependency on `motion/react`.
 
 ## Dependencies
 
-- `motion/react` -- `useMotionValue`, `useSpring`, `useTransform`, `useMotionValueEvent`, `motion` (already in project)
-- No new external dependencies
+- `motion/react` -- **NEW dependency, must be installed**. Provides `useMotionValue`, `useSpring`, `useTransform`, `useMotionValueEvent`, `motion` components. Required for the proximity system.
+- No other new external dependencies. `@base-ui/react` and `@hugeicons/react` are already in the project.
 
 ## Reference Code
 
@@ -232,16 +254,40 @@ Source implementations from Devouring Details component library used as referenc
 - **0 turns**: Component renders nothing.
 - **Fewer than threshold turns**: Component renders nothing.
 - **Exactly threshold turns**: Entrance animation triggers.
-- **Very long conversations (50+ turns)**: Lines compress vertically. Consider adding blur-fade edges at top/bottom. May need a max-height with internal scroll.
+- **Very long conversations (50+ turns)**: Lines compress by reducing the gap between them (from 4px down to 2px) and clamping individual line height lower (min 8px). No internal scroll -- the timeline must remain a 1:1 spatial map of the conversation. If lines would overflow the gutter height, apply blur-fade edges at top/bottom using the blur-fade pattern from Devouring Details.
 - **Turn with no user message**: Show a fallback label like "System" or "Tool execution". The consumer controls children content.
 - **Rapid cursor movement**: Springs handle this naturally -- high stiffness means fast response without jank.
-- **Touch devices**: Proximity effect doesn't apply (no hover). Timeline lines remain visible as static indicators. Tap fires `onLineClick` directly.
+- **Touch devices**: Proximity effect doesn't apply (no hover). Timeline lines remain visible as static indicators. Each line button has an expanded hit area via `::after` pseudo-element (minimum 44x44px tap target per WCAG, visually unchanged). Tap fires `onLineClick` directly. Tooltip does not appear on touch -- tap goes straight to scroll-to.
 
 ## Accessibility
 
+### ARIA structure
+
 - Gutter has `role="navigation"` and `aria-label="Thread timeline"`
 - Each line is a `button` with `aria-label` derived from children (the user message text)
-- Tooltip uses `role="tooltip"` with `aria-describedby` linking to the hovered line
-- Focus navigation: Tab into the gutter focuses the first line, arrow keys navigate between lines
-- Focus on a line shows the tooltip (same as hover behavior)
-- `prefers-reduced-motion`: Disable proximity scaling, use instant opacity changes instead
+- Tooltip has `role="tooltip"` and a unique `id` (generated via `React.useId()` per line)
+- Each line button has `aria-describedby` pointing to its tooltip's `id` (trigger describes tooltip, not the reverse)
+
+### Tooltip implementation
+
+Custom tooltip (not `@base-ui/react` tooltip primitive) because the tooltip position is spring-driven and tied to the proximity system's closest-line detection. The `@base-ui` tooltip uses its own positioner which would conflict with the proximity-driven Y positioning. The custom implementation handles:
+- `id` generation via `React.useId()` per `ThreadTimelineLine`
+- `aria-describedby` on the button, `role="tooltip"` + `id` on the popup
+- Show on hover/focus, hide on blur/pointer-leave
+
+### Keyboard navigation
+
+- **Tab** into the gutter focuses the first line button
+- **ArrowDown / ArrowUp** move focus between lines (stop at boundaries, no wrap)
+- **Enter / Space** fires `onLineClick(turnId)` for the focused line
+- **Escape** moves focus out of the gutter (back to the conversation area)
+- Focus on a line shows the tooltip (same visual as hover)
+- Tab order: the gutter is a single tab stop; arrow keys navigate within
+
+### Reduced motion
+
+`prefers-reduced-motion: reduce` is checked inside `useProximity` via `window.matchMedia`. When active:
+- Springs are replaced with immediate `.set()` calls (no animation)
+- Proximity scaling still works (lines respond to cursor distance) but transitions are instant
+- Entrance animation uses `duration: 0` instead of 200ms
+- This is handled at the hook level, not the component level -- components render identically
