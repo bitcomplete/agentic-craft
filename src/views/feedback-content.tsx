@@ -91,37 +91,37 @@ const FEEDBACK_HISTORY = [
   {
     id: "fb-1",
     timestamp: "2026-03-14 · 14:32",
-    message: "The Security Target defines 14 SFRs across 5 classes. ADV_FSP.1 requires a functional specification with complete summary of the TSFI.",
+    message: "The checkout release covers 14 acceptance criteria across UX, QA, and rollout readiness.",
     type: "positive" as const,
-    detail: "Accurate SFR count and ADV_FSP.1 description confirmed against ST v3.1.",
+    detail: "Requirement count and checklist grouping confirmed against the launch brief.",
   },
   {
     id: "fb-2",
     timestamp: "2026-03-14 · 11:07",
-    message: "The evaluation assurance level requires ALC_FLR.2 for flaw remediation procedures.",
+    message: "The rollout should go to 100% immediately after merge.",
     type: "correction" as const,
-    detail: "Corrected ALC_FLR.2 → ALC_FLR.1. EAL4 augmented does not require FLR.2.",
+    detail: "Corrected to staged rollout. The launch plan requires 10% → 50% → 100% with rollback ready at each step.",
   },
   {
     id: "fb-3",
     timestamp: "2026-03-13 · 16:45",
-    message: "I've mapped each SFR to its corresponding test case in the evaluation work plan. Coverage is at 91.3%.",
+    message: "I mapped every launch requirement to implementation and QA evidence. Coverage is at 91.3%.",
     type: "negative" as const,
-    detail: "FPT_FLS.1 and FDP_RIP.1 were missing from the mapping. Coverage was overstated.",
+    detail: "Rollback ownership and analytics verification were still missing, so coverage was overstated.",
   },
   {
     id: "fb-4",
     timestamp: "2026-03-13 · 09:20",
-    message: "ATE_FUN.1 testing is complete. All functional tests for the cryptographic module passed.",
+    message: "Smoke testing is complete. All critical checkout flows passed in staging.",
     type: "positive" as const,
-    detail: "Test results verified against ATE_FUN.1 work unit documentation.",
+    detail: "Results verified against the latest regression and smoke-check artifacts.",
   },
   {
     id: "fb-5",
     timestamp: "2026-03-12 · 15:10",
-    message: "The TOE boundary includes the hardware security module and its firmware up to version 2.4.",
+    message: "The release scope includes the pricing page experiment and the mobile summary refresh.",
     type: "correction" as const,
-    detail: "Corrected firmware scope: boundary extends to v2.4.1 per the latest ST addendum.",
+    detail: "Corrected scope: the pricing experiment is included, but the mobile summary refresh is deferred to the next release.",
   },
 ]
 
@@ -203,7 +203,7 @@ export function FeedbackContent() {
       setThumbsSelection("down")
     } else if (key === "withCorrection") {
       setThumbsSelection("down")
-      setCorrectionText("EAL4 augmented does not require ALC_FLR.2 — only ALC_FLR.1 is mandated for flaw remediation at this level.")
+      setCorrectionText("The release should not go to 100% immediately — the launch plan requires a staged rollout with rollback ready at each step.")
     } else {
       setThumbsSelection(null)
     }

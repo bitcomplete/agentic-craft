@@ -1,42 +1,43 @@
 "use client"
 
 import * as React from "react"
-import { cn } from "@/lib/utils"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
+  ArrowExpand01Icon,
+  ArrowShrink01Icon,
   Cancel01Icon,
   MailReply01Icon,
   Task01Icon,
-  ArrowExpand01Icon,
-  ArrowShrink01Icon,
 } from "@hugeicons/core-free-icons"
-import type { ComposerScopeItem } from "./composer"
-import type { ComposerTask } from "./composer"
 
-/* ── Island wrapper (used by each island primitive) ── */
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { cn } from "@/lib/utils"
+import type { ComposerScopeItem, ComposerTask } from "./composer"
 
 function Island({
   className,
   children,
   ...props
-}: React.ComponentProps<"div">) {
+}: React.ComponentProps<typeof Card>) {
   return (
     <div
-      className={cn("animate-composer-island w-[95%]", className)}
+      data-slot="composer-island-wrapper"
+      className={cn("animate-composer-island", className)}
       style={{ zIndex: 0 }}
-      {...props}
     >
-      <div
+      <Card
         data-slot="composer-island"
-        className="border border-b-0 border-border bg-background first:rounded-t-xl first:shadow-[0_-1px_6px_rgba(0,0,0,0.04),0_-4px_16px_rgba(0,0,0,0.03)]"
+        size="sm"
+        className="gap-0 py-0"
+        {...props}
       >
         {children}
-      </div>
+      </Card>
     </div>
   )
 }
-
-/* ── ComposerScope ── */
 
 export function ComposerScope({
   items,
@@ -44,101 +45,87 @@ export function ComposerScope({
   onDismiss,
   className,
   ...props
-}: React.ComponentProps<"div"> & {
+}: React.ComponentProps<typeof Island> & {
   items: ComposerScopeItem[]
   onRemove?: (id: string) => void
   onDismiss?: () => void
 }) {
   return (
     <Island className={className} {...props}>
-      <div className="flex items-center gap-2 px-3 py-2.5">
-        <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
+      <div className="flex items-center gap-2 px-4 py-3">
+        <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
           {items.map((item) => (
-            <span
-              key={item.id}
-              className="animate-composer-slide group/scope inline-flex items-center gap-1.5 rounded-md border border-border bg-muted/40 px-2 py-0.5 text-xs text-foreground"
-            >
-              <HugeiconsIcon
-                icon={item.icon}
-                size={12}
-                strokeWidth={1.5}
-                className="shrink-0 text-muted-foreground"
-              />
+            <Badge key={item.id} variant="outline">
+              <HugeiconsIcon icon={item.icon} size={12} strokeWidth={1.5} />
               <span className="max-w-[160px] truncate">{item.label}</span>
               {onRemove && (
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="icon-xs"
                   onClick={() => onRemove(item.id)}
-                  className="text-muted-foreground/40 opacity-0 transition-colors group-hover/scope:opacity-100 hover:text-foreground"
+                  className="size-4"
                 >
-                  <HugeiconsIcon
-                    icon={Cancel01Icon}
-                    size={10}
-                    strokeWidth={2}
-                  />
-                </button>
+                  <HugeiconsIcon icon={Cancel01Icon} size={10} strokeWidth={2} />
+                </Button>
               )}
-            </span>
+            </Badge>
           ))}
         </div>
         {onDismiss && (
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="icon-xs"
             onClick={onDismiss}
-            className="shrink-0 text-muted-foreground/40 transition-colors hover:text-foreground"
           >
             <HugeiconsIcon icon={Cancel01Icon} size={14} strokeWidth={1.5} />
-          </button>
+          </Button>
         )}
       </div>
     </Island>
   )
 }
-
-/* ── ComposerReply ── */
 
 export function ComposerReply({
   onDismiss,
   className,
   children,
   ...props
-}: React.ComponentProps<"div"> & {
+}: React.ComponentProps<typeof Island> & {
   onDismiss?: () => void
 }) {
   return (
     <Island className={className} {...props}>
-      <div className="flex items-center gap-2 px-4 py-2.5">
-        <HugeiconsIcon
-          icon={MailReply01Icon}
-          size={13}
-          strokeWidth={1.5}
-          className="shrink-0 text-muted-foreground/60"
-        />
-        <span className="flex-1 truncate text-xs text-muted-foreground">
+      <div className="flex items-center gap-3 px-4 py-3">
+        <Badge variant="outline">
+          <HugeiconsIcon icon={MailReply01Icon} size={12} strokeWidth={1.5} />
+          Reply
+        </Badge>
+        <span className="flex-1 truncate text-sm text-muted-foreground">
           {children}
         </span>
         {onDismiss && (
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="icon-xs"
             onClick={onDismiss}
-            className="shrink-0 text-muted-foreground/60 transition-colors hover:text-foreground"
           >
             <HugeiconsIcon icon={Cancel01Icon} size={14} strokeWidth={1.5} />
-          </button>
+          </Button>
         )}
       </div>
     </Island>
   )
 }
 
-/* ── ComposerPlan ── */
-
 export function ComposerPlan({
   tasks,
   defaultExpanded = false,
   className,
   ...props
-}: React.ComponentProps<"div"> & {
+}: React.ComponentProps<typeof Island> & {
   tasks: ComposerTask[]
   defaultExpanded?: boolean
 }) {
@@ -148,44 +135,44 @@ export function ComposerPlan({
   return (
     <Island className={className} {...props}>
       <div className="px-4 py-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <HugeiconsIcon icon={Task01Icon} size={13} strokeWidth={1.5} />
-            <span>
-              {completedCount} out of {tasks.length} tasks completed
-            </span>
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-2 text-sm text-muted-foreground">
+            <Badge variant="outline">Plan</Badge>
+            <div className="flex min-w-0 items-center gap-2">
+              <HugeiconsIcon icon={Task01Icon} size={14} strokeWidth={1.5} />
+              <span className="truncate">
+                {completedCount} out of {tasks.length} tasks completed
+              </span>
+            </div>
           </div>
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="icon-xs"
             onClick={() => setExpanded(!expanded)}
-            className="text-muted-foreground/60 transition-colors hover:text-foreground"
           >
             <HugeiconsIcon
               icon={expanded ? ArrowShrink01Icon : ArrowExpand01Icon}
               size={14}
               strokeWidth={1.5}
             />
-          </button>
+          </Button>
         </div>
 
         {expanded && (
-          <div className="animate-composer-slide mt-3 space-y-2.5">
+          <div className="animate-composer-slide mt-3 space-y-3">
             {tasks.map((task, i) => (
               <div
                 key={i}
                 className={cn(
-                  "flex items-start gap-2.5 text-sm leading-snug",
-                  task.dimmed
-                    ? "text-muted-foreground/40"
-                    : "text-foreground",
+                  "flex items-start gap-3 text-sm",
+                  task.dimmed ? "text-muted-foreground" : "text-foreground",
                 )}
               >
                 <span
                   className={cn(
-                    "mt-[3px] flex h-[14px] w-[14px] shrink-0 items-center justify-center rounded-full border",
-                    task.dimmed
-                      ? "border-muted-foreground/20"
-                      : "border-muted-foreground/40",
+                    "mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border",
+                    task.done ? "bg-primary text-primary-foreground" : "",
                   )}
                 />
                 <span>

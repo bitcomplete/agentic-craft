@@ -75,21 +75,19 @@ function ensureStyles() {
 /* ------------------------------------------------------------------ */
 
 const MEMORY_ENTRIES = [
-  { id: "m1", key: "Preferred EAL level", value: "EAL4+" },
-  { id: "m2", key: "Default PP", value: "PP-CIMC-SLv3" },
-  { id: "m3", key: "Evaluation lab", value: "Lab A — Berlin" },
-  { id: "m4", key: "Report format", value: "Markdown with CEM work unit headers" },
-  { id: "m5", key: "TOE type", value: "Java Card applet on NXP P60" },
-  { id: "m6", key: "Certification body", value: "BSI (SOGIS-MRA scheme)" },
+  { id: "m1", key: "Preferred rollout style", value: "Staged rollout with rollback ready" },
+  { id: "m2", key: "Default repo", value: "web-app" },
+  { id: "m3", key: "Active design file", value: "Checkout redesign — Figma" },
+  { id: "m4", key: "Report format", value: "Markdown with blockers, risks, and next actions" },
+  { id: "m5", key: "Default review depth", value: "Product + UI + implementation" },
+  { id: "m6", key: "Handoff audience", value: "product-team@acme.dev" },
 ]
 
-
-
 const PRIVACY_CATEGORIES = [
-  { key: "preferences", label: "Preferences", desc: "EAL level, report format, workflow choices" },
-  { key: "docHistory", label: "Document History", desc: "Previously reviewed STs, PPs, and ETRs" },
-  { key: "evalContext", label: "Evaluation Context", desc: "Current TOE, lab, certification body" },
-  { key: "personalInfo", label: "Personal Info", desc: "Name, timezone, role at ITSEF" },
+  { key: "preferences", label: "Preferences", desc: "Review depth, output format, workflow choices" },
+  { key: "docHistory", label: "Project History", desc: "Previously reviewed PRs, specs, designs, and launch notes" },
+  { key: "evalContext", label: "Work Context", desc: "Active repo, release, feature area, and design surface" },
+  { key: "personalInfo", label: "Personal Info", desc: "Name, timezone, role, and communication preferences" },
 ]
 
 /* ------------------------------------------------------------------ */
@@ -170,7 +168,7 @@ export function MemoryContent() {
     edit: false,
     delete: false,
   })
-  const [editValue, setEditValue] = useState("EAL4+")
+  const [editValue, setEditValue] = useState("Staged rollout with rollback ready")
   const [crudAnimKey, setCrudAnimKey] = useState(0)
 
   const handleCrudToggle = useCallback((key: string) => {
@@ -179,7 +177,7 @@ export function MemoryContent() {
       next[key] = true
       return next
     })
-    setEditValue("EAL4+")
+    setEditValue("Staged rollout with rollback ready")
     setCrudAnimKey((k) => k + 1)
   }, [])
 
@@ -341,8 +339,8 @@ export function MemoryContent() {
                   No memories yet
                 </p>
                 <p className="mt-1 max-w-xs text-xs text-muted-foreground/50">
-                  As you work with the agent, it will learn your evaluation
-                  preferences, frequently referenced Protection Profiles,
+                  As you work with the agent, it will learn your review
+                  preferences, frequently referenced project artifacts,
                   and workflow habits.
                 </p>
               </div>
@@ -452,8 +450,8 @@ export function MemoryContent() {
               {crudState.view && (
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="text-xs text-muted-foreground/60">Preferred EAL level</span>
-                    <p className="text-sm text-foreground/85">EAL4+</p>
+                    <span className="text-xs text-muted-foreground/60">Preferred rollout style</span>
+                    <p className="text-sm text-foreground/85">Staged rollout with rollback ready</p>
                   </div>
                   <div className="flex items-center gap-0.5">
                     <button
@@ -477,7 +475,7 @@ export function MemoryContent() {
               {/* Edit mode */}
               {crudState.edit && (
                 <div className="space-y-3">
-                  <span className="text-xs text-muted-foreground/60">Preferred EAL level</span>
+                  <span className="text-xs text-muted-foreground/60">Preferred rollout style</span>
                   <input
                     type="text"
                     value={editValue}
@@ -509,8 +507,8 @@ export function MemoryContent() {
               {crudState.delete && (
                 <div className="space-y-3">
                   <div>
-                    <span className="text-xs text-muted-foreground/60">Preferred EAL level</span>
-                    <p className="text-sm text-foreground/85">EAL4+</p>
+                    <span className="text-xs text-muted-foreground/60">Preferred rollout style</span>
+                    <p className="text-sm text-foreground/85">Staged rollout with rollback ready</p>
                   </div>
                   <div className="rounded-md border border-foreground/10 bg-foreground/[0.02] px-3 py-2.5">
                     <div className="flex items-start gap-2">
@@ -616,9 +614,9 @@ export function MemoryContent() {
                   color: "oklch(0.2642 0.013 93.9)",
                 }}
               >
-                I see you&apos;ve been consistently requesting EAL4+
-                evaluations across the last three sessions. The Protection
-                Profile PP-CIMC-SLv3 appears to be your default reference.
+                I see you&apos;ve been consistently requesting staged rollouts with
+                rollback ready across the last three sessions. The checkout
+                launch brief appears to be your default reference.
               </p>
             </div>
 
@@ -628,7 +626,7 @@ export function MemoryContent() {
                 <div className="flex items-center gap-2.5">
                   <HugeiconsIcon icon={Brain01Icon} size={14} strokeWidth={1.5} className="shrink-0 text-muted-foreground" />
                   <p className="text-sm text-muted-foreground">
-                    I noticed you prefer <span className="font-medium text-foreground/80">EAL4+</span> — save this preference?
+                    I noticed you prefer <span className="font-medium text-foreground/80">Staged rollout with rollback ready</span> — save this preference?
                   </p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0 ml-3">
@@ -831,7 +829,7 @@ export function MemoryContent() {
         <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
           No number inside the ring — the icon signals presence, and the
           tooltip provides detail on demand. This avoids cognitive load
-          for evaluators who don&apos;t need to know the exact count at
+          for people who don&apos;t need to know the exact count at
           a glance.
         </div>
       </section>
@@ -844,8 +842,8 @@ export function MemoryContent() {
         <h2 className="text-xl font-semibold tracking-tight">Privacy Controls</h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Category-level toggles for what the agent is allowed to remember.
-          Evaluators working under NDA or handling sensitive TOE data may
-          need to disable specific categories.
+          Teams working with sensitive launches, internal designs, or customer
+          data may need to disable specific categories.
         </p>
 
         <div className="mt-10">
@@ -922,9 +920,9 @@ export function MemoryContent() {
           </thead>
           <tbody>
             {[
-              ["All On", "All categories enabled", "Default for most evaluators"],
-              ["Selective", "Preferences + Documents on, Context + Personal off", "Common for consultants working across multiple ITSEFs"],
-              ["All Off", "All categories disabled with confirmation", "For sensitive evaluations or auditor-mode sessions"],
+              ["All On", "All categories enabled", "Default for most product teams"],
+              ["Selective", "Preferences + Documents on, Context + Personal off", "Common when working across multiple repos or clients"],
+              ["All Off", "All categories disabled with confirmation", "For sensitive launches or audit-mode sessions"],
             ].map(([preset, state, notes], i) => (
               <tr key={preset} className={i < 2 ? "border-b border-border/50" : ""}>
                 <td className="py-2.5 pr-6 font-medium">{preset}</td>

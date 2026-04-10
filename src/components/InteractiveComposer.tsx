@@ -45,30 +45,30 @@ interface FeatureState {
 }
 
 const SUGGESTIONS = [
-  "Check SFR coverage",
-  "Compare with previous version",
-  "List open findings",
-  "Generate summary",
+  "Review this PR",
+  "Summarize release risks",
+  "List open issues",
+  "Draft a handoff note",
 ]
 
 const REPLY_QUOTE =
-  "The FCS_COP.1 instantiation also references an outdated algorithm suite — this will need updating before the evaluation facility review."
+  "The schema migration still runs on every preview deployment — we should move it to the release job before rolling this out further."
 
 const PLACEHOLDER_MAP: Record<string, string> = {
-  default: "Ask about this device...",
+  default: "Ask about this project...",
   reply: "Reply to this message...",
-  scope: "Ask about the Security Target...",
+  scope: "Ask about this release...",
 }
 
 const MOCK_ATTACHMENTS: ComposerFile[] = [
-  { name: "Security_Target_v3.1.pdf", size: "2.4 MB", type: "file" },
-  { name: "TOE_boundary_diagram.png", size: "340 KB", type: "image" },
+  { name: "checkout-redesign-spec.md", size: "2.4 MB", type: "file" },
+  { name: "pricing-page-v2.png", size: "340 KB", type: "image" },
 ]
 
 const INITIAL_SCOPE_ITEMS: ComposerScopeItem[] = [
-  { id: "st", label: "Security Target v3.1", icon: File01Icon },
-  { id: "device", label: "ACME SmartCard Module", icon: ComputerIcon },
-  { id: "pp", label: "PP-CIMC-SLv3", icon: Shield01Icon },
+  { id: "release", label: "Spring release", icon: File01Icon },
+  { id: "repo", label: "web-app repo", icon: ComputerIcon },
+  { id: "design", label: "pricing revamp", icon: Shield01Icon },
 ]
 
 const PLAN_TASKS = [

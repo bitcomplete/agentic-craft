@@ -1,5 +1,8 @@
 # ThreadTimeline v2: Icon-Triggered Navigation Panel
 
+> Status: Historical archived design reference.
+> This is a later historical ThreadTimeline iteration, not current canonical repo guidance unless the implementation explicitly matches it.
+
 Replaces the always-visible proximity-scaled gutter with a click-to-open overlay panel. A clock icon triggers the panel. User message cards stack vertically over the dimmed conversation. Click a card to scroll to that turn and close the panel.
 
 ## Decisions

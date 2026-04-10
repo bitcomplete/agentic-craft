@@ -1,5 +1,9 @@
 # ThreadTimeline Implementation Plan
 
+> Status: Historical archived plan. Preserved from an earlier implementation session.
+> Do not use this file as the current task list or repo workflow guide.
+> Current onboarding starts at `AGENTS.md`, `docs/agent/README.md`, and `INTERACTIVE_SPEC.md`.
+
 > **For agentic workers:** REQUIRED: Use superpowers:subagent-driven-development (if subagents available) or superpowers:executing-plans to implement this plan. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build a vertical timeline gutter component with proximity-based line scaling for thread navigation.
@@ -8,7 +12,7 @@
 
 **Tech Stack:** React 19, TypeScript, motion/react (new dep), Tailwind v4, shadcn/ui base-nova registry
 
-**Spec:** `docs/superpowers/specs/2026-03-16-thread-timeline-design.md`
+**Spec:** `docs/history/agent-work/specs/2026-03-16-thread-timeline-design.md`
 
 **Reference code:** Devouring Details line-minimap source at `/tmp/line-minimap/source.tsx` and `/tmp/devouring-details/` (downloaded component library).
 

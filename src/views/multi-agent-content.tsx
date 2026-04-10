@@ -118,37 +118,37 @@ function makeToggle(
 /* ------------------------------------------------------------------ */
 
 const AGENT_CARDS = [
-  { name: "Evidence Collector", role: "Gather evaluation artifacts", task: "Collecting ALC_DEL delivery artifacts", progress: "12 of 18 items gathered" },
-  { name: "Compliance Mapper", role: "Map SFRs to controls", task: "Mapping FCS_COP.1 to NIST SP 800-53", progress: "24 of 31 SFRs mapped" },
-  { name: "Document Drafter", role: "Author Security Target sections", task: "Drafting ASE_TSS.1 TOE summary", progress: "Section 6.2 in progress" },
+  { name: "Design Reviewer", role: "Check interaction quality", task: "Reviewing the checkout handoff against the latest Figma frames", progress: "12 of 18 screens reviewed" },
+  { name: "Code Reviewer", role: "Map implementation to requirements", task: "Comparing the checkout PR against launch checklist items", progress: "24 of 31 checks reviewed" },
+  { name: "Release Coordinator", role: "Prepare launch communication", task: "Drafting launch summary and rollout notes", progress: "Handoff draft in progress" },
 ]
 
 const HANDOFF_STEPS = [
-  { label: "Parse Security Target", agent: "Document Drafter" },
-  { label: "Map SFR coverage", agent: "Compliance Mapper" },
-  { label: "Generate evaluation report", agent: "Report Generator" },
+  { label: "Review design artifacts", agent: "Design Reviewer" },
+  { label: "Verify implementation coverage", agent: "Code Reviewer" },
+  { label: "Generate launch handoff", agent: "Release Coordinator" },
 ]
 
 const PARALLEL_AGENTS = [
-  { name: "Vulnerability Scanner", task: "Scanning CVE database against TOE boundary", result: "847 CVEs scanned — 0 critical findings", progress: 72 },
-  { name: "Evidence Collector", task: "Gathering ALC lifecycle evidence", result: "18 of 18 artifacts collected — 100% coverage", progress: 45 },
-  { name: "Policy Analyst", task: "Analysing BSI-CC-PP-0084 protection profile", result: "47 SFRs parsed — 4 deltas from previous version", progress: 88 },
+  { name: "QA Analyst", task: "Running smoke checks across checkout flows", result: "47 checks run — 2 follow-ups identified", progress: 72 },
+  { name: "Release Coordinator", task: "Gathering launch evidence", result: "18 of 18 artifacts linked — rollout packet complete", progress: 45 },
+  { name: "Analytics Checker", task: "Validating launch tracking plan", result: "12 events reviewed — 3 instrumentation deltas", progress: 88 },
 ]
 
-const ROUTING_AGENTS = ["Compliance Mapper", "Evidence Collector", "Policy Analyst"]
+const ROUTING_AGENTS = ["Code Reviewer", "Design Reviewer", "Release Coordinator"]
 
 const DIRECT_MESSAGES = [
-  { from: "Compliance Mapper", to: "Document Drafter", content: "I found that FCS_COP.1.1 references AES-CBC-128 in the Security Target, but the protection profile PP-CIMC-SLv3 requires AES-256. Can you update section 6.1.3?" },
-  { from: "Document Drafter", to: "Compliance Mapper", content: "Confirmed. I have updated the cryptographic operations table in ASE_TSS.1 to reference AES-256-CBC. The rationale now cites NIST SP 800-131A Rev 2." },
-  { from: "Compliance Mapper", to: "Document Drafter", content: "Verified. FCS_COP.1.1 mapping now aligns with the PP requirement. Marking this SFR as fully covered." },
+  { from: "Code Reviewer", to: "Design Reviewer", content: "The checkout PR still uses the old summary layout on mobile. Can you confirm whether the Figma file expects the sticky total card?" },
+  { from: "Design Reviewer", to: "Code Reviewer", content: "Confirmed. The latest frame uses the sticky total card below 768px and the older stacked summary should be removed before launch." },
+  { from: "Code Reviewer", to: "Release Coordinator", content: "Verified. I’m marking the mobile layout issue as a launch blocker until the new summary pattern lands." },
 ]
 
 const SHARED_CONTEXT_ITEMS = [
-  { agent: "Evidence Collector", label: "ALC_DEL.1 delivery procedures", type: "Artifact", time: "2m ago" },
-  { agent: "Compliance Mapper", label: "FCS_COP.1 coverage gap — AES key size", type: "Finding", time: "4m ago" },
-  { agent: "Document Drafter", label: "ASE_TSS.1 section 6.1.3 — updated", type: "Draft", time: "5m ago" },
-  { agent: "Policy Analyst", label: "BSI-CC-PP-0084 v1.2 SFR delta report", type: "Analysis", time: "8m ago" },
-  { agent: "Vulnerability Scanner", label: "CVE-2025-3891 disposition — not applicable", type: "Assessment", time: "12m ago" },
+  { agent: "Release Coordinator", label: "Launch checklist — linked artifacts complete", type: "Artifact", time: "2m ago" },
+  { agent: "Code Reviewer", label: "Mobile summary layout mismatch", type: "Finding", time: "4m ago" },
+  { agent: "Design Reviewer", label: "Checkout handoff annotations updated", type: "Draft", time: "5m ago" },
+  { agent: "Analytics Checker", label: "Tracking plan delta report", type: "Analysis", time: "8m ago" },
+  { agent: "QA Analyst", label: "Failed-card recovery smoke check — needs follow-up", type: "Assessment", time: "12m ago" },
 ]
 
 /* ------------------------------------------------------------------ */
@@ -199,8 +199,8 @@ export function MultiAgentContent() {
           Multi-Agent Patterns
         </h1>
         <p className="mt-4 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-          Coordination primitives for orchestrating multiple agents across
-          Common Criteria evaluation workflows — handoffs, parallel execution,
+          Coordination patterns for orchestrating multiple agents across product,
+          design, QA, and release workflows — handoffs, parallel execution,
           routing, and inter-agent communication.
         </p>
       </header>
@@ -435,10 +435,9 @@ export function MultiAgentContent() {
         </table>
 
         <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          Handoff flows model the sequential dependencies in CC evaluations —
-          a Security Target must be parsed before SFR coverage can be mapped,
-          and coverage must be mapped before the evaluation report can be
-          generated. Each handoff creates an auditable transition record.
+          Handoff flows model the sequential dependencies in cross-functional
+          product work — design context must be understood before implementation
+          review, and implementation review should happen before launch handoff. Each handoff creates an auditable transition record.
         </div>
       </section>
 
@@ -542,10 +541,9 @@ export function MultiAgentContent() {
         </table>
 
         <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          Parallel execution is critical for CC evaluations where independent
-          assurance activities — vulnerability scanning (AVA_VAN), evidence
-          collection (ALC), and protection profile analysis — can proceed
-          concurrently without blocking each other.
+          Parallel execution is valuable when design review, QA verification,
+          analytics checks, and release coordination can proceed at the same
+          time without blocking each other.
         </div>
       </section>
 
@@ -581,9 +579,9 @@ export function MultiAgentContent() {
                   <HugeiconsIcon icon={Route01Icon} size={14} strokeWidth={1.5} className="text-muted-foreground" />
                   <span className="text-[10px] text-muted-foreground">Incoming task</span>
                 </div>
-                <p className="text-sm">Review FCS_COP.1 cryptographic requirements</p>
+                <p className="text-sm">Review checkout launch blockers</p>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Task type: SFR compliance review
+                  Task type: launch-readiness review
                 </p>
               </div>
 
@@ -630,7 +628,7 @@ export function MultiAgentContent() {
                         <div className="mt-2 flex items-center gap-1.5">
                           <HugeiconsIcon icon={ArrowRight01Icon} size={10} strokeWidth={1.5} className="text-muted-foreground" />
                           <span className="text-[10px] text-muted-foreground">
-                            {activeRoute === "auto" ? "Best match — SFR expertise" : "Selected"}
+                            {activeRoute === "auto" ? "Best match — launch context" : "Selected"}
                           </span>
                         </div>
                       )}
@@ -671,9 +669,9 @@ export function MultiAgentContent() {
         </table>
 
         <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          Routing decisions in CC workflows must be transparent and auditable.
-          Auto-routing uses task type classification to match SFR-related tasks
-          to the Compliance Mapper, evidence tasks to the Evidence Collector,
+          Routing decisions in agent workflows must be transparent and auditable.
+          Auto-routing uses task classification to match design work to the
+          Design Reviewer, implementation checks to the Code Reviewer,
           and policy tasks to the Policy Analyst. Manual override ensures the
           evaluator retains final authority over agent assignments.
         </div>
@@ -801,9 +799,9 @@ export function MultiAgentContent() {
 
         <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
           Agent communication patterns support the traceability requirements
-          of CC evaluations. Direct messaging creates point-to-point audit
-          trails (e.g., when the Compliance Mapper flags an SFR gap for the
-          Document Drafter), while shared context provides a workspace where
+          of product work. Direct messaging creates point-to-point audit
+          trails (e.g., when the Code Reviewer flags a launch blocker for the
+          Release Coordinator), while shared context provides a workspace where
           all agents can contribute findings visible to the evaluation team.
         </div>
       </section>

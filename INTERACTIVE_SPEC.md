@@ -1,21 +1,28 @@
 # Interactive Page Specification
 
-Every page in this design system must have interactive demos at the level of
+Every page in this reference must have interactive demos at the level of
 InteractiveComposer.tsx. Here's what that means:
+
+Visual styling should come primarily from the active shadcn/ui theme and the
+shared primitive defaults. These patterns define composition, state, behavior,
+and interaction logic — not a single canonical set of radii, shadows, colors,
+or typography beyond what is structurally necessary for the pattern to read.
 
 ## The Standard (set by InteractiveComposer)
 
 1. **Controls panel** — toggle buttons above the demo that activate/deactivate
-   features. Active controls show a small dot indicator. Controls use
-   `rounded-md border border-border px-2.5 py-1 text-xs transition-colors`.
-   Active: `bg-foreground text-background`. Inactive: `hover:bg-muted`.
+   features. Active controls should use shared button/toggle primitives and rely
+   on the current theme for their visual treatment rather than bespoke local
+   styling.
 
 2. **Real state** — everything uses React `useState`. Inputs type. Buttons
    animate. Toggles toggle. Nothing is static HTML with no behavior.
 
 3. **Animations** — islands slide up (translateY 16→0, 250ms ease-out).
    Press effects (scale 0.97). Fade in/out for appearing/disappearing elements.
-   No motion libraries — pure CSS keyframes injected via `<style>`.
+   Prefer pure CSS keyframes for routine demo motion. Use a motion library only
+   when a pattern truly needs it for structural interactions such as shared-layout
+   transitions.
 
 4. **Single interactive demo per section** — NOT 5 static screenshots. One
    component, many states controlled by the controls panel.
@@ -30,11 +37,11 @@ InteractiveComposer.tsx. Here's what that means:
 
 ## Tech constraints
 
-- React 19 + Vite 7 + Tailwind CSS v4 + shadcn/ui v4 (neutral, inset)
+- Next.js 16 + React 19 + Tailwind CSS v4 + shadcn/ui-style primitives
 - Icons: `@hugeicons/react` + `@hugeicons/core-free-icons`
   - Usage: `<HugeiconsIcon icon={SomeIcon} size={14} strokeWidth={1.5} />`
   - All icons monochrome, no colors
-- No motion/framer-motion — pure CSS animations via injected `<style>` tags
+- Prefer CSS animations via injected `<style>` tags for most demos; allow motion libraries only when a pattern depends on layout-aware transitions or other structural animation primitives
 - Import pattern: `import { HugeiconsIcon } from "@hugeicons/react"`
   then `import { IconName } from "@hugeicons/core-free-icons"`
 - shadcn components from `@/components/ui/*` (DropdownMenu, Tooltip, etc.)
@@ -51,22 +58,22 @@ InteractiveComposer.tsx. Here's what that means:
 
 ## Domain context
 
-This is a design system for an agentic interface used by non-technical
-certification professionals (Common Criteria, CRA — EU Cyber Resilience Act).
-All example content should use CC/security evaluation terminology:
-- Security Targets, Protection Profiles, SFRs, SARs, EAL levels
-- TOE (Target of Evaluation), ITSEF (evaluation facility)
-- FCS_COP, FDP_ACF, FAU_GEN — CC functional requirement families
-- Evaluators, evaluation evidence, conformance claims
+Agentic Craft is domain-agnostic. Prefer examples from software product development and design collaboration because they are more broadly legible to developers and designers while still supporting complex human-AI workflows.
+Use scenarios that involve traceability, review gates, approvals, iteration, handoffs, and judgment.
+Good example topics include:
+- pull requests, branches, commits, deployments, incidents, release notes
+- design files, component reviews, handoff threads, prototypes, feedback cycles
+- task planning, debugging, documentation, analytics, support escalation
+Keep examples concrete and realistic, but avoid overly niche domain jargon unless a page explicitly calls for it.
 
 ## User instructions (CRITICAL)
 
-- NO function signatures in demos (e.g., `analyze_execution_logs("FAU_GEN.1")`)
+- NO function signatures in demos (e.g., `analyze_release_logs("checkout-service")`)
   — use human-readable labels only
 - All icons monochrome — no colors
 - No spinners/loaders while tools load
 - Tool labels: font-weight 400 (never bold)
 - No success/failure icons on tool calls
-- No pill shapes — use rounded-md consistently
-- Sans font: Albert Sans. Serif font: Source Serif 4
-- Agent prose color in light mode: oklch(0.2642 0.013 93.9)
+- Prefer theme-provided radius, surface, color, and typography defaults
+- Do not hard-code canonical rounded, pill, shadow, or font choices unless they are structurally required by the interaction pattern
+- Keep the pattern implementation restyleable through shadcn theme tokens and primitive variants

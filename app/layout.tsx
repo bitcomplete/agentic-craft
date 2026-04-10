@@ -1,28 +1,30 @@
-import type { Metadata } from 'next'
-import { Albert_Sans, Source_Serif_4 } from 'next/font/google'
-import { TooltipProvider } from '@/components/ui/tooltip'
-import { ThemeProvider } from '@/components/theme-provider'
+import type { Metadata } from "next"
+import { Source_Serif_4, Geist, Lora } from "next/font/google"
+import { TooltipProvider } from "@/components/ui/tooltip"
+import { ThemeProvider } from "@/components/theme-provider"
 import {
   SidebarProvider,
   SidebarInset,
   SidebarTrigger,
-} from '@/components/ui/sidebar'
-import { AppSidebar } from '@/components/app-sidebar'
-import '@/index.css'
+} from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/app-sidebar"
+import { HashScrollHandler } from "@/components/hash-scroll-handler"
+import { SidebarFloatingTrigger } from "@/components/sidebar-floating-trigger"
+import "@/index.css"
+import { cn } from "@/lib/utils"
 
-const albertSans = Albert_Sans({
-  subsets: ['latin'],
-  variable: '--font-sans',
-})
+const loraHeading = Lora({ subsets: ["latin"], variable: "--font-heading" })
+
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" })
 
 const sourceSerif4 = Source_Serif_4({
-  subsets: ['latin'],
-  variable: '--font-serif',
+  subsets: ["latin"],
+  variable: "--font-serif",
 })
 
 export const metadata: Metadata = {
-  title: 'Agentic Craft',
-  description: 'Agentic Design System — Interactive Component Showcase',
+  title: "Agentic Craft",
+  description: "Agnostic reference for agentic UX patterns and interaction models",
 }
 
 export default function RootLayout({
@@ -31,36 +33,34 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${albertSans.variable} ${sourceSerif4.variable}`}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={cn(
+        sourceSerif4.variable,
+        "font-sans",
+        geist.variable,
+        loraHeading.variable,
+      )}
+    >
       <body>
         <TooltipProvider>
           <ThemeProvider>
             <SidebarProvider
-              style={{ '--sidebar-width': '220px' } as React.CSSProperties}
+              style={{ "--sidebar-width": "220px" } as React.CSSProperties}
             >
               <AppSidebar />
-              <SidebarInset>
-                <div className="fixed top-3 left-3 z-40 group-data-[state=expanded]/sidebar-wrapper:hidden">
-                  <SidebarTrigger className="h-8 w-8 rounded-md bg-background/80 backdrop-blur-sm border border-border/50 shadow-sm" />
-                </div>
+              <SidebarInset id="main-content">
+                <HashScrollHandler />
+                <SidebarFloatingTrigger />
                 <div className="flex h-10 items-center px-4 md:hidden">
                   <SidebarTrigger />
                 </div>
-                <main className="flex-1 overflow-auto">
-                  <div className="mx-auto max-w-[860px] px-6 sm:px-10 pt-12 pb-24">
+                <div className="min-h-0 flex-1 overflow-auto" data-app-scroll-container>
+                  <div className="mx-auto max-w-[860px] px-6 pt-12 pb-24 sm:px-10">
                     {children}
                   </div>
-                </main>
-                <footer className="border-t border-dashed border-border/40 px-8 py-8 text-center text-xs text-muted-foreground/60">
-                  <a
-                    href="https://github.com/arielconti10/agentic-craft"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-muted-foreground transition-colors"
-                  >
-                    Agentic Craft — Open Source
-                  </a>
-                </footer>
+                </div>
               </SidebarInset>
             </SidebarProvider>
           </ThemeProvider>

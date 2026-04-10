@@ -1,5 +1,6 @@
-'use client'
+"use client"
 
+import Link from "next/link"
 import { useState, useEffect, useCallback, useRef } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
@@ -29,6 +30,7 @@ import {
   ToolCallLabel,
   ToolCallContent,
 } from "@/components/ui/tool-call"
+import { Badge } from "@/components/ui/badge"
 
 /* ------------------------------------------------------------------ */
 /*  CSS Keyframes                                                      */
@@ -98,140 +100,140 @@ function ensureStyles() {
 
 const TOOL_CALLS_DATA = [
   {
-    label: "Searching document repository",
+    label: "Searching release artifacts",
     duration: "1.2s",
     details: [
-      { key: "Query", value: "active security requirements" },
-      { key: "Results", value: "47 documents matched" },
-      { key: "Scope", value: "Security Target v3.1" },
+      { key: "Query", value: "checkout launch readiness" },
+      { key: "Results", value: "18 artifacts matched" },
+      { key: "Scope", value: "Spring release" },
     ],
   },
   {
-    label: "Loading Security Target definitions",
+    label: "Loading launch brief and linked specs",
     duration: "0.4s",
     details: [
-      { key: "File", value: "ST-SmartCard-v3.1.pdf" },
-      { key: "SFRs parsed", value: "23 requirements" },
-      { key: "SARs parsed", value: "14 assurance components" },
+      { key: "File", value: "checkout-launch-brief.md" },
+      { key: "Acceptance criteria", value: "14 tracked" },
+      { key: "Linked artifacts", value: "PR, Figma, QA run, release notes" },
     ],
   },
   {
-    label: "Cross-referencing test case mappings",
+    label: "Cross-referencing rollout checklist",
     duration: "3.4s",
     details: [
-      { key: "Test cases", value: "87 mapped" },
-      { key: "Unmapped SFRs", value: "2 (FPT_FLS.1, FDP_RIP.1)" },
+      { key: "Checklist items", value: "27 mapped" },
+      { key: "Open gaps", value: "2 (rollback note, analytics QA)" },
     ],
   },
   {
-    label: "Generating coverage matrix",
+    label: "Generating launch review summary",
     duration: "0.9s",
     details: [
-      { key: "Coverage", value: "91.3% (21 of 23 SFRs)" },
-      { key: "Output", value: "coverage-matrix-2026-03.xlsx" },
+      { key: "Coverage", value: "92% of launch checks complete" },
+      { key: "Output", value: "launch-review-2026-04.md" },
     ],
   },
 ]
 
 const ERROR_TOOL = {
-  label: "Checking remote syslog connectivity",
+  label: "Checking preview environment health",
   duration: "8.2s",
   error:
-    "Connection timed out — the remote syslog server at 10.0.4.22:514 did not respond within 8 seconds.",
+    "Connection timed out — the preview environment did not respond within 8 seconds during smoke checks.",
 }
 
 const SUBAGENT_TOOLS = [
   {
-    label: "Checking ALC_CMC evidence",
+    label: "Checking design review evidence",
     duration: "1.8s",
     details: [
-      { key: "Documents", value: "CM Plan v2.3, CM Records" },
-      { key: "Status", value: "All evidence present" },
+      { key: "Artifacts", value: "Figma file, annotated screenshots" },
+      { key: "Status", value: "All linked and current" },
     ],
   },
   {
-    label: "Checking ALC_DEL evidence",
+    label: "Checking QA evidence",
     duration: "0.9s",
     details: [
-      { key: "Documents", value: "Delivery procedures rev 4" },
+      { key: "Artifacts", value: "Regression report, smoke checklist" },
       { key: "Status", value: "Complete" },
     ],
   },
   {
-    label: "Checking AVA_VAN evidence",
+    label: "Checking analytics readiness",
     duration: "4.2s",
     details: [
-      { key: "Documents", value: "Vulnerability analysis report" },
-      { key: "Status", value: "Pending — 2 items missing" },
+      { key: "Artifacts", value: "Tracking plan, dashboard links" },
+      { key: "Status", value: "Pending — 2 events need verification" },
     ],
   },
 ]
 
 const PLAN_STEPS = [
-  "Load Security Target",
-  "Parse SFR definitions",
-  "Map test cases to SFRs",
-  "Identify coverage gaps",
-  "Generate report",
-  "Review with evaluator",
+  "Load launch brief",
+  "Parse acceptance criteria",
+  "Map PRs and designs to checks",
+  "Identify launch gaps",
+  "Generate summary",
+  "Review with team",
 ]
 
 const PARALLEL_TASKS = [
   {
     label: "Checking current git status in the project",
     details: [
-      { key: "Working dir", value: "/eval/smartcard-st-v3" },
-      { key: "Modified files", value: "3 (coverage-matrix.xlsx, SFR-map.json, notes.md)" },
-      { key: "Untracked", value: "1 (test-results-2026-03.csv)" },
+      { key: "Working dir", value: "/workspace/web-app" },
+      { key: "Modified files", value: "3 (checkout.tsx, pricing.ts, release-notes.md)" },
+      { key: "Untracked", value: "1 (launch-checklist-2026-04.csv)" },
     ],
   },
   {
     label: "Checking remote configuration",
     details: [
-      { key: "Remote", value: "origin → git.itsef.local/eval/smartcard-st" },
+      { key: "Remote", value: "origin → github.com/acme/web-app" },
       { key: "Branch", value: "main (up to date)" },
-      { key: "Last push", value: "2026-03-14 09:41 UTC" },
+      { key: "Last push", value: "2026-04-09 09:41 UTC" },
     ],
   },
   {
-    label: "Reading SFR coverage definitions",
+    label: "Reading rollout checklist definitions",
     details: [
-      { key: "File", value: "SFR-map.json" },
-      { key: "SFRs parsed", value: "23 requirements" },
-      { key: "Families", value: "FCS, FDP, FPT, FAU, FIA" },
+      { key: "File", value: "launch-checklist.json" },
+      { key: "Checks parsed", value: "27 requirements" },
+      { key: "Groups", value: "UX, QA, DATA, REL, A11Y" },
     ],
   },
 ]
 
 const APPROVAL_EMAIL = {
-  recipient: "evaluation@bsi.bund.de",
-  subject: "ETR Submission — SmartCard TOE v3.1 (EAL4+)",
-  body: "Please find attached the Evaluation Technical Report for the SmartCard TOE v3.1 Security Target. This submission covers all CEM work units for EAL4+ with ALC_FLR.3 augmentation. The evaluation was conducted in accordance with CC v3.1 Rev 5.",
+  recipient: "product-team@acme.dev",
+  subject: "Launch review — Checkout spring release",
+  body: "Please find attached the launch review summary for the Checkout spring release. It includes open rollout risks, unresolved QA items, analytics checks, and recommended next actions before wider release.",
 }
 
 const APPROVAL_CHANGES = [
-  { type: "add" as const, text: "Added FCS_COP.1 coverage mapping for AES-256-GCM" },
-  { type: "add" as const, text: "Added test case TC-087 for cryptographic key destruction" },
-  { type: "remove" as const, text: "Removed deprecated FDP_ACF.1 iteration reference" },
-  { type: "add" as const, text: "Added AVA_VAN.3 vulnerability analysis summary" },
-  { type: "remove" as const, text: "Removed placeholder TOE boundary description" },
+  { type: "add" as const, text: "Added rollback checklist for the checkout experiment" },
+  { type: "add" as const, text: "Added smoke test for failed-card recovery" },
+  { type: "remove" as const, text: "Removed stale screenshot from the handoff note" },
+  { type: "add" as const, text: "Added analytics verification note for checkout_completed" },
+  { type: "remove" as const, text: "Removed placeholder launch owner field" },
 ]
 
 const DECISION_OPTIONS = [
   {
-    title: "Flag as finding",
-    desc: "Add to the non-conformity report for evaluator review in the next OR meeting.",
-    consequence: "Impact: Adds 1 open finding to the ETR. Requires vendor response within 10 days.",
+    title: "Block release",
+    desc: "Keep the launch gated until the missing rollout checks are resolved.",
+    consequence: "Impact: Release stays internal-only until blockers are cleared.",
   },
   {
-    title: "Request evidence",
-    desc: "Send an automated evidence request to the developer with a 5-day deadline.",
-    consequence: "Impact: Evaluation paused for FPT_STM.1 pending developer response.",
+    title: "Request changes",
+    desc: "Send a targeted follow-up to engineering and design with a short deadline.",
+    consequence: "Impact: Launch is paused while the team closes the identified gaps.",
   },
   {
-    title: "Mark for later",
-    desc: "Add to the deferred items list for the next evaluation cycle.",
-    consequence: "Impact: No immediate delay. Risk carried forward to next cycle.",
+    title: "Track as follow-up",
+    desc: "Proceed with launch but log the issue as a scheduled follow-up item.",
+    consequence: "Impact: No immediate delay, but risk is carried into the next release review.",
   },
 ]
 
@@ -468,7 +470,7 @@ export function ActionsContent() {
       setAskSubmitted(false)
     } else {
       setAskState({ open: false, answered: true })
-      setAskInput("EAL4+ with ALC_FLR.3 augmentation")
+      setAskInput("High-risk launch with staged rollout and rollback ready")
       setAskSubmitted(true)
     }
   }, [])
@@ -647,11 +649,11 @@ export function ActionsContent() {
                 <span className="text-sm font-normal">
                   Evidence Verification Agent
                 </span>
-                <span className="rounded-md bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
+                <Badge variant="secondary" className="shrink-0">
                   {subagentProgress >= 8
                     ? "complete"
                     : `${subagentProgress} of 8 families`}
-                </span>
+                </Badge>
                 {subagentState.running && subagentProgress < 8 && (
                   <span className="h-1.5 w-1.5 rounded-full bg-foreground/40 actions-pulse-dot" />
                 )}
@@ -668,8 +670,8 @@ export function ActionsContent() {
               {subagentOpen && (
                 <div className="actions-expand border-t border-border/40 px-3 py-3 space-y-2">
                   <p className="text-xs text-muted-foreground">
-                    Validating completeness and traceability of evaluation
-                    evidence for each assurance family.
+                    Validating completeness and traceability of launch evidence
+                    across design, implementation, QA, and rollout.
                   </p>
                   {/* Progress bar */}
                   <div className="h-1 rounded-md bg-muted">
@@ -772,13 +774,13 @@ export function ActionsContent() {
                   CC Evaluation Coverage Report
                 </span>
               </div>
-              <span className="rounded-md bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+              <Badge variant="secondary" className="shrink-0">
                 {planState.executing
                   ? `${Math.min(activeStep, planSteps.length)} of ${planSteps.length} complete`
                   : planState.editable
                     ? `${planSteps.length} steps`
                     : `${planSteps.length} steps`}
-              </span>
+              </Badge>
             </div>
 
             <div className="space-y-0">
@@ -1068,7 +1070,7 @@ export function ActionsContent() {
                 className="mt-0.5 shrink-0 text-muted-foreground"
               />
               <p className="text-sm">
-                How should I handle the missing audit log entries for FPT_STM.1?
+                How should I handle the missing launch audit events for checkout_completed?
               </p>
             </div>
 
@@ -1210,11 +1212,11 @@ export function ActionsContent() {
               />
               <div>
                 <p className="text-sm">
-                  What assurance level should I target for the evaluation?
+                  What rollout strategy should I target for this release?
                 </p>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  This determines the depth of analysis for each SFR family
-                  and the applicable CEM work units.
+                  This determines the level of review, the launch blast radius,
+                  and the rollback expectations.
                 </p>
               </div>
             </div>
@@ -1232,7 +1234,7 @@ export function ActionsContent() {
                     onKeyDown={(e) => {
                       if (e.key === "Enter") handleAskSubmit()
                     }}
-                    placeholder="e.g., EAL4+ with ALC_FLR.3"
+                    placeholder="e.g., staged rollout to 10% with rollback ready"
                     className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none placeholder:text-muted-foreground/50 focus:border-foreground/20"
                   />
                 </div>
@@ -1326,8 +1328,16 @@ export function ActionsContent() {
         </h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Human-in-the-loop confirmation before the agent performs a
-          consequential action. The user reviews the action details and
-          explicitly approves or denies.
+          consequential action. This lens shows the gate inside action-taking
+          flows. For the canonical pattern reference, see{" "}
+          <Link
+            href="/approval-gate"
+            className="text-foreground underline underline-offset-4"
+          >
+            Approval Gate
+          </Link>
+          . The user reviews the action details and explicitly approves, denies,
+          or asks for a revision.
         </p>
 
         <div className="mt-10">
@@ -1455,7 +1465,7 @@ export function ActionsContent() {
                     className="mt-0.5 shrink-0 text-muted-foreground"
                   />
                   <p className="text-sm">
-                    I'd like to apply these changes to the Security Target. Please review.
+                    I'd like to apply these launch-readiness changes. Please review.
                   </p>
                 </div>
 

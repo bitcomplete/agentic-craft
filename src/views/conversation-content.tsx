@@ -1,5 +1,6 @@
 'use client'
 
+import Link from "next/link"
 import { useState, useEffect } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
@@ -120,7 +121,7 @@ const agentProseStyle: React.CSSProperties = {
   WebkitFontSmoothing: "antialiased",
 }
 
-const THINKING_TEXT = `Let me analyze the evaluation findings systematically. The timestamp issue in the audit log appears to be a configuration mismatch, not a compliance failure — the TOE uses UTC internally but the log viewer displays local time. I need to check whether FAU_GEN.1 specifies a format requirement... it specifies "date and time" but doesn't mandate UTC. So this might not be a finding after all. But wait — the PP interpretation in Annex B does require unambiguous timestamps. Let me re-read that section...`
+const THINKING_TEXT = `Let me analyze the release notes and rollout state systematically. The spike in failed checkouts may be a metrics issue rather than a product issue — the dashboard is mixing preview and production traffic. I need to check whether the event filter is scoped correctly... it looks like preview traffic is still included. So this may not be a blocker after all. But wait — the launch checklist explicitly says production metrics must be isolated before rollout decisions. Let me verify that setup...`
 
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
@@ -191,8 +192,8 @@ export function ConversationContent() {
             {/* User message */}
             <div className="flex justify-end">
               <div className="max-w-[75%] rounded-lg bg-primary px-4 py-2.5 text-sm text-primary-foreground">
-                Can you review the Security Target document for CC evaluation
-                compliance?
+                Can you review the launch brief and tell me if this release is
+                ready to ship?
               </div>
             </div>
 
@@ -201,16 +202,16 @@ export function ConversationContent() {
               <div className="max-w-[75%] rounded-lg border border-border bg-muted px-4 py-3">
                 <div className="font-serif text-base" style={agentProseStyle}>
                   <p>
-                    I've reviewed the Security Target against the Common Criteria
-                    v3.1 R5 requirements. The document covers the required ASE
-                    class components, but I found three areas that need attention.
+                    I've reviewed the launch brief, PR, and linked rollout
+                    artifacts. The release looks healthy overall, but I found
+                    three areas that need attention.
                   </p>
                   <p className="mt-4">
-                    The conformance claims in Section 2 reference PP‑CIMC‑SLv3
-                    but the rationale table in Annex A doesn't map all SFRs back
-                    to the PP. The FCS_COP.1 instantiation also references an
-                    outdated algorithm suite — this will need updating before the
-                    evaluation facility review.
+                    The rollout notes still reference the previous experiment
+                    owner, the mobile summary layout in the PR does not match the
+                    latest Figma handoff, and the analytics checklist still has
+                    one unverified launch event. Those should be resolved before
+                    wider rollout.
                   </p>
                 </div>
               </div>
@@ -219,8 +220,7 @@ export function ConversationContent() {
             {/* Follow-up user message */}
             <div className="flex justify-end">
               <div className="max-w-[75%] rounded-lg bg-primary px-4 py-2.5 text-sm text-primary-foreground">
-                Can you list the specific SFRs that are missing from the
-                mapping?
+                Can you list the specific launch checks that are still open?
               </div>
             </div>
 
@@ -229,14 +229,13 @@ export function ConversationContent() {
               <div className="max-w-[75%] rounded-lg border border-border bg-muted px-4 py-3">
                 <div className="font-serif text-base" style={agentProseStyle}>
                   <p>
-                    The following SFRs from PP‑CIMC‑SLv3 are not mapped in Annex
-                    A:
+                    The following launch checks are still open:
                   </p>
                   <ul className="mt-3 ml-5 list-disc space-y-1">
-                    <li>FCS_CKM.1 — Cryptographic key generation</li>
-                    <li>FCS_CKM.4 — Cryptographic key destruction</li>
-                    <li>FDP_ACF.1 — Security attribute based access control</li>
-                    <li>FMT_MSA.3 — Static attribute initialisation</li>
+                    <li>Rollback owner is not assigned in the launch brief</li>
+                    <li>Mobile summary layout still uses the older pattern</li>
+                    <li>checkout_completed analytics event is not verified</li>
+                    <li>Release handoff note still contains stale screenshots</li>
                   </ul>
                 </div>
               </div>
@@ -247,10 +246,10 @@ export function ConversationContent() {
               <div className="max-w-[75%] rounded-lg border border-border bg-muted px-4 py-3">
                 <div className="font-serif text-base" style={agentProseStyle}>
                   <p>
-                    The FDP_IFC.1 component specifies information flow control
-                    for the TOE's inter-module communication channel. Based on
-                    the security functional policy defined in Section 7.2, the
-                    flow control SFP covers all data transfers between
+                    The current rollout path covers internal users and a 10%
+                    production slice. Based on the launch plan, the next step is
+                    to verify analytics, confirm rollback ownership, and then
+                    decide whether to expand the audience to
                     {showCursor && (
                       <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse bg-foreground align-middle" />
                     )}
@@ -262,7 +261,7 @@ export function ConversationContent() {
             {/* System message */}
             <div className="flex justify-center">
               <div className="rounded-md bg-muted px-3 py-1.5 text-xs text-muted-foreground">
-                4 findings added to evaluation tracker
+                4 release-review follow-ups added to the tracker
               </div>
             </div>
           </div>
@@ -449,11 +448,10 @@ export function ConversationContent() {
               <div className="mt-4 rounded-lg border border-border bg-muted px-4 py-3 conv-fade-in">
                 <div className="font-serif text-base" style={agentProseStyle}>
                   <p>
-                    Two SFRs are missing from the mapping: FCS_CKM.4 (key
-                    destruction) and FDP_ACF.1 (attribute-based access control).
-                    The CKM.4 omission is a genuine gap, while the ACF.1 absence
-                    appears to be an editing error introduced in the v3.1 rewrite
-                    — it was present in the previous version.
+                    Two launch checks are still open: rollback ownership and
+                    analytics verification. The rollout owner gap is genuine,
+                    while the analytics issue appears to be a setup drift between
+                    the launch brief and the dashboard configuration.
                   </p>
                 </div>
               </div>
@@ -562,21 +560,19 @@ export function ConversationContent() {
           <div className="mt-10 border border-border/40 rounded-lg p-6">
             <div className="font-serif text-base" style={agentProseStyle}>
               <p>
-                The evaluation assurance level has been set to EAL4+, which
-                requires independent vulnerability analysis by the ITSEF
+                The release is currently staged for a gradual rollout, which
+                requires the launch owner to confirm rollback readiness
                 <sup className="ml-0.5 cursor-pointer text-xs font-sans font-medium text-primary hover:underline">
                   [1]
                 </sup>
-                . The augmentation with ALC_FLR.2 mandates a documented flaw
-                remediation process with explicit timelines for
-                security-relevant fixes
+                . The launch checklist also requires analytics verification and a
+                documented support handoff before traffic expands
                 <sup className="ml-0.5 cursor-pointer text-xs font-sans font-medium text-primary hover:underline">
                   [2]
                 </sup>
-                . Notably, the scheme's interpretive guidance requires that all
-                SFR-supporting modules be included in the TOE boundary — the
-                current exclusion of the logging subsystem may not survive the
-                certification body's review
+                . Notably, the release notes and the PR must reference the same
+                affected surfaces — the current omission of the mobile summary
+                issue from the handoff note may not survive launch review
                 <sup className="ml-0.5 cursor-pointer text-xs font-sans font-medium text-primary hover:underline">
                   [3]
                 </sup>
@@ -593,12 +589,12 @@ export function ConversationContent() {
           <div className="mt-10 border border-border/40 rounded-lg p-6">
             <div className="flex flex-wrap gap-2">
               {[
-                { icon: Shield01Icon, label: "Security Target §6.1.1" },
+                { icon: Shield01Icon, label: "Launch brief — rollout section" },
                 {
                   icon: File01Icon,
-                  label: "Evaluation Technical Report §4.2",
+                  label: "QA report — smoke results",
                 },
-                { icon: File01Icon, label: "PP‑CIMC‑SLv3 §5.1.1" },
+                { icon: File01Icon, label: "Figma handoff — mobile summary" },
               ].map((chip) => (
                 <button
                   key={chip.label}
@@ -630,26 +626,26 @@ export function ConversationContent() {
               {
                 num: 1,
                 title:
-                  "Common Criteria Part 3: Security Assurance Components",
-                source: "ccportal.org/cc/part3/v3.1r5",
+                  "Checkout launch brief — rollout and rollback rules",
+                source: "docs.acme.dev/releases/checkout-launch-brief",
                 excerpt:
-                  "ALC_FLR.2 requires the developer to establish flaw remediation procedures with defined response timelines...",
+                  "Before traffic expands, the launch owner must confirm rollback readiness and support escalation coverage...",
               },
               {
                 num: 2,
                 title:
-                  "Flaw Remediation Policy — ACME Security Module v3.1",
-                source: "docs.internal/acme-sm/flr-policy-v3.1.pdf",
+                  "QA handoff — checkout smoke and regression report",
+                source: "docs.acme.dev/qa/checkout-smoke-report",
                 excerpt:
-                  "Critical vulnerabilities: 72-hour acknowledgment, 30-day resolution. High: 7-day ack, 90-day resolution...",
+                  "The mobile summary layout differs from the approved frame below 768px, but payment success and failure paths are stable...",
               },
               {
                 num: 3,
                 title:
-                  "Scheme Interpretive Guidance — TOE Boundary Scope",
-                source: "ccscheme.gov/guidance/toe-boundary-2024.pdf",
+                  "Design handoff — mobile summary pattern",
+                source: "figma.com/file/checkout-redesign/mobile-summary",
                 excerpt:
-                  "All subsystems that enforce, support, or contribute to SFR satisfaction must fall within the TOE boundary...",
+                  "The sticky total card is the approved mobile pattern for the release candidate and should replace the stacked summary variant...",
               },
             ].map((ref) => (
               <div
@@ -690,6 +686,10 @@ export function ConversationContent() {
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           The message input area. Use the controls to explore every variant —
           type, send, toggle features. Everything is interactive.
+        </p>
+        <p className="mt-3 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
+          This lens shows the composer in context. For the canonical pattern
+          reference, see <Link href="/composer" className="text-foreground underline underline-offset-4">Composer</Link>.
         </p>
 
         <div className="mt-14 rounded-xl border border-border/40 bg-background p-6">

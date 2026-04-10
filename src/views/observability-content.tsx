@@ -1,5 +1,6 @@
-'use client'
+"use client"
 
+import Link from "next/link"
 import { useState, useEffect } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
@@ -129,25 +130,25 @@ function makeToggle(
 /* ------------------------------------------------------------------ */
 
 const ACTIVITY_LIVE = [
-  { time: "Just now", action: "Checking FCS_COP.1 algorithm references", type: "tool" as const, icon: Search01Icon },
-  { time: "12s ago", action: "Cross-referencing Security Target v3.1 against EN 18031-1", type: "tool" as const, icon: File01Icon },
-  { time: "34s ago", action: "Identified 2 coverage gaps in FDP_ACC.1 requirements", type: "message" as const, icon: Brain01Icon },
-  { time: "1m ago", action: "Started SFR gap analysis for ACME SmartCard Module", type: "message" as const, icon: Shield01Icon },
+  { time: "Just now", action: "Checking checkout rollout events", type: "tool" as const, icon: Search01Icon },
+  { time: "12s ago", action: "Cross-referencing launch brief against the latest PR and Figma handoff", type: "tool" as const, icon: File01Icon },
+  { time: "34s ago", action: "Identified 2 gaps in the rollout checklist", type: "message" as const, icon: Brain01Icon },
+  { time: "1m ago", action: "Started launch review for the checkout release", type: "message" as const, icon: Shield01Icon },
 ]
 
 const ACTIVITY_HISTORY = [
-  { time: "11:48 AM", action: "Completed SFR gap analysis — 4 gaps identified", type: "message" as const, icon: Tick01Icon },
-  { time: "11:44 AM", action: "Generated coverage matrix for ADV_FSP.4", type: "tool" as const, icon: File01Icon },
-  { time: "11:40 AM", action: "Parsed EN 18031-1 SFR catalogue — 47 requirements", type: "tool" as const, icon: Search01Icon },
-  { time: "11:32 AM", action: "Evidence mapping complete for ALC_FLR.2", type: "message" as const, icon: Tick01Icon },
-  { time: "11:14 AM", action: "Cross-referenced test case mappings — 87 cases", type: "tool" as const, icon: File01Icon },
+  { time: "11:48 AM", action: "Completed launch review — 4 follow-ups identified", type: "message" as const, icon: Tick01Icon },
+  { time: "11:44 AM", action: "Generated launch summary for the product team", type: "tool" as const, icon: File01Icon },
+  { time: "11:40 AM", action: "Parsed rollout checklist — 27 requirements", type: "tool" as const, icon: Search01Icon },
+  { time: "11:32 AM", action: "Analytics verification complete for checkout_completed", type: "message" as const, icon: Tick01Icon },
+  { time: "11:14 AM", action: "Cross-referenced PR and QA artifacts", type: "tool" as const, icon: File01Icon },
 ]
 
 const ACTIVITY_FILTERED = [
-  { time: "12s ago", action: "Cross-referencing Security Target v3.1 against EN 18031-1", type: "tool" as const, icon: File01Icon },
-  { time: "11:44 AM", action: "Generated coverage matrix for ADV_FSP.4", type: "tool" as const, icon: File01Icon },
-  { time: "11:40 AM", action: "Parsed EN 18031-1 SFR catalogue — 47 requirements", type: "tool" as const, icon: Search01Icon },
-  { time: "11:14 AM", action: "Cross-referenced test case mappings — 87 cases", type: "tool" as const, icon: File01Icon },
+  { time: "12s ago", action: "Cross-referencing launch brief against the latest PR and Figma handoff", type: "tool" as const, icon: File01Icon },
+  { time: "11:44 AM", action: "Generated launch summary for the product team", type: "tool" as const, icon: File01Icon },
+  { time: "11:40 AM", action: "Parsed rollout checklist — 27 requirements", type: "tool" as const, icon: Search01Icon },
+  { time: "11:14 AM", action: "Cross-referenced PR and QA artifacts", type: "tool" as const, icon: File01Icon },
 ]
 
 const TOKEN_CONFIGS = {
@@ -157,37 +158,37 @@ const TOKEN_CONFIGS = {
 }
 
 const SESSION_SINGLE = [
-  { role: "user" as const, content: "Check if the Security Target covers all FCS_COP.1 requirements for the ACME SmartCard Module." },
-  { role: "agent" as const, content: "I reviewed the Security Target v3.1 against FCS_COP.1 and found the cryptographic operation specification references AES-CBC-128, but the latest PP-CIMC-SLv3 expects AES-256. This is a gap that should be addressed before the ITSEF evaluation.", tool: "Searched document repository" },
+  { role: "user" as const, content: "Check whether the checkout launch is ready for a staged rollout." },
+  { role: "agent" as const, content: "I reviewed the launch brief, PR, QA report, and analytics checks. The rollout looks close to ready, but the rollback checklist and one analytics event still need confirmation.", tool: "Searched launch artifacts" },
 ]
 
 const SESSION_MULTI = [
-  { role: "user" as const, content: "Run a gap analysis on the SFR coverage for EN 18031-1." },
-  { role: "agent" as const, content: "Starting the analysis. I'll cross-reference all 47 SFRs from EN 18031-1 against the current Security Target.", tool: "Loading SFR catalogue" },
-  { role: "user" as const, content: "Focus on the network security requirements — FTP_ITC and FCS families." },
-  { role: "agent" as const, content: "Narrowing scope to network-related SFRs. I found 2 gaps: FTP_ITC.1 lacks a rationale for the chosen trusted channel mechanism, and FCS_CKM.1 references a deprecated key size.", tool: "Cross-referencing Security Target" },
-  { role: "user" as const, content: "Generate a remediation report for those gaps." },
-  { role: "agent" as const, content: "Report generated with remediation steps for both gaps, including estimated effort and references to relevant PP sections. Saved as gap-remediation-2026-03.pdf.", tool: "Generating coverage report" },
+  { role: "user" as const, content: "Run a launch review for the checkout redesign." },
+  { role: "agent" as const, content: "Starting the review. I’ll compare the launch brief, design handoff, PR, QA evidence, and rollout checklist.", tool: "Loading launch checklist" },
+  { role: "user" as const, content: "Focus on mobile checkout, analytics, and rollback readiness." },
+  { role: "agent" as const, content: "Narrowing scope. I found 2 gaps: the mobile summary layout still differs from the approved design, and the rollback owner is missing from the launch checklist.", tool: "Cross-referencing release artifacts" },
+  { role: "user" as const, content: "Generate a launch-readiness report for those gaps." },
+  { role: "agent" as const, content: "Report generated with recommended fixes, ownership, and release risk notes. Saved as checkout-launch-review-2026-04.pdf.", tool: "Generating launch report" },
 ]
 
 const ERROR_LIST = [
   {
     time: "11:32 AM",
     severity: "warning" as const,
-    title: "Document repository timeout",
-    detail: "Connection to the ITSEF document repository timed out after 30s while fetching ADV_FSP.4 evidence package. Retried successfully on second attempt.",
+    title: "Preview environment timeout",
+    detail: "Connection to the preview environment timed out after 30s during smoke checks. The retry succeeded on the second attempt.",
   },
   {
     time: "10:15 AM",
     severity: "error" as const,
-    title: "CRA conformity statement generation failed",
-    detail: "Missing required field: TOE boundary description. The Security Target v3.1 does not include a compliant boundary diagram per CRA Annex I, Section 2.",
+    title: "Launch summary generation failed",
+    detail: "Missing required field: launch owner. The current launch brief does not include a confirmed owner for rollback decisions.",
   },
   {
     time: "09:48 AM",
     severity: "warning" as const,
     title: "Rate limit approached",
-    detail: "Token usage reached 85% of the daily budget during the vulnerability scan batch. Subsequent requests were throttled to stay within limits.",
+    detail: "Token usage reached 85% of the daily budget during the release-review batch. Subsequent requests were throttled to stay within limits.",
   },
 ]
 
@@ -247,6 +248,18 @@ export function ObservabilityContent() {
           Activity timelines, token tracking, session history, and error logs
           for continuous agent oversight.
         </p>
+        <p className="mt-4 max-w-[640px] text-sm leading-relaxed text-muted-foreground">
+          Observability is the lens for why these oversight surfaces matter. The
+          canonical pattern references live in{" "}
+          <Link href="/activity-timeline" className="text-foreground underline underline-offset-4">
+            Activity Timeline
+          </Link>{" "}
+          for live execution streams and{" "}
+          <Link href="/audit-trail" className="text-foreground underline underline-offset-4">
+            Audit Trail
+          </Link>{" "}
+          for formal accountability records.
+        </p>
       </header>
 
       {/* ============================================================ */}
@@ -257,7 +270,7 @@ export function ObservabilityContent() {
         <h2 className="text-xl font-semibold tracking-tight">Activity Timeline</h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           A chronological stream of agent actions — tool invocations, messages,
-          and state transitions — for full auditability of evaluation workflows.
+          and state transitions — for full auditability of product and release workflows.
         </p>
 
         <div className="mt-10">
@@ -341,10 +354,10 @@ export function ObservabilityContent() {
         </table>
 
         <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          The activity timeline serves as the FAU_GEN audit log surface — every agent
+          The activity timeline serves as the audit-log surface — every agent
           action is recorded with a timestamp, type classification, and human-readable
           description. Live mode streams entries as they occur; History and Filtered
-          modes enable retrospective analysis during ITSEF evaluations.
+          modes enable retrospective analysis during launch and review work.
         </div>
       </section>
 
@@ -468,8 +481,8 @@ export function ObservabilityContent() {
         <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
           Token meters translate raw API consumption into a budget metaphor that
           certification professionals understand. The 80% warning threshold provides
-          time to prioritize remaining evaluation tasks before throttling begins —
-          particularly important during time-bounded ITSEF evaluation sessions.
+          time to prioritize remaining review work before throttling begins —
+          particularly important during time-bounded launch windows.
         </div>
       </section>
 
@@ -582,10 +595,10 @@ export function ObservabilityContent() {
         </table>
 
         <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          Session timelines provide the conversation-level audit trail that ITSEF
-          evaluators need when reviewing how an agent arrived at its conclusions. Multi-turn
-          sessions show how iterative refinement (e.g., narrowing scope from all SFRs to
-          just FTP/FCS families) leads to more targeted analysis.
+          Session timelines provide the conversation-level audit trail teams need
+          when reviewing how an agent arrived at its conclusions. Multi-turn
+          sessions show how iterative refinement (e.g., narrowing scope from the
+          full release to mobile checkout and analytics) leads to more targeted analysis.
         </div>
       </section>
 
@@ -701,10 +714,9 @@ export function ObservabilityContent() {
         </table>
 
         <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          The error log provides the diagnostic transparency required by FAU_SAR
-          (Security Audit Review) — evaluators can inspect every operational anomaly,
-          understand its context, and verify that the agent's error handling meets the
-          TOE's claimed assurance level.
+          The error log provides the diagnostic transparency teams need to inspect
+          every operational anomaly, understand its context, and verify that the
+          agent's error handling is appropriate for launch-critical workflows.
         </div>
       </section>
     </article>

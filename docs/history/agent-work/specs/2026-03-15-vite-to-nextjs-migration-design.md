@@ -1,5 +1,8 @@
 # Vite to Next.js Migration
 
+> Status: Historical archived design reference.
+> This document captures an earlier migration design and is not the canonical source of truth for the current repo.
+
 ## Context
 
 This project is a Vite 7.2.4 + React 19 SPA (Agentic Design System) that needs SSR, SEO, and React Server Components. The migration moves to Next.js 16 (App Router) deployed on Vercel with static generation (SSG) for all pages.

@@ -77,12 +77,3 @@
   --tool-tree-connector: oklch(0.23 0 0);
 }
 
-/* ── ThreadTimeline ── */
-
-:root {
-  --thread-timeline-tooltip-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-}
-
-.dark {
-  --thread-timeline-tooltip-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-}

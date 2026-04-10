@@ -1,9 +1,16 @@
 "use client"
 
 import * as React from "react"
-import { cn } from "@/lib/utils"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { Cancel01Icon, File01Icon, Image01Icon } from "@hugeicons/core-free-icons"
+import {
+  Cancel01Icon,
+  File01Icon,
+  Image01Icon,
+} from "@hugeicons/core-free-icons"
+
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { cn } from "@/lib/utils"
 import type { ComposerFile } from "./composer"
 
 const FILE_ICONS = {
@@ -29,32 +36,33 @@ export function ComposerAttachments({
       {...props}
     >
       {files.map((file) => (
-        <div
-          key={file.name}
-          className="group flex items-center gap-2 rounded-lg border border-border/60 bg-muted/40 px-3 py-2"
-        >
-          <HugeiconsIcon
-            icon={FILE_ICONS[file.type]}
-            size={14}
-            strokeWidth={1.5}
-            className="shrink-0 text-muted-foreground"
-          />
-          <div className="min-w-0">
-            <p className="max-w-[140px] truncate text-xs font-medium">
-              {file.name}
-            </p>
-            <p className="text-[10px] text-muted-foreground">{file.size}</p>
+        <Card key={file.name} size="sm" className="gap-0 px-3 py-2">
+          <div className="flex items-center gap-2">
+            <HugeiconsIcon
+              icon={FILE_ICONS[file.type]}
+              size={14}
+              strokeWidth={1.5}
+            />
+            <div className="min-w-0">
+              <p className="max-w-[140px] truncate text-sm">{file.name}</p>
+              <p className="text-xs text-muted-foreground">{file.size}</p>
+            </div>
+            {onRemove && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon-xs"
+                onClick={() => onRemove(file.name)}
+              >
+                <HugeiconsIcon
+                  icon={Cancel01Icon}
+                  size={12}
+                  strokeWidth={1.5}
+                />
+              </Button>
+            )}
           </div>
-          {onRemove && (
-            <button
-              type="button"
-              onClick={() => onRemove(file.name)}
-              className="ml-0.5 text-muted-foreground/40 opacity-0 transition-colors group-hover:opacity-100 hover:text-foreground"
-            >
-              <HugeiconsIcon icon={Cancel01Icon} size={12} strokeWidth={1.5} />
-            </button>
-          )}
-        </div>
+        </Card>
       ))}
     </div>
   )

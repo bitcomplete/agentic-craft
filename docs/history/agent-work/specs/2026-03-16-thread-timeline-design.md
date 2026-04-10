@@ -1,5 +1,8 @@
 # ThreadTimeline Component Design
 
+> Status: Historical archived design reference.
+> This is the earlier ThreadTimeline gutter/proximity concept. See `2026-03-16-thread-timeline-v2-design.md` for the later historical redesign.
+
 A vertical timeline gutter for thread navigation. Thin vertical lines represent conversation turns. Proximity-based scaling (adapted from Devouring Details line-minimap) makes lines respond to cursor distance. Hover shows a tooltip preview of the user's message; click scrolls to the turn.
 
 ## Decisions

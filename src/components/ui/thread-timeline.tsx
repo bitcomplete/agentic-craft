@@ -1,52 +1,17 @@
 "use client"
 
 import * as React from "react"
-import {
-  motion,
-  useMotionValue,
-  useSpring,
-  useTransform,
-  useMotionValueEvent,
-} from "motion/react"
+import { motion, LayoutGroup, animate } from "motion/react"
 import { cn } from "@/lib/utils"
-import {
-  transformScale,
-  DISTANCE_LIMIT,
-  PROXIMITY_SPRING,
-  usePrefersReducedMotion,
-} from "@/hooks/use-proximity"
-
-/* ── Helpers ── */
-
-function clamp(val: number, min: number, max: number): number {
-  return Math.min(Math.max(val, min), max)
-}
-
-function getLineHeight(text: string): number {
-  return clamp(Math.round(text.length * 0.4), 16, 48)
-}
-
-function getChildrenText(children: React.ReactNode): string {
-  if (typeof children === "string") return children
-  if (typeof children === "number") return String(children)
-  if (Array.isArray(children)) return children.map(getChildrenText).join("")
-  if (React.isValidElement<{ children?: React.ReactNode }>(children) && children.props.children) {
-    return getChildrenText(children.props.children)
-  }
-  return ""
-}
-
-/* ── Turn index context (must be defined before ThreadTimelineLine) ── */
-
-const TurnIndexCtx = React.createContext<number | null>(null)
+import { HugeiconsIcon } from "@hugeicons/react"
+import { Clock01Icon } from "@hugeicons/core-free-icons"
 
 /* ── Context ── */
 
 interface ThreadTimelineContextValue {
+  open: boolean
+  selectedId: string | null
   onLineClick: ((turnId: string) => void) | undefined
-  cursorY: ReturnType<typeof useMotionValue<number>>
-  closestTurnId: string | null
-  setClosestTurnId: (id: string | null) => void
 }
 
 const ThreadTimelineCtx =
@@ -61,120 +26,131 @@ function useThreadTimeline(): ThreadTimelineContextValue {
   return ctx
 }
 
-/* ── ThreadTimeline (root, internal) ── */
+/* ── ThreadTimeline ── */
 
-function ThreadTimelineInner({
+function ThreadTimeline({
   threshold = 6,
   visible: visibleProp,
   onVisibleChange,
   onLineClick,
+  scrollContainerRef,
   className,
   children,
-  ...props
-}: React.ComponentProps<"nav"> & {
+}: {
   threshold?: number
   visible?: boolean
   onVisibleChange?: (visible: boolean) => void
   onLineClick?: (turnId: string) => void
+  scrollContainerRef?: React.RefObject<HTMLElement | null>
+  className?: string
+  children: React.ReactNode
 }) {
-  const items = React.Children.toArray(children)
-  const count = items.length
+  const allChildren = React.Children.toArray(children)
+  const lines = allChildren.filter(
+    (child): child is React.ReactElement =>
+      React.isValidElement(child) && child.type === ThreadTimelineLine,
+  )
+  const rest = allChildren.filter(
+    (child) =>
+      !(React.isValidElement(child) && child.type === ThreadTimelineLine),
+  )
+  const count = lines.length
 
-  /* Visibility: controlled or uncontrolled */
+  /* Trigger visibility */
   const [_visible, _setVisible] = React.useState(false)
   const isVisible = visibleProp ?? _visible
-  const [hasEntered, setHasEntered] = React.useState(false)
-  const prefersReducedMotion = usePrefersReducedMotion()
 
   const onVisibleChangeRef = React.useRef(onVisibleChange)
   onVisibleChangeRef.current = onVisibleChange
 
   React.useEffect(() => {
-    if (visibleProp !== undefined) return // controlled mode
-    const shouldShow = count >= threshold
-    if (shouldShow && !_visible) {
+    if (visibleProp !== undefined) return
+    if (count >= threshold && !_visible) {
       _setVisible(true)
       onVisibleChangeRef.current?.(true)
     }
   }, [count, threshold, visibleProp, _visible])
 
-  React.useEffect(() => {
-    if (isVisible && !hasEntered) {
-      if (prefersReducedMotion.current) {
-        setHasEntered(true)
-      } else {
-        requestAnimationFrame(() => setHasEntered(true))
+  /* Panel state */
+  const [open, setOpen] = React.useState(false)
+  const [selectedId, setSelectedId] = React.useState<string | null>(null)
+
+  const handleLineClick = React.useCallback(
+    (turnId: string) => {
+      setSelectedId(turnId)
+      setOpen(false)
+
+      // Animated scroll to the target message
+      if (scrollContainerRef?.current) {
+        const el = scrollContainerRef.current.querySelector(`[data-turn-id="${turnId}"]`) as HTMLElement | null
+        if (el) {
+          const container = scrollContainerRef.current
+          const targetScrollTop = el.offsetTop - (container.clientHeight / 2) + (el.clientHeight / 2)
+          const maxScroll = container.scrollHeight - container.clientHeight
+          const clamped = Math.max(0, Math.min(targetScrollTop, maxScroll))
+
+          animate(container.scrollTop, clamped, {
+            type: "spring",
+            bounce: 0,
+            duration: 0.6,
+            onUpdate: (value) => {
+              container.scrollTop = value
+            },
+          })
+        }
       }
-    }
-  }, [isVisible, hasEntered, prefersReducedMotion])
 
-  /* Proximity cursor tracking */
-  const cursorY = useMotionValue(0)
-  const [closestTurnId, setClosestTurnId] = React.useState<string | null>(null)
+      onLineClick?.(turnId)
 
-  const handlePointerMove = React.useCallback(
-    (e: React.PointerEvent) => {
-      cursorY.set(e.clientY)
+      // Clear selection after animation completes
+      setTimeout(() => setSelectedId(null), 600)
     },
-    [cursorY],
+    [onLineClick, scrollContainerRef],
   )
 
-  const handlePointerLeave = React.useCallback(() => {
-    cursorY.set(0)
-    setClosestTurnId(null)
-  }, [cursorY])
-
-  const handleClick = React.useCallback(() => {
-    if (closestTurnId && onLineClick) {
-      onLineClick(closestTurnId)
-    }
-  }, [closestTurnId, onLineClick])
-
   const ctx = React.useMemo(
-    () => ({ onLineClick, cursorY, closestTurnId, setClosestTurnId }),
-    [onLineClick, cursorY, closestTurnId],
+    () => ({ open, selectedId, onLineClick: handleLineClick }),
+    [open, selectedId, handleLineClick],
   )
 
   if (!isVisible) return null
 
   return (
     <ThreadTimelineCtx.Provider value={ctx}>
-      <nav
-        data-slot="thread-timeline"
-        role="navigation"
-        aria-label="Thread timeline"
-        className={cn(
-          "flex w-8 flex-col items-center border-l border-border py-4 ease-out",
-          prefersReducedMotion.current
-            ? ""
-            : "transition-transform duration-200",
-          hasEntered ? "translate-x-0" : "translate-x-8",
-          className,
-        )}
-        onPointerMove={handlePointerMove}
-        onPointerLeave={handlePointerLeave}
-        onClick={handleClick}
-        style={{ gap: 4 }}
-        {...props}
-      >
-        {children}
-      </nav>
+      <LayoutGroup>
+        <div data-slot="thread-timeline" className={cn("contents", className)}>
+          {/* Trigger button */}
+          <motion.button
+            type="button"
+            data-slot="thread-timeline-trigger"
+            aria-label={open ? "Close thread navigation" : "Open thread navigation"}
+            aria-expanded={open}
+            onClick={() => setOpen(!open)}
+            whileTap={{ scale: 0.96 }}
+            className={cn(
+              "absolute top-4 right-4 z-50 flex size-10 items-center justify-center rounded-full border shadow-sm transition-colors",
+              open
+                ? "bg-foreground text-background border-foreground"
+                : "bg-background text-muted-foreground border-border hover:text-foreground hover:bg-muted/50",
+            )}
+          >
+            <HugeiconsIcon icon={Clock01Icon} size={16} strokeWidth={1.5} />
+          </motion.button>
+
+          {/* Minimap overlay -- cards positioned bottom-right, same as user's prototype */}
+          <div className="absolute bottom-0 right-8 flex flex-col items-end gap-2.5 z-40 pointer-events-none pb-32">
+            {open &&
+              lines.map((child) => (
+                <React.Fragment key={child.key}>
+                  {child}
+                </React.Fragment>
+              ))}
+          </div>
+
+          {rest}
+        </div>
+      </LayoutGroup>
     </ThreadTimelineCtx.Provider>
-  )
-}
-
-/* ── ThreadTimeline (public, wraps children with turn index) ── */
-
-function ThreadTimeline({
-  children,
-  ...props
-}: React.ComponentProps<typeof ThreadTimelineInner>) {
-  return (
-    <ThreadTimelineInner {...props}>
-      {React.Children.map(children, (child, i) => (
-        <TurnIndexCtx.Provider value={i + 1}>{child}</TurnIndexCtx.Provider>
-      ))}
-    </ThreadTimelineInner>
   )
 }
 
@@ -182,143 +158,74 @@ function ThreadTimeline({
 
 function ThreadTimelineLine({
   turnId,
-  timestamp,
-  active = false,
   className,
   children,
-  ...props
-}: React.ComponentProps<"div"> & {
+}: {
   turnId: string
   timestamp?: string
   active?: boolean
+  className?: string
+  children: React.ReactNode
 }) {
-  const { cursorY, closestTurnId, setClosestTurnId, onLineClick } =
-    useThreadTimeline()
-  const ref = React.useRef<HTMLDivElement>(null)
-  const tooltipId = React.useId()
-  const prefersReducedMotion = usePrefersReducedMotion()
+  const { open, selectedId, onLineClick } = useThreadTimeline()
 
-  /*
-   * Single proximity value drives both scaleX and opacity via useTransform.
-   * One getBoundingClientRect call per line per pointermove (not three).
-   * Adapted from the Devouring Details interpolation pattern.
-   */
-  const proximityRaw = useMotionValue(0)
-  const proximity = useSpring(proximityRaw, PROXIMITY_SPRING)
-  const scaleX = useTransform(proximity, [0, 1], [1, 2])
-  const opacity = useTransform(proximity, [0, 1], [0.25, 0.7])
-
-  useMotionValueEvent(cursorY, "change", (latest) => {
-    if (!ref.current) return
-    if (latest === 0) {
-      if (prefersReducedMotion.current) proximityRaw.jump(0)
-      else proximityRaw.set(0)
-      return
-    }
-    const rect = ref.current.getBoundingClientRect()
-    const centerY = rect.top + rect.height / 2
-    const distance = latest - centerY
-    const scaled = transformScale(distance, 0, 0, 1)
-    if (prefersReducedMotion.current) proximityRaw.jump(scaled)
-    else proximityRaw.set(scaled)
-
-    // Closest-line detection from the same getBoundingClientRect
-    if (Math.abs(distance) < DISTANCE_LIMIT / 2) {
-      setClosestTurnId(turnId)
-    }
-  })
-
-  const text = getChildrenText(children)
-  const lineHeight = getLineHeight(text)
-  const isClosest = closestTurnId === turnId
-  const turnIndex = React.useContext(TurnIndexCtx)
+  if (!open) return null
 
   return (
-    <div
-      ref={ref}
-      data-slot="thread-timeline-line"
-      className={cn("relative flex flex-col items-center", className)}
-      {...props}
-    >
-      {/* The line itself */}
-      <motion.div
-        role="button"
-        tabIndex={0}
-        aria-label={text}
-        aria-describedby={isClosest ? tooltipId : undefined}
-        className="cursor-pointer rounded-sm bg-muted-foreground"
-        style={{
-          width: 1.5,
-          height: lineHeight,
-          scaleX,
-          opacity,
-          transformOrigin: "center",
-        }}
-        onKeyDown={(e) => {
-          if ((e.key === "Enter" || e.key === " ") && onLineClick) {
-            e.preventDefault()
-            onLineClick(turnId)
-          }
-          if (e.key === "Escape") {
-            ;(e.currentTarget as HTMLElement).blur()
-          }
-          if (e.key === "ArrowDown") {
-            e.preventDefault()
-            const next = e.currentTarget.parentElement?.nextElementSibling
-            const btn = next?.querySelector<HTMLElement>("[role=button]")
-            btn?.focus()
-          }
-          if (e.key === "ArrowUp") {
-            e.preventDefault()
-            const prev = e.currentTarget.parentElement?.previousElementSibling
-            const btn = prev?.querySelector<HTMLElement>("[role=button]")
-            btn?.focus()
-          }
-        }}
-        onFocus={() => setClosestTurnId(turnId)}
-        onBlur={() => setClosestTurnId(null)}
-      />
-
-      {/* Active turn dot */}
-      {active && (
-        <div className="mt-1 size-1 rounded-full bg-muted-foreground/50" />
+    <motion.button
+      layoutId={`thread-timeline-${turnId}`}
+      data-slot="thread-timeline-card"
+      onClick={() => onLineClick?.(turnId)}
+      whileTap={{ scale: 0.96 }}
+      className={cn(
+        "pointer-events-auto text-[15px] py-2.5 px-5 rounded-full shadow whitespace-nowrap transition-colors",
+        selectedId === turnId
+          ? "bg-foreground text-background"
+          : "bg-muted text-foreground hover:bg-foreground hover:text-background",
+        className,
       )}
+      transition={{ type: "spring", bounce: 0, duration: 0.6 }}
+    >
+      {children}
+    </motion.button>
+  )
+}
 
-      {/* Expanded touch target (44x44 minimum) */}
-      <div
-        className="pointer-events-auto absolute"
-        style={{
-          width: 44,
-          height: 44,
-          left: "50%",
-          top: "50%",
-          transform: "translate(-50%, -50%)",
-        }}
-        aria-hidden="true"
-      />
+/* ── ThreadTimelineMessage -- wraps user messages in the chat with shared layoutId ── */
 
-      {/* Tooltip */}
-      {isClosest && (
-        <div
-          id={tooltipId}
-          role="tooltip"
-          data-slot="thread-timeline-tooltip"
-          className="pointer-events-none absolute right-full mr-2 z-50 max-w-[260px] rounded-lg border border-border bg-popover py-2.5 px-3 animate-in fade-in duration-[120ms]"
-          style={{
-            top: "50%",
-            transform: "translateY(-50%)",
-            boxShadow: "var(--thread-timeline-tooltip-shadow)",
-          }}
+function ThreadTimelineMessage({
+  turnId,
+  className,
+  children,
+}: {
+  turnId: string
+  className?: string
+  children: React.ReactNode
+}) {
+  const { open, selectedId } = useThreadTimeline()
+
+  return (
+    <div className="relative flex justify-end w-full" data-turn-id={turnId}>
+      {/* Invisible placeholder to maintain layout when message morphs to minimap */}
+      <div className="py-2.5 px-5 opacity-0 pointer-events-none whitespace-nowrap text-sm">
+        {children}
+      </div>
+
+      {/* Actual animated message -- hidden when minimap is open (it morphs to the overlay) */}
+      {!open && (
+        <motion.div
+          layoutId={`thread-timeline-${turnId}`}
+          className={cn(
+            "absolute top-0 right-0 text-sm py-2.5 px-5 rounded-full z-10 whitespace-nowrap transition-colors duration-500",
+            selectedId === turnId
+              ? "bg-foreground text-background"
+              : "bg-primary text-primary-foreground",
+            className,
+          )}
+          transition={{ type: "spring", bounce: 0, duration: 0.6 }}
         >
-          <div className="text-[10px] text-muted-foreground/60 mb-1">
-            {turnIndex !== null && <>Turn {turnIndex}</>}
-            {turnIndex !== null && timestamp && <> &middot; </>}
-            {timestamp}
-          </div>
-          <div className="text-[13px] text-foreground leading-snug line-clamp-3">
-            {children}
-          </div>
-        </div>
+          {children}
+        </motion.div>
       )}
     </div>
   )
@@ -327,5 +234,6 @@ function ThreadTimelineLine({
 export {
   ThreadTimeline,
   ThreadTimelineLine,
+  ThreadTimelineMessage,
   useThreadTimeline,
 }

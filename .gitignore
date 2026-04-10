@@ -29,3 +29,21 @@ dist-backup
 .next/
 next-env.d.ts
 tsconfig.tsbuildinfo
+
+# Personal agent/local state
+/.claude/
+/.agents/
+/.history/
+/.superpowers/
+/.agent-state/
+/.hermes/plans/
+/local-artifacts/
+
+# Personal downloads / loose local artifacts at repo root
+/*.dmg
+/*.zip
+/*.pdf
+/*.PDF
+
+# Local playgrounds / imported experiments
+/minimapanimation/

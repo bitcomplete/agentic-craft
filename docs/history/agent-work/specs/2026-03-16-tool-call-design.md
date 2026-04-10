@@ -1,5 +1,8 @@
 # ToolCall Component Design
 
+> Status: Historical archived design reference.
+> This document is preserved for design archaeology and should not override the current implementation.
+
 ## Context
 
 The agentic-craft library needs a universal `ToolCall` component -- the atomic unit for representing a single tool/function call in an agentic interface. It must work both standalone (sequential tool calls) and inside `ToolTree` (parallel execution). Currently, ToolTree has its own item primitives (`ToolTreeItem`, `ToolTreeItemTrigger`, `ToolTreeItemContent`) that duplicate what ToolCall should be. This spec unifies them.

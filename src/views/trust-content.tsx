@@ -78,60 +78,60 @@ function ensureStyles() {
 const AUDIT_ENTRIES = [
   {
     time: "14:02:11",
-    action: "Opened Security Target v3.1",
+    action: "Opened checkout launch brief",
     user: "Agent",
-    outcome: "Loaded 47 SFR definitions",
-    evidence: "ST-SmartCard-v3.1.pdf",
+    outcome: "Loaded 14 acceptance criteria",
+    evidence: "checkout-launch-brief.md",
   },
   {
     time: "14:02:14",
-    action: "Cross-referenced FCS_COP.1 test results",
+    action: "Cross-referenced mobile checkout screenshots",
     user: "Agent",
-    outcome: "3 of 4 test cases passed",
-    evidence: "Test Report TR-2026-003, §4.2",
+    outcome: "2 of 3 key states matched the latest design",
+    evidence: "checkout-redesign.fig, frame 18",
   },
   {
     time: "14:02:18",
-    action: "Flagged FCS_COP.1.1 for evaluator review",
+    action: "Flagged mobile summary mismatch for review",
     user: "Agent",
-    outcome: "Added to OR agenda item #7",
-    evidence: "OR-Agenda-2026-03.docx",
+    outcome: "Added to launch blockers",
+    evidence: "launch-review-2026-04.md, blocker #2",
   },
   {
     time: "14:02:22",
-    action: "Evaluator approved finding classification",
-    user: "M. Laurent (ITSEF)",
-    outcome: "Finding confirmed as minor",
-    evidence: "ETR-2026-v2.pdf, §6.1",
+    action: "Product lead approved blocker classification",
+    user: "A. Chen (product)",
+    outcome: "Issue confirmed as release blocker",
+    evidence: "launch-thread-2026-04, reply #14",
   },
 ]
 
 const PROVENANCE_SOURCES = [
   {
-    document: "Security Target v3.1",
-    section: "§5.1 — SFR Definitions",
+    document: "Checkout launch brief",
+    section: "Acceptance criteria — Mobile summary",
     confidence: 0.94,
     type: "Primary",
   },
   {
-    document: "CEM v3.1 Supplement",
-    section: "§12.4 — Evaluator Actions",
+    document: "Figma handoff",
+    section: "Frame 18 — Mobile summary state",
     confidence: 0.87,
-    type: "Guidance",
+    type: "Design",
   },
   {
-    document: "Previous ETR (2025-08)",
-    section: "§6 — Findings Summary",
+    document: "Previous release retro",
+    section: "Launch blockers summary",
     confidence: 0.71,
     type: "Reference",
   },
 ]
 
 const PROVENANCE_CHAIN = [
-  { step: "Source", label: "ST v3.1, §5.1", detail: "FCS_COP.1 specifies AES-256-CBC for data encryption" },
-  { step: "Extracted", label: "Requirement", detail: "TOE must implement AES-256-CBC per FIPS 197" },
-  { step: "Inference", label: "Gap analysis", detail: "Test case TC-047 covers AES-256 but not CBC mode specifically" },
-  { step: "Conclusion", label: "Finding", detail: "Partial coverage — recommend additional test for CBC mode validation" },
+  { step: "Source", label: "Launch brief", detail: "Mobile checkout must use the sticky total card below 768px" },
+  { step: "Extracted", label: "Requirement", detail: "The production implementation should match the approved mobile summary layout" },
+  { step: "Inference", label: "Gap analysis", detail: "Current PR still renders the older stacked summary pattern on mobile" },
+  { step: "Conclusion", label: "Finding", detail: "Release blocker — update the mobile summary before wider rollout" },
 ]
 
 const COST_BREAKDOWN = {
@@ -148,32 +148,32 @@ const AUTONOMY_LEVELS = [
   {
     level: 2,
     name: "Human-in-Command",
-    description: "AI drafts outputs and proposes actions; human approves every one before execution.",
+    description: "AI drafts outputs and proposes actions; a human approves every external or high-stakes step.",
     uiPattern: "Approval modal",
     capabilities: [
-      "Draft evaluation findings for review",
-      "Propose SFR-to-test-case mappings",
-      "Suggest evidence requests to developer",
+      "Draft launch summaries for review",
+      "Propose requirement-to-artifact mappings",
+      "Suggest follow-ups for engineering or design",
     ],
     restrictions: [
-      "Cannot send emails without approval",
-      "Cannot modify evaluation records",
-      "Cannot create or close findings",
+      "Cannot send updates without approval",
+      "Cannot change rollout settings",
+      "Cannot close blockers on its own",
     ],
   },
   {
     level: 3,
     name: "Human-Delegated",
-    description: "AI handles routine tasks autonomously; human reviews only flagged exceptions.",
+    description: "AI handles routine review tasks autonomously; humans review only flagged exceptions.",
     uiPattern: "Inbox of flagged items",
     capabilities: [
-      "Automatically cross-reference SFR coverage",
+      "Automatically compare launch artifacts",
       "Generate routine status reports",
-      "Send pre-approved notification templates",
+      "Send pre-approved handoff templates",
     ],
     restrictions: [
-      "Flags novel findings for human review",
-      "Cannot submit evidence packages to lab",
+      "Flags novel blockers for human review",
+      "Cannot trigger a production rollout",
       "Escalates if confidence drops below 70%",
     ],
   },
@@ -183,80 +183,80 @@ const AUTONOMY_LEVELS = [
     description: "AI executes freely but escalates when confidence drops below a set threshold.",
     uiPattern: "Confidence slider",
     capabilities: [
-      "Execute full evaluation workflows end-to-end",
-      "Send emails and create findings autonomously",
-      "Update Security Target revision history",
+      "Execute end-to-end launch review workflows",
+      "Send updates and create blockers autonomously",
+      "Update release notes and audit trails",
     ],
     restrictions: [
       "Escalates on confidence below threshold",
-      "Cannot approve final ETR submission",
+      "Cannot approve the final launch decision",
       "Human monitors via activity dashboard",
     ],
   },
 ]
 
 const MODE_CONFIGS = {
-  compliance: {
-    label: "Compliance",
-    focus: "Ensuring all evaluation evidence meets CEM requirements and PP conformance claims.",
+  design: {
+    label: "Design",
+    focus: "Checking interaction quality, design fidelity, and consistency across screens and states.",
     tools: [
-      "Evidence completeness checker",
-      "SFR coverage matrix generator",
-      "PP conformance validator",
-      "ALC lifecycle document scanner",
+      "Design diff reviewer",
+      "Screenshot comparison",
+      "Component consistency checker",
+      "Handoff artifact scanner",
     ],
   },
-  research: {
-    label: "Research",
-    focus: "Investigating technical aspects of the TOE, analyzing vulnerability reports, and reviewing cryptographic implementations.",
+  implementation: {
+    label: "Implementation",
+    focus: "Reviewing PRs, rollout logic, instrumentation, and implementation constraints.",
     tools: [
-      "Vulnerability database search",
-      "Cryptographic algorithm verifier",
+      "Diff reviewer",
+      "Analytics verifier",
       "Technical document analyzer",
-      "CAVP certificate lookup",
+      "Release checklist scanner",
     ],
   },
-  review: {
-    label: "Review",
-    focus: "Reviewing evaluation deliverables, checking consistency across documents, and preparing for lab audits.",
+  launch: {
+    label: "Launch",
+    focus: "Reviewing launch readiness, blockers, rollback confidence, and communication artifacts.",
     tools: [
-      "Cross-document consistency checker",
-      "ETR section reviewer",
-      "Finding classification advisor",
-      "Audit preparation checklist",
+      "Launch summary generator",
+      "Blocker classifier",
+      "Rollback readiness checker",
+      "Handoff checklist",
     ],
   },
 }
 
 const SCOPE_CONFIGS = {
-  device: {
-    label: "Device Only",
-    scope: "ACME SmartCard Module v3.1",
+  designOnly: {
+    label: "Design Only",
+    scope: "Checkout redesign",
     documents: [
-      { name: "Security Target v3.1", section: "Full document" },
-      { name: "Test Report TR-2026-003", section: "Device-specific tests" },
+      { name: "Figma handoff", section: "Latest approved frames" },
+      { name: "Design notes", section: "Mobile checkout states" },
     ],
   },
-  devicePP: {
-    label: "Device + PP",
-    scope: "ACME SmartCard + PP-CIMC-SLv3",
+  repoDesign: {
+    label: "Repo + Design",
+    scope: "Checkout release",
     documents: [
-      { name: "Security Target v3.1", section: "Full document" },
-      { name: "Test Report TR-2026-003", section: "All test results" },
-      { name: "PP-CIMC-SLv3", section: "SFR requirements" },
-      { name: "PP Evaluation Report", section: "Conformance claims" },
+      { name: "Launch brief", section: "Full document" },
+      { name: "Checkout PR", section: "Current diff" },
+      { name: "Figma handoff", section: "Relevant frames" },
+      { name: "QA report", section: "Smoke + regression results" },
     ],
   },
   global: {
-    label: "Global",
-    scope: "All evaluation artifacts",
+    label: "Full Launch Bundle",
+    scope: "All release artifacts",
     documents: [
-      { name: "Security Target v3.1", section: "Full document" },
-      { name: "Test Report TR-2026-003", section: "All test results" },
-      { name: "PP-CIMC-SLv3", section: "Full document" },
-      { name: "Previous ETR (2025-08)", section: "Findings and conclusions" },
-      { name: "CEM v3.1 Supplement", section: "Evaluator actions" },
-      { name: "Vulnerability Analysis Report", section: "AVA_VAN results" },
+      { name: "Launch brief", section: "Full document" },
+      { name: "Checkout PR", section: "Current diff" },
+      { name: "Figma handoff", section: "Relevant frames" },
+      { name: "QA report", section: "All results" },
+      { name: "Analytics plan", section: "Tracked events" },
+      { name: "Previous launch retro", section: "Blockers and learnings" },
     ],
   },
 }
@@ -324,11 +324,11 @@ export function TrustContent() {
   const [autoAnimKey, setAutoAnimKey] = useState(0)
 
   /* — Mode Toggles — */
-  const [modeCtrl, setModeCtrl] = useState<Record<string, boolean>>({ compliance: true, research: false, review: false })
+  const [modeCtrl, setModeCtrl] = useState<Record<string, boolean>>({ design: true, implementation: false, launch: false })
   const [modeAnimKey, setModeAnimKey] = useState(0)
 
   /* — Context Scope — */
-  const [scopeCtrl, setScopeCtrl] = useState<Record<string, boolean>>({ device: true, devicePP: false, global: false })
+  const [scopeCtrl, setScopeCtrl] = useState<Record<string, boolean>>({ designOnly: true, repoDesign: false, global: false })
   const [scopeAnimKey, setScopeAnimKey] = useState(0)
 
   /* — Consent Flow — */
@@ -375,10 +375,10 @@ export function TrustContent() {
   const activeLevel = autoCtrl.level2 ? AUTONOMY_LEVELS[0] : autoCtrl.level3 ? AUTONOMY_LEVELS[1] : AUTONOMY_LEVELS[2]
 
   /* Resolve active mode */
-  const activeMode = modeCtrl.compliance ? MODE_CONFIGS.compliance : modeCtrl.research ? MODE_CONFIGS.research : MODE_CONFIGS.review
+  const activeMode = modeCtrl.design ? MODE_CONFIGS.design : modeCtrl.implementation ? MODE_CONFIGS.implementation : MODE_CONFIGS.launch
 
   /* Resolve active scope */
-  const activeScope = scopeCtrl.device ? SCOPE_CONFIGS.device : scopeCtrl.devicePP ? SCOPE_CONFIGS.devicePP : SCOPE_CONFIGS.global
+  const activeScope = scopeCtrl.designOnly ? SCOPE_CONFIGS.designOnly : scopeCtrl.repoDesign ? SCOPE_CONFIGS.repoDesign : SCOPE_CONFIGS.global
 
   return (
     <article>
@@ -536,9 +536,9 @@ export function TrustContent() {
         <div className="mt-8">
           <Controls
             options={[
-              { key: "compliance", label: "Compliance" },
-              { key: "research", label: "Research" },
-              { key: "review", label: "Review" },
+              { key: "design", label: "Design" },
+              { key: "implementation", label: "Implementation" },
+              { key: "launch", label: "Launch" },
             ]}
             active={modeCtrl}
             onToggle={makeToggle(setModeCtrl, setModeAnimKey)}
@@ -551,7 +551,7 @@ export function TrustContent() {
                 <div className="flex items-center gap-3">
                   <div className="flex h-8 w-8 items-center justify-center rounded-md bg-muted">
                     <HugeiconsIcon
-                      icon={modeCtrl.compliance ? Shield01Icon : modeCtrl.research ? Search01Icon : Target01Icon}
+                      icon={modeCtrl.design ? Shield01Icon : modeCtrl.implementation ? Search01Icon : Target01Icon}
                       size={14}
                       strokeWidth={1.5}
                       className="text-muted-foreground"
@@ -590,7 +590,7 @@ export function TrustContent() {
                 <div className="pt-2">
                   <p className="text-xs text-muted-foreground mb-2">Switch mode</p>
                   <div className="inline-flex rounded-md border border-border bg-muted/30 p-0.5">
-                    {(["compliance", "research", "review"] as const).map((m) => (
+                    {(["design", "implementation", "launch"] as const).map((m) => (
                       <button
                         key={m}
                         onClick={() => makeToggle(setModeCtrl, setModeAnimKey)(m)}
@@ -622,19 +622,19 @@ export function TrustContent() {
             </thead>
             <tbody className="text-muted-foreground">
               <tr className="border-b border-border/50">
-                <td className="py-2.5 pr-4 font-medium text-foreground">Compliance</td>
-                <td className="py-2.5 pr-4">Evidence and PP conformance</td>
-                <td className="py-2.5">4 compliance-specific tools</td>
+                <td className="py-2.5 pr-4 font-medium text-foreground">Design</td>
+                <td className="py-2.5 pr-4">Interaction quality and design fidelity</td>
+                <td className="py-2.5">4 design-specific tools</td>
               </tr>
               <tr className="border-b border-border/50">
-                <td className="py-2.5 pr-4 font-medium text-foreground">Research</td>
-                <td className="py-2.5 pr-4">Technical investigation</td>
-                <td className="py-2.5">4 research-specific tools</td>
+                <td className="py-2.5 pr-4 font-medium text-foreground">Implementation</td>
+                <td className="py-2.5 pr-4">PR, instrumentation, and rollout logic review</td>
+                <td className="py-2.5">4 implementation-specific tools</td>
               </tr>
               <tr>
-                <td className="py-2.5 pr-4 font-medium text-foreground">Review</td>
-                <td className="py-2.5 pr-4">Deliverable review and audit prep</td>
-                <td className="py-2.5">4 review-specific tools</td>
+                <td className="py-2.5 pr-4 font-medium text-foreground">Launch</td>
+                <td className="py-2.5 pr-4">Launch readiness, blockers, and handoff review</td>
+                <td className="py-2.5">4 launch-specific tools</td>
               </tr>
             </tbody>
           </table>
@@ -662,9 +662,9 @@ export function TrustContent() {
         <div className="mt-8">
           <Controls
             options={[
-              { key: "device", label: "Device Only" },
-              { key: "devicePP", label: "Device + PP" },
-              { key: "global", label: "Global" },
+              { key: "designOnly", label: "Design Only" },
+              { key: "repoDesign", label: "Repo + Design" },
+              { key: "global", label: "Full Launch Bundle" },
             ]}
             active={scopeCtrl}
             onToggle={makeToggle(setScopeCtrl, setScopeAnimKey)}
@@ -710,12 +710,12 @@ export function TrustContent() {
                     {activeScope.documents.length} document{activeScope.documents.length !== 1 ? "s" : ""} in scope
                   </span>
                   <div className="flex items-center gap-1 ml-auto">
-                    {["device", "devicePP", "global"].map((s) => (
+                    {["designOnly", "repoDesign", "global"].map((s) => (
                       <div
                         key={s}
                         className={`h-1.5 w-4 rounded-md transition-colors ${
-                          (s === "device") ||
-                          (s === "devicePP" && (scopeCtrl.devicePP || scopeCtrl.global)) ||
+                          (s === "designOnly") ||
+                          (s === "repoDesign" && (scopeCtrl.repoDesign || scopeCtrl.global)) ||
                           (s === "global" && scopeCtrl.global)
                             ? "bg-foreground/20"
                             : "bg-muted"
@@ -741,14 +741,14 @@ export function TrustContent() {
             </thead>
             <tbody className="text-muted-foreground">
               <tr className="border-b border-border/50">
-                <td className="py-2.5 pr-4 font-medium text-foreground">Device Only</td>
+                <td className="py-2.5 pr-4 font-medium text-foreground">Design Only</td>
                 <td className="py-2.5 pr-4">2 documents</td>
-                <td className="py-2.5">Focused work on a single TOE</td>
+                <td className="py-2.5">Focused work on a single design surface</td>
               </tr>
               <tr className="border-b border-border/50">
-                <td className="py-2.5 pr-4 font-medium text-foreground">Device + PP</td>
+                <td className="py-2.5 pr-4 font-medium text-foreground">Repo + Design</td>
                 <td className="py-2.5 pr-4">4 documents</td>
-                <td className="py-2.5">Evaluating PP conformance claims</td>
+                <td className="py-2.5">Comparing implementation against design and launch requirements</td>
               </tr>
               <tr>
                 <td className="py-2.5 pr-4 font-medium text-foreground">Global</td>
@@ -970,7 +970,7 @@ export function TrustContent() {
                   <div className="flex items-center gap-2 mt-3">
                     <HugeiconsIcon icon={File01Icon} size={12} strokeWidth={1.5} className="text-muted-foreground" />
                     <span className="text-xs text-muted-foreground">
-                      Source: Security Target v3.1, §5.1.1
+                      Source: Checkout launch brief, acceptance criteria
                     </span>
                   </div>
                 </div>

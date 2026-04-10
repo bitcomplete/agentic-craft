@@ -1,6 +1,8 @@
 "use client"
 
 import * as React from "react"
+
+import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { useComposer } from "./composer"
 
@@ -35,23 +37,22 @@ export function ComposerSuggestions({
     <div
       data-slot="composer-suggestions"
       className={cn(
-        "animate-composer-slide mt-3 flex flex-wrap justify-center gap-1.5",
+        "animate-composer-slide mt-3 flex flex-wrap justify-center gap-2",
         className,
       )}
       {...props}
     >
       {items.map((s) => (
-        <button
+        <Button
           key={s}
           type="button"
+          variant="outline"
+          size="xs"
           onClick={() => handleClick(s)}
-          className={cn(
-            "rounded-md border border-border/60 px-2.5 py-1 text-xs text-muted-foreground transition-all duration-200 hover:border-border hover:bg-muted/40 hover:text-foreground",
-            flashChip === s ? "animate-composer-chip" : "",
-          )}
+          className={cn(flashChip === s ? "animate-composer-chip" : "")}
         >
           {s}
-        </button>
+        </Button>
       ))}
     </div>
   )

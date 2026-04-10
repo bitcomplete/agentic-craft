@@ -1,5 +1,9 @@
 # Vite to Next.js Migration Plan
 
+> Status: Historical archived plan. Preserved from an earlier implementation session.
+> Do not use this file as the current task list or repo workflow guide.
+> Current onboarding starts at `AGENTS.md`, `docs/agent/README.md`, and `INTERACTIVE_SPEC.md`.
+
 > **For agentic workers:** REQUIRED: Use superpowers:subagent-driven-development (if subagents available) or superpowers:executing-plans to implement this plan. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Migrate the Agentic Design System from Vite 7.2.4 SPA to Next.js 16 App Router with SSR, SEO, and React Server Components.
@@ -8,7 +12,7 @@
 
 **Tech Stack:** Next.js 16, React 19, TypeScript 5.9, Tailwind CSS 4 (PostCSS), shadcn base-nova, @base-ui/react, HugeIcons
 
-**Spec:** `docs/superpowers/specs/2026-03-15-vite-to-nextjs-migration-design.md`
+**Spec:** `docs/history/agent-work/specs/2026-03-15-vite-to-nextjs-migration-design.md`
 
 ---
 

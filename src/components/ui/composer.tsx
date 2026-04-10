@@ -1,8 +1,10 @@
 "use client"
 
 import * as React from "react"
-import { cn } from "@/lib/utils"
 import type { IconSvgElement } from "@hugeicons/react"
+
+import { Card } from "@/components/ui/card"
+import { cn } from "@/lib/utils"
 
 /* ── Types ── */
 
@@ -29,8 +31,6 @@ export interface ComposerScopeItem {
 interface ComposerContextValue {
   value: string
   onValueChange: (value: string) => void
-  isFocused: boolean
-  setIsFocused: (focused: boolean) => void
   isSending: boolean
   send: () => void
   disabled: boolean
@@ -75,7 +75,6 @@ export function Composer({
     [onValueChangeProp],
   )
 
-  const [isFocused, setIsFocused] = React.useState(false)
   const [isSending, setIsSending] = React.useState(false)
   const textareaRef = React.useRef<HTMLTextAreaElement | null>(null)
 
@@ -96,14 +95,12 @@ export function Composer({
     () => ({
       value,
       onValueChange,
-      isFocused,
-      setIsFocused,
       isSending,
       send,
       disabled,
       textareaRef,
     }),
-    [value, onValueChange, isFocused, isSending, send, disabled],
+    [value, onValueChange, isSending, send, disabled],
   )
 
   return (
@@ -132,7 +129,13 @@ export function ComposerIslands({
   return (
     <div
       data-slot="composer-islands"
-      className={cn("flex w-full flex-col items-center", className)}
+      className={cn(
+        "flex w-full flex-col items-center",
+        "[&>[data-slot=composer-island-wrapper]]:w-[95%]",
+        "[&>[data-slot=composer-island-wrapper]_[data-slot=composer-island]]:rounded-b-none",
+        "[&>[data-slot=composer-island-wrapper]:not(:first-child)_[data-slot=composer-island]]:rounded-t-none",
+        className,
+      )}
       {...props}
     >
       {children}
@@ -146,23 +149,16 @@ export function ComposerCard({
   className,
   children,
   ...props
-}: React.ComponentProps<"div">) {
-  const { isFocused } = useComposer()
-
+}: React.ComponentProps<typeof Card>) {
   return (
-    <div
+    <Card
       data-slot="composer-card"
-      className={cn(
-        "relative z-1 w-full rounded-xl border bg-background transition-shadow duration-300 ease-out",
-        isFocused
-          ? "border-foreground/15 shadow-[0_0_0_1px_rgba(0,0,0,0.03),0_2px_12px_rgba(0,0,0,0.06),0_8px_32px_rgba(0,0,0,0.04)]"
-          : "border-border shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_16px_rgba(0,0,0,0.03)]",
-        className,
-      )}
+      size="sm"
+      className={cn("relative z-1 w-full gap-0 py-0", className)}
       {...props}
     >
       {children}
-    </div>
+    </Card>
   )
 }
 

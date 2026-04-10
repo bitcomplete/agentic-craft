@@ -1,21 +1,47 @@
-# React + TypeScript + Vite + shadcn/ui
+# Agentic Craft
 
-This is a template for a new Vite project with React, TypeScript, and shadcn/ui.
+HAX-informed reference for agentic UX patterns and interaction models.
 
-## Adding components
+This repo is a Next.js 16 + React 19 app focused on how complex human-AI interface patterns are represented, composed, and explained. It is not a design system or a primitive component library. shadcn/ui provides the substrate; Agentic Craft focuses on the higher-order patterns built on top of it: composer surfaces, tool calls, workflow steps, memory controls, trust patterns, multi-agent flows, observability, and related interaction models.
 
-To add components to your app, run the following command:
+## Quick start
 
 ```bash
-npx shadcn@latest add button
+pnpm install
+pnpm dev
 ```
 
-This will place the ui components in the `src/components` directory.
+Useful commands:
 
-## Using components
-
-To use the components in your app, import them as follows:
-
-```tsx
-import { Button } from "@/components/ui/button"
+```bash
+pnpm typecheck
+pnpm build
+pnpm registry:build
 ```
+
+## Project guidance
+
+For agents and automation:
+- Start with `AGENTS.md`
+- Then read `docs/agent/README.md`
+- Follow `INTERACTIVE_SPEC.md` for cross-page interaction and design rules
+
+## Truth hierarchy
+
+- Implemented code is the source of truth for current behavior
+- `INTERACTIVE_SPEC.md` is the source of truth for cross-page interaction conventions
+- `AGENTS.md` and `docs/agent/README.md` define the personal harness workflow
+- `docs/history/agent-work/` is historical context only, not active instruction
+
+## Personal/local directories
+
+The repo is optimized for personal day-to-day agent work. These paths are local-only and non-canonical:
+
+- `.claude/`
+- `.agents/`
+- `.history/`
+- `.superpowers/`
+- `.agent-state/`
+- `.hermes/plans/`
+
+Use `.agent-state/` for active scratch notes instead of committing live task state into the repo.
