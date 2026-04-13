@@ -16,25 +16,52 @@ import { Card } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import type { ComposerScopeItem, ComposerTask } from "./composer"
 
+type IslandProps = Omit<React.ComponentProps<typeof Card>, "className"> & {
+  className?: string
+  wrapperClassName?: string
+}
+
 function Island({
   className,
+  wrapperClassName,
   children,
   ...props
-}: React.ComponentProps<typeof Card>) {
+}: IslandProps) {
   return (
     <div
       data-slot="composer-island-wrapper"
-      className={cn("animate-composer-island", className)}
+      className={cn("animate-composer-island", wrapperClassName)}
       style={{ zIndex: 0 }}
     >
       <Card
         data-slot="composer-island"
-        size="sm"
-        className="gap-0 py-0"
+        className={cn(
+          "gap-0 rounded-[calc(var(--composer-shell-radius)-var(--composer-shell-inset))] py-0",
+          className
+        )}
         {...props}
       >
         {children}
       </Card>
+    </div>
+  )
+}
+
+function IslandContent({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="composer-island-content"
+      className={cn(
+        "[padding-inline:var(--composer-shell-inset)] py-2",
+        className
+      )}
+      {...props}
+    >
+      {children}
     </div>
   )
 }
@@ -52,37 +79,43 @@ export function ComposerScope({
 }) {
   return (
     <Island className={className} {...props}>
-      <div className="flex items-center gap-2 px-4 py-3">
-        <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
-          {items.map((item) => (
-            <Badge key={item.id} variant="outline">
-              <HugeiconsIcon icon={item.icon} size={12} strokeWidth={1.5} />
-              <span className="max-w-[160px] truncate">{item.label}</span>
-              {onRemove && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-xs"
-                  onClick={() => onRemove(item.id)}
-                  className="size-4"
-                >
-                  <HugeiconsIcon icon={Cancel01Icon} size={10} strokeWidth={2} />
-                </Button>
-              )}
-            </Badge>
-          ))}
+      <IslandContent>
+        <div className="flex items-center gap-2">
+          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
+            {items.map((item) => (
+              <Badge key={item.id} variant="outline">
+                <HugeiconsIcon icon={item.icon} size={12} strokeWidth={1.5} />
+                <span className="truncate">{item.label}</span>
+                {onRemove && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon-xs"
+                    onClick={() => onRemove(item.id)}
+                    className="size-4"
+                  >
+                    <HugeiconsIcon
+                      icon={Cancel01Icon}
+                      size={10}
+                      strokeWidth={2}
+                    />
+                  </Button>
+                )}
+              </Badge>
+            ))}
+          </div>
+          {onDismiss && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-xs"
+              onClick={onDismiss}
+            >
+              <HugeiconsIcon icon={Cancel01Icon} size={14} strokeWidth={1.5} />
+            </Button>
+          )}
         </div>
-        {onDismiss && (
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-xs"
-            onClick={onDismiss}
-          >
-            <HugeiconsIcon icon={Cancel01Icon} size={14} strokeWidth={1.5} />
-          </Button>
-        )}
-      </div>
+      </IslandContent>
     </Island>
   )
 }
@@ -97,25 +130,27 @@ export function ComposerReply({
 }) {
   return (
     <Island className={className} {...props}>
-      <div className="flex items-center gap-3 px-4 py-3">
-        <Badge variant="outline">
-          <HugeiconsIcon icon={MailReply01Icon} size={12} strokeWidth={1.5} />
-          Reply
-        </Badge>
-        <span className="flex-1 truncate text-sm text-muted-foreground">
-          {children}
-        </span>
-        {onDismiss && (
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-xs"
-            onClick={onDismiss}
-          >
-            <HugeiconsIcon icon={Cancel01Icon} size={14} strokeWidth={1.5} />
-          </Button>
-        )}
-      </div>
+      <IslandContent>
+        <div className="flex items-center gap-3">
+          <Badge variant="outline">
+            <HugeiconsIcon icon={MailReply01Icon} size={12} strokeWidth={1.5} />
+            Reply
+          </Badge>
+          <span className="flex-1 truncate text-sm text-muted-foreground">
+            {children}
+          </span>
+          {onDismiss && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-xs"
+              onClick={onDismiss}
+            >
+              <HugeiconsIcon icon={Cancel01Icon} size={14} strokeWidth={1.5} />
+            </Button>
+          )}
+        </div>
+      </IslandContent>
     </Island>
   )
 }
@@ -134,7 +169,7 @@ export function ComposerPlan({
 
   return (
     <Island className={className} {...props}>
-      <div className="px-4 py-3">
+      <IslandContent>
         <div className="flex items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-2 text-sm text-muted-foreground">
             <Badge variant="outline">Plan</Badge>
@@ -166,13 +201,13 @@ export function ComposerPlan({
                 key={i}
                 className={cn(
                   "flex items-start gap-3 text-sm",
-                  task.dimmed ? "text-muted-foreground" : "text-foreground",
+                  task.dimmed ? "text-muted-foreground" : "text-foreground"
                 )}
               >
                 <span
                   className={cn(
                     "mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border",
-                    task.done ? "bg-primary text-primary-foreground" : "",
+                    task.done ? "bg-primary text-primary-foreground" : ""
                   )}
                 />
                 <span>
@@ -182,7 +217,7 @@ export function ComposerPlan({
             ))}
           </div>
         )}
-      </div>
+      </IslandContent>
     </Island>
   )
 }

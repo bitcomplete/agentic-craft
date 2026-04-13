@@ -1,32 +1,68 @@
 /* ── Composer Keyframes ── */
 
 @keyframes composer-send-press {
-  0% { transform: scale(1); }
-  40% { transform: scale(0.82); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(0.82);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 @keyframes composer-island-enter {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes composer-arrow-up {
-  0% { transform: translateY(0); opacity: 1; }
-  50% { transform: translateY(-6px); opacity: 0; }
-  51% { transform: translateY(6px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-6px);
+    opacity: 0;
+  }
+  51% {
+    transform: translateY(6px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes composer-chip-fill {
-  0% { background-color: transparent; }
-  30% { background-color: var(--color-muted); }
-  100% { background-color: transparent; }
+  0% {
+    background-color: transparent;
+  }
+  30% {
+    background-color: var(--color-muted);
+  }
+  100% {
+    background-color: transparent;
+  }
 }
 
 @keyframes composer-slide-in {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ── Utility classes ── */
@@ -51,11 +87,59 @@
   animation: composer-slide-in 0.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
+/* ── Composer Layout ── */
+
+[data-slot="composer-shell"] {
+  container-type: inline-size;
+  container-name: composer-shell;
+}
+
+[data-slot="composer-footer-start"] > * {
+  max-width: 100%;
+}
+
+@container composer-shell (max-width: 44rem) {
+  [data-slot="composer-footer"] {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  [data-slot="composer-footer-start"] {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  [data-slot="composer-footer-end"] {
+    width: max-content;
+    align-self: flex-end;
+  }
+}
+
+@container composer-shell (max-width: 36rem) {
+  [data-slot="composer-footer"] {
+    gap: 0.5rem;
+  }
+
+  [data-slot="composer-footer-start"] {
+    gap: 0.5rem;
+  }
+
+  [data-slot="composer-footer-end"] {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
 /* ── ToolCall ── */
 
 @keyframes tool-call-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
 }
 
 .animate-tool-call-pulse {
@@ -76,4 +160,3 @@
 .dark {
   --tool-tree-connector: oklch(0.23 0 0);
 }
-

@@ -16,11 +16,26 @@
       "registryDependencies": ["dropdown-menu"],
       "files": [
         { "path": "registry/base-nova/ui/composer.tsx", "type": "registry:ui" },
-        { "path": "registry/base-nova/ui/composer-input.tsx", "type": "registry:ui" },
-        { "path": "registry/base-nova/ui/composer-toolbar.tsx", "type": "registry:ui" },
-        { "path": "registry/base-nova/ui/composer-islands.tsx", "type": "registry:ui" },
-        { "path": "registry/base-nova/ui/composer-attachments.tsx", "type": "registry:ui" },
-        { "path": "registry/base-nova/ui/composer-suggestions.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/base-nova/ui/composer-input.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "registry/base-nova/ui/composer-toolbar.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "registry/base-nova/ui/composer-islands.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "registry/base-nova/ui/composer-attachments.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "registry/base-nova/ui/composer-suggestions.tsx",
+          "type": "registry:ui"
+        }
       ],
       "css": {
         "@keyframes composer-send-press": {
@@ -62,6 +77,39 @@
         "@utility animate-composer-slide": {
           "animation": "composer-slide-in 0.2s cubic-bezier(0.22, 1, 0.36, 1) forwards"
         },
+        "[data-slot=\"composer-shell\"]": {
+          "container-type": "inline-size",
+          "container-name": "composer-shell"
+        },
+        "[data-slot=\"composer-footer-start\"] > *": {
+          "max-width": "100%"
+        },
+        "@container composer-shell (max-width: 44rem)": {
+          "[data-slot=\"composer-footer\"]": {
+            "flex-direction": "column",
+            "align-items": "stretch"
+          },
+          "[data-slot=\"composer-footer-start\"]": {
+            "width": "100%",
+            "flex-wrap": "wrap"
+          },
+          "[data-slot=\"composer-footer-end\"]": {
+            "width": "max-content",
+            "align-self": "flex-end"
+          }
+        },
+        "@container composer-shell (max-width: 36rem)": {
+          "[data-slot=\"composer-footer\"]": {
+            "gap": "0.5rem"
+          },
+          "[data-slot=\"composer-footer-start\"]": {
+            "gap": "0.5rem"
+          },
+          "[data-slot=\"composer-footer-end\"]": {
+            "width": "100%",
+            "justify-content": "space-between"
+          }
+        },
         "[data-slot=\"tool-tree-item\"] [data-spine-mask]": {
           "display": "none"
         },
@@ -75,10 +123,7 @@
       "type": "registry:ui",
       "title": "Tool Call",
       "description": "Universal tool call component with running/completed/failed status states. Works standalone for sequential calls or inside ToolTree for parallel execution.",
-      "dependencies": [
-        "@hugeicons/react",
-        "@hugeicons/core-free-icons"
-      ],
+      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
       "files": [
         { "path": "registry/base-nova/ui/tool-call.tsx", "type": "registry:ui" }
       ]
@@ -88,10 +133,7 @@
       "type": "registry:ui",
       "title": "Tool Tree",
       "description": "A composable tree visualization for parallel tool calls with L-connectors, expandable children, and hover timestamps. Wraps ToolCall children.",
-      "dependencies": [
-        "@hugeicons/react",
-        "@hugeicons/core-free-icons"
-      ],
+      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
       "registryDependencies": ["tool-call"],
       "files": [
         { "path": "registry/base-nova/ui/tool-tree.tsx", "type": "registry:ui" }

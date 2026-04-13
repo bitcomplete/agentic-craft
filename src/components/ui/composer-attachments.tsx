@@ -9,7 +9,6 @@ import {
 } from "@hugeicons/core-free-icons"
 
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import type { ComposerFile } from "./composer"
 
@@ -32,11 +31,16 @@ export function ComposerAttachments({
   return (
     <div
       data-slot="composer-attachments"
-      className={cn("animate-composer-slide flex gap-2 px-4 pt-3 pb-1", className)}
+      className={cn("animate-composer-slide flex flex-wrap gap-2", className)}
       {...props}
     >
       {files.map((file) => (
-        <Card key={file.name} size="sm" className="gap-0 px-3 py-2">
+        <div
+          key={file.name}
+          className={cn(
+            "flex items-center gap-2 rounded-[calc(var(--composer-inner-radius)-var(--radius-sm))] border border-border/60 bg-background/80 px-2.5 py-1 shadow-xs"
+          )}
+        >
           <div className="flex items-center gap-2">
             <HugeiconsIcon
               icon={FILE_ICONS[file.type]}
@@ -44,8 +48,7 @@ export function ComposerAttachments({
               strokeWidth={1.5}
             />
             <div className="min-w-0">
-              <p className="max-w-[140px] truncate text-sm">{file.name}</p>
-              <p className="text-xs text-muted-foreground">{file.size}</p>
+              <p className="max-w-35 truncate text-sm">{file.name}</p>
             </div>
             {onRemove && (
               <Button
@@ -53,6 +56,7 @@ export function ComposerAttachments({
                 variant="ghost"
                 size="icon-xs"
                 onClick={() => onRemove(file.name)}
+                className="rounded-[calc(var(--composer-control-radius)-var(--radius-sm))]"
               >
                 <HugeiconsIcon
                   icon={Cancel01Icon}
@@ -62,7 +66,7 @@ export function ComposerAttachments({
               </Button>
             )}
           </div>
-        </Card>
+        </div>
       ))}
     </div>
   )

@@ -18,17 +18,55 @@ import {
 import { cn } from "@/lib/utils"
 import { useComposer } from "./composer"
 
-/* ── ComposerToolbar ── */
+/* ── ComposerFooter ── */
 
-export function ComposerToolbar({
+export function ComposerFooter({
   className,
   children,
   ...props
 }: React.ComponentProps<"div">) {
   return (
     <div
-      data-slot="composer-toolbar"
-      className={cn("flex items-center gap-1 px-3 pt-0.5 pb-3", className)}
+      data-slot="composer-footer"
+      className={cn(
+        "flex items-center justify-between gap-2 [padding-inline:var(--composer-shell-inset)] pt-1 [padding-bottom:var(--composer-shell-inset)]",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
+
+export function ComposerFooterStart({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="composer-footer-start"
+      className={cn("flex min-w-0 flex-1 items-center gap-1.5", className)}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
+
+export function ComposerFooterEnd({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="composer-footer-end"
+      className={cn(
+        "flex shrink-0 items-center justify-end gap-1.5",
+        className
+      )}
       {...props}
     >
       {children}
@@ -48,7 +86,16 @@ export function ComposerMenu({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        render={<Button variant="ghost" size="icon-sm" className={className} />}
+        render={
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            className={cn(
+              "rounded-[var(--composer-control-radius)]",
+              className
+            )}
+          />
+        }
       >
         <HugeiconsIcon icon={Add01Icon} size={16} strokeWidth={1.5} />
       </DropdownMenuTrigger>
@@ -56,7 +103,7 @@ export function ComposerMenu({
         side="top"
         sideOffset={8}
         align="start"
-        className="min-w-[220px]"
+        className="min-w-55"
       >
         {children}
       </DropdownMenuContent>
@@ -92,7 +139,10 @@ export function ComposerContextRing({
             type="button"
             variant="ghost"
             size="icon-sm"
-            className={cn("mr-1", className)}
+            className={cn(
+              "rounded-[var(--composer-control-radius)]",
+              className
+            )}
           />
         }
         {...props}
@@ -154,7 +204,11 @@ export function ComposerSend({
       size="icon-sm"
       onClick={handleClick}
       disabled={!hasContent}
-      className={cn(isSending ? "animate-composer-send" : "", className)}
+      className={cn(
+        "rounded-full bg-foreground/72 text-background shadow-none hover:bg-foreground/82 disabled:bg-foreground/16 disabled:text-foreground/42 disabled:opacity-100 dark:disabled:bg-white/14 dark:disabled:text-white/56",
+        isSending ? "animate-composer-send" : "",
+        className
+      )}
       {...props}
     >
       <span className={arrowAnim ? "animate-composer-arrow" : ""}>

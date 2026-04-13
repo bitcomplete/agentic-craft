@@ -15,7 +15,7 @@ export function ComposerSuggestions({
   items: string[]
   onSelect?: (suggestion: string) => void
 }) {
-  const { onValueChange, textareaRef } = useComposer()
+  const { onValueChange, inputRef } = useComposer()
   const [flashChip, setFlashChip] = React.useState<string | null>(null)
 
   const handleClick = React.useCallback(
@@ -24,11 +24,11 @@ export function ComposerSuggestions({
       setTimeout(() => {
         onValueChange(suggestion)
         setFlashChip(null)
-        textareaRef.current?.focus()
+        inputRef.current?.focus()
         onSelect?.(suggestion)
       }, 250)
     },
-    [onValueChange, textareaRef, onSelect],
+    [inputRef, onSelect, onValueChange]
   )
 
   if (items.length === 0) return null
@@ -37,8 +37,8 @@ export function ComposerSuggestions({
     <div
       data-slot="composer-suggestions"
       className={cn(
-        "animate-composer-slide mt-3 flex flex-wrap justify-center gap-2",
-        className,
+        "animate-composer-slide mt-[var(--composer-shell-inset)] flex flex-wrap justify-center gap-2",
+        className
       )}
       {...props}
     >
