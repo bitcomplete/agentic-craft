@@ -1,0 +1,2036 @@
+[
+  {
+    "file": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-06-critical-product-visual-audit/01-conversation-desktop.png",
+    "width": 1223,
+    "height": 998,
+    "url": "/conversation?audit=critical#messages",
+    "label": "Conversation desktop",
+    "bytes": 114705,
+    "metrics": {
+      "bodyTextSample": "Skip to contentAgentic CraftDemoConversationMessages & ProseCitationsProgress StepsComposerAgent ActionsTrust & GovernanceMemoryMulti-AgentFeedbackObservabilityTemplatesToggle SidebarAgentic CraftPatternsConversationMessage patterns, prose styling, citations, observable work, and composer patterns for agent dialogue.CoreMessages & ProseThree message types form the backbone of agent conversation: user, agent, and system. Agent messages need a clear ownership surface; prose typography can be a rea",
+      "buttonCount": 55,
+      "clientWidth": 1223,
+      "headings": [
+        {
+          "tag": "h1",
+          "text": "Conversation"
+        },
+        {
+          "tag": "h2",
+          "text": "Messages & Prose"
+        },
+        {
+          "tag": "h2",
+          "text": "Progress Steps"
+        },
+        {
+          "tag": "h2",
+          "text": "Citations"
+        },
+        {
+          "tag": "h2",
+          "text": "Composer"
+        }
+      ],
+      "overflowEls": [],
+      "scrollWidth": 1223,
+      "sections": [
+        {
+          "h": 2035,
+          "id": "messages",
+          "y": 0
+        },
+        {
+          "h": 835,
+          "id": "progress-steps",
+          "y": 2035
+        },
+        {
+          "h": 1207,
+          "id": "citations",
+          "y": 2870
+        },
+        {
+          "h": 2501,
+          "id": "composer",
+          "y": 4076
+        }
+      ],
+      "smallTargets": [
+        {
+          "h": 28,
+          "text": "Toggle Sidebar",
+          "visible": true,
+          "w": 28,
+          "x": 232,
+          "y": -277
+        },
+        {
+          "h": 22,
+          "text": "Mark progress steps as helpful",
+          "visible": true,
+          "w": 22,
+          "x": 437,
+          "y": 2488
+        },
+        {
+          "h": 22,
+          "text": "Mark progress steps as not helpful",
+          "visible": true,
+          "w": 22,
+          "x": 471,
+          "y": 2488
+        },
+        {
+          "h": 23,
+          "text": "Open Issue Triage Policy",
+          "visible": true,
+          "w": 23,
+          "x": 733,
+          "y": 3187
+        },
+        {
+          "h": 24,
+          "text": "Previous citation",
+          "visible": true,
+          "w": 24,
+          "x": 969,
+          "y": 3187
+        },
+        {
+          "h": 24,
+          "text": "Next citation",
+          "visible": true,
+          "w": 24,
+          "x": 1042,
+          "y": 3187
+        },
+        {
+          "h": 18,
+          "text": "1",
+          "visible": true,
+          "w": 34,
+          "x": 629,
+          "y": 3531
+        },
+        {
+          "h": 18,
+          "text": "2",
+          "visible": true,
+          "w": 37,
+          "x": 547,
+          "y": 3557
+        },
+        {
+          "h": 18,
+          "text": "3",
+          "visible": true,
+          "w": 37,
+          "x": 693,
+          "y": 3609
+        },
+        {
+          "h": 28,
+          "text": "Expand plan",
+          "visible": true,
+          "w": 28,
+          "x": 1019,
+          "y": 4498
+        },
+        {
+          "h": 28,
+          "text": "Open composer menu",
+          "visible": true,
+          "w": 28,
+          "x": 375,
+          "y": 4580
+        },
+        {
+          "h": 28,
+          "text": "66k / 75k tokens, 88% used",
+          "visible": true,
+          "w": 28,
+          "x": 1005,
+          "y": 4580
+        }
+      ],
+      "title": "Conversation | Agentic Craft",
+      "url": "http://127.0.0.1:3000/conversation?audit=critical#messages"
+    }
+  },
+  {
+    "file": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-06-critical-product-visual-audit/02-conversation-composer-desktop.png",
+    "width": 1223,
+    "height": 998,
+    "url": "/conversation?audit=critical#composer",
+    "label": "Conversation composer desktop",
+    "bytes": 72037,
+    "metrics": {
+      "bodyTextSample": "Skip to contentAgentic CraftDemoConversationMessages & ProseCitationsProgress StepsComposerAgent ActionsTrust & GovernanceMemoryMulti-AgentFeedbackObservabilityTemplatesToggle SidebarAgentic CraftPatternsConversationMessage patterns, prose styling, citations, observable work, and composer patterns for agent dialogue.CoreMessages & ProseThree message types form the backbone of agent conversation: user, agent, and system. Agent messages need a clear ownership surface; prose typography can be a rea",
+      "buttonCount": 55,
+      "clientWidth": 1223,
+      "headings": [
+        {
+          "tag": "h1",
+          "text": "Conversation"
+        },
+        {
+          "tag": "h2",
+          "text": "Messages & Prose"
+        },
+        {
+          "tag": "h2",
+          "text": "Progress Steps"
+        },
+        {
+          "tag": "h2",
+          "text": "Citations"
+        },
+        {
+          "tag": "h2",
+          "text": "Composer"
+        }
+      ],
+      "overflowEls": [],
+      "scrollWidth": 1223,
+      "sections": [
+        {
+          "h": 2035,
+          "id": "messages",
+          "y": -4076
+        },
+        {
+          "h": 835,
+          "id": "progress-steps",
+          "y": -2041
+        },
+        {
+          "h": 1207,
+          "id": "citations",
+          "y": -1206
+        },
+        {
+          "h": 2501,
+          "id": "composer",
+          "y": 0
+        }
+      ],
+      "smallTargets": [
+        {
+          "h": 28,
+          "text": "Toggle Sidebar",
+          "visible": true,
+          "w": 28,
+          "x": 232,
+          "y": -4353
+        },
+        {
+          "h": 22,
+          "text": "Mark progress steps as helpful",
+          "visible": true,
+          "w": 22,
+          "x": 437,
+          "y": -1588
+        },
+        {
+          "h": 22,
+          "text": "Mark progress steps as not helpful",
+          "visible": true,
+          "w": 22,
+          "x": 471,
+          "y": -1588
+        },
+        {
+          "h": 23,
+          "text": "Open Issue Triage Policy",
+          "visible": true,
+          "w": 23,
+          "x": 733,
+          "y": -889
+        },
+        {
+          "h": 24,
+          "text": "Previous citation",
+          "visible": true,
+          "w": 24,
+          "x": 969,
+          "y": -889
+        },
+        {
+          "h": 24,
+          "text": "Next citation",
+          "visible": true,
+          "w": 24,
+          "x": 1042,
+          "y": -889
+        },
+        {
+          "h": 18,
+          "text": "1",
+          "visible": true,
+          "w": 34,
+          "x": 629,
+          "y": -545
+        },
+        {
+          "h": 18,
+          "text": "2",
+          "visible": true,
+          "w": 37,
+          "x": 547,
+          "y": -519
+        },
+        {
+          "h": 18,
+          "text": "3",
+          "visible": true,
+          "w": 37,
+          "x": 693,
+          "y": -467
+        },
+        {
+          "h": 28,
+          "text": "Expand plan",
+          "visible": true,
+          "w": 28,
+          "x": 1019,
+          "y": 422
+        },
+        {
+          "h": 28,
+          "text": "Open composer menu",
+          "visible": true,
+          "w": 28,
+          "x": 375,
+          "y": 504
+        },
+        {
+          "h": 28,
+          "text": "66k / 75k tokens, 88% used",
+          "visible": true,
+          "w": 28,
+          "x": 1005,
+          "y": 504
+        }
+      ],
+      "title": "Conversation | Agentic Craft",
+      "url": "http://127.0.0.1:3000/conversation?audit=critical#composer"
+    }
+  },
+  {
+    "file": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-06-critical-product-visual-audit/03-conversation-mobile.png",
+    "width": 390,
+    "height": 844,
+    "url": "/conversation?audit=critical-mobile#messages",
+    "label": "Conversation mobile",
+    "bytes": 45184,
+    "metrics": {
+      "bodyTextSample": "Skip to contentToggle SidebarAgentic CraftPatternsConversationMessage patterns, prose styling, citations, observable work, and composer patterns for agent dialogue.CoreMessages & ProseThree message types form the backbone of agent conversation: user, agent, and system. Agent messages need a clear ownership surface; prose typography can be a reader or workspace preference.Reader preferenceA comfortable default for long analysis, explanations, and review-style answers.Serif proseSans proseCompactA",
+      "buttonCount": 34,
+      "clientWidth": 390,
+      "headings": [
+        {
+          "tag": "h1",
+          "text": "Conversation"
+        },
+        {
+          "tag": "h2",
+          "text": "Messages & Prose"
+        },
+        {
+          "tag": "h2",
+          "text": "Progress Steps"
+        },
+        {
+          "tag": "h2",
+          "text": "Citations"
+        },
+        {
+          "tag": "h2",
+          "text": "Composer"
+        }
+      ],
+      "overflowEls": [
+        {
+          "left": 16,
+          "right": 843,
+          "tag": "table",
+          "text": "TypeStyleDetailsUserbg-primary, text-primary-foregroundmax-width 75%, rounded-lg",
+          "width": 827
+        },
+        {
+          "left": 16,
+          "right": 843,
+          "tag": "thead",
+          "text": "TypeStyleDetails",
+          "width": 827
+        },
+        {
+          "left": 16,
+          "right": 843,
+          "tag": "tr",
+          "text": "TypeStyleDetails",
+          "width": 827
+        },
+        {
+          "left": 368,
+          "right": 843,
+          "tag": "th",
+          "text": "Details",
+          "width": 475
+        },
+        {
+          "left": 16,
+          "right": 843,
+          "tag": "tbody",
+          "text": "Userbg-primary, text-primary-foregroundmax-width 75%, rounded-lg, right-aligned,",
+          "width": 827
+        },
+        {
+          "left": 16,
+          "right": 843,
+          "tag": "tr",
+          "text": "Userbg-primary, text-primary-foregroundmax-width 75%, rounded-lg, right-aligned,",
+          "width": 827
+        },
+        {
+          "left": 368,
+          "right": 843,
+          "tag": "td",
+          "text": "max-width 75%, rounded-lg, right-aligned, app body font, 14px",
+          "width": 475
+        },
+        {
+          "left": 16,
+          "right": 843,
+          "tag": "tr",
+          "text": "Agentborder border-border bg-mutedmax-width 75%, rounded-lg, left-aligned, user-",
+          "width": 827
+        }
+      ],
+      "scrollWidth": 390,
+      "sections": [
+        {
+          "h": 2992,
+          "id": "messages",
+          "y": 0
+        },
+        {
+          "h": 940,
+          "id": "progress-steps",
+          "y": 2992
+        },
+        {
+          "h": 1436,
+          "id": "citations",
+          "y": 3932
+        },
+        {
+          "h": 3478,
+          "id": "composer",
+          "y": 5368
+        }
+      ],
+      "smallTargets": [
+        {
+          "h": 28,
+          "text": "Toggle Sidebar",
+          "visible": true,
+          "w": 28,
+          "x": 12,
+          "y": 10
+        },
+        {
+          "h": 22,
+          "text": "Mark progress steps as helpful",
+          "visible": true,
+          "w": 22,
+          "x": 121,
+          "y": 3490
+        },
+        {
+          "h": 22,
+          "text": "Mark progress steps as not helpful",
+          "visible": true,
+          "w": 22,
+          "x": 155,
+          "y": 3490
+        },
+        {
+          "h": 23,
+          "text": "Open Issue Triage Policy",
+          "visible": true,
+          "w": 23,
+          "x": 174,
+          "y": 4260
+        },
+        {
+          "h": 24,
+          "text": "Previous citation",
+          "visible": true,
+          "w": 24,
+          "x": 248,
+          "y": 4260
+        },
+        {
+          "h": 24,
+          "text": "Next citation",
+          "visible": true,
+          "w": 24,
+          "x": 320,
+          "y": 4260
+        },
+        {
+          "h": 18,
+          "text": "1",
+          "visible": true,
+          "w": 34,
+          "x": 144,
+          "y": 4611
+        },
+        {
+          "h": 18,
+          "text": "2",
+          "visible": true,
+          "w": 37,
+          "x": 169,
+          "y": 4663
+        },
+        {
+          "h": 18,
+          "text": "3",
+          "visible": true,
+          "w": 37,
+          "x": 244,
+          "y": 4793
+        },
+        {
+          "h": 28,
+          "text": "Expand plan",
+          "visible": true,
+          "w": 28,
+          "x": 328,
+          "y": 5725
+        },
+        {
+          "h": 28,
+          "text": "Open composer menu",
+          "visible": true,
+          "w": 28,
+          "x": 30,
+          "y": 5787
+        },
+        {
+          "h": 28,
+          "text": "66k / 75k tokens, 88% used",
+          "visible": true,
+          "w": 28,
+          "x": 296,
+          "y": 5787
+        }
+      ],
+      "title": "Conversation | Agentic Craft",
+      "url": "http://127.0.0.1:3000/conversation?audit=critical-mobile#messages"
+    }
+  },
+  {
+    "file": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-06-critical-product-visual-audit/04-conversation-composer-mobile.png",
+    "width": 390,
+    "height": 844,
+    "url": "/conversation?audit=critical-mobile#composer",
+    "label": "Conversation composer mobile",
+    "bytes": 34384,
+    "metrics": {
+      "bodyTextSample": "Skip to contentToggle SidebarAgentic CraftPatternsConversationMessage patterns, prose styling, citations, observable work, and composer patterns for agent dialogue.CoreMessages & ProseThree message types form the backbone of agent conversation: user, agent, and system. Agent messages need a clear ownership surface; prose typography can be a reader or workspace preference.Reader preferenceA comfortable default for long analysis, explanations, and review-style answers.Serif proseSans proseCompactA",
+      "buttonCount": 34,
+      "clientWidth": 390,
+      "headings": [
+        {
+          "tag": "h1",
+          "text": "Conversation"
+        },
+        {
+          "tag": "h2",
+          "text": "Messages & Prose"
+        },
+        {
+          "tag": "h2",
+          "text": "Progress Steps"
+        },
+        {
+          "tag": "h2",
+          "text": "Citations"
+        },
+        {
+          "tag": "h2",
+          "text": "Composer"
+        }
+      ],
+      "overflowEls": [
+        {
+          "left": 16,
+          "right": 843,
+          "tag": "table",
+          "text": "TypeStyleDetailsUserbg-primary, text-primary-foregroundmax-width 75%, rounded-lg",
+          "width": 827
+        },
+        {
+          "left": 16,
+          "right": 843,
+          "tag": "thead",
+          "text": "TypeStyleDetails",
+          "width": 827
+        },
+        {
+          "left": 16,
+          "right": 843,
+          "tag": "tr",
+          "text": "TypeStyleDetails",
+          "width": 827
+        },
+        {
+          "left": 368,
+          "right": 843,
+          "tag": "th",
+          "text": "Details",
+          "width": 475
+        },
+        {
+          "left": 16,
+          "right": 843,
+          "tag": "tbody",
+          "text": "Userbg-primary, text-primary-foregroundmax-width 75%, rounded-lg, right-aligned,",
+          "width": 827
+        },
+        {
+          "left": 16,
+          "right": 843,
+          "tag": "tr",
+          "text": "Userbg-primary, text-primary-foregroundmax-width 75%, rounded-lg, right-aligned,",
+          "width": 827
+        },
+        {
+          "left": 368,
+          "right": 843,
+          "tag": "td",
+          "text": "max-width 75%, rounded-lg, right-aligned, app body font, 14px",
+          "width": 475
+        },
+        {
+          "left": 16,
+          "right": 843,
+          "tag": "tr",
+          "text": "Agentborder border-border bg-mutedmax-width 75%, rounded-lg, left-aligned, user-",
+          "width": 827
+        }
+      ],
+      "scrollWidth": 390,
+      "sections": [
+        {
+          "h": 2992,
+          "id": "messages",
+          "y": -5368
+        },
+        {
+          "h": 940,
+          "id": "progress-steps",
+          "y": -2376
+        },
+        {
+          "h": 1436,
+          "id": "citations",
+          "y": -1436
+        },
+        {
+          "h": 3478,
+          "id": "composer",
+          "y": 0
+        }
+      ],
+      "smallTargets": [
+        {
+          "h": 28,
+          "text": "Toggle Sidebar",
+          "visible": true,
+          "w": 28,
+          "x": 12,
+          "y": 10
+        },
+        {
+          "h": 22,
+          "text": "Mark progress steps as helpful",
+          "visible": true,
+          "w": 22,
+          "x": 121,
+          "y": -1878
+        },
+        {
+          "h": 22,
+          "text": "Mark progress steps as not helpful",
+          "visible": true,
+          "w": 22,
+          "x": 155,
+          "y": -1878
+        },
+        {
+          "h": 23,
+          "text": "Open Issue Triage Policy",
+          "visible": true,
+          "w": 23,
+          "x": 174,
+          "y": -1108
+        },
+        {
+          "h": 24,
+          "text": "Previous citation",
+          "visible": true,
+          "w": 24,
+          "x": 248,
+          "y": -1108
+        },
+        {
+          "h": 24,
+          "text": "Next citation",
+          "visible": true,
+          "w": 24,
+          "x": 320,
+          "y": -1108
+        },
+        {
+          "h": 18,
+          "text": "1",
+          "visible": true,
+          "w": 34,
+          "x": 144,
+          "y": -757
+        },
+        {
+          "h": 18,
+          "text": "2",
+          "visible": true,
+          "w": 37,
+          "x": 169,
+          "y": -705
+        },
+        {
+          "h": 18,
+          "text": "3",
+          "visible": true,
+          "w": 37,
+          "x": 244,
+          "y": -575
+        },
+        {
+          "h": 28,
+          "text": "Expand plan",
+          "visible": true,
+          "w": 28,
+          "x": 328,
+          "y": 357
+        },
+        {
+          "h": 28,
+          "text": "Open composer menu",
+          "visible": true,
+          "w": 28,
+          "x": 30,
+          "y": 419
+        },
+        {
+          "h": 28,
+          "text": "66k / 75k tokens, 88% used",
+          "visible": true,
+          "w": 28,
+          "x": 296,
+          "y": 419
+        }
+      ],
+      "title": "Conversation | Agentic Craft",
+      "url": "http://127.0.0.1:3000/conversation?audit=critical-mobile#composer"
+    }
+  },
+  {
+    "file": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-06-critical-product-visual-audit/05-actions-desktop.png",
+    "width": 1223,
+    "height": 998,
+    "url": "/actions?audit=critical",
+    "label": "Actions desktop",
+    "bytes": 75855,
+    "metrics": {
+      "bodyTextSample": "Skip to contentAgentic CraftDemoConversationAgent ActionsTool CallsSubagent CardsParallel ExecutionPlan CardsDecision BlocksClarifying QuestionsApproval GateTrust & GovernanceMemoryMulti-AgentFeedbackObservabilityTemplatesToggle SidebarAgentic CraftPatternsAgent ActionsTool calls, subagent orchestration, parallel execution, plan cards, clarifying questions, decision flows, and approval gates for agent-driven approval and product workflows.ActionsTool CallsExpandable, human-readable action indica",
+      "buttonCount": 67,
+      "clientWidth": 1223,
+      "headings": [
+        {
+          "tag": "h1",
+          "text": "Agent Actions"
+        },
+        {
+          "tag": "h2",
+          "text": "Tool Calls"
+        },
+        {
+          "tag": "h2",
+          "text": "Subagent Orchestration"
+        },
+        {
+          "tag": "h2",
+          "text": "Plan Cards"
+        },
+        {
+          "tag": "h2",
+          "text": "Parallel Execution"
+        },
+        {
+          "tag": "h2",
+          "text": "Decision Flow"
+        },
+        {
+          "tag": "h2",
+          "text": "Clarifying Questions"
+        },
+        {
+          "tag": "h2",
+          "text": "Approval Gate"
+        }
+      ],
+      "overflowEls": [],
+      "scrollWidth": 1223,
+      "sections": [
+        {
+          "h": 768,
+          "id": "tool-calls",
+          "y": 287
+        },
+        {
+          "h": 945,
+          "id": "subagents",
+          "y": 1055
+        },
+        {
+          "h": 1035,
+          "id": "plans",
+          "y": 1999
+        },
+        {
+          "h": 923,
+          "id": "parallel",
+          "y": 3034
+        },
+        {
+          "h": 1109,
+          "id": "decisions",
+          "y": 3956
+        },
+        {
+          "h": 1233,
+          "id": "ask-blocks",
+          "y": 5065
+        },
+        {
+          "h": 1021,
+          "id": "approval-gate",
+          "y": 6299
+        }
+      ],
+      "smallTargets": [
+        {
+          "h": 28,
+          "text": "Toggle Sidebar",
+          "visible": true,
+          "w": 28,
+          "x": 232,
+          "y": 6
+        },
+        {
+          "h": 20,
+          "text": "Searching document repository",
+          "visible": true,
+          "w": 253,
+          "x": 357,
+          "y": 510
+        },
+        {
+          "h": 20,
+          "text": "Loading project brief definitions",
+          "visible": true,
+          "w": 255,
+          "x": 357,
+          "y": 536
+        },
+        {
+          "h": 20,
+          "text": "Cross-referencing test case mappings",
+          "visible": true,
+          "w": 297,
+          "x": 357,
+          "y": 562
+        },
+        {
+          "h": 20,
+          "text": "Generating coverage matrix",
+          "visible": true,
+          "w": 230,
+          "x": 357,
+          "y": 588
+        },
+        {
+          "h": 20,
+          "text": "Checking source control source material",
+          "visible": true,
+          "w": 311,
+          "x": 379,
+          "y": 1511
+        },
+        {
+          "h": 20,
+          "text": "Checking delivery readiness source material",
+          "visible": true,
+          "w": 335,
+          "x": 379,
+          "y": 1537
+        },
+        {
+          "h": 20,
+          "text": "Checking risk review source material",
+          "visible": true,
+          "w": 287,
+          "x": 379,
+          "y": 1563
+        },
+        {
+          "h": 20,
+          "text": "Running tasks in parallel",
+          "visible": true,
+          "w": 204,
+          "x": 357,
+          "y": 3390
+        },
+        {
+          "h": 20,
+          "text": "Checking current git status in the project",
+          "visible": true,
+          "w": 314,
+          "x": 385,
+          "y": 3422
+        },
+        {
+          "h": 20,
+          "text": "Checking remote configuration",
+          "visible": true,
+          "w": 251,
+          "x": 385,
+          "y": 3448
+        },
+        {
+          "h": 20,
+          "text": "Reading requirement coverage definitions",
+          "visible": true,
+          "w": 320,
+          "x": 385,
+          "y": 3474
+        }
+      ],
+      "title": "Agent Actions | Agentic Craft",
+      "url": "http://127.0.0.1:3000/actions?audit=critical"
+    }
+  },
+  {
+    "file": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-06-critical-product-visual-audit/06-trust-desktop.png",
+    "width": 1223,
+    "height": 998,
+    "url": "/trust?audit=critical",
+    "label": "Trust desktop",
+    "bytes": 80952,
+    "metrics": {
+      "bodyTextSample": "Skip to contentAgentic CraftDemoConversationAgent ActionsTrust & GovernanceSettings TemplatesAutonomy LevelMode TogglesContext ScopeConsent FlowConfidence DisplayKill SwitchCost TransparencyData ProvenanceAudit TrailMemoryMulti-AgentFeedbackObservabilityTemplatesToggle SidebarAgentic CraftPatternsTrust & SafetyAutonomy governance, operational configuration, transparency, and guardrail patterns that establish and maintain user trust in agentic experiences.ConfigurationSettings TemplatesReusable c",
+      "buttonCount": 61,
+      "clientWidth": 1223,
+      "headings": [
+        {
+          "tag": "h1",
+          "text": "Trust & Safety"
+        },
+        {
+          "tag": "h2",
+          "text": "Settings Templates"
+        },
+        {
+          "tag": "h2",
+          "text": "Autonomy Level"
+        },
+        {
+          "tag": "h2",
+          "text": "Mode Toggles"
+        },
+        {
+          "tag": "h2",
+          "text": "Context Scope"
+        },
+        {
+          "tag": "h2",
+          "text": "Consent Flow"
+        },
+        {
+          "tag": "h2",
+          "text": "Confidence Display"
+        },
+        {
+          "tag": "h2",
+          "text": "Kill Switch"
+        },
+        {
+          "tag": "h2",
+          "text": "Cost Transparency"
+        },
+        {
+          "tag": "h2",
+          "text": "Data Provenance"
+        },
+        {
+          "tag": "h2",
+          "text": "Audit Trail"
+        }
+      ],
+      "overflowEls": [],
+      "scrollWidth": 1223,
+      "sections": [
+        {
+          "h": 517,
+          "id": "settings-templates",
+          "y": 287
+        },
+        {
+          "h": 877,
+          "id": "autonomy-level",
+          "y": 804
+        },
+        {
+          "h": 922,
+          "id": "mode-toggles",
+          "y": 1680
+        },
+        {
+          "h": 853,
+          "id": "context-scope",
+          "y": 2602
+        },
+        {
+          "h": 859,
+          "id": "consent-flow",
+          "y": 3454
+        },
+        {
+          "h": 778,
+          "id": "confidence-display",
+          "y": 4313
+        },
+        {
+          "h": 692,
+          "id": "kill-switch",
+          "y": 5090
+        },
+        {
+          "h": 611,
+          "id": "cost-transparency",
+          "y": 5782
+        },
+        {
+          "h": 900,
+          "id": "data-provenance",
+          "y": 6392
+        },
+        {
+          "h": 719,
+          "id": "audit-trail",
+          "y": 7292
+        }
+      ],
+      "smallTargets": [
+        {
+          "h": 28,
+          "text": "Toggle Sidebar",
+          "visible": true,
+          "w": 28,
+          "x": 232,
+          "y": 6
+        },
+        {
+          "h": 15,
+          "text": "Agentic Craft — Open Source",
+          "visible": true,
+          "w": 163,
+          "x": 640,
+          "y": 8140
+        }
+      ],
+      "title": "Trust & Governance | Agentic Craft",
+      "url": "http://127.0.0.1:3000/trust?audit=critical"
+    }
+  },
+  {
+    "file": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-06-critical-product-visual-audit/07-memory-desktop.png",
+    "width": 1223,
+    "height": 998,
+    "url": "/memory?audit=critical",
+    "label": "Memory desktop",
+    "bytes": 64042,
+    "metrics": {
+      "bodyTextSample": "Skip to contentAgentic CraftDemoConversationAgent ActionsTrust & GovernanceMemoryMemory PanelMemory Entry CRUDAuto-MemoryContext RingPrivacy ControlsMulti-AgentFeedbackObservabilityTemplatesToggle SidebarAgentic CraftKnowledge & ContextMemoryPatterns for persistent memory, cross-session recall, context awareness, auto-detection of preferences, and privacy controls for reviewer data.PersistenceMemory PanelThe reviewer's stored preferences and facts — key-value pairs the agent uses to personalize ",
+      "buttonCount": 56,
+      "clientWidth": 1223,
+      "headings": [
+        {
+          "tag": "h1",
+          "text": "Memory"
+        },
+        {
+          "tag": "h2",
+          "text": "Memory Panel"
+        },
+        {
+          "tag": "h2",
+          "text": "Memory Entry CRUD"
+        },
+        {
+          "tag": "h2",
+          "text": "Auto-Memory"
+        },
+        {
+          "tag": "h2",
+          "text": "Memory Context Ring"
+        },
+        {
+          "tag": "h2",
+          "text": "Privacy Controls"
+        }
+      ],
+      "overflowEls": [],
+      "scrollWidth": 1223,
+      "sections": [
+        {
+          "h": 1011,
+          "id": "memory-panel",
+          "y": 287
+        },
+        {
+          "h": 714,
+          "id": "memory-crud",
+          "y": 1298
+        },
+        {
+          "h": 792,
+          "id": "auto-memory",
+          "y": 2011
+        },
+        {
+          "h": 683,
+          "id": "context-ring",
+          "y": 2803
+        },
+        {
+          "h": 924,
+          "id": "privacy-controls",
+          "y": 3485
+        }
+      ],
+      "smallTargets": [
+        {
+          "h": 28,
+          "text": "Toggle Sidebar",
+          "visible": true,
+          "w": 28,
+          "x": 232,
+          "y": 6
+        },
+        {
+          "h": 28,
+          "text": "Edit memory: Preferred release tier level",
+          "visible": true,
+          "w": 28,
+          "x": 1014,
+          "y": 559
+        },
+        {
+          "h": 28,
+          "text": "Delete memory: Preferred release tier level",
+          "visible": true,
+          "w": 28,
+          "x": 1046,
+          "y": 559
+        },
+        {
+          "h": 28,
+          "text": "Edit memory: Default launch policy",
+          "visible": true,
+          "w": 28,
+          "x": 1014,
+          "y": 637
+        },
+        {
+          "h": 28,
+          "text": "Delete memory: Default launch policy",
+          "visible": true,
+          "w": 28,
+          "x": 1046,
+          "y": 637
+        },
+        {
+          "h": 28,
+          "text": "Edit memory: Review workspace",
+          "visible": true,
+          "w": 28,
+          "x": 1014,
+          "y": 715
+        },
+        {
+          "h": 28,
+          "text": "Delete memory: Review workspace",
+          "visible": true,
+          "w": 28,
+          "x": 1046,
+          "y": 715
+        },
+        {
+          "h": 28,
+          "text": "Edit memory: Report format",
+          "visible": true,
+          "w": 28,
+          "x": 1014,
+          "y": 793
+        },
+        {
+          "h": 28,
+          "text": "Delete memory: Report format",
+          "visible": true,
+          "w": 28,
+          "x": 1046,
+          "y": 793
+        },
+        {
+          "h": 28,
+          "text": "Edit memory: product type",
+          "visible": true,
+          "w": 28,
+          "x": 1014,
+          "y": 871
+        },
+        {
+          "h": 28,
+          "text": "Delete memory: product type",
+          "visible": true,
+          "w": 28,
+          "x": 1046,
+          "y": 871
+        },
+        {
+          "h": 28,
+          "text": "Edit memory: Approval team",
+          "visible": true,
+          "w": 28,
+          "x": 1014,
+          "y": 949
+        }
+      ],
+      "title": "Memory | Agentic Craft",
+      "url": "http://127.0.0.1:3000/memory?audit=critical"
+    }
+  },
+  {
+    "file": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-06-critical-product-visual-audit/08-multi-agent-desktop.png",
+    "width": 1223,
+    "height": 998,
+    "url": "/multi-agent?audit=critical",
+    "label": "Multi-agent desktop",
+    "bytes": 82780,
+    "metrics": {
+      "bodyTextSample": "Skip to contentAgentic CraftDemoConversationAgent ActionsTrust & GovernanceMemoryMulti-AgentAgent CardsHandoff FlowParallel AgentsAgent RoutingAgent CommunicationFeedbackObservabilityTemplatesToggle SidebarAgentic CraftOrchestrationMulti-Agent PatternsCoordination primitives for orchestrating multiple agents across product requirements review workflows — handoffs, parallel execution, routing, and inter-agent communication.IdentityAgent CardsIndividual agent identity cards showing name, role, cur",
+      "buttonCount": 40,
+      "clientWidth": 1223,
+      "headings": [
+        {
+          "tag": "h1",
+          "text": "Multi-Agent Patterns"
+        },
+        {
+          "tag": "h2",
+          "text": "Agent Cards"
+        },
+        {
+          "tag": "h2",
+          "text": "Handoff Flow"
+        },
+        {
+          "tag": "h2",
+          "text": "Parallel Agents"
+        },
+        {
+          "tag": "h2",
+          "text": "Agent Routing"
+        },
+        {
+          "tag": "h2",
+          "text": "Agent Communication"
+        }
+      ],
+      "overflowEls": [],
+      "scrollWidth": 1223,
+      "sections": [
+        {
+          "h": 1013,
+          "id": "agent-cards",
+          "y": 287
+        },
+        {
+          "h": 817,
+          "id": "handoff-flow",
+          "y": 1300
+        },
+        {
+          "h": 1060,
+          "id": "parallel-agents",
+          "y": 2117
+        },
+        {
+          "h": 946,
+          "id": "agent-routing",
+          "y": 3177
+        },
+        {
+          "h": 1038,
+          "id": "agent-communication",
+          "y": 4122
+        }
+      ],
+      "smallTargets": [
+        {
+          "h": 28,
+          "text": "Toggle Sidebar",
+          "visible": true,
+          "w": 28,
+          "x": 232,
+          "y": 6
+        },
+        {
+          "h": 15,
+          "text": "Agentic Craft — Open Source",
+          "visible": true,
+          "w": 163,
+          "x": 640,
+          "y": 5290
+        }
+      ],
+      "title": "Multi-Agent | Agentic Craft",
+      "url": "http://127.0.0.1:3000/multi-agent?audit=critical"
+    }
+  },
+  {
+    "file": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-06-critical-product-visual-audit/09-observability-desktop.png",
+    "width": 1223,
+    "height": 998,
+    "url": "/observability?audit=critical",
+    "label": "Observability desktop",
+    "bytes": 69363,
+    "metrics": {
+      "bodyTextSample": "Skip to contentAgentic CraftDemoConversationAgent ActionsTrust & GovernanceMemoryMulti-AgentFeedbackObservabilityActivity TimelineToken UsageSession TimelineError LogTemplatesToggle SidebarAgentic CraftObservabilityObservabilityActivity timelines, token tracking, session history, and error logs for continuous agent oversight.TimelineActivity TimelineA chronological stream of agent actions — tool invocations, messages, and state transitions — for full auditability of review workflows.ControlsLive",
+      "buttonCount": 34,
+      "clientWidth": 1223,
+      "headings": [
+        {
+          "tag": "h1",
+          "text": "Observability"
+        },
+        {
+          "tag": "h2",
+          "text": "Activity Timeline"
+        },
+        {
+          "tag": "h2",
+          "text": "Token Usage"
+        },
+        {
+          "tag": "h2",
+          "text": "Session Timeline"
+        },
+        {
+          "tag": "h2",
+          "text": "Error Log"
+        }
+      ],
+      "overflowEls": [],
+      "scrollWidth": 1223,
+      "sections": [
+        {
+          "h": 1175,
+          "id": "activity-timeline",
+          "y": 287
+        },
+        {
+          "h": 897,
+          "id": "token-usage",
+          "y": 1462
+        },
+        {
+          "h": 903,
+          "id": "session-timeline",
+          "y": 2358
+        },
+        {
+          "h": 909,
+          "id": "error-log",
+          "y": 3261
+        }
+      ],
+      "smallTargets": [
+        {
+          "h": 28,
+          "text": "Toggle Sidebar",
+          "visible": true,
+          "w": 28,
+          "x": 232,
+          "y": 6
+        },
+        {
+          "h": 15,
+          "text": "Agentic Craft — Open Source",
+          "visible": true,
+          "w": 163,
+          "x": 640,
+          "y": 4299
+        }
+      ],
+      "title": "Observability | Agentic Craft",
+      "url": "http://127.0.0.1:3000/observability?audit=critical"
+    }
+  },
+  {
+    "file": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-06-critical-product-visual-audit/10-templates-desktop.png",
+    "width": 1223,
+    "height": 998,
+    "url": "/templates?audit=critical",
+    "label": "Templates desktop",
+    "bytes": 95745,
+    "metrics": {
+      "bodyTextSample": "Skip to contentAgentic CraftDemoConversationAgent ActionsTrust & GovernanceMemoryMulti-AgentFeedbackObservabilityTemplatesReview WorkflowApproval WorkflowClarifying WorkflowMemory ReviewBackground Run MonitorMulti-Agent HandoffAgent SettingsToggle SidebarAgentic CraftWORKFLOW TEMPLATESTemplatesEnd-to-end agentic product workflows built from registry-ready primitives. Templates document the sequence, states, human control points, and recovery behavior that a production interface needs.Review work",
+      "buttonCount": 41,
+      "clientWidth": 1223,
+      "headings": [
+        {
+          "tag": "h1",
+          "text": "Templates"
+        },
+        {
+          "tag": "h2",
+          "text": "Review Workflow"
+        },
+        {
+          "tag": "h2",
+          "text": "Approval Workflow"
+        },
+        {
+          "tag": "h2",
+          "text": "Clarifying Workflow"
+        },
+        {
+          "tag": "h2",
+          "text": "Memory Review"
+        },
+        {
+          "tag": "h2",
+          "text": "Run Monitor"
+        },
+        {
+          "tag": "h2",
+          "text": "Multi-Agent Handoff"
+        },
+        {
+          "tag": "h2",
+          "text": "Agent Settings"
+        }
+      ],
+      "overflowEls": [],
+      "scrollWidth": 1223,
+      "sections": [
+        {
+          "h": 633,
+          "id": "review-workflow",
+          "y": 838
+        },
+        {
+          "h": 357,
+          "id": "approval-workflow",
+          "y": 1471
+        },
+        {
+          "h": 561,
+          "id": "clarifying-workflow",
+          "y": 1828
+        },
+        {
+          "h": 346,
+          "id": "memory-review",
+          "y": 2389
+        },
+        {
+          "h": 463,
+          "id": "run-monitor",
+          "y": 2735
+        },
+        {
+          "h": 513,
+          "id": "multi-agent-handoff",
+          "y": 3198
+        },
+        {
+          "h": 467,
+          "id": "agent-settings",
+          "y": 3711
+        }
+      ],
+      "smallTargets": [
+        {
+          "h": 28,
+          "text": "Toggle Sidebar",
+          "visible": true,
+          "w": 28,
+          "x": 232,
+          "y": 6
+        },
+        {
+          "h": 15,
+          "text": "Agentic Craft — Open Source",
+          "visible": true,
+          "w": 163,
+          "x": 640,
+          "y": 4482
+        }
+      ],
+      "title": "Templates | Agentic Craft",
+      "url": "http://127.0.0.1:3000/templates?audit=critical"
+    }
+  },
+  {
+    "file": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-06-critical-product-visual-audit/11-actions-mobile.png",
+    "width": 390,
+    "height": 844,
+    "url": "/actions?audit=critical-mobile",
+    "label": "Actions mobile",
+    "bytes": 36131,
+    "metrics": {
+      "bodyTextSample": "Skip to contentToggle SidebarAgentic CraftPatternsAgent ActionsTool calls, subagent orchestration, parallel execution, plan cards, clarifying questions, decision flows, and approval gates for agent-driven approval and product workflows.ActionsTool CallsExpandable, human-readable action indicators. Each tool call shows a plain-language label — never a function signature. Click to reveal key-value details.ControlsExpand AllError StateGroupedSearching document repository1.2sLoading project brief de",
+      "buttonCount": 43,
+      "clientWidth": 390,
+      "headings": [
+        {
+          "tag": "h1",
+          "text": "Agent Actions"
+        },
+        {
+          "tag": "h2",
+          "text": "Tool Calls"
+        },
+        {
+          "tag": "h2",
+          "text": "Subagent Orchestration"
+        },
+        {
+          "tag": "h2",
+          "text": "Plan Cards"
+        },
+        {
+          "tag": "h2",
+          "text": "Parallel Execution"
+        },
+        {
+          "tag": "h2",
+          "text": "Decision Flow"
+        },
+        {
+          "tag": "h2",
+          "text": "Clarifying Questions"
+        },
+        {
+          "tag": "h2",
+          "text": "Approval Gate"
+        }
+      ],
+      "overflowEls": [
+        {
+          "left": 16,
+          "right": 519,
+          "tag": "table",
+          "text": "PropertySpecTool title14px sans, font-weight 400 (never bold)Inner detail text12",
+          "width": 503
+        },
+        {
+          "left": 16,
+          "right": 519,
+          "tag": "thead",
+          "text": "PropertySpec",
+          "width": 503
+        },
+        {
+          "left": 16,
+          "right": 519,
+          "tag": "tr",
+          "text": "PropertySpec",
+          "width": 503
+        },
+        {
+          "left": 148,
+          "right": 519,
+          "tag": "th",
+          "text": "Spec",
+          "width": 371
+        },
+        {
+          "left": 16,
+          "right": 519,
+          "tag": "tbody",
+          "text": "Tool title14px sans, font-weight 400 (never bold)Inner detail text12px, key in m",
+          "width": 503
+        },
+        {
+          "left": 16,
+          "right": 519,
+          "tag": "tr",
+          "text": "Tool title14px sans, font-weight 400 (never bold)",
+          "width": 503
+        },
+        {
+          "left": 148,
+          "right": 519,
+          "tag": "td",
+          "text": "14px sans, font-weight 400 (never bold)",
+          "width": 371
+        },
+        {
+          "left": 16,
+          "right": 519,
+          "tag": "tr",
+          "text": "Inner detail text12px, key in muted, value in foreground",
+          "width": 503
+        }
+      ],
+      "scrollWidth": 390,
+      "sections": [
+        {
+          "h": 830,
+          "id": "tool-calls",
+          "y": 341
+        },
+        {
+          "h": 1043,
+          "id": "subagents",
+          "y": 1171
+        },
+        {
+          "h": 1120,
+          "id": "plans",
+          "y": 2214
+        },
+        {
+          "h": 985,
+          "id": "parallel",
+          "y": 3334
+        },
+        {
+          "h": 1289,
+          "id": "decisions",
+          "y": 4320
+        },
+        {
+          "h": 1297,
+          "id": "ask-blocks",
+          "y": 5609
+        },
+        {
+          "h": 1235,
+          "id": "approval-gate",
+          "y": 6905
+        }
+      ],
+      "smallTargets": [
+        {
+          "h": 28,
+          "text": "Toggle Sidebar",
+          "visible": true,
+          "w": 28,
+          "x": 12,
+          "y": 10
+        },
+        {
+          "h": 20,
+          "text": "Searching document repository",
+          "visible": true,
+          "w": 253,
+          "x": 41,
+          "y": 587
+        },
+        {
+          "h": 20,
+          "text": "Loading project brief definitions",
+          "visible": true,
+          "w": 255,
+          "x": 41,
+          "y": 613
+        },
+        {
+          "h": 20,
+          "text": "Cross-referencing test case mappings",
+          "visible": true,
+          "w": 276,
+          "x": 41,
+          "y": 639
+        },
+        {
+          "h": 20,
+          "text": "Generating coverage matrix",
+          "visible": true,
+          "w": 230,
+          "x": 41,
+          "y": 665
+        },
+        {
+          "h": 20,
+          "text": "Checking source control source material",
+          "visible": true,
+          "w": 245,
+          "x": 63,
+          "y": 1686
+        },
+        {
+          "h": 20,
+          "text": "Checking delivery readiness source material",
+          "visible": true,
+          "w": 242,
+          "x": 63,
+          "y": 1712
+        },
+        {
+          "h": 20,
+          "text": "Checking risk review source material",
+          "visible": true,
+          "w": 241,
+          "x": 63,
+          "y": 1738
+        },
+        {
+          "h": 20,
+          "text": "Running tasks in parallel",
+          "visible": true,
+          "w": 204,
+          "x": 41,
+          "y": 3712
+        },
+        {
+          "h": 20,
+          "text": "Checking current git status in the project",
+          "visible": true,
+          "w": 202,
+          "x": 69,
+          "y": 3744
+        },
+        {
+          "h": 20,
+          "text": "Checking remote configuration",
+          "visible": true,
+          "w": 202,
+          "x": 69,
+          "y": 3770
+        },
+        {
+          "h": 20,
+          "text": "Reading requirement coverage definitions",
+          "visible": true,
+          "w": 202,
+          "x": 69,
+          "y": 3796
+        }
+      ],
+      "title": "Agent Actions | Agentic Craft",
+      "url": "http://127.0.0.1:3000/actions?audit=critical-mobile"
+    }
+  },
+  {
+    "file": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-06-critical-product-visual-audit/12-multi-agent-mobile.png",
+    "width": 390,
+    "height": 844,
+    "url": "/multi-agent?audit=critical-mobile",
+    "label": "Multi-agent mobile",
+    "bytes": 34961,
+    "metrics": {
+      "bodyTextSample": "Skip to contentToggle SidebarAgentic CraftOrchestrationMulti-Agent PatternsCoordination primitives for orchestrating multiple agents across product requirements review workflows — handoffs, parallel execution, routing, and inter-agent communication.IdentityAgent CardsIndividual agent identity cards showing name, role, current status, and active task. Cards reflect the agent's operational state in real time.ControlsActiveIdleErrorSource CollectorGather project artifactsCollecting delivery readine",
+      "buttonCount": 18,
+      "clientWidth": 390,
+      "headings": [
+        {
+          "tag": "h1",
+          "text": "Multi-Agent Patterns"
+        },
+        {
+          "tag": "h2",
+          "text": "Agent Cards"
+        },
+        {
+          "tag": "h2",
+          "text": "Handoff Flow"
+        },
+        {
+          "tag": "h2",
+          "text": "Parallel Agents"
+        },
+        {
+          "tag": "h2",
+          "text": "Agent Routing"
+        },
+        {
+          "tag": "h2",
+          "text": "Agent Communication"
+        }
+      ],
+      "overflowEls": [
+        {
+          "left": 16,
+          "right": 875,
+          "tag": "table",
+          "text": "AgentStatusTaskProgressConfidenceCostUpdatedSource CollectorGather project artif",
+          "width": 859
+        },
+        {
+          "left": 16,
+          "right": 875,
+          "tag": "thead",
+          "text": "AgentStatusTaskProgressConfidenceCostUpdated",
+          "width": 859
+        },
+        {
+          "left": 16,
+          "right": 875,
+          "tag": "tr",
+          "text": "AgentStatusTaskProgressConfidenceCostUpdated",
+          "width": 859
+        },
+        {
+          "left": 276,
+          "right": 532,
+          "tag": "th",
+          "text": "Task",
+          "width": 256
+        },
+        {
+          "left": 532,
+          "right": 660,
+          "tag": "th",
+          "text": "Progress",
+          "width": 128
+        },
+        {
+          "left": 660,
+          "right": 750,
+          "tag": "th",
+          "text": "Confidence",
+          "width": 90
+        },
+        {
+          "left": 750,
+          "right": 804,
+          "tag": "th",
+          "text": "Cost",
+          "width": 54
+        },
+        {
+          "left": 804,
+          "right": 875,
+          "tag": "th",
+          "text": "Updated",
+          "width": 71
+        }
+      ],
+      "scrollWidth": 390,
+      "sections": [
+        {
+          "h": 1308,
+          "id": "agent-cards",
+          "y": 341
+        },
+        {
+          "h": 1137,
+          "id": "handoff-flow",
+          "y": 1649
+        },
+        {
+          "h": 1154,
+          "id": "parallel-agents",
+          "y": 2786
+        },
+        {
+          "h": 1156,
+          "id": "agent-routing",
+          "y": 3940
+        },
+        {
+          "h": 1341,
+          "id": "agent-communication",
+          "y": 5096
+        }
+      ],
+      "smallTargets": [
+        {
+          "h": 28,
+          "text": "Toggle Sidebar",
+          "visible": true,
+          "w": 28,
+          "x": 12,
+          "y": 10
+        },
+        {
+          "h": 15,
+          "text": "Agentic Craft — Open Source",
+          "visible": true,
+          "w": 163,
+          "x": 114,
+          "y": 6567
+        }
+      ],
+      "title": "Multi-Agent | Agentic Craft",
+      "url": "http://127.0.0.1:3000/multi-agent?audit=critical-mobile"
+    }
+  },
+  {
+    "file": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-06-critical-product-visual-audit/13-observability-mobile.png",
+    "width": 390,
+    "height": 844,
+    "url": "/observability?audit=critical-mobile",
+    "label": "Observability mobile",
+    "bytes": 33212,
+    "metrics": {
+      "bodyTextSample": "Skip to contentToggle SidebarAgentic CraftObservabilityObservabilityActivity timelines, token tracking, session history, and error logs for continuous agent oversight.TimelineActivity TimelineA chronological stream of agent actions — tool invocations, messages, and state transitions — for full auditability of review workflows.ControlsLiveHistoryFilteredLive feedStreamingChecking Export workflow algorithm referencesJust nowTool callCross-referencing Project brief v3 against Launch checklist12s ag",
+      "buttonCount": 13,
+      "clientWidth": 390,
+      "headings": [
+        {
+          "tag": "h1",
+          "text": "Observability"
+        },
+        {
+          "tag": "h2",
+          "text": "Activity Timeline"
+        },
+        {
+          "tag": "h2",
+          "text": "Token Usage"
+        },
+        {
+          "tag": "h2",
+          "text": "Session Timeline"
+        },
+        {
+          "tag": "h2",
+          "text": "Error Log"
+        }
+      ],
+      "overflowEls": [
+        {
+          "left": 16,
+          "right": 884,
+          "tag": "table",
+          "text": "AgentStatusTaskProgressConfidenceCostUpdatedReview AgentCoordinates the sessionW",
+          "width": 868
+        },
+        {
+          "left": 16,
+          "right": 884,
+          "tag": "thead",
+          "text": "AgentStatusTaskProgressConfidenceCostUpdated",
+          "width": 868
+        },
+        {
+          "left": 16,
+          "right": 884,
+          "tag": "tr",
+          "text": "AgentStatusTaskProgressConfidenceCostUpdated",
+          "width": 868
+        },
+        {
+          "left": 281,
+          "right": 537,
+          "tag": "th",
+          "text": "Task",
+          "width": 256
+        },
+        {
+          "left": 537,
+          "right": 668,
+          "tag": "th",
+          "text": "Progress",
+          "width": 132
+        },
+        {
+          "left": 668,
+          "right": 759,
+          "tag": "th",
+          "text": "Confidence",
+          "width": 90
+        },
+        {
+          "left": 759,
+          "right": 813,
+          "tag": "th",
+          "text": "Cost",
+          "width": 54
+        },
+        {
+          "left": 813,
+          "right": 884,
+          "tag": "th",
+          "text": "Updated",
+          "width": 71
+        }
+      ],
+      "scrollWidth": 390,
+      "sections": [
+        {
+          "h": 1337,
+          "id": "activity-timeline",
+          "y": 295
+        },
+        {
+          "h": 995,
+          "id": "token-usage",
+          "y": 1633
+        },
+        {
+          "h": 1113,
+          "id": "session-timeline",
+          "y": 2628
+        },
+        {
+          "h": 1007,
+          "id": "error-log",
+          "y": 3741
+        }
+      ],
+      "smallTargets": [
+        {
+          "h": 28,
+          "text": "Toggle Sidebar",
+          "visible": true,
+          "w": 28,
+          "x": 12,
+          "y": 10
+        },
+        {
+          "h": 15,
+          "text": "Agentic Craft — Open Source",
+          "visible": true,
+          "w": 163,
+          "x": 114,
+          "y": 4878
+        }
+      ],
+      "title": "Observability | Agentic Craft",
+      "url": "http://127.0.0.1:3000/observability?audit=critical-mobile"
+    }
+  }
+]

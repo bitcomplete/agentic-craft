@@ -1,0 +1,74 @@
+[
+  {
+    "name": "fluid-input-message",
+    "ok": true,
+    "bytes": 43306,
+    "title": "Fluid Functionalism",
+    "url": "https://www.fluidfunctionalism.com/docs/input-message",
+    "file": "/Users/arielconti/workspace/agentic-craft/outputs/research/2026-06-06-agentic-craft-improvement-plan/visual-evidence-round-2/fluid-input-message.png"
+  },
+  {
+    "name": "fluid-ask-user-questions",
+    "ok": true,
+    "bytes": 49151,
+    "title": "Fluid Functionalism",
+    "url": "https://www.fluidfunctionalism.com/docs/ask-user-questions",
+    "file": "/Users/arielconti/workspace/agentic-craft/outputs/research/2026-06-06-agentic-craft-improvement-plan/visual-evidence-round-2/fluid-ask-user-questions.png"
+  },
+  {
+    "name": "fluid-thinking-steps",
+    "ok": true,
+    "bytes": 46804,
+    "title": "Fluid Functionalism",
+    "url": "https://www.fluidfunctionalism.com/docs/thinking-steps",
+    "file": "/Users/arielconti/workspace/agentic-craft/outputs/research/2026-06-06-agentic-craft-improvement-plan/visual-evidence-round-2/fluid-thinking-steps.png"
+  },
+  {
+    "name": "ai-elements-prompt-input",
+    "ok": true,
+    "bytes": 73622,
+    "title": "Prompt Input",
+    "url": "https://elements.ai-sdk.dev/components/prompt-input",
+    "file": "/Users/arielconti/workspace/agentic-craft/outputs/research/2026-06-06-agentic-craft-improvement-plan/visual-evidence-round-2/ai-elements-prompt-input.png"
+  },
+  {
+    "name": "ai-elements-sources",
+    "ok": true,
+    "bytes": 55044,
+    "title": "Sources",
+    "url": "https://elements.ai-sdk.dev/components/sources",
+    "file": "/Users/arielconti/workspace/agentic-craft/outputs/research/2026-06-06-agentic-craft-improvement-plan/visual-evidence-round-2/ai-elements-sources.png"
+  },
+  {
+    "name": "copilotkit-hitl",
+    "ok": true,
+    "bytes": 76957,
+    "title": "HITL Overview",
+    "url": "https://docs.copilotkit.ai/built-in-agent/human-in-the-loop",
+    "file": "/Users/arielconti/workspace/agentic-craft/outputs/research/2026-06-06-agentic-craft-improvement-plan/visual-evidence-round-2/copilotkit-hitl.png"
+  },
+  {
+    "name": "copilotkit-tool-rendering",
+    "ok": true,
+    "bytes": 96903,
+    "title": "Tool Rendering",
+    "url": "https://docs.copilotkit.ai/agent-spec/generative-ui/tool-rendering",
+    "file": "/Users/arielconti/workspace/agentic-craft/outputs/research/2026-06-06-agentic-craft-improvement-plan/visual-evidence-round-2/copilotkit-tool-rendering.png"
+  },
+  {
+    "name": "agentic-craft-templates",
+    "ok": true,
+    "bytes": 84705,
+    "title": "Templates | Agentic Craft",
+    "url": "http://127.0.0.1:3000/templates",
+    "file": "/Users/arielconti/workspace/agentic-craft/outputs/research/2026-06-06-agentic-craft-improvement-plan/visual-evidence-round-2/agentic-craft-templates.png"
+  },
+  {
+    "name": "agentic-craft-observability-mobile",
+    "ok": true,
+    "bytes": 52597,
+    "title": "Observability | Agentic Craft",
+    "url": "http://127.0.0.1:3000/observability?audit=critical-mobile",
+    "file": "/Users/arielconti/workspace/agentic-craft/outputs/research/2026-06-06-agentic-craft-improvement-plan/visual-evidence-round-2/agentic-craft-observability-mobile.png"
+  }
+]

@@ -1,7 +1,7 @@
-# Interactive Page Specification
+# Interactive Reference Page Specification
 
-Every page in this design system must have interactive demos at the level of
-InteractiveComposer.tsx. Here's what that means:
+Every page in this reference guide must have interactive examples at the level
+of InteractiveComposer.tsx. Here's what that means:
 
 ## The Standard (set by InteractiveComposer)
 
@@ -17,7 +17,7 @@ InteractiveComposer.tsx. Here's what that means:
    Press effects (scale 0.97). Fade in/out for appearing/disappearing elements.
    No motion libraries — pure CSS keyframes injected via `<style>`.
 
-4. **Single interactive demo per section** — NOT 5 static screenshots. One
+4. **Single interactive example per section** — NOT 5 static screenshots. One
    component, many states controlled by the controls panel.
 
 5. **Everything clickable** — chips, buttons, dismiss ×, expand/collapse,
@@ -49,19 +49,31 @@ InteractiveComposer.tsx. Here's what that means:
 - Tables: bare, no wrapper. `<th>` uses `text-xs font-medium text-muted-foreground`
 - Callouts: `border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground`
 
-## Domain context
+## Content context
 
-This is a design system for an agentic interface used by non-technical
-certification professionals (Common Criteria, CRA — EU Cyber Resilience Act).
-All example content should use CC/security evaluation terminology:
-- Security Targets, Protection Profiles, SFRs, SARs, EAL levels
-- TOE (Target of Evaluation), ITSEF (evaluation facility)
-- FCS_COP, FDP_ACF, FAU_GEN — CC functional requirement families
-- Evaluators, evaluation evidence, conformance claims
+This is a reference guide for agentic interfaces used across many product
+domains. It should go beyond chat-first interaction and cover the broader
+surface area of agentic products:
+- orchestration surfaces: agent configuration, rule builders, preview panels,
+  routing, handoffs, and parallel work
+- operational surfaces: dashboards, inboxes, task lists, timelines, monitoring,
+  errors, cost, and human oversight queues
+- action surfaces: tool calls, rich action previews, ask blocks, approvals,
+  plans, and rollback/recovery
+- context surfaces: knowledge source selection, connectors, memory controls,
+  source panels, citations, and provenance
+
+Example content should stay generic and portable:
+- product research, project plans, customer feedback, release notes, support
+  cases, internal knowledge, operational runbooks, and analytics
+- plain-language labels instead of domain-specific acronyms
+- workflows that are useful in many contexts: reviewing source material,
+  comparing claims, asking for approval, updating a plan, saving memory, routing
+  work, and inspecting activity
 
 ## User instructions (CRITICAL)
 
-- NO function signatures in demos (e.g., `analyze_execution_logs("FAU_GEN.1")`)
+- NO function signatures in demos (e.g., `analyze_source("report.pdf")`)
   — use human-readable labels only
 - All icons monochrome — no colors
 - No spinners/loaders while tools load

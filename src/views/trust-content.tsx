@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { useState, useEffect } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
@@ -15,6 +15,34 @@ import {
   Target01Icon,
   Search01Icon,
 } from "@hugeicons/core-free-icons"
+import { PatternControls as Controls } from "@/components/pattern-controls"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import {
+  EffectivePolicyPreview,
+  type EffectivePolicy,
+} from "@/components/ui/effective-policy-preview"
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldLegend,
+  FieldSet,
+} from "@/components/ui/field"
+import { Progress } from "@/components/ui/progress"
+import { Separator } from "@/components/ui/separator"
+import { Switch } from "@/components/ui/switch"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 
 /* ------------------------------------------------------------------ */
 /*  CSS Keyframes                                                      */
@@ -34,13 +62,13 @@ function ensureStyles() {
       from { opacity: 0; }
       to { opacity: 1; }
     }
-    @keyframes trust-expand {
-      from { max-height: 0; opacity: 0; }
-      to { max-height: 800px; opacity: 1; }
-    }
-    @keyframes trust-progress {
-      from { width: 0%; }
-      to { width: var(--target-width); }
+      @keyframes trust-expand {
+        from { opacity: 0; transform: translateY(-4px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes trust-progress {
+        from { transform: scaleX(0); }
+        to { transform: scaleX(var(--target-scale)); }
     }
     @keyframes trust-pulse {
       0%, 100% { opacity: 1; }
@@ -62,10 +90,19 @@ function ensureStyles() {
       overflow: hidden;
     }
     .trust-pulse {
-      animation: trust-pulse 1.5s ease-in-out infinite;
+      animation: trust-pulse 1.5s ease-in-out 3;
     }
     .trust-press {
       animation: trust-press 0.15s ease;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .trust-slide-in,
+      .trust-fade-in,
+      .trust-expand,
+      .trust-pulse,
+      .trust-press {
+        animation: none;
+      }
     }
   `
   document.head.appendChild(style)
@@ -78,49 +115,49 @@ function ensureStyles() {
 const AUDIT_ENTRIES = [
   {
     time: "14:02:11",
-    action: "Opened Security Target v3.1",
+    action: "Opened Project brief v3",
     user: "Agent",
-    outcome: "Loaded 47 SFR definitions",
-    evidence: "ST-SmartCard-v3.1.pdf",
+    outcome: "Loaded 47 requirement definitions",
+    source: "Project-Brief-v3.pdf",
   },
   {
     time: "14:02:14",
-    action: "Cross-referenced FCS_COP.1 test results",
+    action: "Cross-referenced Export workflow QA notes",
     user: "Agent",
-    outcome: "3 of 4 test cases passed",
-    evidence: "Test Report TR-2026-003, §4.2",
+    outcome: "3 of 4 checks passed",
+    source: "QA Notes 2026-003, §4.2",
   },
   {
     time: "14:02:18",
-    action: "Flagged FCS_COP.1.1 for evaluator review",
+    action: "Flagged Export workflow for reviewer approval",
     user: "Agent",
     outcome: "Added to OR agenda item #7",
-    evidence: "OR-Agenda-2026-03.docx",
+    source: "Review-Agenda-2026-03.docx",
   },
   {
     time: "14:02:22",
-    action: "Evaluator approved finding classification",
-    user: "M. Laurent (ITSEF)",
+    action: "Reviewer approved finding classification",
+    user: "Morgan Lee (review team)",
     outcome: "Finding confirmed as minor",
-    evidence: "ETR-2026-v2.pdf, §6.1",
+    source: "Launch-Review-2026-v2.pdf, §6.1",
   },
 ]
 
 const PROVENANCE_SOURCES = [
   {
-    document: "Security Target v3.1",
-    section: "§5.1 — SFR Definitions",
+    document: "Project brief v3",
+    section: "§5.1 — requirement Definitions",
     confidence: 0.94,
     type: "Primary",
   },
   {
-    document: "CEM v3.1 Supplement",
-    section: "§12.4 — Evaluator Actions",
+    document: "Operating playbook",
+    section: "§12.4 — Reviewer Actions",
     confidence: 0.87,
     type: "Guidance",
   },
   {
-    document: "Previous ETR (2025-08)",
+    document: "Previous launch review (2025-08)",
     section: "§6 — Findings Summary",
     confidence: 0.71,
     type: "Reference",
@@ -128,10 +165,29 @@ const PROVENANCE_SOURCES = [
 ]
 
 const PROVENANCE_CHAIN = [
-  { step: "Source", label: "ST v3.1, §5.1", detail: "FCS_COP.1 specifies AES-256-CBC for data encryption" },
-  { step: "Extracted", label: "Requirement", detail: "TOE must implement AES-256-CBC per FIPS 197" },
-  { step: "Inference", label: "Gap analysis", detail: "Test case TC-047 covers AES-256 but not CBC mode specifically" },
-  { step: "Conclusion", label: "Finding", detail: "Partial coverage — recommend additional test for CBC mode validation" },
+  {
+    step: "Source",
+    label: "Brief v3, §5.1",
+    detail: "Export workflow specifies CSV and JSON export for data encryption",
+  },
+  {
+    step: "Extracted",
+    label: "Requirement",
+    detail:
+      "product must implement CSV and JSON export per the internal data policy",
+  },
+  {
+    step: "Inference",
+    label: "Gap analysis",
+    detail:
+      "Test case TC-047 covers CSV and JSON exports but not CBC mode specifically",
+  },
+  {
+    step: "Conclusion",
+    label: "Finding",
+    detail:
+      "Partial coverage — recommend additional test for CBC mode validation",
+  },
 ]
 
 const COST_BREAKDOWN = {
@@ -148,80 +204,117 @@ const AUTONOMY_LEVELS = [
   {
     level: 2,
     name: "Human-in-Command",
-    description: "AI drafts outputs and proposes actions; human approves every one before execution.",
+    description:
+      "AI drafts outputs and proposes actions; human approves every one before execution.",
     uiPattern: "Approval modal",
     capabilities: [
-      "Draft evaluation findings for review",
-      "Propose SFR-to-test-case mappings",
-      "Suggest evidence requests to developer",
+      "Draft project findings for review",
+      "Propose requirement-to-test-case mappings",
+      "Suggest source requests to developer",
     ],
     restrictions: [
       "Cannot send emails without approval",
-      "Cannot modify evaluation records",
+      "Cannot modify project records",
       "Cannot create or close findings",
     ],
   },
   {
     level: 3,
     name: "Human-Delegated",
-    description: "AI handles routine tasks autonomously; human reviews only flagged exceptions.",
+    description:
+      "AI handles routine tasks autonomously; human reviews only flagged exceptions.",
     uiPattern: "Inbox of flagged items",
     capabilities: [
-      "Automatically cross-reference SFR coverage",
+      "Automatically cross-reference requirement coverage",
       "Generate routine status reports",
       "Send pre-approved notification templates",
     ],
     restrictions: [
       "Flags novel findings for human review",
-      "Cannot submit evidence packages to lab",
+      "Cannot submit source packages to lab",
       "Escalates if confidence drops below 70%",
     ],
   },
   {
     level: 4,
     name: "Human-in-the-Loop",
-    description: "AI executes freely but escalates when confidence drops below a set threshold.",
+    description:
+      "AI executes freely but escalates when confidence drops below a set threshold.",
     uiPattern: "Confidence slider",
     capabilities: [
-      "Execute full evaluation workflows end-to-end",
+      "Execute full review workflows end-to-end",
       "Send emails and create findings autonomously",
-      "Update Security Target revision history",
+      "Update project brief revision history",
     ],
     restrictions: [
       "Escalates on confidence below threshold",
-      "Cannot approve final ETR submission",
+      "Cannot approve final launch summary submission",
       "Human monitors via activity dashboard",
     ],
   },
 ]
 
+const SETTINGS_TEMPLATES = [
+  {
+    id: "autonomy-settings",
+    title: "Autonomy Settings",
+    description:
+      "Set the maximum independence level, escalation threshold, and allowed action classes.",
+    enabled: true,
+  },
+  {
+    id: "notification-settings",
+    title: "Notification Settings",
+    description:
+      "Choose when background runs, blockers, approvals, and completions notify users.",
+    enabled: true,
+  },
+  {
+    id: "approval-policy-settings",
+    title: "Approval Policy Settings",
+    description:
+      "Require confirmation for external communication, spending, publishing, and destructive edits.",
+    enabled: true,
+  },
+  {
+    id: "memory-privacy-settings",
+    title: "Memory & Privacy Settings",
+    description:
+      "Control durable memory review, workspace scope, expiry, and removal behavior.",
+    enabled: false,
+  },
+] as const
+
 const MODE_CONFIGS = {
-  compliance: {
-    label: "Compliance",
-    focus: "Ensuring all evaluation evidence meets CEM requirements and PP conformance claims.",
+  requirements: {
+    label: "Requirements",
+    focus:
+      "Ensuring all source material meets operating playbook requirements and policy alignment claims.",
     tools: [
-      "Evidence completeness checker",
-      "SFR coverage matrix generator",
-      "PP conformance validator",
-      "ALC lifecycle document scanner",
+      "Source completeness checker",
+      "requirement coverage matrix generator",
+      "Policy alignment validator",
+      "Lifecycle document scanner",
     ],
   },
   research: {
     label: "Research",
-    focus: "Investigating technical aspects of the TOE, analyzing vulnerability reports, and reviewing cryptographic implementations.",
+    focus:
+      "Investigating technical aspects of the product, analyzing risk reports, and reviewing export implementations.",
     tools: [
-      "Vulnerability database search",
-      "Cryptographic algorithm verifier",
+      "Risk database search",
+      "Export behavior verifier",
       "Technical document analyzer",
-      "CAVP certificate lookup",
+      "Platform capability lookup",
     ],
   },
   review: {
     label: "Review",
-    focus: "Reviewing evaluation deliverables, checking consistency across documents, and preparing for lab audits.",
+    focus:
+      "Reviewing project deliverables, checking consistency across documents, and preparing for stakeholder reviews.",
     tools: [
       "Cross-document consistency checker",
-      "ETR section reviewer",
+      "launch summary section reviewer",
       "Finding classification advisor",
       "Audit preparation checklist",
     ],
@@ -231,72 +324,37 @@ const MODE_CONFIGS = {
 const SCOPE_CONFIGS = {
   device: {
     label: "Device Only",
-    scope: "ACME SmartCard Module v3.1",
+    scope: "ACME Customer Portal v3.1",
     documents: [
-      { name: "Security Target v3.1", section: "Full document" },
-      { name: "Test Report TR-2026-003", section: "Device-specific tests" },
+      { name: "Project brief v3", section: "Full document" },
+      { name: "QA Notes 2026-003", section: "Product-specific checks" },
     ],
   },
   devicePP: {
-    label: "Device + PP",
-    scope: "ACME SmartCard + PP-CIMC-SLv3",
+    label: "Product + Policy",
+    scope: "ACME SmartCard + Launch Policy v2",
     documents: [
-      { name: "Security Target v3.1", section: "Full document" },
-      { name: "Test Report TR-2026-003", section: "All test results" },
-      { name: "PP-CIMC-SLv3", section: "SFR requirements" },
-      { name: "PP Evaluation Report", section: "Conformance claims" },
+      { name: "Project brief v3", section: "Full document" },
+      { name: "QA Notes 2026-003", section: "All check results" },
+      { name: "Launch Policy v2", section: "requirement requirements" },
+      { name: "Policy Review Report", section: "Alignment claims" },
     ],
   },
   global: {
     label: "Global",
-    scope: "All evaluation artifacts",
+    scope: "All project artifacts",
     documents: [
-      { name: "Security Target v3.1", section: "Full document" },
-      { name: "Test Report TR-2026-003", section: "All test results" },
-      { name: "PP-CIMC-SLv3", section: "Full document" },
-      { name: "Previous ETR (2025-08)", section: "Findings and conclusions" },
-      { name: "CEM v3.1 Supplement", section: "Evaluator actions" },
-      { name: "Vulnerability Analysis Report", section: "AVA_VAN results" },
+      { name: "Project brief v3", section: "Full document" },
+      { name: "QA Notes 2026-003", section: "All check results" },
+      { name: "Launch Policy v2", section: "Full document" },
+      {
+        name: "Previous launch review (2025-08)",
+        section: "Findings and conclusions",
+      },
+      { name: "Operating playbook", section: "Reviewer actions" },
+      { name: "Risk Analysis Report", section: "risk review results" },
     ],
   },
-}
-
-/* ------------------------------------------------------------------ */
-/*  Controls component                                                 */
-/* ------------------------------------------------------------------ */
-
-function Controls({
-  options,
-  active,
-  onToggle,
-}: {
-  options: { key: string; label: string }[]
-  active: Record<string, boolean>
-  onToggle: (key: string) => void
-}) {
-  return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 pb-5">
-      <span className="section-label mr-1">Controls</span>
-      {options.map((opt) => (
-        <button
-          key={opt.key}
-          onClick={() => onToggle(opt.key)}
-          className={`
-            relative text-xs px-2.5 py-1 rounded-md border transition-all duration-200
-            ${active[opt.key]
-              ? "border-foreground/20 bg-foreground/[0.04] text-foreground"
-              : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50"
-            }
-          `}
-        >
-          {opt.label}
-          {active[opt.key] && (
-            <span className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-foreground/40" />
-          )}
-        </button>
-      ))}
-    </div>
-  )
 }
 
 /* ------------------------------------------------------------------ */
@@ -317,48 +375,102 @@ const PROSE_STYLE: React.CSSProperties = {
 /* ------------------------------------------------------------------ */
 
 export function TrustContent() {
-  useEffect(() => { ensureStyles() }, [])
+  useEffect(() => {
+    ensureStyles()
+  }, [])
+
+  const [settingsEnabled, setSettingsEnabled] = useState<
+    Record<(typeof SETTINGS_TEMPLATES)[number]["id"], boolean>
+  >(() =>
+    SETTINGS_TEMPLATES.reduce(
+      (acc, template) => {
+        acc[template.id] = template.enabled
+        return acc
+      },
+      {} as Record<(typeof SETTINGS_TEMPLATES)[number]["id"], boolean>
+    )
+  )
+
+  const toggleSetting = (id: (typeof SETTINGS_TEMPLATES)[number]["id"]) => {
+    setSettingsEnabled((current) => ({
+      ...current,
+      [id]: !current[id],
+    }))
+  }
 
   /* — Autonomy Level — */
-  const [autoCtrl, setAutoCtrl] = useState<Record<string, boolean>>({ level2: true, level3: false, level4: false })
+  const [autoCtrl, setAutoCtrl] = useState<Record<string, boolean>>({
+    level2: true,
+    level3: false,
+    level4: false,
+  })
   const [autoAnimKey, setAutoAnimKey] = useState(0)
 
   /* — Mode Toggles — */
-  const [modeCtrl, setModeCtrl] = useState<Record<string, boolean>>({ compliance: true, research: false, review: false })
+  const [modeCtrl, setModeCtrl] = useState<Record<string, boolean>>({
+    requirements: true,
+    research: false,
+    review: false,
+  })
   const [modeAnimKey, setModeAnimKey] = useState(0)
 
   /* — Context Scope — */
-  const [scopeCtrl, setScopeCtrl] = useState<Record<string, boolean>>({ device: true, devicePP: false, global: false })
+  const [scopeCtrl, setScopeCtrl] = useState<Record<string, boolean>>({
+    device: true,
+    devicePP: false,
+    global: false,
+  })
   const [scopeAnimKey, setScopeAnimKey] = useState(0)
 
   /* — Consent Flow — */
-  const [consentCtrl, setConsentCtrl] = useState<Record<string, boolean>>({ prompt: true, accepted: false, declined: false })
+  const [consentCtrl, setConsentCtrl] = useState<Record<string, boolean>>({
+    prompt: true,
+    accepted: false,
+    declined: false,
+  })
   const [consentAnimKey, setConsentAnimKey] = useState(0)
 
   /* — Confidence Display — */
-  const [confCtrl, setConfCtrl] = useState<Record<string, boolean>>({ high: true, medium: false, low: false })
+  const [confCtrl, setConfCtrl] = useState<Record<string, boolean>>({
+    high: true,
+    medium: false,
+    low: false,
+  })
   const [confAnimKey, setConfAnimKey] = useState(0)
   const [verifyClicked, setVerifyClicked] = useState(false)
 
   /* — Kill Switch — */
-  const [killCtrl, setKillCtrl] = useState<Record<string, boolean>>({ idle: true, running: false, stopped: false })
+  const [killCtrl, setKillCtrl] = useState<Record<string, boolean>>({
+    idle: true,
+    running: false,
+    stopped: false,
+  })
   const [killAnimKey, setKillAnimKey] = useState(0)
 
   /* — Cost Transparency — */
-  const [costCtrl, setCostCtrl] = useState<Record<string, boolean>>({ compact: true, detailed: false })
+  const [costCtrl, setCostCtrl] = useState<Record<string, boolean>>({
+    compact: true,
+    detailed: false,
+  })
   const [costAnimKey, setCostAnimKey] = useState(0)
 
   /* — Data Provenance — */
-  const [provCtrl, setProvCtrl] = useState<Record<string, boolean>>({ sources: true, chain: false })
+  const [provCtrl, setProvCtrl] = useState<Record<string, boolean>>({
+    sources: true,
+    chain: false,
+  })
   const [provAnimKey, setProvAnimKey] = useState(0)
 
   /* — Audit Trail — */
-  const [auditCtrl, setAuditCtrl] = useState<Record<string, boolean>>({ summary: true, detailed: false })
+  const [auditCtrl, setAuditCtrl] = useState<Record<string, boolean>>({
+    summary: true,
+    detailed: false,
+  })
   const [auditAnimKey, setAuditAnimKey] = useState(0)
 
   function makeToggle(
     setter: React.Dispatch<React.SetStateAction<Record<string, boolean>>>,
-    animSetter: React.Dispatch<React.SetStateAction<number>>,
+    animSetter: React.Dispatch<React.SetStateAction<number>>
   ) {
     return (key: string) => {
       setter((prev) => {
@@ -372,19 +484,68 @@ export function TrustContent() {
   }
 
   /* Resolve active autonomy level */
-  const activeLevel = autoCtrl.level2 ? AUTONOMY_LEVELS[0] : autoCtrl.level3 ? AUTONOMY_LEVELS[1] : AUTONOMY_LEVELS[2]
+  const activeLevel = autoCtrl.level2
+    ? AUTONOMY_LEVELS[0]
+    : autoCtrl.level3
+      ? AUTONOMY_LEVELS[1]
+      : AUTONOMY_LEVELS[2]
 
   /* Resolve active mode */
-  const activeMode = modeCtrl.compliance ? MODE_CONFIGS.compliance : modeCtrl.research ? MODE_CONFIGS.research : MODE_CONFIGS.review
+  const activeMode = modeCtrl.requirements
+    ? MODE_CONFIGS.requirements
+    : modeCtrl.research
+      ? MODE_CONFIGS.research
+      : MODE_CONFIGS.review
 
   /* Resolve active scope */
-  const activeScope = scopeCtrl.device ? SCOPE_CONFIGS.device : scopeCtrl.devicePP ? SCOPE_CONFIGS.devicePP : SCOPE_CONFIGS.global
+  const activeScope = scopeCtrl.device
+    ? SCOPE_CONFIGS.device
+    : scopeCtrl.devicePP
+      ? SCOPE_CONFIGS.devicePP
+      : SCOPE_CONFIGS.global
+
+  const effectivePolicies: EffectivePolicy[] = [
+    {
+      label: "Autonomy",
+      value: `Maximum Level ${activeLevel.level}: ${activeLevel.name}`,
+      description: settingsEnabled["autonomy-settings"]
+        ? "Applies to the current workspace until changed."
+        : "Using product defaults because custom autonomy settings are off.",
+      status: "review",
+    },
+    {
+      label: "External actions",
+      value: settingsEnabled["approval-policy-settings"]
+        ? "Approval required before sending, publishing, or modifying shared records."
+        : "Allowed by workflow defaults.",
+      description:
+        "Risky actions should show a locked consequence preview before execution.",
+      status: settingsEnabled["approval-policy-settings"]
+        ? "required"
+        : "allowed",
+    },
+    {
+      label: "Notifications",
+      value: settingsEnabled["notification-settings"]
+        ? "Notify on blockers, approvals, completions, and budget warnings."
+        : "Only critical blockers notify users.",
+      status: settingsEnabled["notification-settings"] ? "allowed" : "review",
+    },
+    {
+      label: "Memory",
+      value: settingsEnabled["memory-privacy-settings"]
+        ? "Memory changes require review, scope, provenance, and expiry."
+        : "Durable memory is blocked until review settings are enabled.",
+      description: "Memory should not expand scope silently.",
+      status: settingsEnabled["memory-privacy-settings"] ? "required" : "blocked",
+    },
+  ]
 
   return (
     <article>
       <header className="mb-20">
         <p className="section-label mb-4">Patterns</p>
-        <h1 className="font-serif text-4xl font-light tracking-tight leading-[1.15]">
+        <h1 className="font-serif text-4xl leading-[1.15] font-light tracking-tight">
           Trust &amp; Safety
         </h1>
         <p className="mt-4 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
@@ -394,6 +555,49 @@ export function TrustContent() {
         </p>
       </header>
 
+      <section id="settings-templates" className="page-section">
+        <p className="section-label mb-3">Configuration</p>
+        <h2 className="text-xl font-semibold tracking-tight">
+          Settings Templates
+        </h2>
+        <p className="mt-2 max-w-[640px] text-sm leading-relaxed text-muted-foreground">
+          Reusable control groups for product teams that need durable agent
+          boundaries across sessions, not one-off prompt instructions.
+        </p>
+
+        <FieldGroup className="mt-8 rounded-lg border border-border/40 p-6">
+          <FieldSet>
+            <FieldLegend>Reusable Settings Groups</FieldLegend>
+            {SETTINGS_TEMPLATES.map((template) => (
+              <Field key={template.id} orientation="horizontal">
+                <Switch
+                  id={template.id}
+                  checked={settingsEnabled[template.id]}
+                  onCheckedChange={() => toggleSetting(template.id)}
+                />
+                <FieldContent>
+                  <FieldLabel htmlFor={template.id}>
+                    {template.title}
+                  </FieldLabel>
+                  <FieldDescription>{template.description}</FieldDescription>
+                </FieldContent>
+              </Field>
+            ))}
+          </FieldSet>
+        </FieldGroup>
+
+        <EffectivePolicyPreview
+          className="mt-4"
+          policies={effectivePolicies}
+        />
+
+        <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm leading-relaxed text-muted-foreground italic">
+          Settings templates should use confirmation or undo for risky changes
+          such as disabling approval gates, lowering escalation thresholds, or
+          expanding memory scope.
+        </p>
+      </section>
+
       {/* ============================================================ */}
       {/*  Section 1 — Autonomy Level                                   */}
       {/* ============================================================ */}
@@ -401,8 +605,9 @@ export function TrustContent() {
         <p className="section-label mb-3">Governance</p>
         <h2 className="text-xl font-semibold tracking-tight">Autonomy Level</h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-          Select how much independence the agent has. Higher levels increase speed
-          but reduce oversight. Uses the 6-level autonomy scale from foundations.
+          Select how much independence the agent has. Higher levels increase
+          speed but reduce oversight. Uses the 6-level autonomy scale from
+          foundations.
         </p>
 
         <div className="mt-8">
@@ -416,22 +621,30 @@ export function TrustContent() {
             onToggle={makeToggle(setAutoCtrl, setAutoAnimKey)}
           />
 
-          <div className="border border-border/40 rounded-lg p-6" key={autoAnimKey}>
+          <div
+            className="rounded-lg border border-border/40 p-6"
+            key={autoAnimKey}
+          >
             <div className="trust-slide-in">
               {/* Stepped indicator */}
-              <div className="flex items-center gap-1 mb-6">
+              <div className="mb-6 flex items-center gap-1">
                 {[1, 2, 3, 4, 5, 6].map((n) => (
-                  <div key={n} className="flex-1 flex flex-col items-center gap-1.5">
+                  <div
+                    key={n}
+                    className="flex flex-1 flex-col items-center gap-1.5"
+                  >
                     <div
                       className={`h-2 w-full rounded-md transition-colors duration-200 ${
-                        n <= activeLevel.level
-                          ? "bg-foreground/20"
-                          : "bg-muted"
+                        n <= activeLevel.level ? "bg-foreground/20" : "bg-muted"
                       }`}
                     />
-                    <span className={`text-[10px] tabular-nums ${
-                      n === activeLevel.level ? "text-foreground font-medium" : "text-muted-foreground"
-                    }`}>
+                    <span
+                      className={`text-[10px] tabular-nums ${
+                        n === activeLevel.level
+                          ? "font-medium text-foreground"
+                          : "text-muted-foreground"
+                      }`}
+                    >
                       {n}
                     </span>
                   </div>
@@ -441,33 +654,57 @@ export function TrustContent() {
               {/* Level details */}
               <div className="space-y-4">
                 <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs text-muted-foreground">Level {activeLevel.level}</span>
+                  <div className="mb-1 flex items-center gap-2">
+                    <span className="text-xs text-muted-foreground">
+                      Level {activeLevel.level}
+                    </span>
                     <span className="text-xs text-muted-foreground">·</span>
-                    <span className="text-sm font-medium">{activeLevel.name}</span>
+                    <span className="text-sm font-medium">
+                      {activeLevel.name}
+                    </span>
                   </div>
-                  <p className="text-sm text-muted-foreground">{activeLevel.description}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {activeLevel.description}
+                  </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-xs text-muted-foreground mb-2">Capabilities</p>
+                    <p className="mb-2 text-xs text-muted-foreground">
+                      Capabilities
+                    </p>
                     <div className="space-y-1.5">
                       {activeLevel.capabilities.map((cap) => (
                         <div key={cap} className="flex items-start gap-2">
-                          <HugeiconsIcon icon={Tick01Icon} size={12} strokeWidth={1.5} className="mt-0.5 shrink-0 text-muted-foreground" />
-                          <span className="text-xs text-muted-foreground">{cap}</span>
+                          <HugeiconsIcon
+                            icon={Tick01Icon}
+                            size={12}
+                            strokeWidth={1.5}
+                            className="mt-0.5 shrink-0 text-muted-foreground"
+                          />
+                          <span className="text-xs text-muted-foreground">
+                            {cap}
+                          </span>
                         </div>
                       ))}
                     </div>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground mb-2">Restrictions</p>
+                    <p className="mb-2 text-xs text-muted-foreground">
+                      Restrictions
+                    </p>
                     <div className="space-y-1.5">
                       {activeLevel.restrictions.map((r) => (
                         <div key={r} className="flex items-start gap-2">
-                          <HugeiconsIcon icon={Cancel01Icon} size={12} strokeWidth={1.5} className="mt-0.5 shrink-0 text-muted-foreground" />
-                          <span className="text-xs text-muted-foreground">{r}</span>
+                          <HugeiconsIcon
+                            icon={Cancel01Icon}
+                            size={12}
+                            strokeWidth={1.5}
+                            className="mt-0.5 shrink-0 text-muted-foreground"
+                          />
+                          <span className="text-xs text-muted-foreground">
+                            {r}
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -475,9 +712,7 @@ export function TrustContent() {
                 </div>
 
                 <div className="flex items-center gap-2 pt-2">
-                  <span className="rounded-md border border-border px-1.5 py-0.5 text-[10px] text-muted-foreground">
-                    UI: {activeLevel.uiPattern}
-                  </span>
+                  <Badge variant="outline">UI: {activeLevel.uiPattern}</Badge>
                 </div>
               </div>
             </div>
@@ -486,39 +721,58 @@ export function TrustContent() {
 
         {/* Spec table */}
         <div className="mt-8">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Property</th>
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Value</th>
-                <th className="pb-2 text-left text-xs font-medium text-muted-foreground">Notes</th>
-              </tr>
-            </thead>
-            <tbody className="text-muted-foreground">
-              <tr className="border-b border-border/50">
-                <td className="py-2.5 pr-4 font-medium text-foreground">Scale</td>
-                <td className="py-2.5 pr-4">6 levels (1–6)</td>
-                <td className="py-2.5">From Human-Augmented to Human-Out-of-the-Loop</td>
-              </tr>
-              <tr className="border-b border-border/50">
-                <td className="py-2.5 pr-4 font-medium text-foreground">Default</td>
-                <td className="py-2.5 pr-4">Level 2</td>
-                <td className="py-2.5">Start conservative, unlock higher levels over time</td>
-              </tr>
-              <tr>
-                <td className="py-2.5 pr-4 font-medium text-foreground">Indicator</td>
-                <td className="py-2.5 pr-4">Stepped bar</td>
-                <td className="py-2.5">Discrete steps, not a continuous slider</td>
-              </tr>
-            </tbody>
-          </table>
+          <Table className="w-full text-sm">
+            <TableHeader>
+              <TableRow className="border-b border-border">
+                <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
+                  Property
+                </TableHead>
+                <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
+                  Value
+                </TableHead>
+                <TableHead className="pb-2 text-left text-xs font-medium text-muted-foreground">
+                  Notes
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="text-muted-foreground">
+              <TableRow className="border-b border-border/50">
+                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
+                  Scale
+                </TableCell>
+                <TableCell className="py-2.5 pr-4">6 levels (1–6)</TableCell>
+                <TableCell className="py-2.5">
+                  From Human-Augmented to Human-Out-of-the-Loop
+                </TableCell>
+              </TableRow>
+              <TableRow className="border-b border-border/50">
+                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
+                  Default
+                </TableCell>
+                <TableCell className="py-2.5 pr-4">Level 2</TableCell>
+                <TableCell className="py-2.5">
+                  Start conservative, unlock higher levels over time
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
+                  Indicator
+                </TableCell>
+                <TableCell className="py-2.5 pr-4">Stepped bar</TableCell>
+                <TableCell className="py-2.5">
+                  Discrete steps, not a continuous slider
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </div>
 
         {/* Callout */}
-        <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          Autonomy levels should be progressive — start at Level 2 for new evaluations and
-          unlock higher levels only after the agent has demonstrated reliability. Never
-          default to full autonomy for evaluation tasks that affect certification outcomes.
+        <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
+          Autonomy levels should be progressive — start at Level 2 for new
+          workflows and unlock higher levels only after the agent has
+          demonstrated reliability. Never default to full autonomy for review
+          tasks that affect approval outcomes.
         </div>
       </section>
 
@@ -529,14 +783,14 @@ export function TrustContent() {
         <p className="section-label mb-3">Governance</p>
         <h2 className="text-xl font-semibold tracking-tight">Mode Toggles</h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-          Switch the agent's operational mode to focus on different aspects of the
-          evaluation workflow. Each mode changes available tools and priorities.
+          Switch the agent's operational mode to focus on different aspects of
+          the review workflow. Each mode changes available tools and priorities.
         </p>
 
         <div className="mt-8">
           <Controls
             options={[
-              { key: "compliance", label: "Compliance" },
+              { key: "requirements", label: "Requirements" },
               { key: "research", label: "Research" },
               { key: "review", label: "Review" },
             ]}
@@ -544,42 +798,62 @@ export function TrustContent() {
             onToggle={makeToggle(setModeCtrl, setModeAnimKey)}
           />
 
-          <div className="border border-border/40 rounded-lg p-6" key={modeAnimKey}>
+          <div
+            className="rounded-lg border border-border/40 p-6"
+            key={modeAnimKey}
+          >
             <div className="trust-slide-in">
               <div className="space-y-4">
                 {/* Mode header */}
                 <div className="flex items-center gap-3">
                   <div className="flex h-8 w-8 items-center justify-center rounded-md bg-muted">
                     <HugeiconsIcon
-                      icon={modeCtrl.compliance ? Shield01Icon : modeCtrl.research ? Search01Icon : Target01Icon}
+                      icon={
+                        modeCtrl.requirements
+                          ? Shield01Icon
+                          : modeCtrl.research
+                            ? Search01Icon
+                            : Target01Icon
+                      }
                       size={14}
                       strokeWidth={1.5}
                       className="text-muted-foreground"
                     />
                   </div>
                   <div>
-                    <p className="text-sm font-medium">{activeMode.label} mode</p>
+                    <p className="text-sm font-medium">
+                      {activeMode.label} mode
+                    </p>
                     <p className="text-xs text-muted-foreground">Active</p>
                   </div>
                 </div>
 
                 {/* Focus */}
                 <div>
-                  <p className="text-xs text-muted-foreground mb-1.5">Focus</p>
-                  <p className="text-sm text-muted-foreground">{activeMode.focus}</p>
+                  <p className="mb-1.5 text-xs text-muted-foreground">Focus</p>
+                  <p className="text-sm text-muted-foreground">
+                    {activeMode.focus}
+                  </p>
                 </div>
 
                 {/* Available tools */}
                 <div>
-                  <p className="text-xs text-muted-foreground mb-2">Available tools</p>
+                  <p className="mb-2 text-xs text-muted-foreground">
+                    Available tools
+                  </p>
                   <div className="grid grid-cols-2 gap-2">
                     {activeMode.tools.map((tool, i) => (
                       <div
                         key={tool}
-                        className="flex items-center gap-2 rounded-md border border-border/60 px-3 py-2 trust-slide-in"
+                        className="trust-slide-in flex items-center gap-2 rounded-md border border-border/60 px-3 py-2"
                         style={{ animationDelay: `${i * 60}ms` }}
                       >
-                        <HugeiconsIcon icon={Brain01Icon} size={12} strokeWidth={1.5} className="shrink-0 text-muted-foreground" />
+                        <HugeiconsIcon
+                          icon={Brain01Icon}
+                          size={12}
+                          strokeWidth={1.5}
+                          className="shrink-0 text-muted-foreground"
+                        />
                         <span className="text-xs">{tool}</span>
                       </div>
                     ))}
@@ -588,22 +862,35 @@ export function TrustContent() {
 
                 {/* Mode selector as toggle buttons */}
                 <div className="pt-2">
-                  <p className="text-xs text-muted-foreground mb-2">Switch mode</p>
-                  <div className="inline-flex rounded-md border border-border bg-muted/30 p-0.5">
-                    {(["compliance", "research", "review"] as const).map((m) => (
-                      <button
-                        key={m}
-                        onClick={() => makeToggle(setModeCtrl, setModeAnimKey)(m)}
-                        className={`rounded-md px-3 py-1.5 text-xs transition-all duration-150 ${
-                          modeCtrl[m]
-                            ? "bg-background text-foreground shadow-sm"
-                            : "text-muted-foreground hover:text-foreground"
-                        }`}
-                      >
-                        {MODE_CONFIGS[m].label}
-                      </button>
-                    ))}
-                  </div>
+                  <p className="mb-2 text-xs text-muted-foreground">
+                    Switch mode
+                  </p>
+                  <ToggleGroup
+                    value={(
+                      Object.keys(modeCtrl) as Array<keyof typeof modeCtrl>
+                    ).filter((key) => modeCtrl[key])}
+                    onValueChange={(value) => {
+                      const next = value[0] as keyof typeof modeCtrl | undefined
+                      if (next) {
+                        makeToggle(setModeCtrl, setModeAnimKey)(next)
+                      }
+                    }}
+                    variant="outline"
+                    size="sm"
+                    spacing={0}
+                  >
+                    {(["requirements", "research", "review"] as const).map(
+                      (m) => (
+                        <ToggleGroupItem
+                          key={m}
+                          value={m}
+                          aria-label={`Switch to ${MODE_CONFIGS[m].label}`}
+                        >
+                          {MODE_CONFIGS[m].label}
+                        </ToggleGroupItem>
+                      )
+                    )}
+                  </ToggleGroup>
                 </div>
               </div>
             </div>
@@ -612,39 +899,64 @@ export function TrustContent() {
 
         {/* Spec table */}
         <div className="mt-8">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Mode</th>
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Focus</th>
-                <th className="pb-2 text-left text-xs font-medium text-muted-foreground">Tools</th>
-              </tr>
-            </thead>
-            <tbody className="text-muted-foreground">
-              <tr className="border-b border-border/50">
-                <td className="py-2.5 pr-4 font-medium text-foreground">Compliance</td>
-                <td className="py-2.5 pr-4">Evidence and PP conformance</td>
-                <td className="py-2.5">4 compliance-specific tools</td>
-              </tr>
-              <tr className="border-b border-border/50">
-                <td className="py-2.5 pr-4 font-medium text-foreground">Research</td>
-                <td className="py-2.5 pr-4">Technical investigation</td>
-                <td className="py-2.5">4 research-specific tools</td>
-              </tr>
-              <tr>
-                <td className="py-2.5 pr-4 font-medium text-foreground">Review</td>
-                <td className="py-2.5 pr-4">Deliverable review and audit prep</td>
-                <td className="py-2.5">4 review-specific tools</td>
-              </tr>
-            </tbody>
-          </table>
+          <Table className="w-full text-sm">
+            <TableHeader>
+              <TableRow className="border-b border-border">
+                <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
+                  Mode
+                </TableHead>
+                <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
+                  Focus
+                </TableHead>
+                <TableHead className="pb-2 text-left text-xs font-medium text-muted-foreground">
+                  Tools
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="text-muted-foreground">
+              <TableRow className="border-b border-border/50">
+                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
+                  Requirements
+                </TableCell>
+                <TableCell className="py-2.5 pr-4">
+                  Source material and policy alignment
+                </TableCell>
+                <TableCell className="py-2.5">
+                  4 requirements-specific tools
+                </TableCell>
+              </TableRow>
+              <TableRow className="border-b border-border/50">
+                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
+                  Research
+                </TableCell>
+                <TableCell className="py-2.5 pr-4">
+                  Technical investigation
+                </TableCell>
+                <TableCell className="py-2.5">
+                  4 research-specific tools
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
+                  Review
+                </TableCell>
+                <TableCell className="py-2.5 pr-4">
+                  Deliverable review and audit prep
+                </TableCell>
+                <TableCell className="py-2.5">
+                  4 review-specific tools
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </div>
 
         {/* Callout */}
-        <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          Mode switching should be instant — no confirmation dialog needed since it only changes
-          tool availability and focus, not data access. Evaluators typically switch modes
-          multiple times during a single evaluation session.
+        <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
+          Mode switching should be instant — no confirmation dialog needed since
+          it only changes tool availability and focus, not data access.
+          Reviewers typically switch modes multiple times during a single review
+          session.
         </div>
       </section>
 
@@ -655,7 +967,7 @@ export function TrustContent() {
         <p className="section-label mb-3">Governance</p>
         <h2 className="text-xl font-semibold tracking-tight">Context Scope</h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-          Define which documents and evaluation artifacts the agent can access.
+          Define which documents and project artifacts the agent can access.
           Narrower scopes reduce noise; wider scopes enable cross-referencing.
         </p>
 
@@ -663,41 +975,62 @@ export function TrustContent() {
           <Controls
             options={[
               { key: "device", label: "Device Only" },
-              { key: "devicePP", label: "Device + PP" },
+              { key: "devicePP", label: "Product + Policy" },
               { key: "global", label: "Global" },
             ]}
             active={scopeCtrl}
             onToggle={makeToggle(setScopeCtrl, setScopeAnimKey)}
           />
 
-          <div className="border border-border/40 rounded-lg p-6" key={scopeAnimKey}>
+          <div
+            className="rounded-lg border border-border/40 p-6"
+            key={scopeAnimKey}
+          >
             <div className="trust-slide-in">
               <div className="space-y-4">
                 {/* Scope indicator */}
                 <div className="flex items-center gap-3">
                   <div className="flex h-7 w-7 items-center justify-center rounded-md bg-muted">
-                    <HugeiconsIcon icon={Target01Icon} size={14} strokeWidth={1.5} className="text-muted-foreground" />
+                    <HugeiconsIcon
+                      icon={Target01Icon}
+                      size={14}
+                      strokeWidth={1.5}
+                      className="text-muted-foreground"
+                    />
                   </div>
                   <div>
                     <p className="text-sm font-medium">{activeScope.label}</p>
-                    <p className="text-xs text-muted-foreground">{activeScope.scope}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {activeScope.scope}
+                    </p>
                   </div>
                 </div>
 
                 {/* Document list */}
                 <div>
-                  <p className="text-xs text-muted-foreground mb-2">Accessible documents</p>
+                  <p className="mb-2 text-xs text-muted-foreground">
+                    Accessible documents
+                  </p>
                   <div className="space-y-2">
                     {activeScope.documents.map((doc, i) => (
                       <div
                         key={doc.name}
-                        className="flex items-center gap-3 rounded-md border border-border/60 px-3 py-2 trust-slide-in"
+                        className="trust-slide-in flex items-center gap-3 rounded-md border border-border/60 px-3 py-2"
                         style={{ animationDelay: `${i * 50}ms` }}
                       >
-                        <HugeiconsIcon icon={File01Icon} size={12} strokeWidth={1.5} className="shrink-0 text-muted-foreground" />
-                        <div className="flex-1 min-w-0">
-                          <span className="text-xs font-medium">{doc.name}</span>
-                          <span className="text-xs text-muted-foreground ml-2">— {doc.section}</span>
+                        <HugeiconsIcon
+                          icon={File01Icon}
+                          size={12}
+                          strokeWidth={1.5}
+                          className="shrink-0 text-muted-foreground"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <span className="text-xs font-medium">
+                            {doc.name}
+                          </span>
+                          <span className="ml-2 text-xs text-muted-foreground">
+                            — {doc.section}
+                          </span>
                         </div>
                       </div>
                     ))}
@@ -705,23 +1038,28 @@ export function TrustContent() {
                 </div>
 
                 {/* Scope size indicator */}
-                <div className="flex items-center gap-2 pt-2 border-t border-border/50">
-                  <span className="text-xs text-muted-foreground">
-                    {activeScope.documents.length} document{activeScope.documents.length !== 1 ? "s" : ""} in scope
-                  </span>
-                  <div className="flex items-center gap-1 ml-auto">
-                    {["device", "devicePP", "global"].map((s) => (
-                      <div
-                        key={s}
-                        className={`h-1.5 w-4 rounded-md transition-colors ${
-                          (s === "device") ||
-                          (s === "devicePP" && (scopeCtrl.devicePP || scopeCtrl.global)) ||
-                          (s === "global" && scopeCtrl.global)
-                            ? "bg-foreground/20"
-                            : "bg-muted"
-                        }`}
-                      />
-                    ))}
+                <div className="flex flex-col gap-2 pt-2">
+                  <Separator />
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-muted-foreground">
+                      {activeScope.documents.length} document
+                      {activeScope.documents.length !== 1 ? "s" : ""} in scope
+                    </span>
+                    <div className="ml-auto flex items-center gap-1">
+                      {["device", "devicePP", "global"].map((s) => (
+                        <div
+                          key={s}
+                          className={`h-1.5 w-4 rounded-md transition-colors ${
+                            s === "device" ||
+                            (s === "devicePP" &&
+                              (scopeCtrl.devicePP || scopeCtrl.global)) ||
+                            (s === "global" && scopeCtrl.global)
+                              ? "bg-foreground/20"
+                              : "bg-muted"
+                          }`}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -731,39 +1069,58 @@ export function TrustContent() {
 
         {/* Spec table */}
         <div className="mt-8">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Scope</th>
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Documents</th>
-                <th className="pb-2 text-left text-xs font-medium text-muted-foreground">Use case</th>
-              </tr>
-            </thead>
-            <tbody className="text-muted-foreground">
-              <tr className="border-b border-border/50">
-                <td className="py-2.5 pr-4 font-medium text-foreground">Device Only</td>
-                <td className="py-2.5 pr-4">2 documents</td>
-                <td className="py-2.5">Focused work on a single TOE</td>
-              </tr>
-              <tr className="border-b border-border/50">
-                <td className="py-2.5 pr-4 font-medium text-foreground">Device + PP</td>
-                <td className="py-2.5 pr-4">4 documents</td>
-                <td className="py-2.5">Evaluating PP conformance claims</td>
-              </tr>
-              <tr>
-                <td className="py-2.5 pr-4 font-medium text-foreground">Global</td>
-                <td className="py-2.5 pr-4">6 documents</td>
-                <td className="py-2.5">Cross-referencing across full evaluation</td>
-              </tr>
-            </tbody>
-          </table>
+          <Table className="w-full text-sm">
+            <TableHeader>
+              <TableRow className="border-b border-border">
+                <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
+                  Scope
+                </TableHead>
+                <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
+                  Documents
+                </TableHead>
+                <TableHead className="pb-2 text-left text-xs font-medium text-muted-foreground">
+                  Use case
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="text-muted-foreground">
+              <TableRow className="border-b border-border/50">
+                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
+                  Device Only
+                </TableCell>
+                <TableCell className="py-2.5 pr-4">2 documents</TableCell>
+                <TableCell className="py-2.5">
+                  Focused work on a single product
+                </TableCell>
+              </TableRow>
+              <TableRow className="border-b border-border/50">
+                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
+                  Product + Policy
+                </TableCell>
+                <TableCell className="py-2.5 pr-4">4 documents</TableCell>
+                <TableCell className="py-2.5">
+                  Evaluating policy alignment claims
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
+                  Global
+                </TableCell>
+                <TableCell className="py-2.5 pr-4">6 documents</TableCell>
+                <TableCell className="py-2.5">
+                  Cross-referencing across full project workspace
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </div>
 
         {/* Callout */}
-        <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          Context scope directly affects response quality and cost. A narrower scope
-          produces faster, cheaper answers but may miss cross-document dependencies.
-          For OR preparation, always use Global scope to ensure nothing is overlooked.
+        <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
+          Context scope directly affects response quality and cost. A narrower
+          scope produces faster, cheaper answers but may miss cross-document
+          dependencies. For OR preparation, always use Global scope to ensure
+          nothing is overlooked.
         </div>
       </section>
 
@@ -789,46 +1146,73 @@ export function TrustContent() {
             onToggle={makeToggle(setConsentCtrl, setConsentAnimKey)}
           />
 
-          <div className="border border-border/40 rounded-lg p-6" key={consentAnimKey}>
+          <div
+            className="rounded-lg border border-border/40 p-6"
+            key={consentAnimKey}
+          >
             <div className="trust-slide-in">
               {/* Consent prompt state */}
               {consentCtrl.prompt && (
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
                     <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted">
-                      <HugeiconsIcon icon={Shield01Icon} size={14} strokeWidth={1.5} className="text-muted-foreground" />
+                      <HugeiconsIcon
+                        icon={Shield01Icon}
+                        size={14}
+                        strokeWidth={1.5}
+                        className="text-muted-foreground"
+                      />
                     </div>
                     <div>
-                      <p className="text-sm font-medium">Action requires your approval</p>
+                      <p className="text-sm font-medium">
+                        Action requires your approval
+                      </p>
                       <p className="mt-1 text-xs text-muted-foreground">
-                        The agent wants to send an evaluation finding summary to the
-                        developer contact for TOE SmartCard-v3.1.
+                        The agent wants to send an project finding summary to
+                        the developer contact for product Portal-v3.
                       </p>
                     </div>
                   </div>
                   <div className="ml-10 rounded-md border border-border bg-muted/30 px-4 py-3">
-                    <p className="text-xs text-muted-foreground mb-1">Action preview</p>
+                    <p className="mb-1 text-xs text-muted-foreground">
+                      Action preview
+                    </p>
                     <p className="text-sm">
-                      Email 2 findings (FCS_COP.1, FPT_STM.1) to vendor-contact@example.com
-                      with a 10-day response deadline.
+                      Email 2 findings (Export workflow, Timestamp handling) to
+                      project-owner@example.com with a 10-day response deadline.
                     </p>
                   </div>
                   <div className="ml-10 flex items-center gap-3">
-                    <button
-                      onClick={() => makeToggle(setConsentCtrl, setConsentAnimKey)("accepted")}
-                      className="rounded-md bg-foreground px-3 py-1.5 text-xs text-background transition-all duration-150 hover:opacity-90 active:scale-[0.97]"
+                    <Button
+                      onClick={() =>
+                        makeToggle(
+                          setConsentCtrl,
+                          setConsentAnimKey
+                        )("accepted")
+                      }
+                      size="xs"
                     >
                       Approve
-                    </button>
-                    <button
-                      onClick={() => makeToggle(setConsentCtrl, setConsentAnimKey)("declined")}
-                      className="rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground transition-all duration-150 hover:bg-muted active:scale-[0.97]"
+                    </Button>
+                    <Button
+                      onClick={() =>
+                        makeToggle(
+                          setConsentCtrl,
+                          setConsentAnimKey
+                        )("declined")
+                      }
+                      variant="outline"
+                      size="xs"
                     >
                       Decline
-                    </button>
-                    <button className="text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors">
+                    </Button>
+                    <Button
+                      variant="link"
+                      size="xs"
+                      className="text-muted-foreground"
+                    >
                       Learn more
-                    </button>
+                    </Button>
                   </div>
                 </div>
               )}
@@ -838,23 +1222,31 @@ export function TrustContent() {
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
                     <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-emerald-500/10">
-                      <HugeiconsIcon icon={Tick01Icon} size={14} strokeWidth={1.5} className="text-muted-foreground" />
+                      <HugeiconsIcon
+                        icon={Tick01Icon}
+                        size={14}
+                        strokeWidth={1.5}
+                        className="text-muted-foreground"
+                      />
                     </div>
                     <div>
                       <p className="text-sm font-medium">Action approved</p>
                       <p className="mt-1 text-xs text-muted-foreground">
-                        Email sent to vendor-contact@example.com with 2 findings.
+                        Email sent to project-owner@example.com with 2 findings.
                         Response deadline: March 25, 2026.
                       </p>
                     </div>
                   </div>
                   <div className="ml-10">
-                    <button
-                      onClick={() => makeToggle(setConsentCtrl, setConsentAnimKey)("prompt")}
-                      className="rounded-md border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted"
+                    <Button
+                      onClick={() =>
+                        makeToggle(setConsentCtrl, setConsentAnimKey)("prompt")
+                      }
+                      variant="outline"
+                      size="xs"
                     >
                       Reset demo
-                    </button>
+                    </Button>
                   </div>
                 </div>
               )}
@@ -864,23 +1256,31 @@ export function TrustContent() {
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
                     <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-red-500/10">
-                      <HugeiconsIcon icon={Cancel01Icon} size={14} strokeWidth={1.5} className="text-muted-foreground" />
+                      <HugeiconsIcon
+                        icon={Cancel01Icon}
+                        size={14}
+                        strokeWidth={1.5}
+                        className="text-muted-foreground"
+                      />
                     </div>
                     <div>
                       <p className="text-sm font-medium">Action declined</p>
                       <p className="mt-1 text-xs text-muted-foreground">
-                        The email was not sent. You can change this in settings or
-                        approve the action later from the activity log.
+                        The email was not sent. You can change this in settings
+                        or approve the action later from the activity log.
                       </p>
                     </div>
                   </div>
                   <div className="ml-10">
-                    <button
-                      onClick={() => makeToggle(setConsentCtrl, setConsentAnimKey)("prompt")}
-                      className="rounded-md border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted"
+                    <Button
+                      onClick={() =>
+                        makeToggle(setConsentCtrl, setConsentAnimKey)("prompt")
+                      }
+                      variant="outline"
+                      size="xs"
                     >
                       Reset demo
-                    </button>
+                    </Button>
                   </div>
                 </div>
               )}
@@ -890,44 +1290,71 @@ export function TrustContent() {
 
         {/* Spec table */}
         <div className="mt-8">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Property</th>
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Value</th>
-                <th className="pb-2 text-left text-xs font-medium text-muted-foreground">Notes</th>
-              </tr>
-            </thead>
-            <tbody className="text-muted-foreground">
-              <tr className="border-b border-border/50">
-                <td className="py-2.5 pr-4 font-medium text-foreground">Trigger</td>
-                <td className="py-2.5 pr-4">Sensitive or irreversible actions</td>
-                <td className="py-2.5">Emails, deletions, external API calls</td>
-              </tr>
-              <tr className="border-b border-border/50">
-                <td className="py-2.5 pr-4 font-medium text-foreground">States</td>
-                <td className="py-2.5 pr-4">Prompt → Accepted / Declined</td>
-                <td className="py-2.5">Three mutually exclusive states</td>
-              </tr>
-              <tr className="border-b border-border/50">
-                <td className="py-2.5 pr-4 font-medium text-foreground">Action preview</td>
-                <td className="py-2.5 pr-4">Required</td>
-                <td className="py-2.5">Shows exactly what will happen before user decides</td>
-              </tr>
-              <tr>
-                <td className="py-2.5 pr-4 font-medium text-foreground">Reversibility</td>
-                <td className="py-2.5 pr-4">Settings override</td>
-                <td className="py-2.5">Declined actions can be re-approved later</td>
-              </tr>
-            </tbody>
-          </table>
+          <Table className="w-full text-sm">
+            <TableHeader>
+              <TableRow className="border-b border-border">
+                <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
+                  Property
+                </TableHead>
+                <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
+                  Value
+                </TableHead>
+                <TableHead className="pb-2 text-left text-xs font-medium text-muted-foreground">
+                  Notes
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="text-muted-foreground">
+              <TableRow className="border-b border-border/50">
+                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
+                  Trigger
+                </TableCell>
+                <TableCell className="py-2.5 pr-4">
+                  Sensitive or irreversible actions
+                </TableCell>
+                <TableCell className="py-2.5">
+                  Emails, deletions, external API calls
+                </TableCell>
+              </TableRow>
+              <TableRow className="border-b border-border/50">
+                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
+                  States
+                </TableCell>
+                <TableCell className="py-2.5 pr-4">
+                  Prompt → Accepted / Declined
+                </TableCell>
+                <TableCell className="py-2.5">
+                  Three mutually exclusive states
+                </TableCell>
+              </TableRow>
+              <TableRow className="border-b border-border/50">
+                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
+                  Action preview
+                </TableCell>
+                <TableCell className="py-2.5 pr-4">Required</TableCell>
+                <TableCell className="py-2.5">
+                  Shows exactly what will happen before user decides
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
+                  Reversibility
+                </TableCell>
+                <TableCell className="py-2.5 pr-4">Settings override</TableCell>
+                <TableCell className="py-2.5">
+                  Declined actions can be re-approved later
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </div>
 
         {/* Callout */}
-        <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          Consent flows should be lightweight enough that users don't develop "approval fatigue."
-          Reserve them for actions with real consequences — sending external communications,
-          modifying evaluation records, or deleting evidence.
+        <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
+          Consent flows should be lightweight enough that users don't develop
+          "approval fatigue." Reserve them for actions with real consequences —
+          sending external communications, modifying project records, or
+          deleting source material.
         </div>
       </section>
 
@@ -936,7 +1363,9 @@ export function TrustContent() {
       {/* ============================================================ */}
       <section id="confidence-display" className="page-section">
         <p className="section-label mb-3">Transparency</p>
-        <h2 className="text-xl font-semibold tracking-tight">Confidence Display</h2>
+        <h2 className="text-xl font-semibold tracking-tight">
+          Confidence Display
+        </h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           How the agent communicates its certainty level through language,
           visual cues, and actionable follow-ups.
@@ -953,24 +1382,32 @@ export function TrustContent() {
             onToggle={makeToggle(setConfCtrl, setConfAnimKey)}
           />
 
-          <div className="border border-border/40 rounded-lg p-6" key={confAnimKey}>
+          <div
+            className="rounded-lg border border-border/40 p-6"
+            key={confAnimKey}
+          >
             <div className="trust-slide-in">
               {/* High confidence */}
               {confCtrl.high && (
                 <div className="space-y-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="h-2 w-2 rounded-full bg-emerald-500" />
-                    <span className="text-xs text-muted-foreground">High confidence</span>
+                  <div className="mb-3 flex items-center gap-2">
+                    <Badge variant="secondary">High confidence</Badge>
                   </div>
                   <div style={PROSE_STYLE}>
-                    FCS_COP.1 requires AES-256-CBC encryption for all data-at-rest
-                    operations. The TOE implements this through the OpenSSL 3.0 library,
-                    validated under CAVP certificate #A4271.
+                    Export workflow requires CSV and JSON export encryption for
+                    all data-at-rest operations. The product implements this
+                    through the approved export service referenced by the
+                    implementation notes.
                   </div>
-                  <div className="flex items-center gap-2 mt-3">
-                    <HugeiconsIcon icon={File01Icon} size={12} strokeWidth={1.5} className="text-muted-foreground" />
+                  <div className="mt-3 flex items-center gap-2">
+                    <HugeiconsIcon
+                      icon={File01Icon}
+                      size={12}
+                      strokeWidth={1.5}
+                      className="text-muted-foreground"
+                    />
                     <span className="text-xs text-muted-foreground">
-                      Source: Security Target v3.1, §5.1.1
+                      Source: Project brief v3, §5.1.1
                     </span>
                   </div>
                 </div>
@@ -979,21 +1416,26 @@ export function TrustContent() {
               {/* Medium confidence */}
               {confCtrl.medium && (
                 <div className="space-y-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="h-2 w-2 rounded-full bg-amber-500" />
-                    <span className="text-xs text-muted-foreground">Medium confidence</span>
+                  <div className="mb-3 flex items-center gap-2">
+                    <Badge variant="outline">Medium confidence</Badge>
                   </div>
                   <div style={PROSE_STYLE}>
-                    Based on the available documentation, FPT_STM.1 appears to rely
-                    on NTP synchronization for timestamp generation — however, the
-                    Security Target does not explicitly confirm this mechanism. The
-                    test report references "reliable timestamps" without specifying
-                    the source.
+                    Based on the available documentation, Timestamp handling
+                    appears to rely on NTP synchronization for timestamp
+                    generation — however, the project brief does not explicitly
+                    confirm this mechanism. The QA notes reference "reliable
+                    timestamps" without specifying the source.
                   </div>
-                  <div className="flex items-center gap-2 mt-3">
-                    <HugeiconsIcon icon={Alert01Icon} size={12} strokeWidth={1.5} className="text-muted-foreground" />
+                  <div className="mt-3 flex items-center gap-2">
+                    <HugeiconsIcon
+                      icon={Alert01Icon}
+                      size={12}
+                      strokeWidth={1.5}
+                      className="text-muted-foreground"
+                    />
                     <span className="text-xs text-muted-foreground">
-                      Qualified — based on indirect evidence from TR-2026-003
+                      Qualified — based on indirect source material from
+                      QA Notes 2026-003
                     </span>
                   </div>
                 </div>
@@ -1002,28 +1444,36 @@ export function TrustContent() {
               {/* Low confidence */}
               {confCtrl.low && (
                 <div className="space-y-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="h-2 w-2 rounded-full bg-red-500" />
-                    <span className="text-xs text-muted-foreground">Low confidence</span>
+                  <div className="mb-3 flex items-center gap-2">
+                    <Badge variant="destructive">Low confidence</Badge>
                   </div>
                   <div style={PROSE_STYLE}>
-                    I'm unable to determine whether AVA_VAN.3 vulnerability testing
-                    was performed against the current TOE version. The referenced
-                    test report (TR-2025-041) predates the latest firmware update,
-                    and I could not locate an updated vulnerability analysis.
+                    I'm unable to determine whether the current risk review was
+                    performed against the latest product version. The referenced
+                    report predates the latest configuration update, and I could
+                    not locate an updated risk analysis.
                   </div>
                   <div className="mt-3 flex items-center gap-3">
-                    <HugeiconsIcon icon={Alert01Icon} size={12} strokeWidth={1.5} className="text-muted-foreground" />
+                    <HugeiconsIcon
+                      icon={Alert01Icon}
+                      size={12}
+                      strokeWidth={1.5}
+                      className="text-muted-foreground"
+                    />
                     <span className="text-xs text-muted-foreground">
                       Uncertain — key documents may be outdated or missing
                     </span>
                   </div>
-                  <button
+                  <Button
                     onClick={() => setVerifyClicked(true)}
-                    className="mt-2 rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground transition-all duration-150 hover:bg-muted active:scale-[0.97]"
+                    variant="outline"
+                    size="xs"
+                    className="mt-2"
                   >
-                    {verifyClicked ? "Verification request sent to evaluator" : "Request evaluator verification"}
-                  </button>
+                    {verifyClicked
+                      ? "Verification request sent to reviewer"
+                      : "Request reviewer verification"}
+                  </Button>
                 </div>
               )}
             </div>
@@ -1032,39 +1482,58 @@ export function TrustContent() {
 
         {/* Spec table */}
         <div className="mt-8">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Level</th>
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Indicator</th>
-                <th className="pb-2 text-left text-xs font-medium text-muted-foreground">Language pattern</th>
-              </tr>
-            </thead>
-            <tbody className="text-muted-foreground">
-              <tr className="border-b border-border/50">
-                <td className="py-2.5 pr-4 font-medium text-foreground">High</td>
-                <td className="py-2.5 pr-4">Green dot</td>
-                <td className="py-2.5">Direct assertions with citations</td>
-              </tr>
-              <tr className="border-b border-border/50">
-                <td className="py-2.5 pr-4 font-medium text-foreground">Medium</td>
-                <td className="py-2.5 pr-4">Amber dot</td>
-                <td className="py-2.5">Hedged language: "appears to," "based on"</td>
-              </tr>
-              <tr>
-                <td className="py-2.5 pr-4 font-medium text-foreground">Low</td>
-                <td className="py-2.5 pr-4">Red dot</td>
-                <td className="py-2.5">Explicit uncertainty + verify action</td>
-              </tr>
-            </tbody>
-          </table>
+          <Table className="w-full text-sm">
+            <TableHeader>
+              <TableRow className="border-b border-border">
+                <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
+                  Level
+                </TableHead>
+                <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
+                  Indicator
+                </TableHead>
+                <TableHead className="pb-2 text-left text-xs font-medium text-muted-foreground">
+                  Language pattern
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="text-muted-foreground">
+              <TableRow className="border-b border-border/50">
+                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
+                  High
+                </TableCell>
+                <TableCell className="py-2.5 pr-4">Green dot</TableCell>
+                <TableCell className="py-2.5">
+                  Direct assertions with citations
+                </TableCell>
+              </TableRow>
+              <TableRow className="border-b border-border/50">
+                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
+                  Medium
+                </TableCell>
+                <TableCell className="py-2.5 pr-4">Amber dot</TableCell>
+                <TableCell className="py-2.5">
+                  Hedged language: "appears to," "based on"
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
+                  Low
+                </TableCell>
+                <TableCell className="py-2.5 pr-4">Red dot</TableCell>
+                <TableCell className="py-2.5">
+                  Explicit uncertainty + verify action
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </div>
 
         {/* Callout */}
-        <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
+        <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
           Confidence indicators should never be hidden from the user. Even when
-          the agent is highly confident, showing the source builds trust over time.
-          Low-confidence responses must always offer a path to human verification.
+          the agent is highly confident, showing the source builds trust over
+          time. Low-confidence responses must always offer a path to human
+          verification.
         </div>
       </section>
 
@@ -1075,8 +1544,8 @@ export function TrustContent() {
         <p className="section-label mb-3">Control</p>
         <h2 className="text-xl font-semibold tracking-tight">Kill Switch</h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-          Always-available mechanism to immediately halt agent execution.
-          The stop control adapts its prominence to the agent's current state.
+          Always-available mechanism to immediately halt agent execution. The
+          stop control adapts its prominence to the agent's current state.
         </p>
 
         <div className="mt-8">
@@ -1090,7 +1559,10 @@ export function TrustContent() {
             onToggle={makeToggle(setKillCtrl, setKillAnimKey)}
           />
 
-          <div className="border border-border/40 rounded-lg p-6" key={killAnimKey}>
+          <div
+            className="rounded-lg border border-border/40 p-6"
+            key={killAnimKey}
+          >
             <div className="trust-slide-in">
               {/* Idle state */}
               {killCtrl.idle && (
@@ -1098,16 +1570,23 @@ export function TrustContent() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="flex h-7 w-7 items-center justify-center rounded-md bg-muted">
-                        <HugeiconsIcon icon={Brain01Icon} size={14} strokeWidth={1.5} className="text-muted-foreground" />
+                        <HugeiconsIcon
+                          icon={Brain01Icon}
+                          size={14}
+                          strokeWidth={1.5}
+                          className="text-muted-foreground"
+                        />
                       </div>
                       <div>
                         <p className="text-sm">Agent idle</p>
-                        <p className="text-xs text-muted-foreground">Waiting for instructions</p>
+                        <p className="text-xs text-muted-foreground">
+                          Waiting for instructions
+                        </p>
                       </div>
                     </div>
-                    <button className="rounded-md border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted">
+                    <Button variant="outline" size="xs">
                       Stop
-                    </button>
+                    </Button>
                   </div>
                 </div>
               )}
@@ -1118,28 +1597,37 @@ export function TrustContent() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="flex h-7 w-7 items-center justify-center rounded-md bg-muted">
-                        <HugeiconsIcon icon={Activity01Icon} size={14} strokeWidth={1.5} className="text-muted-foreground trust-pulse" />
+                        <HugeiconsIcon
+                          icon={Activity01Icon}
+                          size={14}
+                          strokeWidth={1.5}
+                          className="trust-pulse text-muted-foreground"
+                        />
                       </div>
                       <div>
-                        <p className="text-sm">Analyzing SFR coverage matrix</p>
-                        <p className="text-xs text-muted-foreground">Processing 23 requirements…</p>
+                        <p className="text-sm">
+                          Analyzing requirement coverage matrix
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Processing 23 requirements…
+                        </p>
                       </div>
                     </div>
-                    <button
-                      onClick={() => makeToggle(setKillCtrl, setKillAnimKey)("stopped")}
-                      className="rounded-md bg-red-500/10 border border-red-500/20 px-3 py-1.5 text-xs text-foreground transition-all duration-150 hover:bg-red-500/20 active:scale-[0.97]"
+                    <Button
+                      onClick={() =>
+                        makeToggle(setKillCtrl, setKillAnimKey)("stopped")
+                      }
+                      variant="destructive"
+                      size="xs"
                     >
                       Stop agent
-                    </button>
+                    </Button>
                   </div>
                   <div className="ml-10">
-                    <div className="h-1 w-full rounded-full bg-muted overflow-hidden">
-                      <div
-                        className="h-full rounded-full bg-foreground/20"
-                        style={{ width: "62%", animation: "trust-progress 1s ease forwards", ["--target-width" as string]: "62%" }}
-                      />
-                    </div>
-                    <p className="mt-1.5 text-xs text-muted-foreground">14 of 23 SFRs processed</p>
+                    <Progress value={62} />
+                    <p className="mt-1.5 text-xs text-muted-foreground">
+                      14 of 23 requirements processed
+                    </p>
                   </div>
                 </div>
               )}
@@ -1150,29 +1638,40 @@ export function TrustContent() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="flex h-7 w-7 items-center justify-center rounded-md bg-red-500/10">
-                        <HugeiconsIcon icon={Cancel01Icon} size={14} strokeWidth={1.5} className="text-muted-foreground" />
+                        <HugeiconsIcon
+                          icon={Cancel01Icon}
+                          size={14}
+                          strokeWidth={1.5}
+                          className="text-muted-foreground"
+                        />
                       </div>
                       <div>
                         <p className="text-sm">Agent stopped</p>
                         <p className="text-xs text-muted-foreground">
-                          Halted at 14 of 23 SFRs. Partial results saved.
+                          Halted at 14 of 23 requirements. Partial results
+                          saved.
                         </p>
                       </div>
                     </div>
                   </div>
                   <div className="ml-10 flex items-center gap-3">
-                    <button
-                      onClick={() => makeToggle(setKillCtrl, setKillAnimKey)("running")}
-                      className="rounded-md bg-foreground px-3 py-1.5 text-xs text-background transition-all duration-150 hover:opacity-90 active:scale-[0.97]"
+                    <Button
+                      onClick={() =>
+                        makeToggle(setKillCtrl, setKillAnimKey)("running")
+                      }
+                      size="xs"
                     >
                       Resume
-                    </button>
-                    <button
-                      onClick={() => makeToggle(setKillCtrl, setKillAnimKey)("idle")}
-                      className="rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-muted"
+                    </Button>
+                    <Button
+                      onClick={() =>
+                        makeToggle(setKillCtrl, setKillAnimKey)("idle")
+                      }
+                      variant="outline"
+                      size="xs"
                     >
                       Discard &amp; reset
-                    </button>
+                    </Button>
                   </div>
                 </div>
               )}
@@ -1182,39 +1681,62 @@ export function TrustContent() {
 
         {/* Spec table */}
         <div className="mt-8">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">State</th>
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Button style</th>
-                <th className="pb-2 text-left text-xs font-medium text-muted-foreground">Behavior</th>
-              </tr>
-            </thead>
-            <tbody className="text-muted-foreground">
-              <tr className="border-b border-border/50">
-                <td className="py-2.5 pr-4 font-medium text-foreground">Idle</td>
-                <td className="py-2.5 pr-4">Subtle border</td>
-                <td className="py-2.5">Present but low prominence</td>
-              </tr>
-              <tr className="border-b border-border/50">
-                <td className="py-2.5 pr-4 font-medium text-foreground">Running</td>
-                <td className="py-2.5 pr-4">Red-tinted background</td>
-                <td className="py-2.5">Prominent, immediately accessible</td>
-              </tr>
-              <tr>
-                <td className="py-2.5 pr-4 font-medium text-foreground">Stopped</td>
-                <td className="py-2.5 pr-4">Resume + Discard options</td>
-                <td className="py-2.5">Partial results preserved, user chooses next step</td>
-              </tr>
-            </tbody>
-          </table>
+          <Table className="w-full text-sm">
+            <TableHeader>
+              <TableRow className="border-b border-border">
+                <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
+                  State
+                </TableHead>
+                <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
+                  Button style
+                </TableHead>
+                <TableHead className="pb-2 text-left text-xs font-medium text-muted-foreground">
+                  Behavior
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="text-muted-foreground">
+              <TableRow className="border-b border-border/50">
+                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
+                  Idle
+                </TableCell>
+                <TableCell className="py-2.5 pr-4">Subtle border</TableCell>
+                <TableCell className="py-2.5">
+                  Present but low prominence
+                </TableCell>
+              </TableRow>
+              <TableRow className="border-b border-border/50">
+                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
+                  Running
+                </TableCell>
+                <TableCell className="py-2.5 pr-4">
+                  Red-tinted background
+                </TableCell>
+                <TableCell className="py-2.5">
+                  Prominent, immediately accessible
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
+                  Stopped
+                </TableCell>
+                <TableCell className="py-2.5 pr-4">
+                  Resume + Discard options
+                </TableCell>
+                <TableCell className="py-2.5">
+                  Partial results preserved, user chooses next step
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </div>
 
         {/* Callout */}
-        <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          The stop button must always be reachable within one click. During long-running
-          operations like batch SFR analysis, it should be the most prominent UI element.
-          Stopped agents must preserve partial work — never discard without explicit user consent.
+        <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
+          The stop button must always be reachable within one click. During
+          long-running operations like batch requirement analysis, it should be
+          the most prominent UI element. Stopped agents must preserve partial
+          work — never discard without explicit user consent.
         </div>
       </section>
 
@@ -1223,10 +1745,13 @@ export function TrustContent() {
       {/* ============================================================ */}
       <section id="cost-transparency" className="page-section">
         <p className="section-label mb-3">Transparency</p>
-        <h2 className="text-xl font-semibold tracking-tight">Cost Transparency</h2>
+        <h2 className="text-xl font-semibold tracking-tight">
+          Cost Transparency
+        </h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Showing users the computational cost of agent operations. Compact mode
-          provides a glanceable summary; detailed mode breaks down token usage and pricing.
+          provides a glanceable summary; detailed mode breaks down token usage
+          and pricing.
         </p>
 
         <div className="mt-8">
@@ -1239,21 +1764,40 @@ export function TrustContent() {
             onToggle={makeToggle(setCostCtrl, setCostAnimKey)}
           />
 
-          <div className="border border-border/40 rounded-lg p-6" key={costAnimKey}>
+          <div
+            className="rounded-lg border border-border/40 p-6"
+            key={costAnimKey}
+          >
             <div className="trust-slide-in">
               {/* Compact */}
               {costCtrl.compact && (
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
-                    <HugeiconsIcon icon={Activity01Icon} size={12} strokeWidth={1.5} className="text-muted-foreground" />
-                    <span className="text-xs text-muted-foreground">16,138 tokens</span>
+                    <HugeiconsIcon
+                      icon={Activity01Icon}
+                      size={12}
+                      strokeWidth={1.5}
+                      className="text-muted-foreground"
+                    />
+                    <span className="text-xs text-muted-foreground">
+                      16,138 tokens
+                    </span>
                   </div>
                   <span className="text-xs text-muted-foreground">·</span>
-                  <span className="text-xs text-muted-foreground">${COST_BREAKDOWN.totalCost.toFixed(2)}</span>
+                  <span className="text-xs text-muted-foreground">
+                    ${COST_BREAKDOWN.totalCost.toFixed(2)}
+                  </span>
                   <span className="text-xs text-muted-foreground">·</span>
                   <div className="flex items-center gap-1.5">
-                    <HugeiconsIcon icon={Clock01Icon} size={12} strokeWidth={1.5} className="text-muted-foreground" />
-                    <span className="text-xs text-muted-foreground">{COST_BREAKDOWN.elapsed}</span>
+                    <HugeiconsIcon
+                      icon={Clock01Icon}
+                      size={12}
+                      strokeWidth={1.5}
+                      className="text-muted-foreground"
+                    />
+                    <span className="text-xs text-muted-foreground">
+                      {COST_BREAKDOWN.elapsed}
+                    </span>
                   </div>
                 </div>
               )}
@@ -1261,39 +1805,73 @@ export function TrustContent() {
               {/* Detailed */}
               {costCtrl.detailed && (
                 <div className="space-y-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <HugeiconsIcon icon={Activity01Icon} size={14} strokeWidth={1.5} className="text-muted-foreground" />
+                  <div className="mb-2 flex items-center gap-2">
+                    <HugeiconsIcon
+                      icon={Activity01Icon}
+                      size={14}
+                      strokeWidth={1.5}
+                      className="text-muted-foreground"
+                    />
                     <span className="text-sm">Operation cost breakdown</span>
                   </div>
                   <div className="grid grid-cols-2 gap-x-8 gap-y-3">
                     <div>
-                      <p className="text-xs text-muted-foreground">Input tokens</p>
-                      <p className="text-sm font-medium tabular-nums">{COST_BREAKDOWN.inputTokens.toLocaleString()}</p>
+                      <p className="text-xs text-muted-foreground">
+                        Input tokens
+                      </p>
+                      <p className="text-sm font-medium tabular-nums">
+                        {COST_BREAKDOWN.inputTokens.toLocaleString()}
+                      </p>
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground">Output tokens</p>
-                      <p className="text-sm font-medium tabular-nums">{COST_BREAKDOWN.outputTokens.toLocaleString()}</p>
+                      <p className="text-xs text-muted-foreground">
+                        Output tokens
+                      </p>
+                      <p className="text-sm font-medium tabular-nums">
+                        {COST_BREAKDOWN.outputTokens.toLocaleString()}
+                      </p>
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground">Input cost</p>
-                      <p className="text-sm font-medium tabular-nums">${COST_BREAKDOWN.inputCost.toFixed(2)}</p>
+                      <p className="text-xs text-muted-foreground">
+                        Input cost
+                      </p>
+                      <p className="text-sm font-medium tabular-nums">
+                        ${COST_BREAKDOWN.inputCost.toFixed(2)}
+                      </p>
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground">Output cost</p>
-                      <p className="text-sm font-medium tabular-nums">${COST_BREAKDOWN.outputCost.toFixed(2)}</p>
+                      <p className="text-xs text-muted-foreground">
+                        Output cost
+                      </p>
+                      <p className="text-sm font-medium tabular-nums">
+                        ${COST_BREAKDOWN.outputCost.toFixed(2)}
+                      </p>
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Model</p>
-                      <p className="text-sm font-mono text-muted-foreground">{COST_BREAKDOWN.model}</p>
+                      <p className="font-mono text-sm text-muted-foreground">
+                        {COST_BREAKDOWN.model}
+                      </p>
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground">Time elapsed</p>
-                      <p className="text-sm font-medium tabular-nums">{COST_BREAKDOWN.elapsed}</p>
+                      <p className="text-xs text-muted-foreground">
+                        Time elapsed
+                      </p>
+                      <p className="text-sm font-medium tabular-nums">
+                        {COST_BREAKDOWN.elapsed}
+                      </p>
                     </div>
                   </div>
-                  <div className="pt-3 border-t border-border/50 flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground">Total cost</span>
-                    <span className="text-sm font-medium tabular-nums">${COST_BREAKDOWN.totalCost.toFixed(2)}</span>
+                  <div className="flex flex-col gap-3 pt-3">
+                    <Separator />
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-muted-foreground">
+                        Total cost
+                      </span>
+                      <span className="text-sm font-medium tabular-nums">
+                        ${COST_BREAKDOWN.totalCost.toFixed(2)}
+                      </span>
+                    </div>
                   </div>
                 </div>
               )}
@@ -1303,34 +1881,53 @@ export function TrustContent() {
 
         {/* Spec table */}
         <div className="mt-8">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Mode</th>
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Shows</th>
-                <th className="pb-2 text-left text-xs font-medium text-muted-foreground">Use case</th>
-              </tr>
-            </thead>
-            <tbody className="text-muted-foreground">
-              <tr className="border-b border-border/50">
-                <td className="py-2.5 pr-4 font-medium text-foreground">Compact</td>
-                <td className="py-2.5 pr-4">Total tokens, cost, elapsed time</td>
-                <td className="py-2.5">Inline display after each response</td>
-              </tr>
-              <tr>
-                <td className="py-2.5 pr-4 font-medium text-foreground">Detailed</td>
-                <td className="py-2.5 pr-4">Input/output split, model, pricing</td>
-                <td className="py-2.5">Budget review and cost optimization</td>
-              </tr>
-            </tbody>
-          </table>
+          <Table className="w-full text-sm">
+            <TableHeader>
+              <TableRow className="border-b border-border">
+                <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
+                  Mode
+                </TableHead>
+                <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
+                  Shows
+                </TableHead>
+                <TableHead className="pb-2 text-left text-xs font-medium text-muted-foreground">
+                  Use case
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="text-muted-foreground">
+              <TableRow className="border-b border-border/50">
+                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
+                  Compact
+                </TableCell>
+                <TableCell className="py-2.5 pr-4">
+                  Total tokens, cost, elapsed time
+                </TableCell>
+                <TableCell className="py-2.5">
+                  Inline display after each response
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
+                  Detailed
+                </TableCell>
+                <TableCell className="py-2.5 pr-4">
+                  Input/output split, model, pricing
+                </TableCell>
+                <TableCell className="py-2.5">
+                  Budget review and cost optimization
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </div>
 
         {/* Callout */}
-        <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
+        <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
           Cost transparency builds trust with procurement teams and lab managers
           who need to justify AI spending. The compact format should be
-          unobtrusive; detailed mode is for when users actively want to understand costs.
+          unobtrusive; detailed mode is for when users actively want to
+          understand costs.
         </div>
       </section>
 
@@ -1339,10 +1936,13 @@ export function TrustContent() {
       {/* ============================================================ */}
       <section id="data-provenance" className="page-section">
         <p className="section-label mb-3">Transparency</p>
-        <h2 className="text-xl font-semibold tracking-tight">Data Provenance</h2>
+        <h2 className="text-xl font-semibold tracking-tight">
+          Data Provenance
+        </h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-          Tracing information back to its origin. Sources mode shows where data came from;
-          chain mode shows the full reasoning path from source to conclusion.
+          Tracing information back to its origin. Sources mode shows where data
+          came from; chain mode shows the full reasoning path from source to
+          conclusion.
         </p>
 
         <div className="mt-8">
@@ -1355,7 +1955,10 @@ export function TrustContent() {
             onToggle={makeToggle(setProvCtrl, setProvAnimKey)}
           />
 
-          <div className="border border-border/40 rounded-lg p-6" key={provAnimKey}>
+          <div
+            className="rounded-lg border border-border/40 p-6"
+            key={provAnimKey}
+          >
             <div className="trust-slide-in">
               {/* Sources */}
               {provCtrl.sources && (
@@ -1363,28 +1966,35 @@ export function TrustContent() {
                   {PROVENANCE_SOURCES.map((src, i) => (
                     <div
                       key={src.document}
-                      className="flex items-start gap-3 rounded-md border border-border/60 p-3 trust-slide-in"
+                      className="trust-slide-in flex items-start gap-3 rounded-md border border-border/60 p-3"
                       style={{ animationDelay: `${i * 80}ms` }}
                     >
                       <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-muted">
-                        <HugeiconsIcon icon={File01Icon} size={12} strokeWidth={1.5} className="text-muted-foreground" />
+                        <HugeiconsIcon
+                          icon={File01Icon}
+                          size={12}
+                          strokeWidth={1.5}
+                          className="text-muted-foreground"
+                        />
                       </div>
-                      <div className="flex-1 min-w-0">
+                      <div className="min-w-0 flex-1">
                         <div className="flex items-center justify-between gap-2">
-                          <p className="text-sm font-medium truncate">{src.document}</p>
-                          <span className="shrink-0 rounded-md border border-border px-1.5 py-0.5 text-[10px] text-muted-foreground">
-                            {src.type}
-                          </span>
+                          <p className="truncate text-sm font-medium">
+                            {src.document}
+                          </p>
+                          <Badge variant="outline">{src.type}</Badge>
                         </div>
-                        <p className="mt-0.5 text-xs text-muted-foreground">{src.section}</p>
+                        <p className="mt-0.5 text-xs text-muted-foreground">
+                          {src.section}
+                        </p>
                         <div className="mt-2 flex items-center gap-2">
-                          <div className="h-1 flex-1 rounded-full bg-muted overflow-hidden">
-                            <div
-                              className="h-full rounded-full bg-foreground/20"
-                              style={{ width: `${src.confidence * 100}%`, animation: "trust-progress 0.6s ease forwards", ["--target-width" as string]: `${src.confidence * 100}%`, animationDelay: `${i * 80 + 200}ms` }}
-                            />
-                          </div>
-                          <span className="text-[10px] tabular-nums text-muted-foreground">{(src.confidence * 100).toFixed(0)}%</span>
+                          <Progress
+                            value={src.confidence * 100}
+                            className="flex-1"
+                          />
+                          <span className="text-[10px] text-muted-foreground tabular-nums">
+                            {(src.confidence * 100).toFixed(0)}%
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -1398,7 +2008,7 @@ export function TrustContent() {
                   {PROVENANCE_CHAIN.map((node, i) => (
                     <div key={node.step}>
                       <div
-                        className="flex items-start gap-3 trust-slide-in"
+                        className="trust-slide-in flex items-start gap-3"
                         style={{ animationDelay: `${i * 100}ms` }}
                       >
                         <div className="flex flex-col items-center">
@@ -1406,22 +2016,38 @@ export function TrustContent() {
                             {i + 1}
                           </div>
                           {i < PROVENANCE_CHAIN.length - 1 && (
-                            <div className="w-px h-6 bg-border/60 my-1" />
+                            <div className="my-1 h-6 w-px bg-border/60" />
                           )}
                         </div>
                         <div className="pb-2">
                           <div className="flex items-center gap-2">
-                            <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{node.step}</span>
-                            <span className="text-xs text-muted-foreground">·</span>
-                            <span className="text-xs font-medium">{node.label}</span>
+                            <span className="text-[10px] tracking-wider text-muted-foreground uppercase">
+                              {node.step}
+                            </span>
+                            <span className="text-xs text-muted-foreground">
+                              ·
+                            </span>
+                            <span className="text-xs font-medium">
+                              {node.label}
+                            </span>
                           </div>
-                          <p className="mt-0.5 text-sm text-muted-foreground">{node.detail}</p>
+                          <p className="mt-0.5 text-sm text-muted-foreground">
+                            {node.detail}
+                          </p>
                         </div>
                       </div>
                     </div>
                   ))}
-                  <div className="mt-3 flex items-center gap-2 trust-fade-in" style={{ animationDelay: "400ms" }}>
-                    <HugeiconsIcon icon={LinkSquare01Icon} size={12} strokeWidth={1.5} className="text-muted-foreground" />
+                  <div
+                    className="trust-fade-in mt-3 flex items-center gap-2"
+                    style={{ animationDelay: "400ms" }}
+                  >
+                    <HugeiconsIcon
+                      icon={LinkSquare01Icon}
+                      size={12}
+                      strokeWidth={1.5}
+                      className="text-muted-foreground"
+                    />
                     <span className="text-xs text-muted-foreground">
                       Full chain: 4 steps from source to conclusion
                     </span>
@@ -1434,35 +2060,54 @@ export function TrustContent() {
 
         {/* Spec table */}
         <div className="mt-8">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Mode</th>
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Shows</th>
-                <th className="pb-2 text-left text-xs font-medium text-muted-foreground">When to use</th>
-              </tr>
-            </thead>
-            <tbody className="text-muted-foreground">
-              <tr className="border-b border-border/50">
-                <td className="py-2.5 pr-4 font-medium text-foreground">Sources</td>
-                <td className="py-2.5 pr-4">Document, section, confidence, type</td>
-                <td className="py-2.5">Quick verification of data origin</td>
-              </tr>
-              <tr>
-                <td className="py-2.5 pr-4 font-medium text-foreground">Chain</td>
-                <td className="py-2.5 pr-4">Source → fact → inference → conclusion</td>
-                <td className="py-2.5">Auditing the full reasoning path</td>
-              </tr>
-            </tbody>
-          </table>
+          <Table className="w-full text-sm">
+            <TableHeader>
+              <TableRow className="border-b border-border">
+                <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
+                  Mode
+                </TableHead>
+                <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
+                  Shows
+                </TableHead>
+                <TableHead className="pb-2 text-left text-xs font-medium text-muted-foreground">
+                  When to use
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="text-muted-foreground">
+              <TableRow className="border-b border-border/50">
+                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
+                  Sources
+                </TableCell>
+                <TableCell className="py-2.5 pr-4">
+                  Document, section, confidence, type
+                </TableCell>
+                <TableCell className="py-2.5">
+                  Quick verification of data origin
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
+                  Chain
+                </TableCell>
+                <TableCell className="py-2.5 pr-4">
+                  Source → fact → inference → conclusion
+                </TableCell>
+                <TableCell className="py-2.5">
+                  Auditing the full reasoning path
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </div>
 
         {/* Callout */}
-        <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          In CC evaluations, every claim must be traceable to evidence. Data provenance
-          mirrors the evaluator's own methodology — showing the chain from source
-          document through extracted requirement to analytical conclusion. This makes
-          agent outputs auditable by evaluation facilities.
+        <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
+          In complex review workflows, every claim must be traceable to source
+          material. Data provenance mirrors the reviewer's own methodology —
+          showing the chain from source document through extracted requirement
+          to analytical conclusion. This makes agent outputs auditable by review
+          teams.
         </div>
       </section>
 
@@ -1473,9 +2118,9 @@ export function TrustContent() {
         <p className="section-label mb-3">Accountability</p>
         <h2 className="text-xl font-semibold tracking-tight">Audit Trail</h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-          Immutable log of all agent actions for compliance and review. Summary
-          mode shows a compact timeline; detailed mode expands each entry with
-          full context and evidence links.
+          Immutable log of all agent actions for requirements and review.
+          Summary mode shows a compact timeline; detailed mode expands each
+          entry with full context and source links.
         </p>
 
         <div className="mt-8">
@@ -1488,7 +2133,10 @@ export function TrustContent() {
             onToggle={makeToggle(setAuditCtrl, setAuditAnimKey)}
           />
 
-          <div className="border border-border/40 rounded-lg p-6" key={auditAnimKey}>
+          <div
+            className="rounded-lg border border-border/40 p-6"
+            key={auditAnimKey}
+          >
             <div className="trust-slide-in">
               {/* Summary */}
               {auditCtrl.summary && (
@@ -1496,10 +2144,10 @@ export function TrustContent() {
                   {AUDIT_ENTRIES.map((entry, i) => (
                     <div
                       key={entry.time}
-                      className="flex items-center gap-3 trust-slide-in"
+                      className="trust-slide-in flex items-center gap-3"
                       style={{ animationDelay: `${i * 60}ms` }}
                     >
-                      <span className="shrink-0 text-[11px] tabular-nums text-muted-foreground font-mono">
+                      <span className="shrink-0 font-mono text-[11px] text-muted-foreground tabular-nums">
                         {entry.time}
                       </span>
                       <div className="h-px flex-1 bg-border/40" />
@@ -1515,23 +2163,36 @@ export function TrustContent() {
                   {AUDIT_ENTRIES.map((entry, i) => (
                     <div
                       key={entry.time}
-                      className="rounded-md border border-border/60 p-3 trust-slide-in"
+                      className="trust-slide-in rounded-md border border-border/60 p-3"
                       style={{ animationDelay: `${i * 80}ms` }}
                     >
-                      <div className="flex items-center justify-between mb-2">
+                      <div className="mb-2 flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <span className="text-[11px] tabular-nums text-muted-foreground font-mono">
+                          <span className="font-mono text-[11px] text-muted-foreground tabular-nums">
                             {entry.time}
                           </span>
-                          <span className="text-xs text-muted-foreground">·</span>
-                          <span className="text-xs text-muted-foreground">{entry.user}</span>
+                          <span className="text-xs text-muted-foreground">
+                            ·
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            {entry.user}
+                          </span>
                         </div>
                       </div>
                       <p className="text-sm font-medium">{entry.action}</p>
-                      <p className="mt-1 text-xs text-muted-foreground">{entry.outcome}</p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {entry.outcome}
+                      </p>
                       <div className="mt-2 flex items-center gap-1.5">
-                        <HugeiconsIcon icon={File01Icon} size={11} strokeWidth={1.5} className="text-muted-foreground" />
-                        <span className="text-[10px] text-muted-foreground">{entry.evidence}</span>
+                        <HugeiconsIcon
+                          icon={File01Icon}
+                          size={11}
+                          strokeWidth={1.5}
+                          className="text-muted-foreground"
+                        />
+                        <span className="text-[10px] text-muted-foreground">
+                          {entry.source}
+                        </span>
                       </div>
                     </div>
                   ))}
@@ -1543,35 +2204,54 @@ export function TrustContent() {
 
         {/* Spec table */}
         <div className="mt-8">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Mode</th>
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Shows</th>
-                <th className="pb-2 text-left text-xs font-medium text-muted-foreground">Audience</th>
-              </tr>
-            </thead>
-            <tbody className="text-muted-foreground">
-              <tr className="border-b border-border/50">
-                <td className="py-2.5 pr-4 font-medium text-foreground">Summary</td>
-                <td className="py-2.5 pr-4">Timestamp + action description</td>
-                <td className="py-2.5">Quick scan during evaluation</td>
-              </tr>
-              <tr>
-                <td className="py-2.5 pr-4 font-medium text-foreground">Detailed</td>
-                <td className="py-2.5 pr-4">User, outcome, evidence links</td>
-                <td className="py-2.5">Formal audit and compliance review</td>
-              </tr>
-            </tbody>
-          </table>
+          <Table className="w-full text-sm">
+            <TableHeader>
+              <TableRow className="border-b border-border">
+                <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
+                  Mode
+                </TableHead>
+                <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
+                  Shows
+                </TableHead>
+                <TableHead className="pb-2 text-left text-xs font-medium text-muted-foreground">
+                  Audience
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="text-muted-foreground">
+              <TableRow className="border-b border-border/50">
+                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
+                  Summary
+                </TableCell>
+                <TableCell className="py-2.5 pr-4">
+                  Timestamp + action description
+                </TableCell>
+                <TableCell className="py-2.5">
+                  Quick scan during review
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
+                  Detailed
+                </TableCell>
+                <TableCell className="py-2.5 pr-4">
+                  User, outcome, source links
+                </TableCell>
+                <TableCell className="py-2.5">
+                  Formal audit and requirements review
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </div>
 
         {/* Callout */}
-        <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          Audit trails are a regulatory requirement in CC and CRA contexts. Every
-          agent action must be logged with enough detail for an ITSEF evaluator to
-          reconstruct exactly what happened. The summary view keeps daily work
-          manageable while the detailed view satisfies formal audit needs.
+        <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
+          Audit trails are a regulatory requirement in CC and release governance
+          contexts. Every agent action must be logged with enough detail for an
+          review team sessioner to reconstruct exactly what happened. The
+          summary view keeps daily work manageable while the detailed view
+          satisfies formal review needs.
         </div>
       </section>
     </article>

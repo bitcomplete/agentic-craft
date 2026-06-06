@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "action-preview",
+  "title": "Action Preview",
+  "description": "A locked consequence preview for approvals, external actions, document changes, and rollback-aware agent work.",
+  "dependencies": [
+    "@hugeicons/react",
+    "@hugeicons/core-free-icons"
+  ],
+  "registryDependencies": [
+    "badge"
+  ],
+  "files": [
+    {
+      "path": "registry/base-nova/ui/action-preview.tsx",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\nimport { LockKeyIcon, Shield01Icon } from \"@hugeicons/core-free-icons\"\nimport { HugeiconsIcon } from \"@hugeicons/react\"\n\nimport { Badge } from \"@/components/ui/badge\"\nimport { cn } from \"@/lib/utils\"\n\ntype ActionPreviewItem = {\n  label: string\n  value: React.ReactNode\n}\n\ntype ActionPreviewProps = React.ComponentProps<\"div\"> & {\n  title: string\n  description: React.ReactNode\n  items: ActionPreviewItem[]\n  status?: \"preview\" | \"locked\" | \"approved\" | \"denied\"\n}\n\nconst statusLabels = {\n  preview: \"Preview\",\n  locked: \"Locked payload\",\n  approved: \"Approved\",\n  denied: \"Denied\",\n} satisfies Record<NonNullable<ActionPreviewProps[\"status\"]>, string>\n\nfunction ActionPreview({\n  title,\n  description,\n  items,\n  status = \"locked\",\n  className,\n  children,\n  ...props\n}: ActionPreviewProps) {\n  return (\n    <div\n      data-slot=\"action-preview\"\n      className={cn(\n        \"rounded-lg border border-border/60 bg-muted/20 p-3 sm:p-4\",\n        className\n      )}\n      {...props}\n    >\n      <div className=\"flex items-start justify-between gap-3\">\n        <div className=\"min-w-0\">\n          <div className=\"flex items-center gap-2\">\n            <HugeiconsIcon\n              icon={status === \"locked\" ? LockKeyIcon : Shield01Icon}\n              size={14}\n              strokeWidth={1.5}\n              className=\"shrink-0 text-muted-foreground\"\n              aria-hidden=\"true\"\n            />\n            <h3 className=\"truncate text-sm font-medium text-foreground\">\n              {title}\n            </h3>\n          </div>\n          <p className=\"mt-2 text-sm leading-5 text-muted-foreground\">\n            {description}\n          </p>\n        </div>\n        <Badge variant={status === \"denied\" ? \"destructive\" : \"outline\"}>\n          {statusLabels[status]}\n        </Badge>\n      </div>\n\n      <div className=\"mt-4 grid gap-2 sm:grid-cols-2\">\n        {items.map((item) => (\n          <div\n            key={item.label}\n            className=\"rounded-md border border-border/50 bg-background/60 px-3 py-2\"\n          >\n            <p className=\"text-[11px] font-medium text-muted-foreground\">\n              {item.label}\n            </p>\n            <div className=\"mt-1 text-sm leading-5 break-words text-foreground\">\n              {item.value}\n            </div>\n          </div>\n        ))}\n      </div>\n\n      {children && <div className=\"mt-4\">{children}</div>}\n    </div>\n  )\n}\n\nexport { ActionPreview, type ActionPreviewItem, type ActionPreviewProps }\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

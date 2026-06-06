@@ -15,13 +15,15 @@ type ToolCallStatus = "running" | "completed" | "failed"
 interface ToolCallContextValue {
   expanded: boolean
   onExpandedChange: (expanded: boolean) => void
+  icon: IconSvgElement
   status: ToolCallStatus
+  timestamp?: string
 }
 
 const ToolCallContext = React.createContext<ToolCallContextValue | null>(null)
 
 function useToolCall(): ToolCallContextValue {
-  const ctx = React.useContext(ToolCallContext)
+  const ctx = React.use(ToolCallContext)
   if (!ctx) throw new Error("useToolCall must be used within a <ToolCall />")
   return ctx
 }
@@ -32,8 +34,6 @@ function ToolCall({
   icon,
   status = "completed",
   timestamp,
-  error,
-  onRetry,
   defaultExpanded = false,
   className,
   children,
@@ -42,115 +42,105 @@ function ToolCall({
   icon: IconSvgElement
   status?: ToolCallStatus
   timestamp?: string
-  error?: string
-  onRetry?: () => void
   defaultExpanded?: boolean
 }) {
   const [expanded, setExpanded] = React.useState(
-    defaultExpanded || status === "failed",
+    defaultExpanded || status === "failed"
   )
-  const [hover, setHover] = React.useState(false)
-
-  const hasContent = React.Children.toArray(children).some(
-    (child) => React.isValidElement(child) && child.type === ToolCallContent,
-  )
-
-  const canExpand = status !== "running" && (hasContent || !!error)
 
   const ctx = React.useMemo(
-    () => ({ expanded, onExpandedChange: setExpanded, status }),
-    [expanded, status],
+    () => ({
+      expanded,
+      onExpandedChange: setExpanded,
+      icon,
+      status,
+      timestamp,
+    }),
+    [expanded, icon, status, timestamp]
   )
 
   return (
-    <ToolCallContext.Provider value={ctx}>
+    <ToolCallContext value={ctx}>
       <div
         data-slot="tool-call"
-        className={cn("flex flex-col gap-3 min-w-0 text-muted-foreground relative", className)}
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
+        className={cn(
+          "relative flex min-w-0 flex-col gap-3 text-muted-foreground",
+          className
+        )}
         {...props}
       >
-        <div className="flex items-center gap-2 relative group/tool-wrapper">
-          <button
-            type="button"
-            onClick={canExpand ? () => setExpanded(!expanded) : undefined}
-            className={cn(
-              "min-w-0 flex items-center gap-2 w-fit max-w-full",
-              canExpand ? "cursor-pointer" : "cursor-default",
-            )}
-          >
-            <div className="relative rounded-full size-5 flex items-center justify-center shrink-0">
-              <div className="absolute bg-background inset-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full size-6" />
-              <HugeiconsIcon
-                icon={icon}
-                size={16}
-                strokeWidth={1.5}
-                className={cn(
-                  "relative",
-                  status === "running" && "animate-tool-call-pulse",
-                  status === "failed"
-                    ? "text-destructive"
-                    : "text-muted-foreground group-hover/tool-wrapper:text-foreground",
-                )}
-              />
-            </div>
-            {/* Render only non-content children (labels) in the trigger */}
-            {React.Children.map(children, (child) =>
-              React.isValidElement(child) && child.type === ToolCallContent
-                ? null
-                : child,
-            )}
-            {canExpand && (
-              <HugeiconsIcon
-                icon={ArrowRight01Icon}
-                size={14}
-                strokeWidth={1.5}
-                className={cn(
-                  "shrink-0 transition-transform duration-200",
-                  status === "failed"
-                    ? "text-destructive"
-                    : "group-hover/tool-wrapper:text-foreground",
-                  expanded && "rotate-90",
-                )}
-              />
-            )}
-          </button>
-          {timestamp && hover && (
-            <span className="shrink-0 ml-auto text-xs select-none truncate text-muted-foreground">
-              {timestamp}
-            </span>
-          )}
-        </div>
-
-        {/* Expanded content */}
-        {expanded && hasContent && (
-          <div className="animate-composer-slide">
-            {React.Children.map(children, (child) =>
-              React.isValidElement(child) && child.type === ToolCallContent
-                ? child
-                : null,
-            )}
-          </div>
-        )}
-
-        {/* Error state */}
-        {expanded && error && (
-          <div className="animate-composer-slide pl-7 -mt-1 pb-1">
-            <p className="text-xs text-destructive/80">{error}</p>
-            {onRetry && (
-              <button
-                type="button"
-                onClick={onRetry}
-                className="mt-2 rounded-md border border-border px-3 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent"
-              >
-                Retry
-              </button>
-            )}
-          </div>
-        )}
+        {children}
       </div>
-    </ToolCallContext.Provider>
+    </ToolCallContext>
+  )
+}
+
+/* ── ToolCallTrigger ── */
+
+function ToolCallTrigger({
+  className,
+  children,
+  expandable = true,
+  ...props
+}: React.ComponentProps<"button"> & {
+  expandable?: boolean
+}) {
+  const { expanded, onExpandedChange, icon, status, timestamp } = useToolCall()
+  const canExpand = expandable && status !== "running"
+
+  return (
+    <div
+      data-slot="tool-call-trigger-wrap"
+      className="group/tool-wrapper relative flex items-center gap-2"
+    >
+      <button
+        type="button"
+        onClick={canExpand ? () => onExpandedChange(!expanded) : undefined}
+        aria-expanded={canExpand ? expanded : undefined}
+        className={cn(
+          "flex w-fit max-w-full min-w-0 items-center gap-2",
+          canExpand ? "cursor-pointer" : "cursor-default",
+          className
+        )}
+        {...props}
+      >
+        <div className="relative flex size-5 shrink-0 items-center justify-center rounded-full">
+          <div className="absolute inset-1/2 size-6 -translate-x-1/2 -translate-y-1/2 rounded-full bg-background" />
+          <HugeiconsIcon
+            icon={icon}
+            size={16}
+            strokeWidth={1.5}
+            className={cn(
+              "relative",
+              status === "running" && "animate-tool-call-pulse",
+              status === "failed"
+                ? "text-destructive"
+                : "text-muted-foreground group-hover/tool-wrapper:text-foreground"
+            )}
+          />
+        </div>
+        {children}
+        {canExpand && (
+          <HugeiconsIcon
+            icon={ArrowRight01Icon}
+            size={14}
+            strokeWidth={1.5}
+            className={cn(
+              "shrink-0 transition-transform duration-200",
+              status === "failed"
+                ? "text-destructive"
+                : "group-hover/tool-wrapper:text-foreground",
+              expanded && "rotate-90"
+            )}
+          />
+        )}
+      </button>
+      {timestamp && (
+        <span className="ml-auto shrink-0 truncate text-xs text-muted-foreground select-none">
+          {timestamp}
+        </span>
+      )}
+    </div>
   )
 }
 
@@ -167,11 +157,11 @@ function ToolCallLabel({
     <span
       data-slot="tool-call-label"
       className={cn(
-        "min-w-0 text-sm select-none truncate",
+        "min-w-0 truncate text-sm select-none",
         status === "failed"
           ? "text-destructive"
           : "group-hover/tool-wrapper:text-foreground",
-        className,
+        className
       )}
       {...props}
     >
@@ -187,10 +177,13 @@ function ToolCallContent({
   children,
   ...props
 }: React.ComponentProps<"div">) {
+  const { expanded } = useToolCall()
+  if (!expanded) return null
+
   return (
     <div
       data-slot="tool-call-content"
-      className={cn("pl-7 -mt-1 pb-1", className)}
+      className={cn("animate-composer-slide -mt-1 pb-1 pl-7", className)}
       {...props}
     >
       {children}
@@ -198,5 +191,51 @@ function ToolCallContent({
   )
 }
 
-export { ToolCall, ToolCallLabel, ToolCallContent, useToolCall }
+/* ── ToolCallError ── */
+
+function ToolCallError({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"div">) {
+  const { expanded } = useToolCall()
+  if (!expanded) return null
+
+  return (
+    <div
+      data-slot="tool-call-error"
+      className={cn("animate-composer-slide -mt-1 pb-1 pl-7", className)}
+      {...props}
+    >
+      <p className="text-xs text-destructive/80">{children}</p>
+    </div>
+  )
+}
+
+function ToolCallRetry({
+  className,
+  ...props
+}: React.ComponentProps<"button">) {
+  return (
+    <button
+      type="button"
+      data-slot="tool-call-retry"
+      className={cn(
+        "mt-2 rounded-md border border-border px-3 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+export {
+  ToolCall,
+  ToolCallTrigger,
+  ToolCallLabel,
+  ToolCallContent,
+  ToolCallError,
+  ToolCallRetry,
+  useToolCall,
+}
 export type { ToolCallStatus }

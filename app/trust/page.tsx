@@ -3,7 +3,7 @@ import { TrustContent } from '@/views/trust-content'
 
 export const metadata: Metadata = {
   title: 'Trust & Governance | Agentic Craft',
-  description: 'Autonomy levels, consent flows, confidence display, kill switch, and audit trail patterns',
+  description: 'Reference patterns for autonomy, consent, confidence, provenance, and auditability',
 }
 
 export default function TrustPage() {

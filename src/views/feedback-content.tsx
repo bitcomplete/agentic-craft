@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { useState, useEffect, useCallback, useRef } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
@@ -12,6 +12,21 @@ import {
   ArrowRight01Icon,
   MessageIcon,
 } from "@hugeicons/core-free-icons"
+import { PatternControls as Controls } from "@/components/pattern-controls"
+import { cn } from "@/lib/utils"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Field, FieldLabel } from "@/components/ui/field"
+import { Separator } from "@/components/ui/separator"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import { Textarea } from "@/components/ui/textarea"
 
 /* ------------------------------------------------------------------ */
 /*  CSS Keyframes                                                      */
@@ -41,9 +56,9 @@ function ensureStyles() {
       40% { transform: scale(0.92); }
       100% { transform: scale(1); }
     }
-    @keyframes feedback-expand {
-      from { max-height: 0; opacity: 0; }
-      to { max-height: 400px; opacity: 1; }
+      @keyframes feedback-expand {
+        from { opacity: 0; transform: translateY(-4px); }
+        to { opacity: 1; transform: translateY(0); }
     }
     @keyframes feedback-highlight-in {
       from { background-color: transparent; }
@@ -68,6 +83,16 @@ function ensureStyles() {
     .feedback-highlight-in {
       animation: feedback-highlight-in 0.4s ease forwards;
     }
+    @media (prefers-reduced-motion: reduce) {
+      .feedback-slide-in,
+      .feedback-fade-in,
+      .feedback-flash-green,
+      .feedback-press,
+      .feedback-expand,
+      .feedback-highlight-in {
+        animation: none;
+      }
+    }
   `
   document.head.appendChild(style)
 }
@@ -85,83 +110,54 @@ const AGENT_PROSE_STYLE = {
   WebkitFontSmoothing: "antialiased" as const,
 }
 
-const AGENT_PROSE_COLOR = "oklch(0.2642 0.013 93.9)"
+const AGENT_PROSE_COLOR = "var(--foreground)"
 
 const FEEDBACK_HISTORY = [
   {
     id: "fb-1",
     timestamp: "2026-03-14 · 14:32",
-    message: "The Security Target defines 14 SFRs across 5 classes. ADV_FSP.1 requires a functional specification with complete summary of the TSFI.",
+    message:
+      "The project brief defines 14 requirements across 5 classes. implementation notes summarize the workflow behavior and open dependencies.",
     type: "positive" as const,
-    detail: "Accurate SFR count and ADV_FSP.1 description confirmed against ST v3.1.",
+    detail:
+      "Accurate requirement count and implementation notes description confirmed against Brief v3.",
   },
   {
     id: "fb-2",
     timestamp: "2026-03-14 · 11:07",
-    message: "The evaluation assurance level requires ALC_FLR.2 for flaw remediation procedures.",
+    message:
+      "The launch readiness plan requires dedicated support plan for issue triage procedures.",
     type: "correction" as const,
-    detail: "Corrected ALC_FLR.2 → ALC_FLR.1. EAL4 augmented does not require FLR.2.",
+    detail:
+      "Corrected dedicated support plan → standard support plan. enterprise release does not require dedicated support coverage.",
   },
   {
     id: "fb-3",
     timestamp: "2026-03-13 · 16:45",
-    message: "I've mapped each SFR to its corresponding test case in the evaluation work plan. Coverage is at 91.3%.",
+    message:
+      "I've mapped each requirement to its corresponding test case in the review plan. Coverage is at 91.3%.",
     type: "negative" as const,
-    detail: "FPT_FLS.1 and FDP_RIP.1 were missing from the mapping. Coverage was overstated.",
+    detail:
+      "Fallback behavior and Cleanup behavior were missing from the mapping. Coverage was overstated.",
   },
   {
     id: "fb-4",
     timestamp: "2026-03-13 · 09:20",
-    message: "ATE_FUN.1 testing is complete. All functional tests for the cryptographic module passed.",
+    message:
+      "Release QA is complete. All functional tests for the export service passed.",
     type: "positive" as const,
-    detail: "Test results verified against ATE_FUN.1 work unit documentation.",
+    detail: "Test results verified against release QA checklist.",
   },
   {
     id: "fb-5",
     timestamp: "2026-03-12 · 15:10",
-    message: "The TOE boundary includes the hardware security module and its firmware up to version 2.4.",
+    message:
+      "The product boundary includes the billing integration and its configuration up to version 2.4.",
     type: "correction" as const,
-    detail: "Corrected firmware scope: boundary extends to v2.4.1 per the latest ST addendum.",
+    detail:
+      "Corrected configuration scope: boundary extends to v2.4.1 per the latest ST addendum.",
   },
 ]
-
-/* ------------------------------------------------------------------ */
-/*  Controls component                                                 */
-/* ------------------------------------------------------------------ */
-
-function Controls({
-  options,
-  active,
-  onToggle,
-}: {
-  options: { key: string; label: string }[]
-  active: Record<string, boolean>
-  onToggle: (key: string) => void
-}) {
-  return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 pb-5">
-      <span className="section-label mr-1">Controls</span>
-      {options.map((opt) => (
-        <button
-          key={opt.key}
-          onClick={() => onToggle(opt.key)}
-          className={`
-            relative text-xs px-2.5 py-1 rounded-md border transition-all duration-200
-            ${active[opt.key]
-              ? "border-foreground/20 bg-foreground/[0.04] text-foreground"
-              : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50"
-            }
-          `}
-        >
-          {opt.label}
-          {active[opt.key] && (
-            <span className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-foreground/40" />
-          )}
-        </button>
-      ))}
-    </div>
-  )
-}
 
 /* ------------------------------------------------------------------ */
 /*  Page                                                               */
@@ -177,7 +173,9 @@ export function FeedbackContent() {
     negative: false,
     withCorrection: false,
   })
-  const [thumbsSelection, setThumbsSelection] = useState<"up" | "down" | null>(null)
+  const [thumbsSelection, setThumbsSelection] = useState<"up" | "down" | null>(
+    null
+  )
   const [thumbsFlash, setThumbsFlash] = useState(false)
   const [correctionText, setCorrectionText] = useState("")
   const [correctionSubmitted, setCorrectionSubmitted] = useState(false)
@@ -203,23 +201,28 @@ export function FeedbackContent() {
       setThumbsSelection("down")
     } else if (key === "withCorrection") {
       setThumbsSelection("down")
-      setCorrectionText("EAL4 augmented does not require ALC_FLR.2 — only ALC_FLR.1 is mandated for flaw remediation at this level.")
+      setCorrectionText(
+        "enterprise release does not require dedicated support plan — only standard support plan is mandated for issue triage at this level."
+      )
     } else {
       setThumbsSelection(null)
     }
   }, [])
 
-  const handleThumbClick = useCallback((which: "up" | "down") => {
-    if (thumbsSelection === which) {
-      setThumbsSelection(null)
-      return
-    }
-    setThumbsSelection(which)
-    if (which === "up") {
-      setThumbsFlash(true)
-      setTimeout(() => setThumbsFlash(false), 600)
-    }
-  }, [thumbsSelection])
+  const handleThumbClick = useCallback(
+    (which: "up" | "down") => {
+      if (thumbsSelection === which) {
+        setThumbsSelection(null)
+        return
+      }
+      setThumbsSelection(which)
+      if (which === "up") {
+        setThumbsFlash(true)
+        setTimeout(() => setThumbsFlash(false), 600)
+      }
+    },
+    [thumbsSelection]
+  )
 
   const handleCorrectionSubmit = useCallback(() => {
     if (!correctionText.trim()) return
@@ -234,7 +237,10 @@ export function FeedbackContent() {
 
   const handleCorrToggle = useCallback((key: string) => {
     setCorrState(() => {
-      const next: Record<string, boolean> = { original: false, corrected: false }
+      const next: Record<string, boolean> = {
+        original: false,
+        corrected: false,
+      }
       next[key] = true
       return next
     })
@@ -302,19 +308,21 @@ export function FeedbackContent() {
     setExpandedRow(null)
   }, [])
 
-  const visibleHistory = historyState.all ? FEEDBACK_HISTORY : FEEDBACK_HISTORY.slice(0, 3)
+  const visibleHistory = historyState.all
+    ? FEEDBACK_HISTORY
+    : FEEDBACK_HISTORY.slice(0, 3)
 
   return (
     <article>
       <header className="mb-20">
         <p className="section-label mb-4">Patterns</p>
-        <h1 className="font-serif text-4xl font-light tracking-tight leading-[1.15]">
+        <h1 className="font-serif text-4xl leading-[1.15] font-light tracking-tight">
           Feedback &amp; Correction
         </h1>
         <p className="mt-4 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-          Patterns for collecting evaluator feedback on agent responses —
-          thumbs rating, inline corrections, numeric scales, behavioral
-          consequences, and feedback history.
+          Patterns for collecting reviewer feedback on agent responses — thumbs
+          rating, inline corrections, numeric scales, behavioral consequences,
+          and feedback history.
         </p>
       </header>
 
@@ -327,9 +335,9 @@ export function FeedbackContent() {
           Thumbs Feedback
         </h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-          Quick signal from the evaluator on response quality. Thumbs up
-          confirms accuracy. Thumbs down opens a correction flow for
-          structured remediation.
+          Quick signal from the reviewer on response quality. Thumbs up confirms
+          accuracy. Thumbs down opens a correction flow for structured
+          remediation.
         </p>
 
         <div className="mt-10">
@@ -344,7 +352,10 @@ export function FeedbackContent() {
             onToggle={handleThumbsToggle}
           />
 
-          <div className="border border-border/40 rounded-lg p-6" ref={thumbsRef}>
+          <div
+            className="rounded-lg border border-border/40 p-6"
+            ref={thumbsRef}
+          >
             {/* Agent message */}
             <div
               className={`rounded-lg border border-border/40 p-4 transition-colors duration-300 ${
@@ -355,69 +366,113 @@ export function FeedbackContent() {
                 className="text-base"
                 style={{ ...AGENT_PROSE_STYLE, color: AGENT_PROSE_COLOR }}
               >
-                The Security Target defines 14 SFRs across 5 classes.
-                ADV_FSP.1 requires a functional specification with a
-                complete summary of the TSFI. I&apos;ve mapped each SFR to
-                its corresponding test case in the evaluation work plan.
+                The project brief defines 14 requirements across 5 classes.
+                implementation notes summarize the workflow behavior and open
+                dependencies. I&apos;ve mapped each requirement to its
+                corresponding test case in the review plan.
               </p>
 
               {/* Thumbs buttons */}
               <div className="mt-3 flex items-center gap-1">
-                <button
+                <Button
                   type="button"
                   onClick={() => handleThumbClick("up")}
-                  className={`rounded-md p-1.5 transition-colors ${
-                    thumbsSelection === "up"
-                      ? "bg-foreground/[0.06] text-foreground"
-                      : "text-muted-foreground/50 hover:text-muted-foreground"
-                  } ${thumbsSelection === "up" ? "feedback-press" : ""}`}
+                  aria-label="Mark response as helpful"
+                  aria-pressed={thumbsSelection === "up"}
+                  variant="ghost"
+                  size="icon-sm"
+                  className={cn(
+                    "text-muted-foreground/50 hover:text-muted-foreground",
+                    thumbsSelection === "up" &&
+                      "feedback-press bg-foreground/[0.06] text-foreground"
+                  )}
                 >
-                  <HugeiconsIcon icon={ThumbsUpIcon} size={14} strokeWidth={1.5} />
-                </button>
-                <button
+                  <HugeiconsIcon icon={ThumbsUpIcon} strokeWidth={1.5} />
+                </Button>
+                <Button
                   type="button"
                   onClick={() => handleThumbClick("down")}
-                  className={`rounded-md p-1.5 transition-colors ${
-                    thumbsSelection === "down"
-                      ? "bg-foreground/[0.06] text-foreground"
-                      : "text-muted-foreground/50 hover:text-muted-foreground"
-                  } ${thumbsSelection === "down" ? "feedback-press" : ""}`}
+                  aria-label="Mark response as not helpful"
+                  aria-pressed={thumbsSelection === "down"}
+                  variant="ghost"
+                  size="icon-sm"
+                  className={cn(
+                    "text-muted-foreground/50 hover:text-muted-foreground",
+                    thumbsSelection === "down" &&
+                      "feedback-press bg-foreground/[0.06] text-foreground"
+                  )}
                 >
-                  <HugeiconsIcon icon={ThumbsDownIcon} size={14} strokeWidth={1.5} />
-                </button>
+                  <HugeiconsIcon icon={ThumbsDownIcon} strokeWidth={1.5} />
+                </Button>
               </div>
 
               {/* Correction textarea — shown on negative or withCorrection */}
               {thumbsSelection === "down" && (
-                <div className="mt-3 feedback-expand">
+                <div className="feedback-expand mt-3">
                   {correctionSubmitted ? (
-                    <div className="flex items-center gap-2 rounded-md border border-foreground/10 bg-foreground/[0.02] px-3 py-2.5 feedback-fade-in">
-                      <HugeiconsIcon icon={Tick01Icon} size={14} strokeWidth={1.5} className="text-muted-foreground" />
+                    <div className="feedback-fade-in flex items-center gap-2 rounded-md border border-foreground/10 bg-foreground/[0.02] px-3 py-2.5">
+                      <HugeiconsIcon
+                        icon={Tick01Icon}
+                        size={14}
+                        strokeWidth={1.5}
+                        className="text-muted-foreground"
+                      />
                       <span className="text-sm text-muted-foreground">
-                        Correction recorded — the agent will apply this in future responses.
+                        Correction recorded — the agent will apply this in
+                        future responses.
                       </span>
                     </div>
                   ) : (
-                    <>
-                      <textarea
-                        value={correctionText}
-                        onChange={(e) => setCorrectionText(e.target.value)}
-                        placeholder="What should be different?"
-                        rows={3}
-                        className="w-full resize-none rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-foreground/20"
-                      />
-                      <div className="mt-2 flex justify-end">
-                        <button
-                          type="button"
-                          onClick={handleCorrectionSubmit}
-                          disabled={!correctionText.trim()}
-                          className="flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-accent disabled:opacity-40 disabled:pointer-events-none"
+                    <form
+                      className="space-y-2"
+                      onSubmit={(event) => {
+                        event.preventDefault()
+                        handleCorrectionSubmit()
+                      }}
+                    >
+                      <Field>
+                        <FieldLabel
+                          htmlFor="feedback-correction"
+                          className="sr-only"
                         >
-                          <HugeiconsIcon icon={ArrowRight01Icon} size={12} strokeWidth={1.5} />
+                          Correction feedback
+                        </FieldLabel>
+                        <Textarea
+                          id="feedback-correction"
+                          name="feedback-correction"
+                          aria-label="Correction feedback"
+                          value={correctionText}
+                          onChange={(e) => setCorrectionText(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (
+                              e.key === "Enter" &&
+                              (e.metaKey || e.ctrlKey)
+                            ) {
+                              e.preventDefault()
+                              handleCorrectionSubmit()
+                            }
+                          }}
+                          placeholder="What should be different?"
+                          rows={3}
+                          className="resize-none"
+                        />
+                      </Field>
+                      <div className="mt-2 flex justify-end">
+                        <Button
+                          type="submit"
+                          disabled={!correctionText.trim()}
+                          variant="outline"
+                          size="xs"
+                        >
+                          <HugeiconsIcon
+                            icon={ArrowRight01Icon}
+                            strokeWidth={1.5}
+                            data-icon="inline-start"
+                          />
                           Submit correction
-                        </button>
+                        </Button>
                       </div>
-                    </>
+                    </form>
                   )}
                 </div>
               )}
@@ -426,40 +481,66 @@ export function FeedbackContent() {
         </div>
 
         {/* Spec table */}
-        <table className="mt-10 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">
+        <Table className="mt-10 w-full text-sm">
+          <TableHeader>
+            <TableRow className="border-b border-border">
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
                 State
-              </th>
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">
+              </TableHead>
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
                 Trigger
-              </th>
-              <th className="pb-3 text-left text-xs font-medium text-muted-foreground">
+              </TableHead>
+              <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
                 Behavior
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {[
-              ["Neutral", "Default", "Thumbs visible at half opacity, no selection"],
-              ["Positive", "Thumbs up clicked", "Brief green flash confirms, selection persists"],
-              ["Negative", "Thumbs down clicked", "Correction textarea expands below the message"],
-              ["With Correction", "Submit button or Enter", "Textarea pre-filled, submit records the correction"],
+              [
+                "Neutral",
+                "Default",
+                "Thumbs visible at half opacity, no selection",
+              ],
+              [
+                "Positive",
+                "Thumbs up clicked",
+                "Brief green flash confirms, selection persists",
+              ],
+              [
+                "Negative",
+                "Thumbs down clicked",
+                "Correction textarea expands below the message",
+              ],
+              [
+                "With Correction",
+                "Submit button or Cmd/Ctrl+Enter",
+                "Textarea pre-filled, submit records the correction",
+              ],
             ].map(([state, trigger, behavior], i) => (
-              <tr key={state} className={i < 3 ? "border-b border-border/50" : ""}>
-                <td className="py-2.5 pr-6 font-medium">{state}</td>
-                <td className="py-2.5 pr-6 text-muted-foreground">{trigger}</td>
-                <td className="py-2.5 text-muted-foreground">{behavior}</td>
-              </tr>
+              <TableRow
+                key={state}
+                className={i < 3 ? "border-b border-border/50" : ""}
+              >
+                <TableCell className="py-2.5 pr-6 font-medium">
+                  {state}
+                </TableCell>
+                <TableCell className="py-2.5 pr-6 text-muted-foreground">
+                  {trigger}
+                </TableCell>
+                <TableCell className="py-2.5 text-muted-foreground">
+                  {behavior}
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
 
-        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
+        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
           Thumbs appear at reduced opacity until hover, keeping the reading
           experience clean. A thumbs-down always opens the correction flow —
-          negative signal without context is less useful than a directed correction.
+          negative signal without context is less useful than a directed
+          correction.
         </div>
       </section>
 
@@ -473,8 +554,8 @@ export function FeedbackContent() {
         </h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Direct editing of agent prose when a specific factual error is
-          identified — typically an incorrect CC component reference or
-          misquoted assurance requirement.
+          identified — typically an incorrect launch plan reference or misquoted
+          launch requirement.
         </p>
 
         <div className="mt-10">
@@ -487,30 +568,35 @@ export function FeedbackContent() {
             onToggle={handleCorrToggle}
           />
 
-          <div className="border border-border/40 rounded-lg p-6">
+          <div className="rounded-lg border border-border/40 p-6">
             <div className="rounded-lg border border-border/40 p-4">
               {corrState.original ? (
                 <p
                   className="text-base"
                   style={{ ...AGENT_PROSE_STYLE, color: AGENT_PROSE_COLOR }}
                 >
-                  The evaluation assurance level requires{" "}
+                  The launch readiness plan requires{" "}
                   <span className="relative inline-flex items-baseline gap-1.5">
                     <span className="rounded-md bg-foreground/[0.06] px-1">
-                      ALC_FLR.2
+                      dedicated support plan
                     </span>
-                    <button
+                    <Button
                       type="button"
                       onClick={() => handleCorrToggle("corrected")}
-                      className="inline-flex items-center gap-1 rounded-md border border-border px-1.5 py-0.5 text-xs text-muted-foreground transition-colors hover:bg-accent"
+                      variant="outline"
+                      size="xs"
                     >
-                      <HugeiconsIcon icon={Edit01Icon} size={10} strokeWidth={1.5} />
+                      <HugeiconsIcon
+                        icon={Edit01Icon}
+                        strokeWidth={1.5}
+                        data-icon="inline-start"
+                      />
                       Fix this
-                    </button>
+                    </Button>
                   </span>{" "}
-                  for flaw remediation procedures. This component ensures that
-                  the developer has established procedures to track and correct
-                  security flaws reported by users.
+                  for issue triage procedures. This pattern ensures that the
+                  team has an explicit process to track and correct issues
+                  reported by users.
                 </p>
               ) : (
                 <div className="feedback-fade-in">
@@ -518,21 +604,28 @@ export function FeedbackContent() {
                     className="text-base"
                     style={{ ...AGENT_PROSE_STYLE, color: AGENT_PROSE_COLOR }}
                   >
-                    The evaluation assurance level requires{" "}
-                    <span className="rounded-md px-1 feedback-highlight-in" style={{ backgroundColor: "oklch(0.72 0.15 155 / 0.08)" }}>
-                      ALC_FLR.1
+                    The launch readiness plan requires{" "}
+                    <span
+                      className="feedback-highlight-in rounded-md px-1"
+                      style={{ backgroundColor: "oklch(0.72 0.15 155 / 0.08)" }}
+                    >
+                      standard support plan
                     </span>{" "}
-                    for flaw remediation procedures. This component ensures that
-                    the developer has established procedures to track and correct
-                    security flaws reported by users.
+                    for issue triage procedures. This pattern ensures that the
+                    team has an explicit process to track and correct issues
+                    reported by users.
                   </p>
-                  <div className="mt-3 flex items-center gap-2 feedback-slide-in">
-                    <span className="flex items-center gap-1.5 rounded-md border border-foreground/10 bg-foreground/[0.02] px-2 py-1 text-xs text-muted-foreground">
-                      <HugeiconsIcon icon={Tick01Icon} size={12} strokeWidth={1.5} />
+                  <div className="feedback-slide-in mt-3 flex items-center gap-2">
+                    <Badge variant="outline">
+                      <HugeiconsIcon
+                        icon={Tick01Icon}
+                        strokeWidth={1.5}
+                        data-icon="inline-start"
+                      />
                       Applied
-                    </span>
+                    </Badge>
                     <span className="text-xs text-muted-foreground/60">
-                      ALC_FLR.2 → ALC_FLR.1
+                      dedicated support plan → standard support plan
                     </span>
                   </div>
                 </div>
@@ -542,38 +635,55 @@ export function FeedbackContent() {
         </div>
 
         {/* Spec table */}
-        <table className="mt-10 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">
+        <Table className="mt-10 w-full text-sm">
+          <TableHeader>
+            <TableRow className="border-b border-border">
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
                 State
-              </th>
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">
+              </TableHead>
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
                 Visual
-              </th>
-              <th className="pb-3 text-left text-xs font-medium text-muted-foreground">
+              </TableHead>
+              <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
                 Behavior
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {[
-              ["Original", "Error text with subtle highlight + edit button", "Clicking the edit button transitions to corrected state"],
-              ["Corrected", "Replacement text with green-tinted highlight", "Applied tag appears with before → after summary"],
+              [
+                "Original",
+                "Error text with subtle highlight + edit button",
+                "Clicking the edit button transitions to corrected state",
+              ],
+              [
+                "Corrected",
+                "Replacement text with green-tinted highlight",
+                "Applied tag appears with before → after summary",
+              ],
             ].map(([state, visual, behavior], i) => (
-              <tr key={state} className={i < 1 ? "border-b border-border/50" : ""}>
-                <td className="py-2.5 pr-6 font-medium">{state}</td>
-                <td className="py-2.5 pr-6 text-muted-foreground">{visual}</td>
-                <td className="py-2.5 text-muted-foreground">{behavior}</td>
-              </tr>
+              <TableRow
+                key={state}
+                className={i < 1 ? "border-b border-border/50" : ""}
+              >
+                <TableCell className="py-2.5 pr-6 font-medium">
+                  {state}
+                </TableCell>
+                <TableCell className="py-2.5 pr-6 text-muted-foreground">
+                  {visual}
+                </TableCell>
+                <TableCell className="py-2.5 text-muted-foreground">
+                  {behavior}
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
 
-        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          Inline corrections are scoped to specific factual errors — typically CC
-          component misreferences or incorrect assurance level claims. The
-          correction is applied in-place so the evaluator sees the fix in context
+        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
+          Inline corrections are scoped to specific factual errors — typically
+          launch plan misreferences or incorrect readiness level claims. The
+          correction is applied in-place so the reviewer sees the fix in context
           rather than receiving a full regeneration.
         </div>
       </section>
@@ -583,9 +693,7 @@ export function FeedbackContent() {
       {/* ============================================================ */}
       <section id="rating-scale" className="page-section">
         <p className="section-label mb-3">Assessment</p>
-        <h2 className="text-xl font-semibold tracking-tight">
-          Rating Scale
-        </h2>
+        <h2 className="text-xl font-semibold tracking-tight">Rating Scale</h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Numeric quality rating for agent responses, used to build a
           calibration dataset over time. More granular than thumbs, less
@@ -602,42 +710,43 @@ export function FeedbackContent() {
             onToggle={handleRatingToggle}
           />
 
-          <div className="border border-border/40 rounded-lg p-6">
+          <div className="rounded-lg border border-border/40 p-6">
             <div className="rounded-lg border border-border/40 p-4">
               <p
                 className="text-base"
                 style={{ ...AGENT_PROSE_STYLE, color: AGENT_PROSE_COLOR }}
               >
-                Based on the Protection Profile PP-CIMC-SLv3, the TOE must
-                implement FCS_COP.1 for AES-256-GCM and FCS_CKM.1 for
-                RSA-4096 key generation. Both are covered by the ACME
-                cryptographic module&apos;s FIPS 140-3 certification.
+                Based on the launch policy, the product must implement Export
+                workflow for CSV and JSON exports and Retention setting for
+                account retention. Both are covered by the ACME export
+                service&apos;s internal platform approval.
               </p>
 
               {/* Rating row */}
               <div className="mt-4 flex items-center gap-3">
-                <span className="text-xs text-muted-foreground/60">Rate this response</span>
+                <span className="text-xs text-muted-foreground/60">
+                  Rate this response
+                </span>
                 <div className="flex items-center gap-1">
                   {[1, 2, 3, 4, 5].map((n) => (
                     <button
                       key={n}
                       type="button"
                       onClick={() => handleRatingClick(n)}
-                      className={`
-                        flex h-7 w-7 items-center justify-center rounded-md text-xs transition-all duration-150
-                        ${ratingPressed === n ? "feedback-press" : ""}
-                        ${selectedRating === n
-                          ? "border border-foreground/20 bg-foreground/[0.06] text-foreground font-medium"
-                          : "border border-transparent text-muted-foreground/50 hover:text-muted-foreground hover:bg-muted/50"
-                        }
-                      `}
+                      aria-label={`Rate response ${n} out of 5`}
+                      aria-pressed={selectedRating === n}
+                      className={`flex h-7 w-7 items-center justify-center rounded-md text-xs transition-colors duration-150 ${ratingPressed === n ? "feedback-press" : ""} ${
+                        selectedRating === n
+                          ? "border border-foreground/20 bg-foreground/[0.06] font-medium text-foreground"
+                          : "border border-transparent text-muted-foreground/50 hover:bg-muted/50 hover:text-muted-foreground"
+                      } `}
                     >
                       {n}
                     </button>
                   ))}
                 </div>
                 {ratingConfirm && (
-                  <span className="text-xs text-muted-foreground/60 feedback-fade-in">
+                  <span className="feedback-fade-in text-xs text-muted-foreground/60">
                     Feedback recorded
                   </span>
                 )}
@@ -647,42 +756,71 @@ export function FeedbackContent() {
         </div>
 
         {/* Spec table */}
-        <table className="mt-10 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">
+        <Table className="mt-10 w-full text-sm">
+          <TableHeader>
+            <TableRow className="border-b border-border">
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
                 Rating
-              </th>
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">
+              </TableHead>
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
                 Meaning
-              </th>
-              <th className="pb-3 text-left text-xs font-medium text-muted-foreground">
+              </TableHead>
+              <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
                 Agent Response
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {[
-              ["1", "Incorrect or harmful", "Flagged for immediate review, excluded from training"],
-              ["2", "Mostly wrong", "Queued for regeneration with guided corrections"],
-              ["3", "Partially correct", "Logged as neutral — no behavioral change"],
-              ["4", "Good with minor issues", "Reinforced with small adjustments noted"],
-              ["5", "Excellent", "Reinforced as-is, used as positive calibration example"],
+              [
+                "1",
+                "Incorrect or harmful",
+                "Flagged for immediate review, excluded from training",
+              ],
+              [
+                "2",
+                "Mostly wrong",
+                "Queued for regeneration with guided corrections",
+              ],
+              [
+                "3",
+                "Partially correct",
+                "Logged as neutral — no behavioral change",
+              ],
+              [
+                "4",
+                "Good with minor issues",
+                "Reinforced with small adjustments noted",
+              ],
+              [
+                "5",
+                "Excellent",
+                "Reinforced as-is, used as positive calibration example",
+              ],
             ].map(([rating, meaning, response], i) => (
-              <tr key={rating} className={i < 4 ? "border-b border-border/50" : ""}>
-                <td className="py-2.5 pr-6 font-medium">{rating}</td>
-                <td className="py-2.5 pr-6 text-muted-foreground">{meaning}</td>
-                <td className="py-2.5 text-muted-foreground">{response}</td>
-              </tr>
+              <TableRow
+                key={rating}
+                className={i < 4 ? "border-b border-border/50" : ""}
+              >
+                <TableCell className="py-2.5 pr-6 font-medium">
+                  {rating}
+                </TableCell>
+                <TableCell className="py-2.5 pr-6 text-muted-foreground">
+                  {meaning}
+                </TableCell>
+                <TableCell className="py-2.5 text-muted-foreground">
+                  {response}
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
 
-        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
+        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
           Numbered buttons rather than stars — the scale is intentionally
-          utilitarian. Evaluators are accustomed to EAL numeric levels and
-          respond well to explicit ordinal scales. The brief confirmation
-          message auto-dismisses to avoid interrupting workflow.
+          utilitarian. Reviewers are accustomed to readiness labels and respond
+          well to explicit ordinal scales. The brief confirmation message
+          auto-dismisses to avoid interrupting workflow.
         </div>
       </section>
 
@@ -696,8 +834,8 @@ export function FeedbackContent() {
         </h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           How the agent&apos;s behavior visibly changes after receiving
-          feedback. Demonstrates the feedback loop closing — the evaluator
-          sees the before and after side by side.
+          feedback. Demonstrates the feedback loop closing — the reviewer sees
+          the before and after side by side.
         </p>
 
         <div className="mt-10">
@@ -710,64 +848,90 @@ export function FeedbackContent() {
             onToggle={handleBehaviorToggle}
           />
 
-          <div className="border border-border/40 rounded-lg p-6">
+          <div className="rounded-lg border border-border/40 p-6">
             {behaviorState.before ? (
               <div className="rounded-lg border border-border/40 p-4">
                 <p
                   className="text-base"
                   style={{ ...AGENT_PROSE_STYLE, color: AGENT_PROSE_COLOR }}
                 >
-                  The evaluation assurance level requires ALC_FLR.2 for
-                  flaw remediation procedures. This component ensures that
-                  the developer has established procedures to track and
-                  correct security flaws reported by users of the TOE.
+                  The launch readiness plan requires dedicated support plan for
+                  issue triage procedures. This pattern ensures that the team
+                  has an explicit process to track and correct issues reported
+                  by users of the product.
                 </p>
                 <div className="mt-3 flex items-center gap-1">
                   <span className="text-muted-foreground/50">
-                    <HugeiconsIcon icon={ThumbsUpIcon} size={14} strokeWidth={1.5} />
+                    <HugeiconsIcon
+                      icon={ThumbsUpIcon}
+                      size={14}
+                      strokeWidth={1.5}
+                    />
                   </span>
                   <span className="text-muted-foreground/50">
-                    <HugeiconsIcon icon={ThumbsDownIcon} size={14} strokeWidth={1.5} />
+                    <HugeiconsIcon
+                      icon={ThumbsDownIcon}
+                      size={14}
+                      strokeWidth={1.5}
+                    />
                   </span>
                 </div>
               </div>
             ) : (
-              <div className="space-y-3 feedback-fade-in">
+              <div className="feedback-fade-in space-y-3">
                 <div className="rounded-lg border border-border/40 p-4">
                   <p
                     className="text-base"
                     style={{ ...AGENT_PROSE_STYLE, color: AGENT_PROSE_COLOR }}
                   >
-                    The evaluation assurance level requires{" "}
-                    <span className="rounded-md px-1" style={{ backgroundColor: "oklch(0.72 0.15 155 / 0.08)" }}>
-                      ALC_FLR.1
+                    The launch readiness plan requires{" "}
+                    <span
+                      className="rounded-md px-1"
+                      style={{ backgroundColor: "oklch(0.72 0.15 155 / 0.08)" }}
+                    >
+                      standard support plan
                     </span>{" "}
-                    for flaw remediation procedures. This component ensures that
-                    the developer has established procedures to track and
-                    correct security flaws reported by users of the TOE.
+                    for issue triage procedures. This pattern ensures that the
+                    team has an explicit process to track and correct issues
+                    reported by users of the product.
                   </p>
                   <div className="mt-3 flex items-center gap-1">
                     <span className="text-foreground/60">
-                      <HugeiconsIcon icon={ThumbsUpIcon} size={14} strokeWidth={1.5} />
+                      <HugeiconsIcon
+                        icon={ThumbsUpIcon}
+                        size={14}
+                        strokeWidth={1.5}
+                      />
                     </span>
                     <span className="text-muted-foreground/50">
-                      <HugeiconsIcon icon={ThumbsDownIcon} size={14} strokeWidth={1.5} />
+                      <HugeiconsIcon
+                        icon={ThumbsDownIcon}
+                        size={14}
+                        strokeWidth={1.5}
+                      />
                     </span>
                   </div>
                 </div>
 
                 {/* Annotation */}
-                <div className="flex items-start gap-3 rounded-md border border-foreground/10 bg-foreground/[0.02] px-4 py-3 feedback-slide-in">
-                  <HugeiconsIcon icon={MessageIcon} size={14} strokeWidth={1.5} className="mt-0.5 shrink-0 text-muted-foreground" />
+                <div className="feedback-slide-in flex items-start gap-3 rounded-md border border-foreground/10 bg-foreground/[0.02] px-4 py-3">
+                  <HugeiconsIcon
+                    icon={MessageIcon}
+                    size={14}
+                    strokeWidth={1.5}
+                    className="mt-0.5 shrink-0 text-muted-foreground"
+                  />
                   <div className="space-y-1">
                     <p className="text-xs text-muted-foreground">
-                      <span className="font-medium text-foreground/70">Correction applied</span>{" "}
-                      — ALC_FLR.2 → ALC_FLR.1
+                      <span className="font-medium text-foreground/70">
+                        Correction applied
+                      </span>{" "}
+                      — dedicated support plan → standard support plan
                     </p>
                     <p className="text-xs text-muted-foreground/70">
                       Linked to feedback from 2026-03-14 · 11:07. The agent now
-                      correctly references the base flaw remediation component
-                      for EAL4 augmented evaluations.
+                      correctly references the base issue triage component for
+                      enterprise release reviews.
                     </p>
                   </div>
                 </div>
@@ -777,37 +941,54 @@ export function FeedbackContent() {
         </div>
 
         {/* Spec table */}
-        <table className="mt-10 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">
+        <Table className="mt-10 w-full text-sm">
+          <TableHeader>
+            <TableRow className="border-b border-border">
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
                 State
-              </th>
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">
+              </TableHead>
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
                 Content
-              </th>
-              <th className="pb-3 text-left text-xs font-medium text-muted-foreground">
+              </TableHead>
+              <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
                 Purpose
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {[
-              ["Before", "Original agent response with error", "Establishes baseline for comparison"],
-              ["After", "Corrected response with annotation", "Shows the loop closing — feedback produces visible change"],
+              [
+                "Before",
+                "Original agent response with error",
+                "Establishes baseline for comparison",
+              ],
+              [
+                "After",
+                "Corrected response with annotation",
+                "Shows the loop closing — feedback produces visible change",
+              ],
             ].map(([state, content, purpose], i) => (
-              <tr key={state} className={i < 1 ? "border-b border-border/50" : ""}>
-                <td className="py-2.5 pr-6 font-medium">{state}</td>
-                <td className="py-2.5 pr-6 text-muted-foreground">{content}</td>
-                <td className="py-2.5 text-muted-foreground">{purpose}</td>
-              </tr>
+              <TableRow
+                key={state}
+                className={i < 1 ? "border-b border-border/50" : ""}
+              >
+                <TableCell className="py-2.5 pr-6 font-medium">
+                  {state}
+                </TableCell>
+                <TableCell className="py-2.5 pr-6 text-muted-foreground">
+                  {content}
+                </TableCell>
+                <TableCell className="py-2.5 text-muted-foreground">
+                  {purpose}
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
 
-        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
+        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
           Closing the feedback loop visibly builds trust. The annotation card
-          links back to the original feedback entry so the evaluator can trace
+          links back to the original feedback entry so the reviewer can trace
           exactly which correction produced the behavioral change.
         </div>
       </section>
@@ -821,7 +1002,7 @@ export function FeedbackContent() {
           Feedback History
         </h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-          A running log of all evaluator feedback — positive signals, negative
+          A running log of all reviewer feedback — positive signals, negative
           signals, and corrections. Provides an audit trail and training
           reference for the agent.
         </p>
@@ -836,52 +1017,75 @@ export function FeedbackContent() {
             onToggle={handleHistoryToggle}
           />
 
-          <div className="border border-border/40 rounded-lg p-6">
+          <div className="rounded-lg border border-border/40 p-6">
             <div className="space-y-0">
               {visibleHistory.map((entry, i) => {
                 const isExpanded = expandedRow === entry.id
                 return (
-                  <div key={entry.id} className={i < visibleHistory.length - 1 ? "border-b border-border/40" : ""}>
+                  <div
+                    key={entry.id}
+                    className={
+                      i < visibleHistory.length - 1
+                        ? "border-b border-border/40"
+                        : ""
+                    }
+                  >
                     <button
                       type="button"
-                      onClick={() => setExpandedRow(isExpanded ? null : entry.id)}
-                      className="flex w-full items-start gap-3 py-3 text-left transition-colors hover:bg-muted/30 px-2 rounded-md"
+                      onClick={() =>
+                        setExpandedRow(isExpanded ? null : entry.id)
+                      }
+                      className="flex w-full items-start gap-3 rounded-md px-2 py-3 text-left transition-colors hover:bg-muted/30"
                     >
                       {/* Type indicator */}
-                      <span className={`mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-md ${
-                        entry.type === "positive"
-                          ? "bg-foreground/[0.04]"
-                          : entry.type === "negative"
+                      <span
+                        className={`mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-md ${
+                          entry.type === "positive"
                             ? "bg-foreground/[0.04]"
-                            : "bg-foreground/[0.04]"
-                      }`}>
+                            : entry.type === "negative"
+                              ? "bg-foreground/[0.04]"
+                              : "bg-foreground/[0.04]"
+                        }`}
+                      >
                         {entry.type === "positive" ? (
-                          <HugeiconsIcon icon={ThumbsUpIcon} size={11} strokeWidth={1.5} className="text-muted-foreground" />
+                          <HugeiconsIcon
+                            icon={ThumbsUpIcon}
+                            size={11}
+                            strokeWidth={1.5}
+                            className="text-muted-foreground"
+                          />
                         ) : entry.type === "negative" ? (
-                          <HugeiconsIcon icon={ThumbsDownIcon} size={11} strokeWidth={1.5} className="text-muted-foreground" />
+                          <HugeiconsIcon
+                            icon={ThumbsDownIcon}
+                            size={11}
+                            strokeWidth={1.5}
+                            className="text-muted-foreground"
+                          />
                         ) : (
-                          <HugeiconsIcon icon={Edit01Icon} size={11} strokeWidth={1.5} className="text-muted-foreground" />
+                          <HugeiconsIcon
+                            icon={Edit01Icon}
+                            size={11}
+                            strokeWidth={1.5}
+                            className="text-muted-foreground"
+                          />
                         )}
                       </span>
 
                       {/* Content */}
-                      <div className="flex-1 min-w-0">
+                      <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
                           <span className="text-xs text-muted-foreground/60">
-                            <HugeiconsIcon icon={Clock01Icon} size={10} strokeWidth={1.5} className="inline mr-1" />
+                            <HugeiconsIcon
+                              icon={Clock01Icon}
+                              size={10}
+                              strokeWidth={1.5}
+                              className="mr-1 inline"
+                            />
                             {entry.timestamp}
                           </span>
-                          <span className={`rounded-md px-1.5 py-0.5 text-[10px] ${
-                            entry.type === "positive"
-                              ? "bg-foreground/[0.04] text-muted-foreground"
-                              : entry.type === "negative"
-                                ? "bg-foreground/[0.04] text-muted-foreground"
-                                : "bg-foreground/[0.04] text-muted-foreground"
-                          }`}>
-                            {entry.type}
-                          </span>
+                          <Badge variant="secondary">{entry.type}</Badge>
                         </div>
-                        <p className="mt-1 text-sm text-foreground/80 truncate">
+                        <p className="mt-1 truncate text-sm text-foreground/80">
                           {entry.message}
                         </p>
                       </div>
@@ -897,8 +1101,8 @@ export function FeedbackContent() {
 
                     {/* Expanded detail */}
                     {isExpanded && (
-                      <div className="ml-8 mb-3 px-2 feedback-expand">
-                        <div className="rounded-md border border-border/40 bg-foreground/[0.01] px-3 py-2.5 feedback-slide-in">
+                      <div className="feedback-expand mb-3 ml-8 px-2">
+                        <div className="feedback-slide-in rounded-md border border-border/40 bg-foreground/[0.01] px-3 py-2.5">
                           <p className="text-sm text-muted-foreground">
                             {entry.detail}
                           </p>
@@ -911,55 +1115,80 @@ export function FeedbackContent() {
             </div>
 
             {historyState.recent && (
-              <div className="mt-3 pt-3 border-t border-border/40">
-                <button
+              <div className="mt-3 flex flex-col gap-3">
+                <Separator />
+                <Button
                   type="button"
                   onClick={() => handleHistoryToggle("all")}
-                  className="text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors"
+                  variant="ghost"
+                  size="xs"
+                  className="w-fit text-muted-foreground/60 hover:text-muted-foreground"
                 >
                   Show all {FEEDBACK_HISTORY.length} entries
-                </button>
+                </Button>
               </div>
             )}
           </div>
         </div>
 
         {/* Spec table */}
-        <table className="mt-10 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">
+        <Table className="mt-10 w-full text-sm">
+          <TableHeader>
+            <TableRow className="border-b border-border">
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
                 Column
-              </th>
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">
+              </TableHead>
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
                 Content
-              </th>
-              <th className="pb-3 text-left text-xs font-medium text-muted-foreground">
+              </TableHead>
+              <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
                 Notes
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {[
-              ["Type", "Positive / Negative / Correction", "Icon-coded, monochrome"],
-              ["Timestamp", "Date and time of feedback", "Sorted most recent first"],
-              ["Message", "Excerpt of the rated agent response", "Truncated to one line, full text on expand"],
-              ["Detail", "Evaluator's note or correction text", "Visible only when row is expanded"],
+              [
+                "Type",
+                "Positive / Negative / Correction",
+                "Icon-coded, monochrome",
+              ],
+              [
+                "Timestamp",
+                "Date and time of feedback",
+                "Sorted most recent first",
+              ],
+              [
+                "Message",
+                "Excerpt of the rated agent response",
+                "Truncated to one line, full text on expand",
+              ],
+              [
+                "Detail",
+                "Reviewer's note or correction text",
+                "Visible only when row is expanded",
+              ],
             ].map(([col, content, notes], i) => (
-              <tr key={col} className={i < 3 ? "border-b border-border/50" : ""}>
-                <td className="py-2.5 pr-6 font-medium">{col}</td>
-                <td className="py-2.5 pr-6 text-muted-foreground">{content}</td>
-                <td className="py-2.5 text-muted-foreground">{notes}</td>
-              </tr>
+              <TableRow
+                key={col}
+                className={i < 3 ? "border-b border-border/50" : ""}
+              >
+                <TableCell className="py-2.5 pr-6 font-medium">{col}</TableCell>
+                <TableCell className="py-2.5 pr-6 text-muted-foreground">
+                  {content}
+                </TableCell>
+                <TableCell className="py-2.5 text-muted-foreground">
+                  {notes}
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
 
-        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          The feedback history doubles as an audit trail — useful for CC
-          evaluations where traceability of evaluator decisions matters.
-          Expandable rows keep the list scannable while preserving full detail
-          on demand.
+        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
+          The feedback history doubles as an audit trail — useful for CC reviews
+          where traceability of reviewer decisions matters. Expandable rows keep
+          the list scannable while preserving full detail on demand.
         </div>
       </section>
     </article>

@@ -13,7 +13,7 @@
         "@hugeicons/core-free-icons",
         "@base-ui/react"
       ],
-      "registryDependencies": ["dropdown-menu"],
+      "registryDependencies": ["dropdown-menu", "textarea", "tooltip"],
       "files": [
         { "path": "registry/base-nova/ui/composer.tsx", "type": "registry:ui" },
         { "path": "registry/base-nova/ui/composer-input.tsx", "type": "registry:ui" },
@@ -67,6 +67,18 @@
         },
         "[data-slot=\"tool-tree-item\"]:last-child [data-spine-mask]": {
           "display": "block"
+        },
+        "[data-compact-touch]": {
+          "position": "relative"
+        },
+        "[data-compact-touch]::after": {
+          "content": "\"\"",
+          "position": "absolute",
+          "left": "50%",
+          "top": "50%",
+          "width": "44px",
+          "height": "44px",
+          "transform": "translate(-50%, -50%)"
         }
       }
     },
@@ -95,6 +107,152 @@
       "registryDependencies": ["tool-call"],
       "files": [
         { "path": "registry/base-nova/ui/tool-tree.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "reference-item",
+      "type": "registry:ui",
+      "title": "Reference Item",
+      "description": "A composable item row for sources, memories, findings, files, tasks, and agent activity with media, metadata, and action slots.",
+      "files": [
+        { "path": "registry/base-nova/ui/reference-item.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "observable-work",
+      "type": "registry:ui",
+      "title": "Observable Work",
+      "description": "A step disclosure pattern for showing visible agent work, touched sources, state, and completion without exposing hidden reasoning traces.",
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
+      "registryDependencies": ["badge"],
+      "files": [
+        { "path": "registry/base-nova/ui/observable-work.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "decision-surface",
+      "type": "registry:ui",
+      "title": "Decision Surface",
+      "description": "A composable confirmation surface for approvals, risky actions, clarifying interruptions, and rollback decisions.",
+      "registryDependencies": ["button", "dialog"],
+      "files": [
+        { "path": "registry/base-nova/ui/decision-surface.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "file-lifecycle",
+      "type": "registry:ui",
+      "title": "File Lifecycle",
+      "description": "A file attachment lifecycle pattern for drag states, validation, upload progress, rejection, retry, and removal.",
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
+      "registryDependencies": ["badge", "button", "progress"],
+      "files": [
+        { "path": "registry/base-nova/ui/file-lifecycle.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "agent-status-table",
+      "type": "registry:ui",
+      "title": "Agent Status Table",
+      "description": "A rich operational table for multiple agents with status, active task, progress, confidence, cost, and last activity.",
+      "registryDependencies": ["badge", "progress", "table"],
+      "files": [
+        { "path": "registry/base-nova/ui/agent-status-table.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "clarifying-questions",
+      "type": "registry:ui",
+      "title": "Clarifying Questions",
+      "description": "A controlled question group for collecting missing requirements through text, single-choice, and multiple-choice prompts.",
+      "registryDependencies": [
+        "button",
+        "field",
+        "input-group",
+        "toggle-group"
+      ],
+      "files": [
+        { "path": "registry/base-nova/ui/clarifying-questions.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "action-preview",
+      "type": "registry:ui",
+      "title": "Action Preview",
+      "description": "A locked consequence preview for approvals, external actions, document changes, and rollback-aware agent work.",
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
+      "registryDependencies": ["badge"],
+      "files": [
+        { "path": "registry/base-nova/ui/action-preview.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "source-preview",
+      "type": "registry:ui",
+      "title": "Source Preview",
+      "description": "A citation and provenance preview card with source title, excerpt, location, navigation, and open-source action.",
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
+      "registryDependencies": ["button"],
+      "files": [
+        { "path": "registry/base-nova/ui/source-preview.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "effective-policy-preview",
+      "type": "registry:ui",
+      "title": "Effective Policy Preview",
+      "description": "A compact settings summary showing the agent policy currently produced by autonomy, approval, notification, and memory controls.",
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
+      "registryDependencies": ["badge"],
+      "files": [
+        { "path": "registry/base-nova/ui/effective-policy-preview.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "memory-ledger-item",
+      "type": "registry:ui",
+      "title": "Memory Ledger Item",
+      "description": "A provenance-rich memory row with scope, expiry, last-used metadata, source inspection, edit, and removal actions.",
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
+      "registryDependencies": ["badge", "button", "reference-item"],
+      "files": [
+        { "path": "registry/base-nova/ui/memory-ledger-item.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "review-workflow",
+      "type": "registry:block",
+      "title": "Review Workflow",
+      "description": "An end-to-end agentic review workflow block with observable work, source-scope clarification, locked action preview, and approval.",
+      "registryDependencies": [
+        "action-preview",
+        "badge",
+        "button",
+        "clarifying-questions",
+        "decision-surface",
+        "observable-work",
+        "reference-item"
+      ],
+      "files": [
+        { "path": "registry/base-nova/blocks/review-workflow.tsx", "type": "registry:block" }
       ]
     }
   ]

@@ -3,7 +3,7 @@ import { FeedbackContent } from '@/views/feedback-content'
 
 export const metadata: Metadata = {
   title: 'Feedback | Agentic Craft',
-  description: 'Thumbs feedback, inline correction, rating scales, and behavioral consequence patterns',
+  description: 'Reference patterns for correction, ratings, adaptation, and feedback history',
 }
 
 export default function FeedbackPage() {

@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { useState, useEffect, useCallback } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
@@ -11,6 +11,41 @@ import {
   Brain01Icon,
   Alert01Icon,
 } from "@hugeicons/core-free-icons"
+import { PatternControls as Controls } from "@/components/pattern-controls"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { MemoryLedgerItem } from "@/components/ui/memory-ledger-item"
+import { SourcePreview } from "@/components/ui/source-preview"
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldSet,
+  FieldTitle,
+} from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "@/components/ui/input-group"
+import { Switch } from "@/components/ui/switch"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 /* ------------------------------------------------------------------ */
 /*  CSS Keyframes                                                      */
@@ -39,9 +74,9 @@ function ensureStyles() {
       40% { transform: scale(0.97); }
       100% { transform: scale(1); }
     }
-    @keyframes memory-expand {
-      from { max-height: 0; opacity: 0; }
-      to { max-height: 300px; opacity: 1; }
+      @keyframes memory-expand {
+        from { opacity: 0; transform: translateY(-4px); }
+        to { opacity: 1; transform: translateY(0); }
     }
     @keyframes memory-ring-fill {
       from { stroke-dashoffset: var(--ring-circ); }
@@ -66,6 +101,19 @@ function ensureStyles() {
     .memory-ring-fill {
       animation: memory-ring-fill 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
+    @media (prefers-reduced-motion: reduce) {
+      .memory-slide-in,
+      .memory-fade-in,
+      .memory-fade-out,
+      .memory-press,
+      .memory-expand,
+      .memory-ring-fill {
+        animation: none;
+      }
+      .memory-ring-fill {
+        stroke-dashoffset: var(--ring-offset);
+      }
+    }
   `
   document.head.appendChild(style)
 }
@@ -75,60 +123,102 @@ function ensureStyles() {
 /* ------------------------------------------------------------------ */
 
 const MEMORY_ENTRIES = [
-  { id: "m1", key: "Preferred EAL level", value: "EAL4+" },
-  { id: "m2", key: "Default PP", value: "PP-CIMC-SLv3" },
-  { id: "m3", key: "Evaluation lab", value: "Lab A — Berlin" },
-  { id: "m4", key: "Report format", value: "Markdown with CEM work unit headers" },
-  { id: "m5", key: "TOE type", value: "Java Card applet on NXP P60" },
-  { id: "m6", key: "Certification body", value: "BSI (SOGIS-MRA scheme)" },
+  {
+    id: "m1",
+    key: "Preferred release tier level",
+    value: "enterprise release",
+    source: "Launch review session",
+    page: "Message 18",
+    excerpt:
+      "Use enterprise release as the default review tier when checking launch readiness and support coverage.",
+    lastUsed: "12m ago",
+    scope: "Workspace",
+    expiry: "90 days",
+  },
+  {
+    id: "m2",
+    key: "Default launch policy",
+    value: "Launch Policy v2",
+    source: "Project brief v3",
+    page: "Page 4",
+    excerpt:
+      "Launch Policy v2 is the governing policy for this review cycle and should be linked from final findings.",
+    lastUsed: "31m ago",
+    scope: "Project",
+    expiry: "180 days",
+  },
+  {
+    id: "m3",
+    key: "Review workspace",
+    value: "Launch review team",
+    source: "Workspace settings",
+    page: "Team profile",
+    excerpt:
+      "Route review summaries and source requests through the Launch review team workspace.",
+    lastUsed: "1h ago",
+    scope: "Team",
+    expiry: "Never",
+  },
+  {
+    id: "m4",
+    key: "Report format",
+    value: "Markdown with operating playbook work unit headers",
+    source: "User preference",
+    page: "Message 6",
+    excerpt:
+      "Please format review output as concise Markdown grouped by operating playbook work units.",
+    lastUsed: "Yesterday",
+    scope: "User",
+    expiry: "90 days",
+  },
+  {
+    id: "m5",
+    key: "product type",
+    value: "self-serve onboarding flow",
+    source: "Product notes",
+    page: "Page 2",
+    excerpt:
+      "The reviewed product is a self-serve onboarding flow with enterprise support dependencies.",
+    lastUsed: "Yesterday",
+    scope: "Project",
+    expiry: "60 days",
+  },
+  {
+    id: "m6",
+    key: "Approval team",
+    value: "Internal launch process",
+    source: "Approval policy",
+    page: "Section 3",
+    excerpt:
+      "Launch approval follows the internal launch process and requires review team sign-off before distribution.",
+    lastUsed: "2d ago",
+    scope: "Team",
+    expiry: "180 days",
+  },
 ]
-
-
 
 const PRIVACY_CATEGORIES = [
-  { key: "preferences", label: "Preferences", desc: "EAL level, report format, workflow choices" },
-  { key: "docHistory", label: "Document History", desc: "Previously reviewed STs, PPs, and ETRs" },
-  { key: "evalContext", label: "Evaluation Context", desc: "Current TOE, lab, certification body" },
-  { key: "personalInfo", label: "Personal Info", desc: "Name, timezone, role at ITSEF" },
+  {
+    key: "preferences",
+    label: "Preferences",
+    desc: "release tier level, report format, workflow choices",
+  },
+  {
+    key: "docHistory",
+    label: "Document History",
+    desc: "Previously reviewed briefs, policies, and launch summaries",
+  },
+  {
+    key: "projectContext",
+    label: "Project Context",
+    desc: "Current product, team, and approval path",
+  },
+  {
+    key: "personalInfo",
+    label: "Personal Info",
+    desc: "Name, timezone, role at review team",
+  },
 ]
-
-/* ------------------------------------------------------------------ */
-/*  Controls component                                                 */
-/* ------------------------------------------------------------------ */
-
-function Controls({
-  options,
-  active,
-  onToggle,
-}: {
-  options: { key: string; label: string }[]
-  active: Record<string, boolean>
-  onToggle: (key: string) => void
-}) {
-  return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 pb-5">
-      <span className="section-label mr-1">Controls</span>
-      {options.map((opt) => (
-        <button
-          key={opt.key}
-          onClick={() => onToggle(opt.key)}
-          className={`
-            relative text-xs px-2.5 py-1 rounded-md border transition-all duration-200
-            ${active[opt.key]
-              ? "border-foreground/20 bg-foreground/[0.04] text-foreground"
-              : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50"
-            }
-          `}
-        >
-          {opt.label}
-          {active[opt.key] && (
-            <span className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-foreground/40" />
-          )}
-        </button>
-      ))}
-    </div>
-  )
-}
 
 /* ------------------------------------------------------------------ */
 /*  Page                                                               */
@@ -144,25 +234,33 @@ export function MemoryContent() {
     search: false,
   })
   const [searchQuery, setSearchQuery] = useState("")
-  const [hoveredEntry, setHoveredEntry] = useState<string | null>(null)
+  const [activeMemoryId, setActiveMemoryId] = useState(MEMORY_ENTRIES[0].id)
 
   const handlePanelToggle = useCallback((key: string) => {
     setPanelState(() => {
-      const next: Record<string, boolean> = { empty: false, populated: false, search: false }
+      const next: Record<string, boolean> = {
+        empty: false,
+        populated: false,
+        search: false,
+      }
       next[key] = true
       return next
     })
     setSearchQuery("")
-    setHoveredEntry(null)
   }, [])
 
-  const filteredEntries = panelState.search && searchQuery
-    ? MEMORY_ENTRIES.filter(
-        (e) =>
-          e.key.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          e.value.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : MEMORY_ENTRIES
+  const filteredEntries =
+    panelState.search && searchQuery
+      ? MEMORY_ENTRIES.filter(
+          (e) =>
+            e.key.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            e.value.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      : MEMORY_ENTRIES
+  const activeMemory =
+    filteredEntries.find((entry) => entry.id === activeMemoryId) ??
+    filteredEntries[0] ??
+    MEMORY_ENTRIES[0]
 
   /* ── Section 2: Memory Entry CRUD ── */
   const [crudState, setCrudState] = useState<Record<string, boolean>>({
@@ -170,18 +268,22 @@ export function MemoryContent() {
     edit: false,
     delete: false,
   })
-  const [editValue, setEditValue] = useState("EAL4+")
+  const [editValue, setEditValue] = useState("enterprise release")
   const [crudAnimKey, setCrudAnimKey] = useState(0)
 
-  const handleCrudToggle = useCallback((key: string) => {
+  const handleCrudToggle = (key: string) => {
     setCrudState(() => {
-      const next: Record<string, boolean> = { view: false, edit: false, delete: false }
+      const next: Record<string, boolean> = {
+        view: false,
+        edit: false,
+        delete: false,
+      }
       next[key] = true
       return next
     })
-    setEditValue("EAL4+")
+    setEditValue("enterprise release")
     setCrudAnimKey((k) => k + 1)
-  }, [])
+  }
 
   /* ── Section 3: Auto-Memory ── */
   const [autoState, setAutoState] = useState<Record<string, boolean>>({
@@ -193,7 +295,11 @@ export function MemoryContent() {
 
   const handleAutoToggle = useCallback((key: string) => {
     setAutoState(() => {
-      const next: Record<string, boolean> = { detected: false, saved: false, dismissed: false }
+      const next: Record<string, boolean> = {
+        detected: false,
+        saved: false,
+        dismissed: false,
+      }
       next[key] = true
       return next
     })
@@ -205,18 +311,19 @@ export function MemoryContent() {
     noContext: true,
     withContext: false,
   })
-  const [ringHovered, setRingHovered] = useState(false)
   const [ringAnimKey, setRingAnimKey] = useState(0)
 
-  const handleRingToggle = useCallback((key: string) => {
+  const handleRingToggle = (key: string) => {
     setRingState(() => {
-      const next: Record<string, boolean> = { noContext: false, withContext: false }
+      const next: Record<string, boolean> = {
+        noContext: false,
+        withContext: false,
+      }
       next[key] = true
       return next
     })
-    setRingHovered(false)
     setRingAnimKey((k) => k + 1)
-  }, [])
+  }
 
   /* ── Section 5: Privacy Controls ── */
   const [privacyState, setPrivacyState] = useState<Record<string, boolean>>({
@@ -227,24 +334,43 @@ export function MemoryContent() {
   const [toggles, setToggles] = useState<Record<string, boolean>>({
     preferences: true,
     docHistory: true,
-    evalContext: true,
+    projectContext: true,
     personalInfo: true,
   })
   const [showOffConfirm, setShowOffConfirm] = useState(false)
 
   const handlePrivacyToggle = useCallback((key: string) => {
     setPrivacyState(() => {
-      const next: Record<string, boolean> = { allOn: false, selective: false, allOff: false }
+      const next: Record<string, boolean> = {
+        allOn: false,
+        selective: false,
+        allOff: false,
+      }
       next[key] = true
       return next
     })
     setShowOffConfirm(false)
     if (key === "allOn") {
-      setToggles({ preferences: true, docHistory: true, evalContext: true, personalInfo: true })
+      setToggles({
+        preferences: true,
+        docHistory: true,
+        projectContext: true,
+        personalInfo: true,
+      })
     } else if (key === "selective") {
-      setToggles({ preferences: true, docHistory: true, evalContext: false, personalInfo: false })
+      setToggles({
+        preferences: true,
+        docHistory: true,
+        projectContext: false,
+        personalInfo: false,
+      })
     } else if (key === "allOff") {
-      setToggles({ preferences: false, docHistory: false, evalContext: false, personalInfo: false })
+      setToggles({
+        preferences: false,
+        docHistory: false,
+        projectContext: false,
+        personalInfo: false,
+      })
       setShowOffConfirm(true)
     }
   }, [])
@@ -261,13 +387,13 @@ export function MemoryContent() {
     <article>
       <header className="mb-20">
         <p className="section-label mb-4">Knowledge &amp; Context</p>
-        <h1 className="font-serif text-4xl font-light tracking-tight leading-[1.15]">
+        <h1 className="font-serif text-4xl leading-[1.15] font-light tracking-tight">
           Memory
         </h1>
         <p className="mt-4 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Patterns for persistent memory, cross-session recall, context
-          awareness, auto-detection of preferences, and privacy controls
-          for evaluator data.
+          awareness, auto-detection of preferences, and privacy controls for
+          reviewer data.
         </p>
       </header>
 
@@ -278,8 +404,8 @@ export function MemoryContent() {
         <p className="section-label mb-3">Persistence</p>
         <h2 className="text-xl font-semibold tracking-tight">Memory Panel</h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-          The evaluator&apos;s stored preferences and facts — key-value pairs
-          the agent uses to personalize responses across sessions.
+          The reviewer&apos;s stored preferences and facts — key-value pairs the
+          agent uses to personalize responses across sessions.
         </p>
 
         <div className="mt-10">
@@ -293,134 +419,179 @@ export function MemoryContent() {
             onToggle={handlePanelToggle}
           />
 
-          <div className="border border-border/40 rounded-lg p-6">
+          <div className="rounded-lg border border-border/40 p-6">
             {/* Header */}
-            <div className="flex items-center justify-between mb-4">
+            <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <HugeiconsIcon icon={Brain01Icon} size={14} strokeWidth={1.5} className="text-muted-foreground" />
+                <HugeiconsIcon
+                  icon={Brain01Icon}
+                  size={14}
+                  strokeWidth={1.5}
+                  className="text-muted-foreground"
+                />
                 <span className="text-sm font-medium">Memories</span>
                 {!panelState.empty && (
-                  <span className="rounded-md bg-foreground/[0.04] px-1.5 py-0.5 text-[10px] text-muted-foreground">
-                    {panelState.search && searchQuery ? filteredEntries.length : MEMORY_ENTRIES.length}
-                  </span>
+                  <Badge variant="secondary">
+                    {panelState.search && searchQuery
+                      ? filteredEntries.length
+                      : MEMORY_ENTRIES.length}
+                  </Badge>
                 )}
               </div>
             </div>
 
             {/* Search input — shown only in search mode */}
             {panelState.search && (
-              <div className="mb-4 memory-slide-in">
-                <div className="flex items-center gap-2 rounded-md border border-border px-3 py-1.5">
-                  <HugeiconsIcon icon={Search01Icon} size={14} strokeWidth={1.5} className="text-muted-foreground" />
-                  <input
+              <div className="memory-slide-in mb-4">
+                <InputGroup>
+                  <InputGroupAddon>
+                    <HugeiconsIcon icon={Search01Icon} strokeWidth={1.5} />
+                  </InputGroupAddon>
+                  <InputGroupInput
+                    id="memory-search"
+                    name="memory-search"
                     type="text"
-                    placeholder="Search memories..."
+                    aria-label="Search memories"
+                    placeholder="Search memories…"
+                    autoComplete="off"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground/50"
-                    autoFocus
                   />
                   {searchQuery && (
-                    <button
-                      type="button"
-                      onClick={() => setSearchQuery("")}
-                      className="text-muted-foreground hover:text-foreground"
-                    >
-                      <HugeiconsIcon icon={Cancel01Icon} size={12} strokeWidth={1.5} />
-                    </button>
+                    <InputGroupAddon align="inline-end">
+                      <InputGroupButton
+                        type="button"
+                        onClick={() => setSearchQuery("")}
+                        aria-label="Clear memory search"
+                        size="icon-xs"
+                      >
+                        <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.5} />
+                      </InputGroupButton>
+                    </InputGroupAddon>
                   )}
-                </div>
+                </InputGroup>
               </div>
             )}
 
             {/* Empty state */}
             {panelState.empty && (
-              <div className="flex flex-col items-center justify-center py-10 text-center memory-fade-in">
-                <HugeiconsIcon icon={Brain01Icon} size={32} strokeWidth={1} className="mb-3 text-muted-foreground/30" />
+              <div className="memory-fade-in flex flex-col items-center justify-center py-10 text-center">
+                <HugeiconsIcon
+                  icon={Brain01Icon}
+                  size={32}
+                  strokeWidth={1}
+                  className="mb-3 text-muted-foreground/30"
+                />
                 <p className="text-sm font-medium text-muted-foreground/70">
                   No memories yet
                 </p>
                 <p className="mt-1 max-w-xs text-xs text-muted-foreground/50">
-                  As you work with the agent, it will learn your evaluation
-                  preferences, frequently referenced Protection Profiles,
-                  and workflow habits.
+                  As you work with the agent, it will learn your review
+                  preferences, frequently referenced reference documents, and
+                  workflow habits.
                 </p>
               </div>
             )}
 
             {/* Populated / Search entries */}
             {!panelState.empty && (
-              <div className="space-y-1">
-                {filteredEntries.map((entry) => (
-                  <div
-                    key={entry.id}
-                    className="group flex items-center justify-between rounded-md px-3 py-2.5 transition-colors hover:bg-foreground/[0.02]"
-                    onMouseEnter={() => setHoveredEntry(entry.id)}
-                    onMouseLeave={() => setHoveredEntry(null)}
-                  >
-                    <div className="min-w-0">
-                      <span className="text-xs text-muted-foreground/60">{entry.key}</span>
-                      <p className="text-sm text-foreground/85 truncate">{entry.value}</p>
-                    </div>
-                    {/* Actions — visible on hover */}
-                    <div className={`flex shrink-0 items-center gap-0.5 transition-opacity ${
-                      hoveredEntry === entry.id ? "opacity-100" : "opacity-0"
-                    }`}>
-                      <button
-                        type="button"
-                        className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-                      >
-                        <HugeiconsIcon icon={Edit01Icon} size={13} strokeWidth={1.5} />
-                      </button>
-                      <button
-                        type="button"
-                        className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
-                      >
-                        <HugeiconsIcon icon={Delete01Icon} size={13} strokeWidth={1.5} />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-                {panelState.search && searchQuery && filteredEntries.length === 0 && (
-                  <div className="py-6 text-center memory-fade-in">
-                    <p className="text-sm text-muted-foreground/60">
-                      No memories match &ldquo;{searchQuery}&rdquo;
-                    </p>
-                  </div>
+              <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_360px]">
+                <div className="flex flex-col gap-2">
+                  {filteredEntries.map((entry) => (
+                    <MemoryLedgerItem
+                      key={entry.id}
+                      title={entry.key}
+                      value={entry.value}
+                      source={entry.source}
+                      lastUsed={entry.lastUsed}
+                      scope={entry.scope}
+                      expiry={entry.expiry}
+                      selected={activeMemory.id === entry.id}
+                      onInspect={() => setActiveMemoryId(entry.id)}
+                      onEdit={() => handleCrudToggle("edit")}
+                      onDelete={() => handleCrudToggle("delete")}
+                    />
+                  ))}
+                </div>
+                {filteredEntries.length > 0 && (
+                  <SourcePreview
+                    className="lg:sticky lg:top-4"
+                    title={activeMemory.source}
+                    excerpt={activeMemory.excerpt}
+                    location={activeMemory.page}
+                    source={activeMemory.key}
+                  />
                 )}
+                {panelState.search &&
+                  searchQuery &&
+                  filteredEntries.length === 0 && (
+                    <div className="memory-fade-in py-6 text-center lg:col-span-2">
+                      <p className="text-sm text-muted-foreground/60">
+                        No memories match &ldquo;{searchQuery}&rdquo;
+                      </p>
+                    </div>
+                  )}
               </div>
             )}
           </div>
         </div>
 
         {/* Spec table */}
-        <table className="mt-10 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">State</th>
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">Content</th>
-              <th className="pb-3 text-left text-xs font-medium text-muted-foreground">Behavior</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table className="mt-10 w-full text-sm">
+          <TableHeader>
+            <TableRow className="border-b border-border">
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
+                State
+              </TableHead>
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
+                Content
+              </TableHead>
+              <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
+                Behavior
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {[
-              ["Empty", "Placeholder with guidance text", "Shown when the agent has no stored memories"],
-              ["Populated", "Key-value list with hover actions", "Edit and delete icons appear on hover per row"],
-              ["Search", "Filtered list with search input", "Real-time filtering by key or value"],
+              [
+                "Empty",
+                "Placeholder with guidance text",
+                "Shown when the agent has no stored memories",
+              ],
+              [
+                "Populated",
+                "Key-value list with hover actions",
+                "Edit and delete icons appear on hover per row",
+              ],
+              [
+                "Search",
+                "Filtered list with search input",
+                "Real-time filtering by key or value",
+              ],
             ].map(([state, content, behavior], i) => (
-              <tr key={state} className={i < 2 ? "border-b border-border/50" : ""}>
-                <td className="py-2.5 pr-6 font-medium">{state}</td>
-                <td className="py-2.5 pr-6 text-muted-foreground">{content}</td>
-                <td className="py-2.5 text-muted-foreground">{behavior}</td>
-              </tr>
+              <TableRow
+                key={state}
+                className={i < 2 ? "border-b border-border/50" : ""}
+              >
+                <TableCell className="py-2.5 pr-6 font-medium">
+                  {state}
+                </TableCell>
+                <TableCell className="py-2.5 pr-6 text-muted-foreground">
+                  {content}
+                </TableCell>
+                <TableCell className="py-2.5 text-muted-foreground">
+                  {behavior}
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
 
-        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
+        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
           Memory entries are key-value pairs rather than free text — this makes
-          them scannable and editable without requiring the evaluator to parse
-          unstructured prose. Actions appear only on hover to keep the list clean.
+          them scannable and editable without requiring the reviewer to parse
+          unstructured prose. Actions appear only on hover to keep the list
+          clean.
         </div>
       </section>
 
@@ -429,10 +600,12 @@ export function MemoryContent() {
       {/* ============================================================ */}
       <section id="memory-crud" className="page-section">
         <p className="section-label mb-3">Management</p>
-        <h2 className="text-xl font-semibold tracking-tight">Memory Entry CRUD</h2>
+        <h2 className="text-xl font-semibold tracking-tight">
+          Memory Entry CRUD
+        </h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-          View, edit, and delete individual memory entries. Each operation
-          uses inline controls so the evaluator stays in context.
+          View, edit, and delete individual memory entries. Each operation uses
+          inline controls so the reviewer stays in context.
         </p>
 
         <div className="mt-10">
@@ -446,100 +619,144 @@ export function MemoryContent() {
             onToggle={handleCrudToggle}
           />
 
-          <div className="border border-border/40 rounded-lg p-6" key={crudAnimKey}>
-            <div className="rounded-md border border-border/40 px-4 py-3 memory-slide-in">
+          <div
+            className="rounded-lg border border-border/40 p-6"
+            key={crudAnimKey}
+          >
+            <div className="memory-slide-in rounded-md border border-border/40 px-4 py-3">
               {/* View mode */}
               {crudState.view && (
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="text-xs text-muted-foreground/60">Preferred EAL level</span>
-                    <p className="text-sm text-foreground/85">EAL4+</p>
+                    <span className="text-xs text-muted-foreground/60">
+                      Preferred release tier level
+                    </span>
+                    <p className="text-sm text-foreground/85">
+                      enterprise release
+                    </p>
                   </div>
                   <div className="flex items-center gap-0.5">
-                    <button
+                    <Button
                       type="button"
                       onClick={() => handleCrudToggle("edit")}
-                      className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                      aria-label="Edit memory: Preferred release tier level"
+                      variant="ghost"
+                      size="icon-sm"
+                      className="text-muted-foreground hover:text-foreground"
                     >
-                      <HugeiconsIcon icon={Edit01Icon} size={13} strokeWidth={1.5} />
-                    </button>
-                    <button
+                      <HugeiconsIcon icon={Edit01Icon} strokeWidth={1.5} />
+                    </Button>
+                    <Button
                       type="button"
                       onClick={() => handleCrudToggle("delete")}
-                      className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
+                      aria-label="Delete memory: Preferred release tier level"
+                      variant="ghost"
+                      size="icon-sm"
+                      className="text-muted-foreground hover:text-foreground"
                     >
-                      <HugeiconsIcon icon={Delete01Icon} size={13} strokeWidth={1.5} />
-                    </button>
+                      <HugeiconsIcon icon={Delete01Icon} strokeWidth={1.5} />
+                    </Button>
                   </div>
                 </div>
               )}
 
               {/* Edit mode */}
               {crudState.edit && (
-                <div className="space-y-3">
-                  <span className="text-xs text-muted-foreground/60">Preferred EAL level</span>
-                  <input
-                    type="text"
-                    value={editValue}
-                    onChange={(e) => setEditValue(e.target.value)}
-                    className="w-full rounded-md border border-border bg-background px-3 py-1.5 text-sm text-foreground outline-none focus:ring-1 focus:ring-foreground/20"
-                    autoFocus
-                  />
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => handleCrudToggle("view")}
-                      className="flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs text-foreground transition-colors hover:bg-accent"
+                <FieldGroup className="gap-3">
+                  <Field>
+                    <FieldLabel
+                      htmlFor="memory-edit-value"
+                      className="text-xs text-muted-foreground/60"
                     >
-                      <HugeiconsIcon icon={Tick01Icon} size={12} strokeWidth={1.5} />
-                      Save
-                    </button>
-                    <button
+                      Preferred release tier level
+                    </FieldLabel>
+                    <Input
+                      id="memory-edit-value"
+                      name="memory-edit-value"
+                      type="text"
+                      autoComplete="off"
+                      value={editValue}
+                      onChange={(e) => setEditValue(e.target.value)}
+                    />
+                  </Field>
+                  <div className="flex items-center gap-2">
+                    <Button
                       type="button"
                       onClick={() => handleCrudToggle("view")}
-                      className="rounded-md border border-transparent px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-muted/50"
+                      variant="outline"
+                      size="xs"
+                    >
+                      <HugeiconsIcon
+                        icon={Tick01Icon}
+                        strokeWidth={1.5}
+                        data-icon="inline-start"
+                      />
+                      Save
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={() => handleCrudToggle("view")}
+                      variant="ghost"
+                      size="xs"
                     >
                       Cancel
-                    </button>
+                    </Button>
                   </div>
-                </div>
+                </FieldGroup>
               )}
 
               {/* Delete mode */}
               {crudState.delete && (
                 <div className="space-y-3">
                   <div>
-                    <span className="text-xs text-muted-foreground/60">Preferred EAL level</span>
-                    <p className="text-sm text-foreground/85">EAL4+</p>
+                    <span className="text-xs text-muted-foreground/60">
+                      Preferred release tier level
+                    </span>
+                    <p className="text-sm text-foreground/85">
+                      enterprise release
+                    </p>
                   </div>
                   <div className="rounded-md border border-foreground/10 bg-foreground/[0.02] px-3 py-2.5">
                     <div className="flex items-start gap-2">
-                      <HugeiconsIcon icon={Alert01Icon} size={14} strokeWidth={1.5} className="mt-0.5 shrink-0 text-muted-foreground" />
+                      <HugeiconsIcon
+                        icon={Alert01Icon}
+                        size={14}
+                        strokeWidth={1.5}
+                        className="mt-0.5 shrink-0 text-muted-foreground"
+                      />
                       <div>
-                        <p className="text-sm text-foreground/80">Delete this memory?</p>
+                        <p className="text-sm text-foreground/80">
+                          Delete this memory?
+                        </p>
                         <p className="mt-0.5 text-xs text-muted-foreground">
-                          This cannot be undone. The agent will no longer use this
-                          preference in future responses.
+                          This cannot be undone. The agent will no longer use
+                          this preference in future responses.
                         </p>
                       </div>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button
+                    <Button
                       type="button"
                       onClick={() => handleCrudToggle("view")}
-                      className="flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs text-foreground transition-colors hover:bg-foreground/[0.04]"
+                      variant="outline"
+                      size="xs"
                     >
-                      <HugeiconsIcon icon={Delete01Icon} size={12} strokeWidth={1.5} />
+                      <HugeiconsIcon
+                        icon={Delete01Icon}
+                        strokeWidth={1.5}
+                        data-icon="inline-start"
+                      />
                       Confirm delete
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       type="button"
                       onClick={() => handleCrudToggle("view")}
-                      className="rounded-md border border-transparent px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-muted/50"
+                      variant="ghost"
+                      size="xs"
                     >
                       Cancel
-                    </button>
+                    </Button>
                   </div>
                 </div>
               )}
@@ -548,30 +765,55 @@ export function MemoryContent() {
         </div>
 
         {/* Spec table */}
-        <table className="mt-10 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">Operation</th>
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">Interaction</th>
-              <th className="pb-3 text-left text-xs font-medium text-muted-foreground">Behavior</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table className="mt-10 w-full text-sm">
+          <TableHeader>
+            <TableRow className="border-b border-border">
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
+                Operation
+              </TableHead>
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
+                Interaction
+              </TableHead>
+              <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
+                Behavior
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {[
-              ["View", "Default display", "Shows key-value pair with edit and delete icons"],
-              ["Edit", "Click edit icon", "Inline text field replaces value, Save/Cancel buttons appear"],
-              ["Delete", "Click delete icon", "Confirmation prompt with warning text and Confirm/Cancel"],
+              [
+                "View",
+                "Default display",
+                "Shows key-value pair with edit and delete icons",
+              ],
+              [
+                "Edit",
+                "Click edit icon",
+                "Inline text field replaces value, Save/Cancel buttons appear",
+              ],
+              [
+                "Delete",
+                "Click delete icon",
+                "Confirmation prompt with warning text and Confirm/Cancel",
+              ],
             ].map(([op, interaction, behavior], i) => (
-              <tr key={op} className={i < 2 ? "border-b border-border/50" : ""}>
-                <td className="py-2.5 pr-6 font-medium">{op}</td>
-                <td className="py-2.5 pr-6 text-muted-foreground">{interaction}</td>
-                <td className="py-2.5 text-muted-foreground">{behavior}</td>
-              </tr>
+              <TableRow
+                key={op}
+                className={i < 2 ? "border-b border-border/50" : ""}
+              >
+                <TableCell className="py-2.5 pr-6 font-medium">{op}</TableCell>
+                <TableCell className="py-2.5 pr-6 text-muted-foreground">
+                  {interaction}
+                </TableCell>
+                <TableCell className="py-2.5 text-muted-foreground">
+                  {behavior}
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
 
-        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
+        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
           All CRUD operations happen inline — no modals. The delete confirmation
           is intentionally low-drama: a text warning, not a blocking dialog.
           This matches the lightweight feel of key-value memory management.
@@ -585,9 +827,8 @@ export function MemoryContent() {
         <p className="section-label mb-3">Detection</p>
         <h2 className="text-xl font-semibold tracking-tight">Auto-Memory</h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-          The agent detects learnable information from conversation and
-          offers to save it as a memory — the evaluator always has the
-          final say.
+          The agent detects learnable information from conversation and offers
+          to save it as a memory — the reviewer always has the final say.
         </p>
 
         <div className="mt-10">
@@ -601,9 +842,12 @@ export function MemoryContent() {
             onToggle={handleAutoToggle}
           />
 
-          <div className="border border-border/40 rounded-lg p-6" key={autoAnimKey}>
+          <div
+            className="rounded-lg border border-border/40 p-6"
+            key={autoAnimKey}
+          >
             {/* Agent message context */}
-            <div className="rounded-lg border border-border/40 p-4 mb-3">
+            <div className="mb-3 rounded-lg border border-border/40 p-4">
               <p
                 className="text-base"
                 style={{
@@ -616,54 +860,77 @@ export function MemoryContent() {
                   color: "oklch(0.2642 0.013 93.9)",
                 }}
               >
-                I see you&apos;ve been consistently requesting EAL4+
-                evaluations across the last three sessions. The Protection
-                Profile PP-CIMC-SLv3 appears to be your default reference.
+                I see you&apos;ve been consistently requesting enterprise
+                release reviews across the last three sessions. The reference
+                document Launch Policy v2 appears to be your default reference.
               </p>
             </div>
 
             {/* Detected banner */}
             {autoState.detected && (
-              <div className="flex items-center justify-between rounded-md border border-foreground/10 bg-foreground/[0.02] px-4 py-3 memory-slide-in">
+              <div className="memory-slide-in flex items-center justify-between rounded-md border border-foreground/10 bg-foreground/[0.02] px-4 py-3">
                 <div className="flex items-center gap-2.5">
-                  <HugeiconsIcon icon={Brain01Icon} size={14} strokeWidth={1.5} className="shrink-0 text-muted-foreground" />
+                  <HugeiconsIcon
+                    icon={Brain01Icon}
+                    size={14}
+                    strokeWidth={1.5}
+                    className="shrink-0 text-muted-foreground"
+                  />
                   <p className="text-sm text-muted-foreground">
-                    I noticed you prefer <span className="font-medium text-foreground/80">EAL4+</span> — save this preference?
+                    I noticed you prefer{" "}
+                    <span className="font-medium text-foreground/80">
+                      enterprise release
+                    </span>{" "}
+                    — save this preference?
                   </p>
                 </div>
-                <div className="flex items-center gap-2 shrink-0 ml-3">
-                  <button
+                <div className="ml-3 flex shrink-0 items-center gap-2">
+                  <Button
                     type="button"
                     onClick={() => handleAutoToggle("saved")}
-                    className="flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1 text-xs text-foreground transition-colors hover:bg-accent"
+                    variant="outline"
+                    size="xs"
                   >
-                    <HugeiconsIcon icon={Tick01Icon} size={11} strokeWidth={1.5} />
+                    <HugeiconsIcon
+                      icon={Tick01Icon}
+                      strokeWidth={1.5}
+                      data-icon="inline-start"
+                    />
                     Save
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     type="button"
                     onClick={() => handleAutoToggle("dismissed")}
-                    className="rounded-md border border-transparent px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted/50"
+                    variant="ghost"
+                    size="xs"
                   >
                     Dismiss
-                  </button>
+                  </Button>
                 </div>
               </div>
             )}
 
             {/* Saved confirmation */}
             {autoState.saved && (
-              <div className="flex items-center gap-2 rounded-md border border-foreground/10 bg-foreground/[0.02] px-4 py-3 memory-fade-in">
-                <HugeiconsIcon icon={Tick01Icon} size={14} strokeWidth={1.5} className="text-muted-foreground" />
-                <p className="text-sm text-muted-foreground">Preference saved</p>
+              <div className="memory-fade-in flex items-center gap-2 rounded-md border border-foreground/10 bg-foreground/[0.02] px-4 py-3">
+                <HugeiconsIcon
+                  icon={Tick01Icon}
+                  size={14}
+                  strokeWidth={1.5}
+                  className="text-muted-foreground"
+                />
+                <p className="text-sm text-muted-foreground">
+                  Preference saved
+                </p>
               </div>
             )}
 
             {/* Dismissed — banner gone, just the message */}
             {autoState.dismissed && (
-              <div className="flex items-center gap-2 rounded-md px-4 py-2 memory-fade-in">
+              <div className="memory-fade-in flex items-center gap-2 rounded-md px-4 py-2">
                 <p className="text-xs text-muted-foreground/50 italic">
-                  Suggestion dismissed — the agent will not ask about this preference again.
+                  Suggestion dismissed — the agent will not ask about this
+                  preference again.
                 </p>
               </div>
             )}
@@ -671,34 +938,61 @@ export function MemoryContent() {
         </div>
 
         {/* Spec table */}
-        <table className="mt-10 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">State</th>
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">Visual</th>
-              <th className="pb-3 text-left text-xs font-medium text-muted-foreground">Behavior</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table className="mt-10 w-full text-sm">
+          <TableHeader>
+            <TableRow className="border-b border-border">
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
+                State
+              </TableHead>
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
+                Visual
+              </TableHead>
+              <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
+                Behavior
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {[
-              ["Detected", "Banner below agent message with Save/Dismiss", "Agent surfaces the detected preference with a clear opt-in prompt"],
-              ["Saved", "Brief confirmation message", "Fades in, replacing the banner. Memory is persisted immediately"],
-              ["Dismissed", "Banner removed, muted note", "Agent will not re-prompt for this particular preference"],
+              [
+                "Detected",
+                "Banner below agent message with Save/Dismiss",
+                "Agent surfaces the detected preference with a clear opt-in prompt",
+              ],
+              [
+                "Saved",
+                "Brief confirmation message",
+                "Fades in, replacing the banner. Memory is persisted immediately",
+              ],
+              [
+                "Dismissed",
+                "Banner removed, muted note",
+                "Agent will not re-prompt for this particular preference",
+              ],
             ].map(([state, visual, behavior], i) => (
-              <tr key={state} className={i < 2 ? "border-b border-border/50" : ""}>
-                <td className="py-2.5 pr-6 font-medium">{state}</td>
-                <td className="py-2.5 pr-6 text-muted-foreground">{visual}</td>
-                <td className="py-2.5 text-muted-foreground">{behavior}</td>
-              </tr>
+              <TableRow
+                key={state}
+                className={i < 2 ? "border-b border-border/50" : ""}
+              >
+                <TableCell className="py-2.5 pr-6 font-medium">
+                  {state}
+                </TableCell>
+                <TableCell className="py-2.5 pr-6 text-muted-foreground">
+                  {visual}
+                </TableCell>
+                <TableCell className="py-2.5 text-muted-foreground">
+                  {behavior}
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
 
-        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          Auto-memory is opt-in by design. The agent detects patterns but
-          never persists without explicit evaluator consent. This is critical
-          for CC environments where auditors may need to justify what data
-          the tool retains.
+        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
+          Auto-memory is opt-in by design. The agent detects patterns but never
+          persists without explicit reviewer consent. This is critical for CC
+          environments where auditors may need to justify what data the tool
+          retains.
         </div>
       </section>
 
@@ -707,11 +1001,13 @@ export function MemoryContent() {
       {/* ============================================================ */}
       <section id="context-ring" className="page-section">
         <p className="section-label mb-3">Awareness</p>
-        <h2 className="text-xl font-semibold tracking-tight">Memory Context Ring</h2>
+        <h2 className="text-xl font-semibold tracking-tight">
+          Memory Context Ring
+        </h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-          Visual indicator showing how much memory context is loaded into
-          the current session. Details are revealed on hover to avoid
-          visual clutter.
+          Visual indicator showing how much memory context is loaded into the
+          current session. Details are revealed on hover to avoid visual
+          clutter.
         </p>
 
         <div className="mt-10">
@@ -724,25 +1020,27 @@ export function MemoryContent() {
             onToggle={handleRingToggle}
           />
 
-          <div className="border border-border/40 rounded-lg p-6" key={ringAnimKey}>
+          <div
+            className="rounded-lg border border-border/40 p-6"
+            key={ringAnimKey}
+          >
             <div className="flex items-center gap-8">
               {/* Ring */}
-              <div
-                className="group relative shrink-0"
-                onMouseEnter={() => setRingHovered(true)}
-                onMouseLeave={() => setRingHovered(false)}
-              >
-                <svg className="h-20 w-20 -rotate-90" viewBox="0 0 80 80">
-                  <circle
-                    cx="40"
-                    cy="40"
-                    r={RING_R}
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="6"
-                    className="text-muted/40"
-                  />
-                  {ringState.withContext && (
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <button
+                      type="button"
+                      className="group relative shrink-0 rounded-full focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+                      aria-label={
+                        ringState.withContext
+                          ? `${MEMORY_ENTRIES.length} loaded memories`
+                          : "No memory loaded"
+                      }
+                    />
+                  }
+                >
+                  <svg className="h-20 w-20 -rotate-90" viewBox="0 0 80 80">
                     <circle
                       cx="40"
                       cy="40"
@@ -750,44 +1048,69 @@ export function MemoryContent() {
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="6"
-                      strokeLinecap="round"
-                      strokeDasharray={RING_CIRC}
-                      strokeDashoffset={RING_CIRC * 0.35}
-                      className="text-foreground/50 memory-ring-fill"
-                      style={{
-                        "--ring-circ": RING_CIRC,
-                        "--ring-offset": RING_CIRC * 0.35,
-                      } as React.CSSProperties}
+                      className="text-muted/40"
                     />
-                  )}
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <HugeiconsIcon
-                    icon={Brain01Icon}
-                    size={18}
-                    strokeWidth={1.5}
-                    className={ringState.withContext ? "text-foreground/60" : "text-muted-foreground/30"}
-                  />
-                </div>
-
-                {/* Hover tooltip */}
-                {ringState.withContext && ringHovered && (
-                  <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 z-10 w-56 rounded-md border border-border bg-popover px-3 py-2.5 shadow-md memory-fade-in">
-                    <p className="text-xs font-medium text-foreground/80 mb-2">Loaded memories</p>
+                    {ringState.withContext && (
+                      <circle
+                        cx="40"
+                        cy="40"
+                        r={RING_R}
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="6"
+                        strokeLinecap="round"
+                        strokeDasharray={RING_CIRC}
+                        strokeDashoffset={RING_CIRC * 0.35}
+                        className="memory-ring-fill text-foreground/50"
+                        style={
+                          {
+                            "--ring-circ": RING_CIRC,
+                            "--ring-offset": RING_CIRC * 0.35,
+                          } as React.CSSProperties
+                        }
+                      />
+                    )}
+                  </svg>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <HugeiconsIcon
+                      icon={Brain01Icon}
+                      size={18}
+                      strokeWidth={1.5}
+                      className={
+                        ringState.withContext
+                          ? "text-foreground/60"
+                          : "text-muted-foreground/30"
+                      }
+                    />
+                  </div>
+                </TooltipTrigger>
+                {ringState.withContext && (
+                  <TooltipContent
+                    side="right"
+                    sideOffset={12}
+                    className="w-56 max-w-56 flex-col items-stretch gap-2 bg-popover text-popover-foreground"
+                  >
+                    <p className="text-xs font-medium text-foreground/80">
+                      Loaded memories
+                    </p>
                     <div className="space-y-1.5">
                       {MEMORY_ENTRIES.slice(0, 4).map((e) => (
                         <div key={e.id} className="flex items-baseline gap-2">
-                          <span className="text-[10px] text-muted-foreground/50 shrink-0">{e.key}</span>
-                          <span className="text-[10px] text-muted-foreground truncate">{e.value}</span>
+                          <span className="shrink-0 text-[10px] text-muted-foreground/50">
+                            {e.key}
+                          </span>
+                          <span className="truncate text-[10px] text-muted-foreground">
+                            {e.value}
+                          </span>
                         </div>
                       ))}
                       <p className="text-[10px] text-muted-foreground/40">
                         +{MEMORY_ENTRIES.length - 4} more
                       </p>
                     </div>
-                  </div>
+                  </TooltipContent>
                 )}
-              </div>
+              </Tooltip>
 
               {/* Label */}
               <div>
@@ -796,9 +1119,8 @@ export function MemoryContent() {
                 </p>
                 <p className="mt-0.5 text-xs text-muted-foreground">
                   {ringState.withContext
-                    ? `${MEMORY_ENTRIES.length} entries loaded into this session — hover the ring for details.`
-                    : "Start a conversation to load evaluator preferences and context."
-                  }
+                    ? `${MEMORY_ENTRIES.length} entries loaded into this session — open the ring for details.`
+                    : "Start a conversation to load reviewer preferences and context."}
                 </p>
               </div>
             </div>
@@ -806,33 +1128,55 @@ export function MemoryContent() {
         </div>
 
         {/* Spec table */}
-        <table className="mt-10 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">State</th>
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">Ring Visual</th>
-              <th className="pb-3 text-left text-xs font-medium text-muted-foreground">Tooltip</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table className="mt-10 w-full text-sm">
+          <TableHeader>
+            <TableRow className="border-b border-border">
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
+                State
+              </TableHead>
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
+                Ring Visual
+              </TableHead>
+              <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
+                Tooltip
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {[
-              ["No Context", "Empty ring with muted icon", "No tooltip — nothing to show"],
-              ["With Context", "Partially filled ring, animated on load", "Lists loaded memories with key-value pairs on hover"],
+              [
+                "No Context",
+                "Empty ring with muted icon",
+                "No tooltip — nothing to show",
+              ],
+              [
+                "With Context",
+                "Partially filled ring, animated on load",
+                "Lists loaded memories with key-value pairs on hover or focus",
+              ],
             ].map(([state, ring, tooltip], i) => (
-              <tr key={state} className={i < 1 ? "border-b border-border/50" : ""}>
-                <td className="py-2.5 pr-6 font-medium">{state}</td>
-                <td className="py-2.5 pr-6 text-muted-foreground">{ring}</td>
-                <td className="py-2.5 text-muted-foreground">{tooltip}</td>
-              </tr>
+              <TableRow
+                key={state}
+                className={i < 1 ? "border-b border-border/50" : ""}
+              >
+                <TableCell className="py-2.5 pr-6 font-medium">
+                  {state}
+                </TableCell>
+                <TableCell className="py-2.5 pr-6 text-muted-foreground">
+                  {ring}
+                </TableCell>
+                <TableCell className="py-2.5 text-muted-foreground">
+                  {tooltip}
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
 
-        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          No number inside the ring — the icon signals presence, and the
-          tooltip provides detail on demand. This avoids cognitive load
-          for evaluators who don&apos;t need to know the exact count at
-          a glance.
+        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
+          No number inside the ring — the icon signals presence, and the tooltip
+          provides detail on demand. This avoids cognitive load for reviewers
+          who don&apos;t need to know the exact count at a glance.
         </div>
       </section>
 
@@ -841,10 +1185,12 @@ export function MemoryContent() {
       {/* ============================================================ */}
       <section id="privacy-controls" className="page-section">
         <p className="section-label mb-3">Governance</p>
-        <h2 className="text-xl font-semibold tracking-tight">Privacy Controls</h2>
+        <h2 className="text-xl font-semibold tracking-tight">
+          Privacy Controls
+        </h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Category-level toggles for what the agent is allowed to remember.
-          Evaluators working under NDA or handling sensitive TOE data may
+          Reviewers working under NDA or handling sensitive product data may
           need to disable specific categories.
         </p>
 
@@ -859,88 +1205,112 @@ export function MemoryContent() {
             onToggle={handlePrivacyToggle}
           />
 
-          <div className="border border-border/40 rounded-lg p-6">
-            <div className="space-y-1">
+          <FieldSet className="rounded-lg border border-border/40 p-6">
+            <FieldGroup className="gap-1">
               {PRIVACY_CATEGORIES.map((cat) => (
-                <div
+                <Field
                   key={cat.key}
-                  className="flex items-center justify-between rounded-md px-3 py-3 transition-colors hover:bg-foreground/[0.02]"
+                  orientation="horizontal"
+                  className="items-center justify-between rounded-md px-3 py-3 transition-colors hover:bg-foreground/[0.02]"
                 >
-                  <div>
-                    <p className="text-sm">{cat.label}</p>
-                    <p className="text-xs text-muted-foreground/60">{cat.desc}</p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => handleToggleSwitch(cat.key)}
-                    className={`relative h-5 w-9 rounded-md transition-colors ${
-                      toggles[cat.key]
-                        ? "bg-foreground/80"
-                        : "bg-muted"
-                    }`}
-                  >
-                    <span
-                      className={`absolute top-0.5 h-4 w-4 rounded-md bg-background shadow-sm transition-transform ${
-                        toggles[cat.key]
-                          ? "translate-x-4"
-                          : "translate-x-0.5"
-                      }`}
-                    />
-                  </button>
-                </div>
+                  <FieldContent>
+                    <FieldTitle>{cat.label}</FieldTitle>
+                    <FieldDescription className="text-xs">
+                      {cat.desc}
+                    </FieldDescription>
+                  </FieldContent>
+                  <Switch
+                    checked={toggles[cat.key]}
+                    onCheckedChange={() => handleToggleSwitch(cat.key)}
+                    aria-label={`Toggle ${cat.label}`}
+                  />
+                </Field>
               ))}
-            </div>
+            </FieldGroup>
 
             {/* All-off confirmation */}
             {showOffConfirm && (
-              <div className="mt-4 rounded-md border border-foreground/10 bg-foreground/[0.02] px-4 py-3 memory-slide-in">
+              <div className="memory-slide-in mt-4 rounded-md border border-foreground/10 bg-foreground/[0.02] px-4 py-3">
                 <div className="flex items-start gap-2.5">
-                  <HugeiconsIcon icon={Alert01Icon} size={14} strokeWidth={1.5} className="mt-0.5 shrink-0 text-muted-foreground" />
+                  <HugeiconsIcon
+                    icon={Alert01Icon}
+                    size={14}
+                    strokeWidth={1.5}
+                    className="mt-0.5 shrink-0 text-muted-foreground"
+                  />
                   <div>
                     <p className="text-sm text-foreground/80">
                       All memory categories are disabled
                     </p>
                     <p className="mt-0.5 text-xs text-muted-foreground">
-                      The agent will not retain any information between sessions.
-                      Existing memories remain but will not be used or updated.
+                      The agent will not retain any information between
+                      sessions. Existing memories remain but will not be used or
+                      updated.
                     </p>
                   </div>
                 </div>
               </div>
             )}
-          </div>
+          </FieldSet>
         </div>
 
         {/* Spec table */}
-        <table className="mt-10 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">Preset</th>
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">Toggle State</th>
-              <th className="pb-3 text-left text-xs font-medium text-muted-foreground">Notes</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table className="mt-10 w-full text-sm">
+          <TableHeader>
+            <TableRow className="border-b border-border">
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
+                Preset
+              </TableHead>
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
+                Toggle State
+              </TableHead>
+              <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
+                Notes
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {[
-              ["All On", "All categories enabled", "Default for most evaluators"],
-              ["Selective", "Preferences + Documents on, Context + Personal off", "Common for consultants working across multiple ITSEFs"],
-              ["All Off", "All categories disabled with confirmation", "For sensitive evaluations or auditor-mode sessions"],
+              [
+                "All On",
+                "All categories enabled",
+                "Default for most reviewers",
+              ],
+              [
+                "Selective",
+                "Preferences + Documents on, Context + Personal off",
+                "Common for consultants working across multiple review teams",
+              ],
+              [
+                "All Off",
+                "All categories disabled with confirmation",
+                "For sensitive reviews or private review sessions",
+              ],
             ].map(([preset, state, notes], i) => (
-              <tr key={preset} className={i < 2 ? "border-b border-border/50" : ""}>
-                <td className="py-2.5 pr-6 font-medium">{preset}</td>
-                <td className="py-2.5 pr-6 text-muted-foreground">{state}</td>
-                <td className="py-2.5 text-muted-foreground">{notes}</td>
-              </tr>
+              <TableRow
+                key={preset}
+                className={i < 2 ? "border-b border-border/50" : ""}
+              >
+                <TableCell className="py-2.5 pr-6 font-medium">
+                  {preset}
+                </TableCell>
+                <TableCell className="py-2.5 pr-6 text-muted-foreground">
+                  {state}
+                </TableCell>
+                <TableCell className="py-2.5 text-muted-foreground">
+                  {notes}
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
 
-        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
+        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
           Privacy controls are category-level, not per-entry — this keeps the
           mental model simple. Disabling a category does not delete existing
           memories, it just prevents the agent from reading or updating them.
-          This distinction matters for CC evaluations where data retention
-          policies may differ from data access policies.
+          This distinction matters for complex review workflows where data
+          retention policies may differ from data access policies.
         </div>
       </section>
     </article>

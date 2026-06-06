@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { useState, useEffect } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
@@ -13,6 +13,21 @@ import {
   Route01Icon,
   Share01Icon,
 } from "@hugeicons/core-free-icons"
+import { PatternControls as Controls } from "@/components/pattern-controls"
+import {
+  AgentStatusTable,
+  type AgentStatusRow,
+} from "@/components/ui/agent-status-table"
+import { Badge } from "@/components/ui/badge"
+import { Progress } from "@/components/ui/progress"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 
 /* ------------------------------------------------------------------ */
 /*  CSS Keyframes                                                      */
@@ -36,9 +51,9 @@ function ensureStyles() {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.4; }
     }
-    @keyframes ma-progress {
-      from { width: 0%; }
-      to { width: var(--target-width); }
+      @keyframes ma-progress {
+        from { transform: scaleX(0); }
+        to { transform: scaleX(var(--target-scale)); }
     }
     .ma-slide-in {
       animation: ma-slide-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
@@ -47,51 +62,25 @@ function ensureStyles() {
       animation: ma-fade-in 0.2s ease forwards;
     }
     .ma-pulse {
-      animation: ma-pulse 1.5s ease-in-out infinite;
+      animation: ma-pulse 1.5s ease-in-out 3;
     }
-    .ma-progress {
-      animation: ma-progress 0.6s ease forwards;
+      .ma-progress {
+        transform-origin: left;
+        animation: ma-progress 0.6s ease forwards;
+      }
+    @media (prefers-reduced-motion: reduce) {
+      .ma-slide-in,
+      .ma-fade-in,
+      .ma-pulse,
+      .ma-progress {
+        animation: none;
+      }
+      .ma-progress {
+        transform: scaleX(var(--target-scale));
+      }
     }
   `
   document.head.appendChild(style)
-}
-
-/* ------------------------------------------------------------------ */
-/*  Controls                                                           */
-/* ------------------------------------------------------------------ */
-
-function Controls({
-  options,
-  active,
-  onToggle,
-}: {
-  options: { key: string; label: string }[]
-  active: Record<string, boolean>
-  onToggle: (key: string) => void
-}) {
-  return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 pb-5">
-      <span className="section-label mr-1">Controls</span>
-      {options.map((opt) => (
-        <button
-          key={opt.key}
-          onClick={() => onToggle(opt.key)}
-          className={`
-            relative text-xs px-2.5 py-1 rounded-md border transition-all duration-200
-            ${active[opt.key]
-              ? "border-foreground/20 bg-foreground/[0.04] text-foreground"
-              : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50"
-            }
-          `}
-        >
-          {opt.label}
-          {active[opt.key] && (
-            <span className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-foreground/40" />
-          )}
-        </button>
-      ))}
-    </div>
-  )
 }
 
 /* ------------------------------------------------------------------ */
@@ -100,7 +89,7 @@ function Controls({
 
 function makeToggle(
   setter: React.Dispatch<React.SetStateAction<Record<string, boolean>>>,
-  animSetter: React.Dispatch<React.SetStateAction<number>>,
+  animSetter: React.Dispatch<React.SetStateAction<number>>
 ) {
   return (key: string) => {
     setter((prev) => {
@@ -118,37 +107,146 @@ function makeToggle(
 /* ------------------------------------------------------------------ */
 
 const AGENT_CARDS = [
-  { name: "Evidence Collector", role: "Gather evaluation artifacts", task: "Collecting ALC_DEL delivery artifacts", progress: "12 of 18 items gathered" },
-  { name: "Compliance Mapper", role: "Map SFRs to controls", task: "Mapping FCS_COP.1 to NIST SP 800-53", progress: "24 of 31 SFRs mapped" },
-  { name: "Document Drafter", role: "Author Security Target sections", task: "Drafting ASE_TSS.1 TOE summary", progress: "Section 6.2 in progress" },
+  {
+    name: "Source Collector",
+    role: "Gather project artifacts",
+    task: "Collecting delivery readiness delivery artifacts",
+    progress: "12 of 18 items gathered",
+  },
+  {
+    name: "Requirements Mapper",
+    role: "Map requirements to controls",
+    task: "Mapping Export workflow to internal control library",
+    progress: "24 of 31 requirements mapped",
+  },
+  {
+    name: "Document Drafter",
+    role: "Author project brief sections",
+    task: "Drafting implementation notes product summary",
+    progress: "Section 6.2 in progress",
+  },
+]
+
+const AGENT_STATUS_ROWS: AgentStatusRow[] = [
+  {
+    id: "source-collector",
+    name: "Source Collector",
+    role: "Gather project artifacts",
+    status: "working",
+    task: "Collecting delivery readiness artifacts",
+    progress: 67,
+    confidence: 91,
+    cost: "$0.14",
+    updated: "18s ago",
+  },
+  {
+    id: "requirements-mapper",
+    name: "Requirements Mapper",
+    role: "Map requirements to controls",
+    status: "handoff",
+    task: "Waiting for source packet before final coverage mapping",
+    progress: 58,
+    confidence: 82,
+    cost: "$0.09",
+    updated: "42s ago",
+  },
+  {
+    id: "document-drafter",
+    name: "Document Drafter",
+    role: "Author project brief sections",
+    status: "idle",
+    task: "No drafting until mapped requirements are confirmed",
+    progress: 0,
+    cost: "$0.00",
+    updated: "2m ago",
+  },
 ]
 
 const HANDOFF_STEPS = [
-  { label: "Parse Security Target", agent: "Document Drafter" },
-  { label: "Map SFR coverage", agent: "Compliance Mapper" },
-  { label: "Generate evaluation report", agent: "Report Generator" },
+  { label: "Parse project brief", agent: "Document Drafter" },
+  { label: "Map requirement coverage", agent: "Requirements Mapper" },
+  { label: "Generate review report", agent: "Report Generator" },
 ]
 
 const PARALLEL_AGENTS = [
-  { name: "Vulnerability Scanner", task: "Scanning CVE database against TOE boundary", result: "847 CVEs scanned — 0 critical findings", progress: 72 },
-  { name: "Evidence Collector", task: "Gathering ALC lifecycle evidence", result: "18 of 18 artifacts collected — 100% coverage", progress: 45 },
-  { name: "Policy Analyst", task: "Analysing BSI-CC-PP-0084 protection profile", result: "47 SFRs parsed — 4 deltas from previous version", progress: 88 },
+  {
+    name: "Risk Scanner",
+    task: "Scanning incident database against launch scope",
+    result: "847 incidents scanned — 0 critical blockers",
+    progress: 72,
+  },
+  {
+    name: "Source Collector",
+    task: "Gathering release readiness source material",
+    result: "18 of 18 artifacts collected — 100% coverage",
+    progress: 45,
+  },
+  {
+    name: "Policy Analyst",
+    task: "Analysing launch policy",
+    result: "47 requirements parsed — 4 deltas from previous version",
+    progress: 88,
+  },
 ]
 
-const ROUTING_AGENTS = ["Compliance Mapper", "Evidence Collector", "Policy Analyst"]
+const ROUTING_AGENTS = [
+  "Requirements Mapper",
+  "Source Collector",
+  "Policy Analyst",
+]
 
 const DIRECT_MESSAGES = [
-  { from: "Compliance Mapper", to: "Document Drafter", content: "I found that FCS_COP.1.1 references AES-CBC-128 in the Security Target, but the protection profile PP-CIMC-SLv3 requires AES-256. Can you update section 6.1.3?" },
-  { from: "Document Drafter", to: "Compliance Mapper", content: "Confirmed. I have updated the cryptographic operations table in ASE_TSS.1 to reference AES-256-CBC. The rationale now cites NIST SP 800-131A Rev 2." },
-  { from: "Compliance Mapper", to: "Document Drafter", content: "Verified. FCS_COP.1.1 mapping now aligns with the PP requirement. Marking this SFR as fully covered." },
+  {
+    from: "Requirements Mapper",
+    to: "Document Drafter",
+    content:
+      "I found that Export workflow references CSV-only export in the project brief, but the launch policy Launch Policy v2 requires CSV and JSON exports. Can you update section 6.1.3?",
+  },
+  {
+    from: "Document Drafter",
+    to: "Requirements Mapper",
+    content:
+      "Confirmed. I have updated the export behavior table in implementation notes to reference CSV and JSON export. The rationale now cites the data export policy.",
+  },
+  {
+    from: "Requirements Mapper",
+    to: "Document Drafter",
+    content:
+      "Verified. Export workflow mapping now aligns with the policy requirement. Marking this requirement as fully covered.",
+  },
 ]
 
 const SHARED_CONTEXT_ITEMS = [
-  { agent: "Evidence Collector", label: "ALC_DEL.1 delivery procedures", type: "Artifact", time: "2m ago" },
-  { agent: "Compliance Mapper", label: "FCS_COP.1 coverage gap — AES key size", type: "Finding", time: "4m ago" },
-  { agent: "Document Drafter", label: "ASE_TSS.1 section 6.1.3 — updated", type: "Draft", time: "5m ago" },
-  { agent: "Policy Analyst", label: "BSI-CC-PP-0084 v1.2 SFR delta report", type: "Analysis", time: "8m ago" },
-  { agent: "Vulnerability Scanner", label: "CVE-2025-3891 disposition — not applicable", type: "Assessment", time: "12m ago" },
+  {
+    agent: "Source Collector",
+    label: "delivery readiness.1 delivery procedures",
+    type: "Artifact",
+    time: "2m ago",
+  },
+  {
+    agent: "Requirements Mapper",
+    label: "Export workflow coverage gap — missing JSON option",
+    type: "Finding",
+    time: "4m ago",
+  },
+  {
+    agent: "Document Drafter",
+    label: "implementation notes section 6.1.3 — updated",
+    type: "Draft",
+    time: "5m ago",
+  },
+  {
+    agent: "Policy Analyst",
+    label: "Launch Policy v1.2 requirement delta report",
+    type: "Analysis",
+    time: "8m ago",
+  },
+  {
+    agent: "Risk Scanner",
+    label: "Incident-2025-3891 disposition — not applicable",
+    type: "Assessment",
+    time: "12m ago",
+  },
 ]
 
 /* ------------------------------------------------------------------ */
@@ -161,32 +259,57 @@ export function MultiAgentContent() {
   }, [])
 
   /* Section 1 — Agent Cards */
-  const [cardCtrl, setCardCtrl] = useState<Record<string, boolean>>({ active: true, idle: false, error: false })
+  const [cardCtrl, setCardCtrl] = useState<Record<string, boolean>>({
+    active: true,
+    idle: false,
+    error: false,
+  })
   const [cardAnim, setCardAnim] = useState(0)
   const toggleCard = makeToggle(setCardCtrl, setCardAnim)
-  const activeCardMode = cardCtrl.active ? "active" : cardCtrl.idle ? "idle" : "error"
+  const activeCardMode = cardCtrl.active
+    ? "active"
+    : cardCtrl.idle
+      ? "idle"
+      : "error"
 
   /* Section 2 — Handoff Flow */
-  const [handoffCtrl, setHandoffCtrl] = useState<Record<string, boolean>>({ pending: true, inprogress: false, complete: false })
+  const [handoffCtrl, setHandoffCtrl] = useState<Record<string, boolean>>({
+    pending: true,
+    inprogress: false,
+    complete: false,
+  })
   const [handoffAnim, setHandoffAnim] = useState(0)
   const toggleHandoff = makeToggle(setHandoffCtrl, setHandoffAnim)
-  const activeHandoff = handoffCtrl.pending ? "pending" : handoffCtrl.inprogress ? "inprogress" : "complete"
+  const activeHandoff = handoffCtrl.pending
+    ? "pending"
+    : handoffCtrl.inprogress
+      ? "inprogress"
+      : "complete"
 
   /* Section 3 — Parallel Agents */
-  const [parallelCtrl, setParallelCtrl] = useState<Record<string, boolean>>({ running: true, complete: false })
+  const [parallelCtrl, setParallelCtrl] = useState<Record<string, boolean>>({
+    running: true,
+    complete: false,
+  })
   const [parallelAnim, setParallelAnim] = useState(0)
   const toggleParallel = makeToggle(setParallelCtrl, setParallelAnim)
   const activeParallel = parallelCtrl.running ? "running" : "complete"
 
   /* Section 4 — Agent Routing */
-  const [routeCtrl, setRouteCtrl] = useState<Record<string, boolean>>({ auto: true, manual: false })
+  const [routeCtrl, setRouteCtrl] = useState<Record<string, boolean>>({
+    auto: true,
+    manual: false,
+  })
   const [routeAnim, setRouteAnim] = useState(0)
   const toggleRoute = makeToggle(setRouteCtrl, setRouteAnim)
   const activeRoute = routeCtrl.auto ? "auto" : "manual"
   const [manualSelection, setManualSelection] = useState<string | null>(null)
 
   /* Section 5 — Agent Communication */
-  const [commCtrl, setCommCtrl] = useState<Record<string, boolean>>({ direct: true, shared: false })
+  const [commCtrl, setCommCtrl] = useState<Record<string, boolean>>({
+    direct: true,
+    shared: false,
+  })
   const [commAnim, setCommAnim] = useState(0)
   const toggleComm = makeToggle(setCommCtrl, setCommAnim)
   const activeComm = commCtrl.direct ? "direct" : "shared"
@@ -195,12 +318,12 @@ export function MultiAgentContent() {
     <article>
       <header className="mb-20">
         <p className="section-label mb-4">Orchestration</p>
-        <h1 className="font-serif text-4xl font-light tracking-tight leading-[1.15]">
+        <h1 className="font-serif text-4xl leading-[1.15] font-light tracking-tight">
           Multi-Agent Patterns
         </h1>
         <p className="mt-4 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Coordination primitives for orchestrating multiple agents across
-          Common Criteria evaluation workflows — handoffs, parallel execution,
+          product requirements review workflows — handoffs, parallel execution,
           routing, and inter-agent communication.
         </p>
       </header>
@@ -213,7 +336,8 @@ export function MultiAgentContent() {
         <h2 className="text-xl font-semibold tracking-tight">Agent Cards</h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Individual agent identity cards showing name, role, current status,
-          and active task. Cards reflect the agent's operational state in real time.
+          and active task. Cards reflect the agent's operational state in real
+          time.
         </p>
 
         <div className="mt-10">
@@ -227,54 +351,75 @@ export function MultiAgentContent() {
             onToggle={toggleCard}
           />
 
-          <div className="border border-border/40 rounded-lg p-6" key={cardAnim}>
-            <div className="grid grid-cols-3 gap-4">
+          <div
+            className="rounded-lg border border-border/40 p-4 sm:p-6"
+            key={cardAnim}
+          >
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
               {AGENT_CARDS.map((agent, i) => (
                 <div
                   key={agent.name}
-                  className="rounded-md border border-border/40 p-4 space-y-3 ma-slide-in"
+                  className="ma-slide-in space-y-3 rounded-md border border-border/40 p-4"
                   style={{ animationDelay: `${i * 60}ms` }}
                 >
                   {/* Header */}
                   <div className="flex items-start gap-3">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-muted">
-                      <HugeiconsIcon icon={Brain01Icon} size={14} strokeWidth={1.5} className="text-muted-foreground" />
+                    <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-muted">
+                      <HugeiconsIcon
+                        icon={Brain01Icon}
+                        size={14}
+                        strokeWidth={1.5}
+                        className="text-muted-foreground"
+                      />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium truncate">{agent.name}</p>
-                      <p className="text-xs text-muted-foreground">{agent.role}</p>
+                      <p className="text-sm leading-snug font-medium">
+                        {agent.name}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {agent.role}
+                      </p>
                     </div>
-                    {/* Status dot */}
-                    {activeCardMode === "active" && (
-                      <span className="mt-1.5 h-2 w-2 rounded-full bg-foreground/70 ma-pulse" />
-                    )}
-                    {activeCardMode === "idle" && (
-                      <span className="mt-1.5 h-2 w-2 rounded-full bg-muted-foreground/40" />
-                    )}
                     {activeCardMode === "error" && (
-                      <HugeiconsIcon icon={Alert01Icon} size={14} strokeWidth={1.5} className="mt-1 text-muted-foreground" />
+                      <HugeiconsIcon
+                        icon={Alert01Icon}
+                        size={14}
+                        strokeWidth={1.5}
+                        className="mt-1 text-muted-foreground"
+                      />
                     )}
                   </div>
 
                   {/* Status body */}
                   {activeCardMode === "active" && (
                     <div className="space-y-1.5">
-                      <p className="text-xs text-muted-foreground">{agent.task}</p>
-                      <p className="text-[10px] text-muted-foreground/70">{agent.progress}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {agent.task}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground/70">
+                        {agent.progress}
+                      </p>
                     </div>
                   )}
                   {activeCardMode === "idle" && (
                     <div>
-                      <p className="text-xs text-muted-foreground">Awaiting instructions</p>
+                      <p className="text-xs text-muted-foreground">
+                        Awaiting instructions
+                      </p>
                     </div>
                   )}
                   {activeCardMode === "error" && (
                     <div className="space-y-2">
                       <p className="text-xs text-muted-foreground">
-                        Failed to connect to evaluation artifact repository — timeout after 30s
+                        Failed to connect to project source repository — timeout
+                        after 30s
                       </p>
-                      <button className="inline-flex items-center gap-1.5 rounded-md border border-border px-2 py-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
-                        <HugeiconsIcon icon={RefreshIcon} size={10} strokeWidth={1.5} />
+                      <button className="inline-flex items-center gap-1.5 rounded-md border border-border px-2 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground">
+                        <HugeiconsIcon
+                          icon={RefreshIcon}
+                          size={10}
+                          strokeWidth={1.5}
+                        />
                         Retry
                       </button>
                     </div>
@@ -285,40 +430,66 @@ export function MultiAgentContent() {
           </div>
         </div>
 
-        {/* Spec table */}
-        <table className="mt-10 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border text-left">
-              <th className="pb-3 pr-6 text-xs font-medium text-muted-foreground">Element</th>
-              <th className="pb-3 text-xs font-medium text-muted-foreground">Details</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Card layout</td>
-              <td className="py-3">3-column grid, each card with avatar, name, role, status indicator</td>
-            </tr>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Active state</td>
-              <td className="py-3">Pulsing dot, current task description, progress info</td>
-            </tr>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Idle state</td>
-              <td className="py-3">Muted dot, "Awaiting instructions" placeholder</td>
-            </tr>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Error state</td>
-              <td className="py-3">Alert icon, error message, retry action button</td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="mt-8">
+          <p className="section-label mb-3">Operational table</p>
+          <AgentStatusTable agents={AGENT_STATUS_ROWS} />
+        </div>
 
-        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          Agent cards provide the identity foundation for multi-agent interfaces.
-          In CC evaluation contexts, each card maps to a distinct evaluation
-          activity — evidence collection, compliance mapping, or document
+        {/* Spec table */}
+        <Table className="mt-10 w-full text-sm">
+          <TableHeader>
+            <TableRow className="border-b border-border text-left">
+              <TableHead className="pr-6 pb-3 text-xs font-medium text-muted-foreground">
+                Element
+              </TableHead>
+              <TableHead className="pb-3 text-xs font-medium text-muted-foreground">
+                Details
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow className="border-b border-border/50">
+              <TableCell className="py-3 pr-6 text-muted-foreground">
+                Card layout
+              </TableCell>
+              <TableCell className="py-3">
+                Responsive grid, each card with avatar, name, role, and
+                state-specific details
+              </TableCell>
+            </TableRow>
+            <TableRow className="border-b border-border/50">
+              <TableCell className="py-3 pr-6 text-muted-foreground">
+                Active state
+              </TableCell>
+              <TableCell className="py-3">
+                Current task description and progress info
+              </TableCell>
+            </TableRow>
+            <TableRow className="border-b border-border/50">
+              <TableCell className="py-3 pr-6 text-muted-foreground">
+                Idle state
+              </TableCell>
+              <TableCell className="py-3">
+                "Awaiting instructions" placeholder
+              </TableCell>
+            </TableRow>
+            <TableRow className="border-b border-border/50">
+              <TableCell className="py-3 pr-6 text-muted-foreground">
+                Error state
+              </TableCell>
+              <TableCell className="py-3">
+                Alert icon, error message, retry action button
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+
+        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
+          Agent cards provide the identity foundation for multi-agent
+          interfaces. In review workflow contexts, each card maps to a distinct
+          review activity — source collection, requirements mapping, or document
           authoring — making it clear which agent is responsible for which
-          assurance class deliverable.
+          workstream deliverable.
         </div>
       </section>
 
@@ -329,8 +500,8 @@ export function MultiAgentContent() {
         <p className="section-label mb-3">Orchestration</p>
         <h2 className="text-xl font-semibold tracking-tight">Handoff Flow</h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-          Sequential task handoff between agents. Each step produces output
-          that becomes input for the next agent in the pipeline.
+          Sequential task handoff between agents. Each step produces output that
+          becomes input for the next agent in the pipeline.
         </p>
 
         <div className="mt-10">
@@ -344,8 +515,11 @@ export function MultiAgentContent() {
             onToggle={toggleHandoff}
           />
 
-          <div className="border border-border/40 rounded-lg p-6" key={handoffAnim}>
-            <div className="flex items-center justify-center gap-0 ma-slide-in">
+          <div
+            className="rounded-lg border border-border/40 p-4 sm:p-6"
+            key={handoffAnim}
+          >
+            <div className="ma-slide-in flex flex-col items-stretch gap-0 sm:flex-row sm:items-center sm:justify-center">
               {HANDOFF_STEPS.map((step, i) => {
                 let stepState: "pending" | "active" | "complete" = "pending"
                 if (activeHandoff === "pending") {
@@ -359,9 +533,12 @@ export function MultiAgentContent() {
                 }
 
                 return (
-                  <div key={step.label} className="flex items-center">
+                  <div
+                    key={step.label}
+                    className="flex flex-col items-stretch sm:flex-row sm:items-center"
+                  >
                     <div
-                      className={`flex flex-col items-center gap-2 rounded-md border p-4 w-48 transition-all duration-200 ${
+                      className={`flex w-full flex-col items-center gap-2 rounded-md border p-4 transition-colors duration-200 sm:w-48 ${
                         stepState === "complete"
                           ? "border-foreground/20 bg-foreground/[0.03]"
                           : stepState === "active"
@@ -371,27 +548,38 @@ export function MultiAgentContent() {
                     >
                       <div className="flex items-center gap-2">
                         {stepState === "complete" ? (
-                          <div className="flex h-5 w-5 items-center justify-center rounded-md bg-foreground/10">
-                            <HugeiconsIcon icon={Tick01Icon} size={12} strokeWidth={2} className="text-foreground/70" />
+                          <div className="flex size-5 items-center justify-center rounded-md bg-foreground/10">
+                            <HugeiconsIcon
+                              icon={Tick01Icon}
+                              size={12}
+                              strokeWidth={2}
+                              className="text-foreground/70"
+                            />
                           </div>
                         ) : stepState === "active" ? (
-                          <span className="h-2 w-2 rounded-full bg-foreground/70 ma-pulse" />
+                          <span className="ma-pulse h-2 w-2 rounded-full bg-foreground/70" />
                         ) : (
                           <span className="h-2 w-2 rounded-full bg-muted-foreground/30" />
                         )}
-                        <span className="text-[10px] text-muted-foreground">Step {i + 1}</span>
+                        <span className="text-[10px] text-muted-foreground">
+                          Step {i + 1}
+                        </span>
                       </div>
-                      <p className="text-xs text-center leading-snug">{step.label}</p>
-                      <p className="text-[10px] text-muted-foreground">{step.agent}</p>
+                      <p className="text-center text-xs leading-snug">
+                        {step.label}
+                      </p>
+                      <p className="text-center text-[10px] text-muted-foreground">
+                        {step.agent}
+                      </p>
                     </div>
                     {i < HANDOFF_STEPS.length - 1 && (
-                      <div className="px-2">
+                      <div className="flex justify-center py-2 sm:px-2 sm:py-0">
                         <HugeiconsIcon
                           icon={ArrowRight01Icon}
                           size={14}
                           strokeWidth={1.5}
-                          className={`transition-opacity duration-200 ${
-                            (activeHandoff === "complete") ||
+                          className={`rotate-90 transition-[color,transform] duration-200 sm:rotate-0 ${
+                            activeHandoff === "complete" ||
                             (activeHandoff === "inprogress" && i === 0)
                               ? "text-foreground/50"
                               : "text-muted-foreground/30"
@@ -407,38 +595,60 @@ export function MultiAgentContent() {
         </div>
 
         {/* Spec table */}
-        <table className="mt-10 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border text-left">
-              <th className="pb-3 pr-6 text-xs font-medium text-muted-foreground">Element</th>
-              <th className="pb-3 text-xs font-medium text-muted-foreground">Details</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Step cards</td>
-              <td className="py-3">Fixed-width cards with step number, task label, and assigned agent</td>
-            </tr>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Connectors</td>
-              <td className="py-3">Arrow icons between steps, opacity reflects whether handoff has occurred</td>
-            </tr>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Pending state</td>
-              <td className="py-3">First step highlighted, remaining steps muted at 50% opacity</td>
-            </tr>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Complete state</td>
-              <td className="py-3">All steps show tick icon with subtle background tint</td>
-            </tr>
-          </tbody>
-        </table>
+        <Table className="mt-10 w-full text-sm">
+          <TableHeader>
+            <TableRow className="border-b border-border text-left">
+              <TableHead className="pr-6 pb-3 text-xs font-medium text-muted-foreground">
+                Element
+              </TableHead>
+              <TableHead className="pb-3 text-xs font-medium text-muted-foreground">
+                Details
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow className="border-b border-border/50">
+              <TableCell className="py-3 pr-6 text-muted-foreground">
+                Step cards
+              </TableCell>
+              <TableCell className="py-3">
+                Responsive step cards with step number, task label, and assigned
+                agent
+              </TableCell>
+            </TableRow>
+            <TableRow className="border-b border-border/50">
+              <TableCell className="py-3 pr-6 text-muted-foreground">
+                Connectors
+              </TableCell>
+              <TableCell className="py-3">
+                Arrow icons between steps, opacity reflects whether handoff has
+                occurred
+              </TableCell>
+            </TableRow>
+            <TableRow className="border-b border-border/50">
+              <TableCell className="py-3 pr-6 text-muted-foreground">
+                Pending state
+              </TableCell>
+              <TableCell className="py-3">
+                First step highlighted, remaining steps muted at 50% opacity
+              </TableCell>
+            </TableRow>
+            <TableRow className="border-b border-border/50">
+              <TableCell className="py-3 pr-6 text-muted-foreground">
+                Complete state
+              </TableCell>
+              <TableCell className="py-3">
+                All steps show tick icon with subtle background tint
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
 
-        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          Handoff flows model the sequential dependencies in CC evaluations —
-          a Security Target must be parsed before SFR coverage can be mapped,
-          and coverage must be mapped before the evaluation report can be
-          generated. Each handoff creates an auditable transition record.
+        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
+          Handoff flows model the sequential dependencies in complex review
+          workflows — a project brief must be parsed before requirement coverage
+          can be mapped, and coverage must be mapped before the review report
+          can be generated. Each handoff creates an auditable transition record.
         </div>
       </section>
 
@@ -447,7 +657,9 @@ export function MultiAgentContent() {
       {/* ============================================================ */}
       <section id="parallel-agents" className="page-section">
         <p className="section-label mb-3">Concurrency</p>
-        <h2 className="text-xl font-semibold tracking-tight">Parallel Agents</h2>
+        <h2 className="text-xl font-semibold tracking-tight">
+          Parallel Agents
+        </h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Multiple agents executing independent tasks simultaneously. Each agent
           reports individual progress toward its own objective.
@@ -463,47 +675,60 @@ export function MultiAgentContent() {
             onToggle={toggleParallel}
           />
 
-          <div className="border border-border/40 rounded-lg p-6" key={parallelAnim}>
+          <div
+            className="rounded-lg border border-border/40 p-6"
+            key={parallelAnim}
+          >
             <div className="space-y-3">
               {PARALLEL_AGENTS.map((agent, i) => (
                 <div
                   key={agent.name}
-                  className="rounded-md border border-border/40 p-4 ma-slide-in"
+                  className="ma-slide-in rounded-md border border-border/40 p-4"
                   style={{ animationDelay: `${i * 60}ms` }}
                 >
                   <div className="flex items-start gap-3">
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-muted">
-                      <HugeiconsIcon icon={Brain01Icon} size={14} strokeWidth={1.5} className="text-muted-foreground" />
+                      <HugeiconsIcon
+                        icon={Brain01Icon}
+                        size={14}
+                        strokeWidth={1.5}
+                        className="text-muted-foreground"
+                      />
                     </div>
                     <div className="min-w-0 flex-1 space-y-2">
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-sm font-medium">{agent.name}</p>
                           <p className="text-xs text-muted-foreground">
-                            {activeParallel === "running" ? agent.task : agent.result}
+                            {activeParallel === "running"
+                              ? agent.task
+                              : agent.result}
                           </p>
                         </div>
                         {activeParallel === "running" ? (
-                          <span className="h-2 w-2 rounded-full bg-foreground/70 ma-pulse" />
+                          <span className="ma-pulse h-2 w-2 rounded-full bg-foreground/70" />
                         ) : (
                           <div className="flex h-5 w-5 items-center justify-center rounded-md bg-foreground/10">
-                            <HugeiconsIcon icon={Tick01Icon} size={12} strokeWidth={2} className="text-foreground/70" />
+                            <HugeiconsIcon
+                              icon={Tick01Icon}
+                              size={12}
+                              strokeWidth={2}
+                              className="text-foreground/70"
+                            />
                           </div>
                         )}
                       </div>
 
-                      {/* Progress bar */}
-                      <div className="h-1 w-full rounded-full bg-muted">
-                        <div
-                          className={`h-1 rounded-full ma-progress ${
-                            activeParallel === "complete" ? "bg-foreground/50" : "bg-foreground/30"
-                          }`}
-                          style={{ "--target-width": activeParallel === "complete" ? "100%" : `${agent.progress}%` } as React.CSSProperties}
-                        />
-                      </div>
+                      <Progress
+                        value={
+                          activeParallel === "complete" ? 100 : agent.progress
+                        }
+                      />
 
                       {activeParallel === "running" && (
-                        <p className="text-[10px] text-muted-foreground/60">{agent.progress}% complete</p>
+                        <p className="text-[10px] text-muted-foreground/60">
+                          {agent.progress}% complete
+                        </p>
                       )}
                     </div>
                   </div>
@@ -514,37 +739,60 @@ export function MultiAgentContent() {
         </div>
 
         {/* Spec table */}
-        <table className="mt-10 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border text-left">
-              <th className="pb-3 pr-6 text-xs font-medium text-muted-foreground">Element</th>
-              <th className="pb-3 text-xs font-medium text-muted-foreground">Details</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Agent rows</td>
-              <td className="py-3">Stacked cards with avatar, name, task description, and status indicator</td>
-            </tr>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Progress bars</td>
-              <td className="py-3">Animated fill to individual target width, monochrome foreground tint</td>
-            </tr>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Running state</td>
-              <td className="py-3">Pulsing dot, active task label, percentage complete</td>
-            </tr>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Complete state</td>
-              <td className="py-3">Tick icon, results summary replaces task description, bar at 100%</td>
-            </tr>
-          </tbody>
-        </table>
+        <Table className="mt-10 w-full text-sm">
+          <TableHeader>
+            <TableRow className="border-b border-border text-left">
+              <TableHead className="pr-6 pb-3 text-xs font-medium text-muted-foreground">
+                Element
+              </TableHead>
+              <TableHead className="pb-3 text-xs font-medium text-muted-foreground">
+                Details
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow className="border-b border-border/50">
+              <TableCell className="py-3 pr-6 text-muted-foreground">
+                Agent rows
+              </TableCell>
+              <TableCell className="py-3">
+                Stacked cards with avatar, name, task description, and status
+                indicator
+              </TableCell>
+            </TableRow>
+            <TableRow className="border-b border-border/50">
+              <TableCell className="py-3 pr-6 text-muted-foreground">
+                Progress bars
+              </TableCell>
+              <TableCell className="py-3">
+                Animated fill to individual target width, monochrome foreground
+                tint
+              </TableCell>
+            </TableRow>
+            <TableRow className="border-b border-border/50">
+              <TableCell className="py-3 pr-6 text-muted-foreground">
+                Running state
+              </TableCell>
+              <TableCell className="py-3">
+                Pulsing dot, active task label, percentage complete
+              </TableCell>
+            </TableRow>
+            <TableRow className="border-b border-border/50">
+              <TableCell className="py-3 pr-6 text-muted-foreground">
+                Complete state
+              </TableCell>
+              <TableCell className="py-3">
+                Tick icon, results summary replaces task description, bar at
+                100%
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
 
-        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          Parallel execution is critical for CC evaluations where independent
-          assurance activities — vulnerability scanning (AVA_VAN), evidence
-          collection (ALC), and protection profile analysis — can proceed
+        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
+          Parallel execution is critical for complex review workflows where
+          independent review workstreams — risk scanning (risk review), source
+          material collection (ALC), and launch policy analysis — can proceed
           concurrently without blocking each other.
         </div>
       </section>
@@ -557,7 +805,7 @@ export function MultiAgentContent() {
         <h2 className="text-xl font-semibold tracking-tight">Agent Routing</h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Routing incoming tasks to the most appropriate agent based on task
-          type analysis or manual selection by the evaluation supervisor.
+          type analysis or manual selection by the workflow owner.
         </p>
 
         <div className="mt-10">
@@ -573,35 +821,49 @@ export function MultiAgentContent() {
             }}
           />
 
-          <div className="border border-border/40 rounded-lg p-6" key={routeAnim}>
+          <div
+            className="rounded-lg border border-border/40 p-4 sm:p-6"
+            key={routeAnim}
+          >
             <div className="ma-slide-in space-y-5">
               {/* Incoming task */}
               <div className="rounded-md border border-border/40 p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <HugeiconsIcon icon={Route01Icon} size={14} strokeWidth={1.5} className="text-muted-foreground" />
-                  <span className="text-[10px] text-muted-foreground">Incoming task</span>
+                <div className="mb-2 flex items-center gap-2">
+                  <HugeiconsIcon
+                    icon={Route01Icon}
+                    size={14}
+                    strokeWidth={1.5}
+                    className="text-muted-foreground"
+                  />
+                  <span className="text-[10px] text-muted-foreground">
+                    Incoming task
+                  </span>
                 </div>
-                <p className="text-sm">Review FCS_COP.1 cryptographic requirements</p>
+                <p className="text-sm">
+                  Review Export workflow export requirements
+                </p>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Task type: SFR compliance review
+                  Task type: requirement requirements review
                 </p>
               </div>
 
               {/* Routing arrow */}
               <div className="flex items-center justify-center gap-2">
                 <div className="h-px flex-1 bg-border" />
-                <span className="text-[10px] text-muted-foreground px-2">
-                  {activeRoute === "auto" ? "Auto-routed by task type" : "Select destination agent"}
+                <span className="px-2 text-[10px] text-muted-foreground">
+                  {activeRoute === "auto"
+                    ? "Auto-routed by task type"
+                    : "Select destination agent"}
                 </span>
                 <div className="h-px flex-1 bg-border" />
               </div>
 
               {/* Agent options */}
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 {ROUTING_AGENTS.map((agentName) => {
                   const isSelected =
                     activeRoute === "auto"
-                      ? agentName === "Compliance Mapper"
+                      ? agentName === "Requirements Mapper"
                       : manualSelection === agentName
 
                   return (
@@ -612,25 +874,39 @@ export function MultiAgentContent() {
                           setManualSelection(agentName)
                         }
                       }}
-                      className={`rounded-md border p-3 text-left transition-all duration-200 ${
+                      className={`rounded-md border p-3 text-left transition-colors duration-200 ${
                         isSelected
                           ? "border-foreground/20 bg-foreground/[0.03]"
                           : activeRoute === "manual"
-                            ? "border-border/40 hover:border-foreground/10 cursor-pointer"
+                            ? "cursor-pointer border-border/40 hover:border-foreground/10"
                             : "border-border/40 opacity-40"
                       }`}
                     >
                       <div className="flex items-center gap-2">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-md bg-muted">
-                          <HugeiconsIcon icon={Brain01Icon} size={12} strokeWidth={1.5} className="text-muted-foreground" />
+                        <div className="flex size-6 shrink-0 items-center justify-center rounded-md bg-muted">
+                          <HugeiconsIcon
+                            icon={Brain01Icon}
+                            size={12}
+                            strokeWidth={1.5}
+                            className="text-muted-foreground"
+                          />
                         </div>
-                        <span className="text-xs">{agentName}</span>
+                        <span className="min-w-0 text-xs leading-snug">
+                          {agentName}
+                        </span>
                       </div>
                       {isSelected && (
                         <div className="mt-2 flex items-center gap-1.5">
-                          <HugeiconsIcon icon={ArrowRight01Icon} size={10} strokeWidth={1.5} className="text-muted-foreground" />
+                          <HugeiconsIcon
+                            icon={ArrowRight01Icon}
+                            size={10}
+                            strokeWidth={1.5}
+                            className="text-muted-foreground"
+                          />
                           <span className="text-[10px] text-muted-foreground">
-                            {activeRoute === "auto" ? "Best match — SFR expertise" : "Selected"}
+                            {activeRoute === "auto"
+                              ? "Best match — requirement expertise"
+                              : "Selected"}
                           </span>
                         </div>
                       )}
@@ -643,39 +919,60 @@ export function MultiAgentContent() {
         </div>
 
         {/* Spec table */}
-        <table className="mt-10 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border text-left">
-              <th className="pb-3 pr-6 text-xs font-medium text-muted-foreground">Element</th>
-              <th className="pb-3 text-xs font-medium text-muted-foreground">Details</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Task card</td>
-              <td className="py-3">Shows incoming task with detected type classification</td>
-            </tr>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Auto routing</td>
-              <td className="py-3">Best-match agent highlighted, others dimmed at 40% opacity</td>
-            </tr>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Manual routing</td>
-              <td className="py-3">All agents interactive, click to select destination</td>
-            </tr>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Selection indicator</td>
-              <td className="py-3">Arrow icon with context label ("Best match" or "Selected")</td>
-            </tr>
-          </tbody>
-        </table>
+        <Table className="mt-10 w-full text-sm">
+          <TableHeader>
+            <TableRow className="border-b border-border text-left">
+              <TableHead className="pr-6 pb-3 text-xs font-medium text-muted-foreground">
+                Element
+              </TableHead>
+              <TableHead className="pb-3 text-xs font-medium text-muted-foreground">
+                Details
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow className="border-b border-border/50">
+              <TableCell className="py-3 pr-6 text-muted-foreground">
+                Task card
+              </TableCell>
+              <TableCell className="py-3">
+                Shows incoming task with detected type classification
+              </TableCell>
+            </TableRow>
+            <TableRow className="border-b border-border/50">
+              <TableCell className="py-3 pr-6 text-muted-foreground">
+                Auto routing
+              </TableCell>
+              <TableCell className="py-3">
+                Best-match agent highlighted, others dimmed at 40% opacity
+              </TableCell>
+            </TableRow>
+            <TableRow className="border-b border-border/50">
+              <TableCell className="py-3 pr-6 text-muted-foreground">
+                Manual routing
+              </TableCell>
+              <TableCell className="py-3">
+                All agents interactive, click to select destination
+              </TableCell>
+            </TableRow>
+            <TableRow className="border-b border-border/50">
+              <TableCell className="py-3 pr-6 text-muted-foreground">
+                Selection indicator
+              </TableCell>
+              <TableCell className="py-3">
+                Arrow icon with context label ("Best match" or "Selected")
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
 
-        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
+        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
           Routing decisions in CC workflows must be transparent and auditable.
-          Auto-routing uses task type classification to match SFR-related tasks
-          to the Compliance Mapper, evidence tasks to the Evidence Collector,
-          and policy tasks to the Policy Analyst. Manual override ensures the
-          evaluator retains final authority over agent assignments.
+          Auto-routing uses task type classification to match
+          requirement-related tasks to the Requirements Mapper, source tasks to
+          the Source Collector, and policy tasks to the Policy Analyst. Manual
+          override ensures the reviewer retains final authority over agent
+          assignments.
         </div>
       </section>
 
@@ -684,10 +981,13 @@ export function MultiAgentContent() {
       {/* ============================================================ */}
       <section id="agent-communication" className="page-section">
         <p className="section-label mb-3">Collaboration</p>
-        <h2 className="text-xl font-semibold tracking-tight">Agent Communication</h2>
+        <h2 className="text-xl font-semibold tracking-tight">
+          Agent Communication
+        </h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Inter-agent information exchange via direct messaging or a shared
-          context workspace. Both patterns create auditable communication records.
+          context workspace. Both patterns create auditable communication
+          records.
         </p>
 
         <div className="mt-10">
@@ -700,13 +1000,21 @@ export function MultiAgentContent() {
             onToggle={toggleComm}
           />
 
-          <div className="border border-border/40 rounded-lg p-6" key={commAnim}>
+          <div
+            className="rounded-lg border border-border/40 p-6"
+            key={commAnim}
+          >
             {activeComm === "direct" ? (
-              <div className="space-y-3 ma-slide-in">
-                <div className="flex items-center gap-2 mb-4">
-                  <HugeiconsIcon icon={Message01Icon} size={14} strokeWidth={1.5} className="text-muted-foreground" />
+              <div className="ma-slide-in space-y-3">
+                <div className="mb-4 flex items-center gap-2">
+                  <HugeiconsIcon
+                    icon={Message01Icon}
+                    size={14}
+                    strokeWidth={1.5}
+                    className="text-muted-foreground"
+                  />
                   <span className="text-xs text-muted-foreground">
-                    Direct thread — Compliance Mapper and Document Drafter
+                    Direct thread — Requirements Mapper and Document Drafter
                   </span>
                 </div>
                 {DIRECT_MESSAGES.map((msg, i) => (
@@ -715,55 +1023,88 @@ export function MultiAgentContent() {
                     className="ma-slide-in"
                     style={{ animationDelay: `${i * 80}ms` }}
                   >
-                    <div className={`flex gap-3 ${msg.from === "Document Drafter" ? "flex-row-reverse" : ""}`}>
+                    <div
+                      className={`flex gap-3 ${msg.from === "Document Drafter" ? "flex-row-reverse" : ""}`}
+                    >
                       <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted">
-                        <HugeiconsIcon icon={Brain01Icon} size={12} strokeWidth={1.5} className="text-muted-foreground" />
+                        <HugeiconsIcon
+                          icon={Brain01Icon}
+                          size={12}
+                          strokeWidth={1.5}
+                          className="text-muted-foreground"
+                        />
                       </div>
                       <div
                         className={`flex-1 rounded-md border border-border/40 p-3 ${
-                          msg.from === "Document Drafter" ? "bg-foreground/[0.02]" : ""
+                          msg.from === "Document Drafter"
+                            ? "bg-foreground/[0.02]"
+                            : ""
                         }`}
                       >
-                        <div className="flex items-center gap-2 mb-1.5">
-                          <span className="text-xs font-medium">{msg.from}</span>
-                          <HugeiconsIcon icon={ArrowRight01Icon} size={10} strokeWidth={1.5} className="text-muted-foreground" />
-                          <span className="text-xs text-muted-foreground">{msg.to}</span>
+                        <div className="mb-1.5 flex items-center gap-2">
+                          <span className="text-xs font-medium">
+                            {msg.from}
+                          </span>
+                          <HugeiconsIcon
+                            icon={ArrowRight01Icon}
+                            size={10}
+                            strokeWidth={1.5}
+                            className="text-muted-foreground"
+                          />
+                          <span className="text-xs text-muted-foreground">
+                            {msg.to}
+                          </span>
                         </div>
-                        <p className="text-xs text-muted-foreground leading-relaxed">{msg.content}</p>
+                        <p className="text-xs leading-relaxed text-muted-foreground">
+                          {msg.content}
+                        </p>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="space-y-3 ma-slide-in">
-                <div className="flex items-center gap-2 mb-4">
-                  <HugeiconsIcon icon={Share01Icon} size={14} strokeWidth={1.5} className="text-muted-foreground" />
+              <div className="ma-slide-in space-y-3">
+                <div className="mb-4 flex items-center gap-2">
+                  <HugeiconsIcon
+                    icon={Share01Icon}
+                    size={14}
+                    strokeWidth={1.5}
+                    className="text-muted-foreground"
+                  />
                   <span className="text-xs text-muted-foreground">
-                    Shared evaluation context — 5 items from 5 agents
+                    Shared project context — 5 items from 5 agents
                   </span>
                 </div>
                 {SHARED_CONTEXT_ITEMS.map((item, i) => (
                   <div
                     key={i}
-                    className="flex items-center gap-3 rounded-md border border-border/40 px-4 py-3 ma-slide-in"
+                    className="ma-slide-in flex items-center gap-3 rounded-md border border-border/40 px-4 py-3"
                     style={{ animationDelay: `${i * 50}ms` }}
                   >
                     <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted">
-                      <HugeiconsIcon icon={Brain01Icon} size={12} strokeWidth={1.5} className="text-muted-foreground" />
+                      <HugeiconsIcon
+                        icon={Brain01Icon}
+                        size={12}
+                        strokeWidth={1.5}
+                        className="text-muted-foreground"
+                      />
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <p className="text-sm truncate">{item.label}</p>
-                        <span className="shrink-0 rounded-md bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
-                          {item.type}
-                        </span>
+                        <p className="truncate text-sm">{item.label}</p>
+                        <Badge variant="secondary">{item.type}</Badge>
                       </div>
                       <p className="mt-0.5 text-xs text-muted-foreground">
                         {item.agent} · {item.time}
                       </p>
                     </div>
-                    <HugeiconsIcon icon={Search01Icon} size={12} strokeWidth={1.5} className="shrink-0 text-muted-foreground" />
+                    <HugeiconsIcon
+                      icon={Search01Icon}
+                      size={12}
+                      strokeWidth={1.5}
+                      className="shrink-0 text-muted-foreground"
+                    />
                   </div>
                 ))}
               </div>
@@ -772,39 +1113,63 @@ export function MultiAgentContent() {
         </div>
 
         {/* Spec table */}
-        <table className="mt-10 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border text-left">
-              <th className="pb-3 pr-6 text-xs font-medium text-muted-foreground">Element</th>
-              <th className="pb-3 text-xs font-medium text-muted-foreground">Details</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Direct messages</td>
-              <td className="py-3">Chat-style thread between two agents with sender/receiver labels</td>
-            </tr>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Message alignment</td>
-              <td className="py-3">Alternating left/right layout based on sender, subtle background tint</td>
-            </tr>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Shared context</td>
-              <td className="py-3">List of contributed items with agent attribution, type badge, and timestamp</td>
-            </tr>
-            <tr className="border-b border-border/50">
-              <td className="py-3 pr-6 text-muted-foreground">Context types</td>
-              <td className="py-3">Artifact, Finding, Draft, Analysis, Assessment — shown as muted badges</td>
-            </tr>
-          </tbody>
-        </table>
+        <Table className="mt-10 w-full text-sm">
+          <TableHeader>
+            <TableRow className="border-b border-border text-left">
+              <TableHead className="pr-6 pb-3 text-xs font-medium text-muted-foreground">
+                Element
+              </TableHead>
+              <TableHead className="pb-3 text-xs font-medium text-muted-foreground">
+                Details
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow className="border-b border-border/50">
+              <TableCell className="py-3 pr-6 text-muted-foreground">
+                Direct messages
+              </TableCell>
+              <TableCell className="py-3">
+                Chat-style thread between two agents with sender/receiver labels
+              </TableCell>
+            </TableRow>
+            <TableRow className="border-b border-border/50">
+              <TableCell className="py-3 pr-6 text-muted-foreground">
+                Message alignment
+              </TableCell>
+              <TableCell className="py-3">
+                Alternating left/right layout based on sender, subtle background
+                tint
+              </TableCell>
+            </TableRow>
+            <TableRow className="border-b border-border/50">
+              <TableCell className="py-3 pr-6 text-muted-foreground">
+                Shared context
+              </TableCell>
+              <TableCell className="py-3">
+                List of contributed items with agent attribution, type badge,
+                and timestamp
+              </TableCell>
+            </TableRow>
+            <TableRow className="border-b border-border/50">
+              <TableCell className="py-3 pr-6 text-muted-foreground">
+                Context types
+              </TableCell>
+              <TableCell className="py-3">
+                Artifact, Finding, Draft, Analysis, Assessment — shown as muted
+                badges
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
 
-        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          Agent communication patterns support the traceability requirements
-          of CC evaluations. Direct messaging creates point-to-point audit
-          trails (e.g., when the Compliance Mapper flags an SFR gap for the
-          Document Drafter), while shared context provides a workspace where
-          all agents can contribute findings visible to the evaluation team.
+        <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
+          Agent communication patterns support the traceability requirements of
+          complex review workflows. Direct messaging creates point-to-point
+          audit trails (e.g., when the Requirements Mapper flags an requirement
+          gap for the Document Drafter), while shared context provides a
+          workspace where all agents can contribute findings visible to the
+          project team.
         </div>
       </section>
     </article>

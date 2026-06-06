@@ -3,7 +3,7 @@ import { MultiAgentContent } from '@/views/multi-agent-content'
 
 export const metadata: Metadata = {
   title: 'Multi-Agent | Agentic Craft',
-  description: 'Agent cards, handoff flows, parallel agents, routing, and agent communication patterns',
+  description: 'Reference patterns for agent identity, handoffs, routing, and collaboration',
 }
 
 export default function MultiAgentPage() {

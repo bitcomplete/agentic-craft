@@ -16,7 +16,7 @@ interface ToolTreeContextValue {
 const ToolTreeContext = React.createContext<ToolTreeContextValue | null>(null)
 
 function useToolTree(): ToolTreeContextValue {
-  const ctx = React.useContext(ToolTreeContext)
+  const ctx = React.use(ToolTreeContext)
   if (!ctx) throw new Error("useToolTree must be used within a <ToolTree />")
   return ctx
 }
@@ -42,19 +42,34 @@ function ToolTree({
       if (onOpenChangeProp) onOpenChangeProp(v)
       else _setOpen(v)
     },
-    [onOpenChangeProp],
+    [onOpenChangeProp]
   )
 
-  const ctx = React.useMemo(() => ({ open, onOpenChange }), [open, onOpenChange])
+  const ctx = React.useMemo(
+    () => ({ open, onOpenChange }),
+    [open, onOpenChange]
+  )
 
   return (
     <ToolTreeContext.Provider value={ctx}>
-      <div data-slot="tool-tree" className={cn("flex flex-col gap-3 min-w-0 text-muted-foreground relative", className)} {...props}>
+      <div
+        data-slot="tool-tree"
+        className={cn(
+          "relative flex min-w-0 flex-col gap-3 text-muted-foreground",
+          className
+        )}
+        {...props}
+      >
         {/* Spine: first child so trigger paints on top (DOM order) */}
         {open && (
           <span
-            className="w-px absolute"
-            style={{ left: 9, top: 10, bottom: 0, backgroundColor: "var(--tool-tree-connector)" }}
+            className="absolute w-px"
+            style={{
+              left: 9,
+              top: 10,
+              bottom: 0,
+              backgroundColor: "var(--tool-tree-connector)",
+            }}
           />
         )}
         {children}
@@ -78,19 +93,45 @@ function ToolTreeTrigger({
   const { open, onOpenChange } = useToolTree()
 
   return (
-    <div data-slot="tool-tree-trigger" className="flex items-center gap-2 relative group/tool-wrapper">
-      <button type="button" onClick={() => onOpenChange(!open)} className={cn("min-w-0 flex items-center gap-2 w-fit max-w-full cursor-pointer", className)} {...props}>
+    <div
+      data-slot="tool-tree-trigger"
+      className="group/tool-wrapper relative flex items-center gap-2"
+    >
+      <button
+        type="button"
+        onClick={() => onOpenChange(!open)}
+        className={cn(
+          "flex w-fit max-w-full min-w-0 cursor-pointer items-center gap-2",
+          className
+        )}
+        {...props}
+      >
         {icon && (
-          <div className="relative rounded-full size-5 flex items-center justify-center shrink-0">
-            <div className="absolute bg-background inset-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full size-6" />
-            <HugeiconsIcon icon={icon} size={18} strokeWidth={1.5} className="relative text-muted-foreground group-hover/tool-wrapper:text-foreground" />
+          <div className="relative flex size-5 shrink-0 items-center justify-center rounded-full">
+            <div className="absolute inset-1/2 size-6 -translate-x-1/2 -translate-y-1/2 rounded-full bg-background" />
+            <HugeiconsIcon
+              icon={icon}
+              size={18}
+              strokeWidth={1.5}
+              className="relative text-muted-foreground group-hover/tool-wrapper:text-foreground"
+            />
           </div>
         )}
-        <span className="min-w-0 group-hover/tool-wrapper:text-foreground text-sm select-none truncate">{children}</span>
-        <HugeiconsIcon icon={ArrowDown01Icon} size={14} strokeWidth={1.5} className={cn("shrink-0 group-hover/tool-wrapper:text-foreground transition-transform duration-200", !open && "-rotate-90")} />
+        <span className="min-w-0 truncate text-sm select-none group-hover/tool-wrapper:text-foreground">
+          {children}
+        </span>
+        <HugeiconsIcon
+          icon={ArrowDown01Icon}
+          size={14}
+          strokeWidth={1.5}
+          className={cn(
+            "shrink-0 transition-transform duration-200 group-hover/tool-wrapper:text-foreground",
+            !open && "-rotate-90"
+          )}
+        />
       </button>
       {timestamp && (
-        <span className="shrink-0 ml-auto transition-opacity duration-300 opacity-0 group-hover/tool-wrapper:opacity-100 hidden md:block text-xs select-none truncate">
+        <span className="ml-auto hidden shrink-0 truncate text-xs opacity-0 transition-opacity duration-300 select-none group-hover/tool-wrapper:opacity-100 md:block">
           {timestamp}
         </span>
       )}
@@ -117,7 +158,7 @@ function ToolTreeContent({
       className={cn("pl-[28px]", className)}
       {...props}
     >
-      <div className="grid gap-1.5 grid-cols-1">
+      <div className="grid grid-cols-1 gap-1.5">
         {items.map((child, i) => {
           const isLast = i === items.length - 1
           return (
@@ -131,8 +172,14 @@ function ToolTreeContent({
               )}
               {/* L-connector with rounded bottom-left corner */}
               <div
-                className="absolute rounded-bl-lg border-l border-b"
-                style={{ top: -5, left: -19, width: 30, height: 16, borderColor: "var(--tool-tree-connector)" }}
+                className="absolute rounded-bl-lg border-b border-l"
+                style={{
+                  top: -5,
+                  left: -19,
+                  width: 30,
+                  height: 16,
+                  borderColor: "var(--tool-tree-connector)",
+                }}
               />
               {child}
             </div>
@@ -143,9 +190,4 @@ function ToolTreeContent({
   )
 }
 
-export {
-  ToolTree,
-  ToolTreeTrigger,
-  ToolTreeContent,
-  useToolTree,
-}
+export { ToolTree, ToolTreeTrigger, ToolTreeContent, useToolTree }

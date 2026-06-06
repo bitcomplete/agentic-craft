@@ -1,9 +1,10 @@
-import type { Metadata } from 'next'
-import { ActionsContent } from '@/views/actions-content'
+import type { Metadata } from "next"
+import { ActionsContent } from "@/views/actions-content"
 
 export const metadata: Metadata = {
-  title: 'Agent Actions | Agentic Craft',
-  description: 'Tool calls, subagent cards, parallel execution, plan cards, and decision patterns',
+  title: "Agent Actions | Agentic Craft",
+  description:
+    "Reference patterns for tool calls, plans, clarifying questions, decisions, approvals, and parallel execution",
 }
 
 export default function ActionsPage() {

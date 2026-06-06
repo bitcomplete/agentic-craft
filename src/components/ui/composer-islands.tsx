@@ -22,13 +22,14 @@ function Island({
 }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn("animate-composer-island w-[95%]", className)}
+      data-slot="composer-island-wrap"
+      className={cn("animate-composer-island w-full sm:w-[95%]", className)}
       style={{ zIndex: 0 }}
       {...props}
     >
       <div
         data-slot="composer-island"
-        className="border border-b-0 border-border bg-background first:rounded-t-xl first:shadow-[0_-1px_6px_rgba(0,0,0,0.04),0_-4px_16px_rgba(0,0,0,0.03)]"
+        className="border border-b-0 border-border bg-background"
       >
         {children}
       </div>
@@ -51,12 +52,12 @@ export function ComposerScope({
 }) {
   return (
     <Island className={className} {...props}>
-      <div className="flex items-center gap-2 px-3 py-2.5">
+      <div className="flex items-center gap-2 px-2 py-1.5 sm:px-3 sm:py-2.5">
         <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
           {items.map((item) => (
             <span
               key={item.id}
-              className="animate-composer-slide group/scope inline-flex items-center gap-1.5 rounded-md border border-border bg-muted/40 px-2 py-0.5 text-xs text-foreground"
+              className="animate-composer-slide group/scope inline-flex items-center gap-1.5 rounded-md border border-border bg-muted/40 px-1.5 py-0.5 text-[11px] leading-4 text-foreground sm:px-2 sm:text-xs"
             >
               <HugeiconsIcon
                 icon={item.icon}
@@ -69,7 +70,8 @@ export function ComposerScope({
                 <button
                   type="button"
                   onClick={() => onRemove(item.id)}
-                  className="text-muted-foreground/40 opacity-0 transition-colors group-hover/scope:opacity-100 hover:text-foreground"
+                  aria-label={`Remove ${item.label}`}
+                  className="text-muted-foreground/50 transition-colors hover:text-foreground sm:opacity-0 sm:group-focus-within/scope:opacity-100 sm:group-hover/scope:opacity-100"
                 >
                   <HugeiconsIcon
                     icon={Cancel01Icon}
@@ -85,6 +87,7 @@ export function ComposerScope({
           <button
             type="button"
             onClick={onDismiss}
+            aria-label="Dismiss scope"
             className="shrink-0 text-muted-foreground/40 transition-colors hover:text-foreground"
           >
             <HugeiconsIcon icon={Cancel01Icon} size={14} strokeWidth={1.5} />
@@ -107,7 +110,7 @@ export function ComposerReply({
 }) {
   return (
     <Island className={className} {...props}>
-      <div className="flex items-center gap-2 px-4 py-2.5">
+      <div className="flex items-center gap-2 px-2.5 py-1.5 sm:px-4 sm:py-2.5">
         <HugeiconsIcon
           icon={MailReply01Icon}
           size={13}
@@ -121,6 +124,7 @@ export function ComposerReply({
           <button
             type="button"
             onClick={onDismiss}
+            aria-label="Dismiss reply context"
             className="shrink-0 text-muted-foreground/60 transition-colors hover:text-foreground"
           >
             <HugeiconsIcon icon={Cancel01Icon} size={14} strokeWidth={1.5} />
@@ -147,7 +151,7 @@ export function ComposerPlan({
 
   return (
     <Island className={className} {...props}>
-      <div className="px-4 py-3">
+      <div className="px-2.5 py-1.5 sm:px-4 sm:py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <HugeiconsIcon icon={Task01Icon} size={13} strokeWidth={1.5} />
@@ -158,7 +162,9 @@ export function ComposerPlan({
           <button
             type="button"
             onClick={() => setExpanded(!expanded)}
-            className="text-muted-foreground/60 transition-colors hover:text-foreground"
+            aria-label={expanded ? "Collapse plan" : "Expand plan"}
+            aria-expanded={expanded}
+            className="flex size-7 items-center justify-center rounded-md text-muted-foreground/60 transition-colors hover:bg-muted/50 hover:text-foreground"
           >
             <HugeiconsIcon
               icon={expanded ? ArrowShrink01Icon : ArrowExpand01Icon}
@@ -169,15 +175,13 @@ export function ComposerPlan({
         </div>
 
         {expanded && (
-          <div className="animate-composer-slide mt-3 space-y-2.5">
+          <div className="animate-composer-slide mt-1.5 flex flex-col gap-1.5 sm:mt-3 sm:gap-2.5">
             {tasks.map((task, i) => (
               <div
                 key={i}
                 className={cn(
-                  "flex items-start gap-2.5 text-sm leading-snug",
-                  task.dimmed
-                    ? "text-muted-foreground/40"
-                    : "text-foreground",
+                  "flex items-start gap-2.5 text-xs leading-snug",
+                  task.dimmed ? "text-muted-foreground/40" : "text-foreground"
                 )}
               >
                 <span
@@ -185,7 +189,7 @@ export function ComposerPlan({
                     "mt-[3px] flex h-[14px] w-[14px] shrink-0 items-center justify-center rounded-full border",
                     task.dimmed
                       ? "border-muted-foreground/20"
-                      : "border-muted-foreground/40",
+                      : "border-muted-foreground/40"
                   )}
                 />
                 <span>

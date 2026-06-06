@@ -49,7 +49,8 @@ export function ComposerAttachments({
             <button
               type="button"
               onClick={() => onRemove(file.name)}
-              className="ml-0.5 text-muted-foreground/40 opacity-0 transition-colors group-hover:opacity-100 hover:text-foreground"
+              aria-label={`Remove ${file.name}`}
+              className="ml-0.5 text-muted-foreground/50 transition-colors hover:text-foreground"
             >
               <HugeiconsIcon icon={Cancel01Icon} size={12} strokeWidth={1.5} />
             </button>

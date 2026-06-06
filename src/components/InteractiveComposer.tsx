@@ -17,6 +17,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu"
+import { PatternControls } from "@/components/pattern-controls"
+import { cn } from "@/lib/utils"
 import {
   Composer,
   ComposerIslands,
@@ -29,10 +31,14 @@ import {
   ComposerScope,
   ComposerReply,
   ComposerPlan,
-  ComposerAttachments,
   ComposerSuggestions,
 } from "@/components/ui/composer"
-import type { ComposerScopeItem, ComposerFile } from "@/components/ui/composer"
+import type { ComposerScopeItem } from "@/components/ui/composer"
+import {
+  FileLifecycle,
+  type FileLifecycleFile,
+  type FileLifecycleSurface,
+} from "@/components/ui/file-lifecycle"
 
 /* ─── Demo Data ─── */
 
@@ -45,46 +51,67 @@ interface FeatureState {
 }
 
 const SUGGESTIONS = [
-  "Check SFR coverage",
+  "Check launch risks",
   "Compare with previous version",
   "List open findings",
   "Generate summary",
 ]
 
 const REPLY_QUOTE =
-  "The FCS_COP.1 instantiation also references an outdated algorithm suite — this will need updating before the evaluation facility review."
+  "The onboarding section references the previous rollout plan — this should be updated before the launch review."
 
 const PLACEHOLDER_MAP: Record<string, string> = {
-  default: "Ask about this device...",
-  reply: "Reply to this message...",
-  scope: "Ask about the Security Target...",
+  default: "Ask about this project…",
+  reply: "Reply to this message…",
+  scope: "Ask about the selected sources…",
 }
 
-const MOCK_ATTACHMENTS: ComposerFile[] = [
-  { name: "Security_Target_v3.1.pdf", size: "2.4 MB", type: "file" },
-  { name: "TOE_boundary_diagram.png", size: "340 KB", type: "image" },
+const INITIAL_LIFECYCLE_FILES: FileLifecycleFile[] = [
+  {
+    id: "brief",
+    name: "Project_Brief_v3.pdf",
+    size: "2.4 MB",
+    type: "file",
+    status: "uploaded",
+    progress: 100,
+    message: "Ready",
+  },
+  {
+    id: "timeline",
+    name: "Launch_Timeline.png",
+    size: "340 KB",
+    type: "image",
+    status: "uploading",
+    progress: 68,
+    message: "Scanning",
+  },
+  {
+    id: "duplicate",
+    name: "Project_Brief_v2.pdf",
+    size: "2.1 MB",
+    type: "file",
+    status: "rejected",
+    message: "Duplicate source",
+  },
 ]
 
 const INITIAL_SCOPE_ITEMS: ComposerScopeItem[] = [
-  { id: "st", label: "Security Target v3.1", icon: File01Icon },
-  { id: "device", label: "ACME SmartCard Module", icon: ComputerIcon },
-  { id: "pp", label: "PP-CIMC-SLv3", icon: Shield01Icon },
+  { id: "brief", label: "Project brief", icon: File01Icon },
+  { id: "product", label: "Customer portal", icon: ComputerIcon },
+  { id: "policy", label: "Launch guidelines", icon: Shield01Icon },
 ]
 
 const PLAN_TASKS = [
   {
-    label:
-      "Patch PR1 branch for API formatting and webapp compile compatibility, then verify local checks",
+    label: "Review project brief for missing assumptions and open decisions",
     done: false,
   },
   {
-    label:
-      "Patch PR2-specific formatting or backend issues and verify local checks",
+    label: "Compare launch timeline against support and marketing readiness",
     done: false,
   },
   {
-    label:
-      "Restack PR3 on top, run targeted verification, and push updated branches",
+    label: "Prepare a concise findings summary for the next planning review",
     done: false,
     dimmed: true,
   },
@@ -92,30 +119,112 @@ const PLAN_TASKS = [
 
 /* ─── Demo Component ─── */
 
-export default function InteractiveComposer({
-  showControls = true,
+type ComposerDemoPresentation = "playground" | "compact-playground" | "embedded"
+
+const COMPOSER_DEMO_PRESENTATIONS = {
+  playground: {
+    controls: "full",
+    defaultPlan: true,
+  },
+  "compact-playground": {
+    controls: "compact",
+    defaultPlan: true,
+  },
+  embedded: {
+    controls: "none",
+    defaultPlan: false,
+  },
+} as const satisfies Record<
+  ComposerDemoPresentation,
+  {
+    controls: "full" | "compact" | "none"
+    defaultPlan: boolean
+  }
+>
+
+function ComposerDemo({
+  presentation,
 }: {
-  showControls?: boolean
+  presentation: ComposerDemoPresentation
 }) {
-  const [features, setFeatures] = useState<FeatureState>({
+  const demo = COMPOSER_DEMO_PRESENTATIONS[presentation]
+  const controls = demo.controls
+  const [features, setFeatures] = useState<FeatureState>(() => ({
     scopeBanner: false,
     replyTo: false,
-    plan: false,
+    plan: demo.defaultPlan,
     suggestions: true,
     attachments: false,
-  })
+  }))
 
   const [scopeItems, setScopeItems] =
     useState<ComposerScopeItem[]>(INITIAL_SCOPE_ITEMS)
+  const [draft, setDraft] = useState("")
+  const [fileSurface, setFileSurface] = useState<FileLifecycleSurface>("idle")
+  const [files, setFiles] = useState<FileLifecycleFile[]>([])
 
   const toggle = useCallback((key: keyof FeatureState) => {
     setFeatures((prev) => {
       const next = { ...prev, [key]: !prev[key] }
       if (key === "scopeBanner" && next.scopeBanner) next.replyTo = false
       if (key === "replyTo" && next.replyTo) next.scopeBanner = false
+      if (key === "attachments") {
+        setFiles(next.attachments ? INITIAL_LIFECYCLE_FILES : [])
+        setFileSurface("idle")
+      }
       return next
     })
     if (key === "scopeBanner") setScopeItems(INITIAL_SCOPE_ITEMS)
+  }, [])
+
+  const showAttachments = useCallback(() => {
+    setFeatures((prev) => ({ ...prev, attachments: true }))
+    setFiles(INITIAL_LIFECYCLE_FILES)
+    setFileSurface("idle")
+  }, [])
+
+  const removeFile = useCallback((file: FileLifecycleFile) => {
+    setFiles((prev) => {
+      const next = prev.filter((item) => item.id !== file.id)
+      if (next.length === 0) {
+        setFeatures((current) => ({ ...current, attachments: false }))
+      }
+      return next
+    })
+  }, [])
+
+  const retryFile = useCallback((file: FileLifecycleFile) => {
+    setFiles((prev) =>
+      prev.map((item) =>
+        item.id === file.id
+          ? {
+              ...item,
+              status: "queued",
+              message: "Ready to retry",
+              progress: 0,
+            }
+          : item
+      )
+    )
+  }, [])
+
+  const addDroppedFile = useCallback(() => {
+    setFeatures((prev) => ({ ...prev, attachments: true }))
+    setFileSurface("idle")
+    setFiles((prev) => {
+      if (prev.some((file) => file.id === "dropped-notes")) return prev
+      return [
+        ...prev,
+        {
+          id: "dropped-notes",
+          name: "Release_Notes.md",
+          size: "18 KB",
+          type: "file",
+          status: "queued",
+          message: "Dropped",
+        },
+      ]
+    })
   }, [])
 
   const removeScopeItem = useCallback((id: string) => {
@@ -133,45 +242,46 @@ export default function InteractiveComposer({
     if (features.scopeBanner) return PLACEHOLDER_MAP.scope
     return PLACEHOLDER_MAP.default
   }
+  const hasIslands = features.plan || features.scopeBanner || features.replyTo
 
   return (
     <div
-      className={`relative flex flex-col ${showControls ? "min-h-[520px]" : ""}`}
+      className={cn(
+        "relative flex flex-col",
+        controls === "full" ? "min-h-[520px]" : "",
+        controls === "compact" ? "gap-1.5 sm:gap-4" : ""
+      )}
     >
-      {showControls && (
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 pb-6">
-          <span className="section-label mr-1">Controls</span>
-          {(
-            [
-              ["scopeBanner", "Scope"],
-              ["replyTo", "Reply-to"],
-              ["plan", "Plan"],
-              ["suggestions", "Suggestions"],
-              ["attachments", "Attachments"],
-            ] as const
-          ).map(([key, label]) => (
-            <button
-              key={key}
-              onClick={() => toggle(key)}
-              className={`relative rounded-md border px-2.5 py-1 text-xs transition-all duration-200 ${
-                features[key]
-                  ? "border-foreground/20 bg-foreground/[0.04] text-foreground"
-                  : "border-transparent text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-              } `}
-            >
-              {label}
-              {features[key] && (
-                <span className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-foreground/40" />
-              )}
-            </button>
-          ))}
-        </div>
+      {controls !== "none" && (
+        <PatternControls
+          options={[
+            { key: "scopeBanner", label: "Scope" },
+            { key: "replyTo", label: "Reply-to" },
+            { key: "plan", label: "Plan" },
+            { key: "suggestions", label: "Suggestions" },
+            { key: "attachments", label: "Attachments" },
+          ]}
+          active={features}
+          onToggle={(key) => toggle(key as keyof FeatureState)}
+          showLabel={controls === "full"}
+          density={controls === "compact" ? "compact" : "default"}
+          className={controls === "compact" ? "w-full pb-0" : "pb-6"}
+        />
       )}
 
-      {showControls && <div className="flex-1" />}
+      {controls === "full" && <div className="flex-1" />}
 
-      <Composer onSend={(text) => console.log("send:", text)}>
-        {(features.plan || features.scopeBanner || features.replyTo) && (
+      <Composer
+        value={draft}
+        onValueChange={setDraft}
+        canSend={draft.trim().length > 0 || files.length > 0}
+        onSend={(text) => {
+          console.log("send:", text)
+          setFiles([])
+          setFeatures((current) => ({ ...current, attachments: false }))
+        }}
+      >
+        {hasIslands && (
           <ComposerIslands>
             {features.plan && <ComposerPlan tasks={PLAN_TASKS} />}
             {features.scopeBanner && (
@@ -189,40 +299,78 @@ export default function InteractiveComposer({
           </ComposerIslands>
         )}
 
-        <ComposerCard>
+        <ComposerCard
+          className={
+            hasIslands
+              ? "rounded-t-none border-t-0 sm:rounded-t-none"
+              : undefined
+          }
+        >
           {features.attachments && (
-            <ComposerAttachments
-              files={MOCK_ATTACHMENTS}
-              onRemove={() => toggle("attachments")}
-            />
+            <div className="px-1.5 pt-1.5 sm:px-4 sm:pt-3" aria-live="polite">
+              <FileLifecycle.Root
+                className="border-0 bg-transparent sm:border sm:bg-background"
+                surface={fileSurface}
+                onDragEnter={(event) => {
+                  event.preventDefault()
+                  setFileSurface("dragging")
+                }}
+                onDragOver={(event) => {
+                  event.preventDefault()
+                  setFileSurface("dragging")
+                }}
+                onDragLeave={(event) => {
+                  if (
+                    event.currentTarget.contains(event.relatedTarget as Node)
+                  ) {
+                    return
+                  }
+                  setFileSurface("idle")
+                }}
+                onDrop={(event) => {
+                  event.preventDefault()
+                  addDroppedFile()
+                }}
+              >
+                <FileLifecycle.Dropzone className="border-b border-border/70 sm:border-b-0">
+                  <div className="flex flex-col gap-1 text-left">
+                    <p className="text-xs font-medium sm:text-sm">
+                      Files attached to this message
+                    </p>
+                    <p className="hidden text-xs leading-relaxed text-muted-foreground sm:block">
+                      Drop another source here, retry rejected files, or remove
+                      anything before sending.
+                    </p>
+                  </div>
+                </FileLifecycle.Dropzone>
+                <FileLifecycle.List>
+                  {files.map((file) => (
+                    <FileLifecycle.Item
+                      key={file.id}
+                      file={file}
+                      onRemove={removeFile}
+                      onRetry={retryFile}
+                    />
+                  ))}
+                </FileLifecycle.List>
+              </FileLifecycle.Root>
+            </div>
           )}
           <ComposerInput placeholder={getPlaceholder()} />
           <ComposerToolbar>
             <ComposerMenu>
               <DropdownMenuGroup>
                 <DropdownMenuLabel>Add to message</DropdownMenuLabel>
-                <DropdownMenuItem onClick={() => toggle("attachments")}>
-                  <HugeiconsIcon
-                    icon={File01Icon}
-                    size={14}
-                    strokeWidth={1.5}
-                  />
+                <DropdownMenuItem onClick={showAttachments}>
+                  <HugeiconsIcon icon={File01Icon} strokeWidth={1.5} />
                   Upload file
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => toggle("attachments")}>
-                  <HugeiconsIcon
-                    icon={Image01Icon}
-                    size={14}
-                    strokeWidth={1.5}
-                  />
+                <DropdownMenuItem onClick={showAttachments}>
+                  <HugeiconsIcon icon={Image01Icon} strokeWidth={1.5} />
                   Upload image
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <HugeiconsIcon
-                    icon={Attachment01Icon}
-                    size={14}
-                    strokeWidth={1.5}
-                  />
+                  <HugeiconsIcon icon={Attachment01Icon} strokeWidth={1.5} />
                   Paste from clipboard
                 </DropdownMenuItem>
               </DropdownMenuGroup>
@@ -230,19 +378,11 @@ export default function InteractiveComposer({
               <DropdownMenuGroup>
                 <DropdownMenuLabel>Connect</DropdownMenuLabel>
                 <DropdownMenuItem>
-                  <HugeiconsIcon
-                    icon={Plug01Icon}
-                    size={14}
-                    strokeWidth={1.5}
-                  />
+                  <HugeiconsIcon icon={Plug01Icon} strokeWidth={1.5} />
                   Add connector
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <HugeiconsIcon
-                    icon={Globe02Icon}
-                    size={14}
-                    strokeWidth={1.5}
-                  />
+                  <HugeiconsIcon icon={Globe02Icon} strokeWidth={1.5} />
                   Web search
                 </DropdownMenuItem>
               </DropdownMenuGroup>
@@ -259,19 +399,22 @@ export default function InteractiveComposer({
           </ComposerToolbar>
         </ComposerCard>
 
-        {features.suggestions && (
-          <ComposerSuggestions items={SUGGESTIONS} />
-        )}
+        {features.suggestions && <ComposerSuggestions items={SUGGESTIONS} />}
       </Composer>
-
-      {showControls && (
-        <div className="mt-3 mb-2 flex flex-wrap justify-center gap-x-5 gap-y-1 text-[11px] text-muted-foreground/40">
-          <span>Type to auto-expand</span>
-          <span>Enter to send</span>
-          <span>Shift+Enter for newline</span>
-          <span>Click suggestions to fill</span>
-        </div>
-      )}
     </div>
   )
 }
+
+export function ComposerPlayground() {
+  return <ComposerDemo presentation="playground" />
+}
+
+export function CompactComposerPlayground() {
+  return <ComposerDemo presentation="compact-playground" />
+}
+
+export function EmbeddedComposerDemo() {
+  return <ComposerDemo presentation="embedded" />
+}
+
+export default ComposerPlayground

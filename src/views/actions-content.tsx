@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { useState, useEffect, useCallback, useRef } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
@@ -12,7 +12,6 @@ import {
   CheckListIcon,
   Cancel01Icon,
   DragDropIcon,
-  SentIcon,
   Tick01Icon,
   TextIcon,
   CodeIcon,
@@ -26,9 +25,30 @@ import {
 } from "@/components/ui/tool-tree"
 import {
   ToolCall,
+  ToolCallTrigger,
   ToolCallLabel,
   ToolCallContent,
+  ToolCallError,
 } from "@/components/ui/tool-call"
+import { PatternControls as Controls } from "@/components/pattern-controls"
+import { ActionPreview } from "@/components/ui/action-preview"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import {
+  ClarifyingQuestions,
+  type ClarifyingQuestion,
+} from "@/components/ui/clarifying-questions"
+import { DecisionSurface } from "@/components/ui/decision-surface"
+import { Progress } from "@/components/ui/progress"
+import { Separator } from "@/components/ui/separator"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 
 /* ------------------------------------------------------------------ */
 /*  CSS Keyframes                                                      */
@@ -44,29 +64,29 @@ function ensureStyles() {
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    @keyframes actions-expand {
-      from { max-height: 0; opacity: 0; }
-      to { max-height: 600px; opacity: 1; }
-    }
-    @keyframes actions-collapse {
-      from { max-height: 600px; opacity: 1; }
-      to { max-height: 0; opacity: 0; }
+      @keyframes actions-expand {
+        from { opacity: 0; transform: translateY(-4px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes actions-collapse {
+        from { opacity: 1; transform: translateY(0); }
+        to { opacity: 0; transform: translateY(-4px); }
     }
     @keyframes actions-fade-in {
       from { opacity: 0; }
       to { opacity: 1; }
     }
-    @keyframes actions-progress {
-      from { width: 0%; }
-      to { width: var(--target-width); }
+      @keyframes actions-progress {
+        from { transform: scaleX(0); }
+        to { transform: scaleX(var(--target-scale)); }
     }
     @keyframes actions-pulse-dot {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.4; }
     }
-    @keyframes actions-timeline-fill {
-      from { width: 0%; }
-      to { width: 100%; }
+      @keyframes actions-timeline-fill {
+        from { transform: scaleX(0); }
+        to { transform: scaleX(1); }
     }
     @keyframes actions-step-enter {
       from { opacity: 0; transform: translateX(-6px); }
@@ -83,10 +103,19 @@ function ensureStyles() {
       animation: actions-fade-in 0.2s ease forwards;
     }
     .actions-pulse-dot {
-      animation: actions-pulse-dot 1.5s ease-in-out infinite;
+      animation: actions-pulse-dot 1.5s ease-in-out 3;
     }
     .actions-step-enter {
       animation: actions-step-enter 0.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .actions-slide-in,
+      .actions-expand,
+      .actions-fade-in,
+      .actions-pulse-dot,
+      .actions-step-enter {
+        animation: none;
+      }
     }
   `
   document.head.appendChild(style)
@@ -101,18 +130,18 @@ const TOOL_CALLS_DATA = [
     label: "Searching document repository",
     duration: "1.2s",
     details: [
-      { key: "Query", value: "active security requirements" },
+      { key: "Query", value: "active workflow requirements" },
       { key: "Results", value: "47 documents matched" },
-      { key: "Scope", value: "Security Target v3.1" },
+      { key: "Scope", value: "Project brief v3" },
     ],
   },
   {
-    label: "Loading Security Target definitions",
+    label: "Loading project brief definitions",
     duration: "0.4s",
     details: [
-      { key: "File", value: "ST-SmartCard-v3.1.pdf" },
-      { key: "SFRs parsed", value: "23 requirements" },
-      { key: "SARs parsed", value: "14 assurance components" },
+      { key: "File", value: "Project-Brief-v3.pdf" },
+      { key: "requirements parsed", value: "23 requirements" },
+      { key: "review criteria parsed", value: "14 review criteria" },
     ],
   },
   {
@@ -120,14 +149,17 @@ const TOOL_CALLS_DATA = [
     duration: "3.4s",
     details: [
       { key: "Test cases", value: "87 mapped" },
-      { key: "Unmapped SFRs", value: "2 (FPT_FLS.1, FDP_RIP.1)" },
+      {
+        key: "Unmapped requirements",
+        value: "2 (Fallback behavior, Cleanup behavior)",
+      },
     ],
   },
   {
     label: "Generating coverage matrix",
     duration: "0.9s",
     details: [
-      { key: "Coverage", value: "91.3% (21 of 23 SFRs)" },
+      { key: "Coverage", value: "91.3% (21 of 23 requirements)" },
       { key: "Output", value: "coverage-matrix-2026-03.xlsx" },
     ],
   },
@@ -142,15 +174,15 @@ const ERROR_TOOL = {
 
 const SUBAGENT_TOOLS = [
   {
-    label: "Checking ALC_CMC evidence",
+    label: "Checking source control source material",
     duration: "1.8s",
     details: [
       { key: "Documents", value: "CM Plan v2.3, CM Records" },
-      { key: "Status", value: "All evidence present" },
+      { key: "Status", value: "All source material present" },
     ],
   },
   {
-    label: "Checking ALC_DEL evidence",
+    label: "Checking delivery readiness source material",
     duration: "0.9s",
     details: [
       { key: "Documents", value: "Delivery procedures rev 4" },
@@ -158,121 +190,142 @@ const SUBAGENT_TOOLS = [
     ],
   },
   {
-    label: "Checking AVA_VAN evidence",
+    label: "Checking risk review source material",
     duration: "4.2s",
     details: [
-      { key: "Documents", value: "Vulnerability analysis report" },
+      { key: "Documents", value: "Risk analysis report" },
       { key: "Status", value: "Pending — 2 items missing" },
     ],
   },
 ]
 
 const PLAN_STEPS = [
-  "Load Security Target",
-  "Parse SFR definitions",
-  "Map test cases to SFRs",
+  "Load project brief",
+  "Parse requirement definitions",
+  "Map test cases to requirements",
   "Identify coverage gaps",
   "Generate report",
-  "Review with evaluator",
+  "Review with reviewer",
 ]
 
 const PARALLEL_TASKS = [
   {
     label: "Checking current git status in the project",
     details: [
-      { key: "Working dir", value: "/eval/smartcard-st-v3" },
-      { key: "Modified files", value: "3 (coverage-matrix.xlsx, SFR-map.json, notes.md)" },
+      { key: "Working dir", value: "/workspace/customer-portal" },
+      {
+        key: "Modified files",
+        value: "3 (coverage-matrix.xlsx, requirement-map.json, notes.md)",
+      },
       { key: "Untracked", value: "1 (test-results-2026-03.csv)" },
     ],
   },
   {
     label: "Checking remote configuration",
     details: [
-      { key: "Remote", value: "origin → git.itsef.local/eval/smartcard-st" },
+      {
+        key: "Remote",
+        value: "origin → git.example.com/product/customer-portal",
+      },
       { key: "Branch", value: "main (up to date)" },
       { key: "Last push", value: "2026-03-14 09:41 UTC" },
     ],
   },
   {
-    label: "Reading SFR coverage definitions",
+    label: "Reading requirement coverage definitions",
     details: [
-      { key: "File", value: "SFR-map.json" },
-      { key: "SFRs parsed", value: "23 requirements" },
+      { key: "File", value: "requirement-map.json" },
+      { key: "requirements parsed", value: "23 requirements" },
       { key: "Families", value: "FCS, FDP, FPT, FAU, FIA" },
     ],
   },
 ]
 
 const APPROVAL_EMAIL = {
-  recipient: "evaluation@bsi.bund.de",
-  subject: "ETR Submission — SmartCard TOE v3.1 (EAL4+)",
-  body: "Please find attached the Evaluation Technical Report for the SmartCard TOE v3.1 Security Target. This submission covers all CEM work units for EAL4+ with ALC_FLR.3 augmentation. The evaluation was conducted in accordance with CC v3.1 Rev 5.",
+  recipient: "project-team@example.com",
+  subject: "Launch Review — customer portal v3.1 (enterprise release)",
+  body: "Please find attached the Launch Review Summary for the customer portal v3.1 project brief. This submission covers all review checklist items for enterprise release with dedicated support coverage. The review was conducted using the current internal launch checklist.",
 }
 
 const APPROVAL_CHANGES = [
-  { type: "add" as const, text: "Added FCS_COP.1 coverage mapping for AES-256-GCM" },
-  { type: "add" as const, text: "Added test case TC-087 for cryptographic key destruction" },
-  { type: "remove" as const, text: "Removed deprecated FDP_ACF.1 iteration reference" },
-  { type: "add" as const, text: "Added AVA_VAN.3 vulnerability analysis summary" },
-  { type: "remove" as const, text: "Removed placeholder TOE boundary description" },
+  {
+    type: "add" as const,
+    text: "Added Export workflow coverage mapping for CSV and JSON exports",
+  },
+  {
+    type: "add" as const,
+    text: "Added test case TC-087 for stale export cleanup",
+  },
+  {
+    type: "remove" as const,
+    text: "Removed deprecated Access workflow iteration reference",
+  },
+  { type: "add" as const, text: "Added current risk review summary" },
+  {
+    type: "remove" as const,
+    text: "Removed placeholder product boundary description",
+  },
 ]
 
 const DECISION_OPTIONS = [
   {
     title: "Flag as finding",
-    desc: "Add to the non-conformity report for evaluator review in the next OR meeting.",
-    consequence: "Impact: Adds 1 open finding to the ETR. Requires vendor response within 10 days.",
+    desc: "Add to the open findings list for reviewer approval in the next review meeting.",
+    consequence:
+      "Impact: Adds 1 open finding to the launch summary. Requires team response within 10 days.",
   },
   {
-    title: "Request evidence",
-    desc: "Send an automated evidence request to the developer with a 5-day deadline.",
-    consequence: "Impact: Evaluation paused for FPT_STM.1 pending developer response.",
+    title: "Request source material",
+    desc: "Send an automated source request to the developer with a 5-day deadline.",
+    consequence:
+      "Impact: Review paused for Timestamp handling pending team response.",
   },
   {
     title: "Mark for later",
-    desc: "Add to the deferred items list for the next evaluation cycle.",
-    consequence: "Impact: No immediate delay. Risk carried forward to next cycle.",
+    desc: "Add to the deferred items list for the next review cycle.",
+    consequence:
+      "Impact: No immediate delay. Risk carried forward to next cycle.",
   },
 ]
 
-/* ------------------------------------------------------------------ */
-/*  Controls component                                                 */
-/* ------------------------------------------------------------------ */
+const CLARIFYING_OPTIONS = [
+  {
+    id: "support",
+    title: "Support readiness",
+    description: "Owners, coverage, response windows.",
+  },
+  {
+    id: "timeline",
+    title: "Timeline risk",
+    description: "Release date versus review milestones.",
+  },
+  {
+    id: "onboarding",
+    title: "Enterprise onboarding",
+    description: "Scope, owner, and success criteria.",
+  },
+  {
+    id: "open-assumptions",
+    title: "Open assumptions",
+    description: "Unresolved decisions before drafting.",
+  },
+] as const
 
-function Controls({
-  options,
-  active,
-  onToggle,
-}: {
-  options: { key: string; label: string }[]
-  active: Record<string, boolean>
-  onToggle: (key: string) => void
-}) {
-  return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 pb-5">
-      <span className="section-label mr-1">Controls</span>
-      {options.map((opt) => (
-        <button
-          key={opt.key}
-          onClick={() => onToggle(opt.key)}
-          className={`
-            relative text-xs px-2.5 py-1 rounded-md border transition-all duration-200
-            ${active[opt.key]
-              ? "border-foreground/20 bg-foreground/[0.04] text-foreground"
-              : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50"
-            }
-          `}
-        >
-          {opt.label}
-          {active[opt.key] && (
-            <span className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-foreground/40" />
-          )}
-        </button>
-      ))}
-    </div>
-  )
-}
-
+const CLARIFYING_QUESTION = {
+  id: "launch-areas",
+  label: "Which launch areas should I inspect before drafting findings?",
+  kind: "multiple",
+  options: CLARIFYING_OPTIONS.map((option) => ({
+    value: option.id,
+    label: option.title,
+    description: option.description,
+  })),
+  allowOther: true,
+  otherPlaceholder: "Describe a constraint, missing source, or review angle…",
+  layout: "inline",
+  chipPosition: "right",
+  nextLabel: "Continue",
+} satisfies ClarifyingQuestion
 
 /* ------------------------------------------------------------------ */
 /*  PlanStep sub-component                                             */
@@ -292,13 +345,13 @@ function PlanStep({
   onRemove?: () => void
 }) {
   return (
-    <div className="actions-step-enter flex items-center gap-2.5 py-1 group">
+    <div className="actions-step-enter group flex items-center gap-2.5 py-1">
       {editable && (
         <HugeiconsIcon
           icon={DragDropIcon}
           size={12}
           strokeWidth={1.5}
-          className="shrink-0 text-muted-foreground/30 cursor-grab"
+          className="shrink-0 cursor-grab text-muted-foreground/30"
         />
       )}
       <div
@@ -306,12 +359,12 @@ function PlanStep({
           state === "done"
             ? "bg-muted-foreground"
             : state === "active"
-              ? "bg-foreground actions-pulse-dot"
+              ? "actions-pulse-dot bg-foreground"
               : "bg-muted-foreground/30"
         }`}
       />
       <span
-        className={`text-sm flex-1 ${
+        className={`flex-1 text-sm ${
           state === "done"
             ? "text-muted-foreground line-through"
             : state === "active"
@@ -322,13 +375,16 @@ function PlanStep({
         {index + 1}. {label}
       </span>
       {editable && onRemove && (
-        <button
+        <Button
           type="button"
+          aria-label={`Remove step: ${label}`}
           onClick={onRemove}
-          className="shrink-0 opacity-0 group-hover:opacity-100 text-muted-foreground/40 hover:text-foreground transition-all"
+          variant="ghost"
+          size="icon-xs"
+          className="shrink-0 text-muted-foreground/40 hover:text-foreground"
         >
-          <HugeiconsIcon icon={Cancel01Icon} size={12} strokeWidth={1.5} />
-        </button>
+          <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.5} />
+        </Button>
       )}
     </div>
   )
@@ -342,64 +398,100 @@ export function ActionsContent() {
   useEffect(ensureStyles, [])
 
   /* ── Section 1: Tool Calls state ── */
-  const [toolState, setToolState] = useState({ expandAll: false, error: false, grouped: false })
+  const [toolState, setToolState] = useState({
+    expandAll: false,
+    error: false,
+    grouped: false,
+  })
 
   const toggleToolControl = useCallback((key: string) => {
-    setToolState((prev) => ({ ...prev, [key]: !prev[key as keyof typeof prev] }))
+    setToolState((prev) => ({
+      ...prev,
+      [key]: !prev[key as keyof typeof prev],
+    }))
   }, [])
 
   /* ── Section 2: Subagent state ── */
-  const [subagentState, setSubagentState] = useState({ running: true, complete: false })
+  const [subagentState, setSubagentState] = useState({
+    running: true,
+    complete: false,
+  })
   const [subagentProgress, setSubagentProgress] = useState(0)
   const [subagentOpen, setSubagentOpen] = useState(true)
   const progressRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  const toggleSubagentControl = useCallback((key: string) => {
-    setSubagentState((prev) => {
+  const toggleSubagentControl = useCallback(
+    (key: string) => {
       if (key === "running") {
-        return { running: !prev.running, complete: false }
+        setSubagentState({ running: !subagentState.running, complete: false })
+        setSubagentProgress(0)
+        return
       }
       if (key === "complete") {
-        return { running: false, complete: !prev.complete }
+        const nextComplete = !subagentState.complete
+        setSubagentState({ running: false, complete: nextComplete })
+        setSubagentProgress(nextComplete ? 8 : 0)
       }
-      return prev
-    })
-  }, [])
+    },
+    [subagentState.running, subagentState.complete]
+  )
 
   useEffect(() => {
-    if (progressRef.current) clearInterval(progressRef.current)
-    if (subagentState.complete) {
-      setSubagentProgress(8)
-      return
+    const stopProgress = () => {
+      if (progressRef.current) {
+        clearInterval(progressRef.current)
+        progressRef.current = null
+      }
     }
-    if (subagentState.running) {
-      setSubagentProgress(0)
+
+    const startProgress = () => {
+      if (!subagentState.running || document.hidden || progressRef.current) {
+        return
+      }
+
       progressRef.current = setInterval(() => {
         setSubagentProgress((prev) => {
-          if (prev >= 8) {
-            if (progressRef.current) clearInterval(progressRef.current)
-            return 8
+          const next = Math.min(prev + 1, 8)
+          if (next >= 8) {
+            stopProgress()
           }
-          return prev + 1
+          return next
         })
       }, 600)
-      return () => {
-        if (progressRef.current) clearInterval(progressRef.current)
-      }
-    } else {
-      setSubagentProgress(0)
     }
-  }, [subagentState.running, subagentState.complete])
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        stopProgress()
+        return
+      }
+      startProgress()
+    }
+
+    stopProgress()
+    startProgress()
+    document.addEventListener("visibilitychange", handleVisibilityChange)
+
+    return () => {
+      stopProgress()
+      document.removeEventListener("visibilitychange", handleVisibilityChange)
+    }
+  }, [subagentState.running])
 
   /* ── Section 3: Plan Cards state ── */
-  const [planState, setPlanState] = useState({ executing: true, editable: false })
+  const [planState, setPlanState] = useState({
+    executing: true,
+    editable: false,
+  })
   const [planSteps, setPlanSteps] = useState(PLAN_STEPS)
   const [activeStep, setActiveStep] = useState(3) // 0-indexed, step 4 is active
 
   const togglePlanControl = useCallback((key: string) => {
     setPlanState((prev) => {
-      if (key === "executing") return { executing: !prev.executing, editable: false }
-      if (key === "editable") return { executing: false, editable: !prev.editable }
+      if (key === "executing")
+        return { executing: !prev.executing, editable: false }
+      if (key === "editable")
+        return { executing: false, editable: !prev.editable }
       return prev
     })
     if (key === "editable") {
@@ -423,9 +515,14 @@ export function ActionsContent() {
   }, [])
 
   /* ── Section 4: Parallel Execution state ── */
-  const [parallelState, setParallelState] = useState({ sequential: false, parallel: true })
+  const [parallelState, setParallelState] = useState({
+    sequential: false,
+    parallel: true,
+  })
   const [treeOpen, setTreeOpen] = useState(true)
-  const [childExpanded, setChildExpanded] = useState<Record<number, boolean>>({})
+  const [childExpanded, setChildExpanded] = useState<Record<number, boolean>>(
+    {}
+  )
   const [parallelAnim, setParallelAnim] = useState(0)
 
   const toggleParallelControl = useCallback((key: string) => {
@@ -443,7 +540,10 @@ export function ActionsContent() {
   }, [])
 
   /* ── Section 5: Decision Flow state ── */
-  const [decisionState, setDecisionState] = useState({ pending: true, resolved: false })
+  const [decisionState, setDecisionState] = useState({
+    pending: true,
+    resolved: false,
+  })
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
 
   const toggleDecisionControl = useCallback((key: string) => {
@@ -456,33 +556,57 @@ export function ActionsContent() {
     }
   }, [])
 
-  /* ── Section 6: Structured Ask state ── */
+  /* ── Section 6: Clarifying Questions state ── */
   const [askState, setAskState] = useState({ open: true, answered: false })
-  const [askInput, setAskInput] = useState("")
+  const [selectedClarifications, setSelectedClarifications] = useState<
+    string[]
+  >(["support"])
+  const [askOther, setAskOther] = useState("")
   const [askSubmitted, setAskSubmitted] = useState(false)
 
   const toggleAskControl = useCallback((key: string) => {
     if (key === "open") {
       setAskState({ open: true, answered: false })
-      setAskInput("")
+      setSelectedClarifications(["support"])
+      setAskOther("")
       setAskSubmitted(false)
     } else {
       setAskState({ open: false, answered: true })
-      setAskInput("EAL4+ with ALC_FLR.3 augmentation")
+      setSelectedClarifications(["support", "timeline"])
+      setAskOther("Enterprise release with dedicated support coverage")
       setAskSubmitted(true)
     }
   }, [])
 
   const handleAskSubmit = useCallback(() => {
-    if (!askInput.trim()) return
+    if (selectedClarifications.length === 0 && !askOther.trim()) return
     setAskSubmitted(true)
     setAskState({ open: false, answered: true })
-  }, [askInput])
+  }, [askOther, selectedClarifications.length])
+
+  const handleAskSkip = useCallback(() => {
+    setSelectedClarifications([])
+    setAskOther("")
+    setAskSubmitted(true)
+    setAskState({ open: false, answered: true })
+  }, [])
+
+  const answeredClarifications = [
+    ...CLARIFYING_OPTIONS.filter((option) =>
+      selectedClarifications.includes(option.id)
+    ).map((option) => option.title),
+    ...(askOther.trim() ? [`Other: ${askOther.trim()}`] : []),
+  ]
 
   /* ── Section 7: Approval Gate state ── */
-  const [approvalCtrl, setApprovalCtrl] = useState({ email: true, changes: false })
+  const [approvalCtrl, setApprovalCtrl] = useState({
+    email: true,
+    changes: false,
+  })
   const [approvalAnim, setApprovalAnim] = useState(0)
-  const [approvalStatus, setApprovalStatus] = useState<"pending" | "approved" | "denied">("pending")
+  const [approvalStatus, setApprovalStatus] = useState<
+    "pending" | "approved" | "denied"
+  >("pending")
 
   const toggleApprovalControl = useCallback((key: string) => {
     setApprovalCtrl(() => {
@@ -497,13 +621,13 @@ export function ActionsContent() {
     <article>
       <header className="mb-20">
         <p className="section-label mb-4">Patterns</p>
-        <h1 className="font-serif text-4xl font-light tracking-tight leading-[1.15]">
+        <h1 className="font-serif text-4xl leading-[1.15] font-light tracking-tight">
           Agent Actions
         </h1>
         <p className="mt-4 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Tool calls, subagent orchestration, parallel execution, plan cards,
-          structured asks, decision flows, and approval gates for agent-driven
-          certification and compliance workflows.
+          clarifying questions, decision flows, and approval gates for
+          agent-driven approval and product workflows.
         </p>
       </header>
 
@@ -530,36 +654,62 @@ export function ActionsContent() {
             onToggle={toggleToolControl}
           />
 
-          <div className="border border-border/40 rounded-lg p-6">
-            <div className={`space-y-1.5 ${toolState.grouped ? "border-l-2 border-border pl-3" : ""}`}>
+          <div className="rounded-lg border border-border/40 p-6">
+            <div
+              className={`space-y-1.5 ${toolState.grouped ? "border-l-2 border-border pl-3" : ""}`}
+            >
               {toolState.error ? (
                 <>
-                  <ToolCall icon={Wrench01Icon} status="completed" timestamp={TOOL_CALLS_DATA[0].duration}>
-                    <ToolCallLabel>{TOOL_CALLS_DATA[0].label}</ToolCallLabel>
+                  <ToolCall
+                    icon={Wrench01Icon}
+                    status="completed"
+                    timestamp={TOOL_CALLS_DATA[0].duration}
+                  >
+                    <ToolCallTrigger>
+                      <ToolCallLabel>{TOOL_CALLS_DATA[0].label}</ToolCallLabel>
+                    </ToolCallTrigger>
                     <ToolCallContent>
                       <div className="space-y-1 text-xs">
                         {TOOL_CALLS_DATA[0].details.map((d) => (
                           <div key={d.key} className="flex gap-2">
-                            <span className="text-muted-foreground">{d.key}:</span>
+                            <span className="text-muted-foreground">
+                              {d.key}:
+                            </span>
                             <span className="text-foreground">{d.value}</span>
                           </div>
                         ))}
                       </div>
                     </ToolCallContent>
                   </ToolCall>
-                  <ToolCall icon={Wrench01Icon} status="failed" error={ERROR_TOOL.error} timestamp={ERROR_TOOL.duration}>
-                    <ToolCallLabel>{ERROR_TOOL.label}</ToolCallLabel>
+                  <ToolCall
+                    icon={Wrench01Icon}
+                    status="failed"
+                    timestamp={ERROR_TOOL.duration}
+                  >
+                    <ToolCallTrigger>
+                      <ToolCallLabel>{ERROR_TOOL.label}</ToolCallLabel>
+                    </ToolCallTrigger>
+                    <ToolCallError>{ERROR_TOOL.error}</ToolCallError>
                   </ToolCall>
                 </>
               ) : (
                 TOOL_CALLS_DATA.map((tool) => (
-                  <ToolCall key={tool.label} icon={Wrench01Icon} status="completed" timestamp={tool.duration}>
-                    <ToolCallLabel>{tool.label}</ToolCallLabel>
+                  <ToolCall
+                    key={tool.label}
+                    icon={Wrench01Icon}
+                    status="completed"
+                    timestamp={tool.duration}
+                  >
+                    <ToolCallTrigger>
+                      <ToolCallLabel>{tool.label}</ToolCallLabel>
+                    </ToolCallTrigger>
                     <ToolCallContent>
                       <div className="space-y-1 text-xs">
                         {tool.details.map((d) => (
                           <div key={d.key} className="flex gap-2">
-                            <span className="text-muted-foreground">{d.key}:</span>
+                            <span className="text-muted-foreground">
+                              {d.key}:
+                            </span>
                             <span className="text-foreground">{d.value}</span>
                           </div>
                         ))}
@@ -573,38 +723,54 @@ export function ActionsContent() {
         </div>
 
         {/* Spec table */}
-        <table className="mt-10 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">
+        <Table className="mt-10 w-full text-sm">
+          <TableHeader>
+            <TableRow className="border-b border-border">
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
                 Property
-              </th>
-              <th className="pb-3 text-left text-xs font-medium text-muted-foreground">
+              </TableHead>
+              <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
                 Spec
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {[
               ["Tool title", "14px sans, font-weight 400 (never bold)"],
               ["Inner detail text", "12px, key in muted, value in foreground"],
               ["Icons", "All monochrome — no colored status indicators"],
-              ["Labels", "Human-readable only — no function signatures or code"],
-              ["Duration", "Right-aligned in muted text; errors show \"failed ·\" prefix"],
-              ["Interaction", "Click anywhere on the header row to expand/collapse"],
+              [
+                "Labels",
+                "Human-readable only — no function signatures or code",
+              ],
+              [
+                "Duration",
+                'Right-aligned in muted text; errors show "failed ·" prefix',
+              ],
+              [
+                "Interaction",
+                "Click anywhere on the header row to expand/collapse",
+              ],
             ].map(([prop, spec], i, arr) => (
-              <tr key={prop} className={i < arr.length - 1 ? "border-b border-border/50" : ""}>
-                <td className="py-3 pr-6 font-medium">{prop}</td>
-                <td className="py-3 text-muted-foreground">{spec}</td>
-              </tr>
+              <TableRow
+                key={prop}
+                className={
+                  i < arr.length - 1 ? "border-b border-border/50" : ""
+                }
+              >
+                <TableCell className="py-3 pr-6 font-medium">{prop}</TableCell>
+                <TableCell className="py-3 text-muted-foreground">
+                  {spec}
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
 
-        <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          Tool calls should feel like quiet status updates, not system logs.
-          The user glances at them during execution and digs in only when
-          something looks wrong.
+        <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
+          Tool calls should feel like quiet status updates, not system logs. The
+          user glances at them during execution and digs in only when something
+          looks wrong.
         </p>
       </section>
 
@@ -631,7 +797,7 @@ export function ActionsContent() {
             onToggle={toggleSubagentControl}
           />
 
-          <div className="border border-border/40 rounded-lg p-6">
+          <div className="rounded-lg border border-border/40 p-6">
             <div className="rounded-md border border-border/40">
               <button
                 type="button"
@@ -644,16 +810,14 @@ export function ActionsContent() {
                   strokeWidth={1.5}
                   className="shrink-0 text-muted-foreground"
                 />
-                <span className="text-sm font-normal">
-                  Evidence Verification Agent
-                </span>
-                <span className="rounded-md bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
+                <span className="text-sm font-normal">Source Review Agent</span>
+                <Badge variant="secondary">
                   {subagentProgress >= 8
                     ? "complete"
                     : `${subagentProgress} of 8 families`}
-                </span>
+                </Badge>
                 {subagentState.running && subagentProgress < 8 && (
-                  <span className="h-1.5 w-1.5 rounded-full bg-foreground/40 actions-pulse-dot" />
+                  <span className="actions-pulse-dot h-1.5 w-1.5 rounded-full bg-foreground/40" />
                 )}
                 <HugeiconsIcon
                   icon={ArrowDown01Icon}
@@ -666,29 +830,35 @@ export function ActionsContent() {
               </button>
 
               {subagentOpen && (
-                <div className="actions-expand border-t border-border/40 px-3 py-3 space-y-2">
+                <div className="actions-expand flex flex-col gap-2 px-3 py-3">
+                  <Separator />
                   <p className="text-xs text-muted-foreground">
-                    Validating completeness and traceability of evaluation
-                    evidence for each assurance family.
+                    Validating completeness and traceability of review source
+                    material for each review area.
                   </p>
-                  {/* Progress bar */}
-                  <div className="h-1 rounded-md bg-muted">
-                    <div
-                      className="h-1 rounded-md bg-foreground/40 transition-all duration-500"
-                      style={{ width: `${(subagentProgress / 8) * 100}%` }}
-                    />
-                  </div>
+                  <Progress value={(subagentProgress / 8) * 100} />
                   {/* Nested tool calls */}
-                  <div className="mt-2 space-y-1.5 pl-2 border-l border-border/60">
+                  <div className="mt-2 flex flex-col gap-1.5 border-l border-border/60 pl-2">
                     {SUBAGENT_TOOLS.map((tool) => (
-                      <ToolCall key={tool.label} icon={Wrench01Icon} status="completed" timestamp={tool.duration}>
-                        <ToolCallLabel>{tool.label}</ToolCallLabel>
+                      <ToolCall
+                        key={tool.label}
+                        icon={Wrench01Icon}
+                        status="completed"
+                        timestamp={tool.duration}
+                      >
+                        <ToolCallTrigger>
+                          <ToolCallLabel>{tool.label}</ToolCallLabel>
+                        </ToolCallTrigger>
                         <ToolCallContent>
-                          <div className="space-y-1 text-xs">
+                          <div className="flex flex-col gap-1 text-xs">
                             {tool.details.map((d) => (
                               <div key={d.key} className="flex gap-2">
-                                <span className="text-muted-foreground">{d.key}:</span>
-                                <span className="text-foreground">{d.value}</span>
+                                <span className="text-muted-foreground">
+                                  {d.key}:
+                                </span>
+                                <span className="text-foreground">
+                                  {d.value}
+                                </span>
                               </div>
                             ))}
                           </div>
@@ -703,37 +873,53 @@ export function ActionsContent() {
         </div>
 
         {/* Spec table */}
-        <table className="mt-10 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">
+        <Table className="mt-10 w-full text-sm">
+          <TableHeader>
+            <TableRow className="border-b border-border">
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
                 Property
-              </th>
-              <th className="pb-3 text-left text-xs font-medium text-muted-foreground">
+              </TableHead>
+              <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
                 Spec
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {[
-              ["Progress format", "\"N of M unit\" — concrete, not percentage-based"],
-              ["Completion", "\"complete\" badge replaces the progress count"],
-              ["Running indicator", "Pulsing dot next to the badge while in-progress"],
+              [
+                "Progress format",
+                '"N of M unit" — concrete, not percentage-based',
+              ],
+              ["Completion", '"complete" badge replaces the progress count'],
+              [
+                "Running indicator",
+                "Pulsing dot next to the badge while in-progress",
+              ],
               ["Nesting", "Nested tool calls inherit the same collapsed style"],
-              ["Progress bar", "1px foreground/40 bar with transition-all duration-500"],
+              [
+                "Progress bar",
+                "1px foreground/40 bar with transition-transform duration-500",
+              ],
             ].map(([prop, spec], i, arr) => (
-              <tr key={prop} className={i < arr.length - 1 ? "border-b border-border/50" : ""}>
-                <td className="py-3 pr-6 font-medium">{prop}</td>
-                <td className="py-3 text-muted-foreground">{spec}</td>
-              </tr>
+              <TableRow
+                key={prop}
+                className={
+                  i < arr.length - 1 ? "border-b border-border/50" : ""
+                }
+              >
+                <TableCell className="py-3 pr-6 font-medium">{prop}</TableCell>
+                <TableCell className="py-3 text-muted-foreground">
+                  {spec}
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
 
-        <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          Subagent cards let users monitor delegated work without leaving
-          their current context. The progress bar provides glanceable status
-          while nested tools offer drill-down detail.
+        <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
+          Subagent cards let users monitor delegated work without leaving their
+          current context. The progress bar provides glanceable status while
+          nested tools offer drill-down detail.
         </p>
       </section>
 
@@ -759,7 +945,7 @@ export function ActionsContent() {
             onToggle={togglePlanControl}
           />
 
-          <div className="border border-border/40 rounded-lg p-6">
+          <div className="rounded-lg border border-border/40 p-6">
             <div className="mb-3 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <HugeiconsIcon
@@ -769,16 +955,16 @@ export function ActionsContent() {
                   className="text-muted-foreground"
                 />
                 <span className="text-sm font-medium">
-                  CC Evaluation Coverage Report
+                  Launch Coverage Report
                 </span>
               </div>
-              <span className="rounded-md bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+              <Badge variant="secondary">
                 {planState.executing
                   ? `${Math.min(activeStep, planSteps.length)} of ${planSteps.length} complete`
                   : planState.editable
                     ? `${planSteps.length} steps`
                     : `${planSteps.length} steps`}
-              </span>
+              </Badge>
             </div>
 
             <div className="space-y-0">
@@ -806,81 +992,99 @@ export function ActionsContent() {
             </div>
 
             {planState.editable && (
-              <div className="mt-3 flex gap-2 actions-fade-in">
-                <button
+              <div className="actions-fade-in mt-3 flex gap-2">
+                <Button
                   type="button"
                   onClick={() => movePlanStep(0, 1)}
-                  className="rounded-md border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent"
+                  variant="outline"
+                  size="xs"
                 >
                   Reorder steps
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
-                  onClick={() =>
-                    setPlanSteps((prev) => [...prev, "New step"])
-                  }
-                  className="rounded-md border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent"
+                  onClick={() => setPlanSteps((prev) => [...prev, "New step"])}
+                  variant="outline"
+                  size="xs"
                 >
                   + Add step
-                </button>
+                </Button>
               </div>
             )}
 
             {planState.executing && (
-              <div className="mt-3 flex gap-2 actions-fade-in">
-                <button
+              <div className="actions-fade-in mt-3 flex gap-2">
+                <Button
                   type="button"
                   onClick={() =>
                     setActiveStep((prev) =>
-                      prev < planSteps.length ? prev + 1 : prev,
+                      prev < planSteps.length ? prev + 1 : prev
                     )
                   }
-                  className="rounded-md border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent"
+                  variant="outline"
+                  size="xs"
                 >
                   Advance step
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
                   onClick={() => setActiveStep(0)}
-                  className="rounded-md border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent"
+                  variant="outline"
+                  size="xs"
                 >
                   Reset
-                </button>
+                </Button>
               </div>
             )}
           </div>
         </div>
 
         {/* Spec table */}
-        <table className="mt-10 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">
+        <Table className="mt-10 w-full text-sm">
+          <TableHeader>
+            <TableRow className="border-b border-border">
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
                 Property
-              </th>
-              <th className="pb-3 text-left text-xs font-medium text-muted-foreground">
+              </TableHead>
+              <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
                 Spec
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {[
-              ["Step indicator", "6px square dot, rounded-sm — not a checkbox or number"],
+              [
+                "Step indicator",
+                "6px square dot, rounded-sm — not a checkbox or number",
+              ],
               ["Done state", "Muted foreground + line-through"],
               ["Active state", "Foreground + pulse animation"],
               ["Pending state", "Muted foreground at 60% opacity"],
-              ["Editable mode", "Drag handle + remove button on hover per step"],
-              ["Progress badge", "\"N of M complete\" or step count in editable mode"],
+              [
+                "Editable mode",
+                "Drag handle + remove button on hover per step",
+              ],
+              [
+                "Progress badge",
+                '"N of M complete" or step count in editable mode',
+              ],
             ].map(([prop, spec], i, arr) => (
-              <tr key={prop} className={i < arr.length - 1 ? "border-b border-border/50" : ""}>
-                <td className="py-3 pr-6 font-medium">{prop}</td>
-                <td className="py-3 text-muted-foreground">{spec}</td>
-              </tr>
+              <TableRow
+                key={prop}
+                className={
+                  i < arr.length - 1 ? "border-b border-border/50" : ""
+                }
+              >
+                <TableCell className="py-3 pr-6 font-medium">{prop}</TableCell>
+                <TableCell className="py-3 text-muted-foreground">
+                  {spec}
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
 
-        <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
+        <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
           Plan cards give users a sense of progress and predictability. The
           editable mode allows corrections before the agent commits to an
           approach — a key trust-building pattern.
@@ -896,9 +1100,9 @@ export function ActionsContent() {
           Parallel Execution
         </h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-          IDE-style tree connectors for operations running concurrently.
-          The parent row collapses the branch; each child expands to show
-          tool call details inline.
+          IDE-style tree connectors for operations running concurrently. The
+          parent row collapses the branch; each child expands to show tool call
+          details inline.
         </p>
 
         <div className="mt-10">
@@ -911,23 +1115,40 @@ export function ActionsContent() {
             onToggle={toggleParallelControl}
           />
 
-          <div key={parallelAnim} className="border border-border/40 rounded-lg p-6">
+          <div
+            key={parallelAnim}
+            className="rounded-lg border border-border/40 p-6"
+          >
             {parallelState.parallel ? (
               <div className="actions-slide-in">
                 <ToolTree open={treeOpen} onOpenChange={setTreeOpen}>
-                  <ToolTreeTrigger icon={GitBranchIcon} timestamp="10:44 AM · 1s">
+                  <ToolTreeTrigger
+                    icon={GitBranchIcon}
+                    timestamp="10:44 AM · 1s"
+                  >
                     Running tasks in parallel
                   </ToolTreeTrigger>
                   <ToolTreeContent>
                     {PARALLEL_TASKS.map((task) => (
-                      <ToolCall key={task.label} icon={TextIcon} status="completed" timestamp="10:44 AM · 1s">
-                        <ToolCallLabel>{task.label}</ToolCallLabel>
+                      <ToolCall
+                        key={task.label}
+                        icon={TextIcon}
+                        status="completed"
+                        timestamp="10:44 AM · 1s"
+                      >
+                        <ToolCallTrigger>
+                          <ToolCallLabel>{task.label}</ToolCallLabel>
+                        </ToolCallTrigger>
                         <ToolCallContent>
                           <div className="space-y-1 text-xs">
                             {task.details.map((d) => (
                               <div key={d.key} className="flex gap-2">
-                                <span className="text-muted-foreground">{d.key}:</span>
-                                <span className="text-foreground">{d.value}</span>
+                                <span className="text-muted-foreground">
+                                  {d.key}:
+                                </span>
+                                <span className="text-foreground">
+                                  {d.value}
+                                </span>
                               </div>
                             ))}
                           </div>
@@ -940,7 +1161,7 @@ export function ActionsContent() {
             ) : (
               /* Sequential mode — flat list */
               <div className="actions-slide-in">
-                <div className="flex items-center gap-2.5 mb-3">
+                <div className="mb-3 flex items-center gap-2.5">
                   <HugeiconsIcon
                     icon={ArrowDown01Icon}
                     size={14}
@@ -979,12 +1200,16 @@ export function ActionsContent() {
                         />
                       </button>
                       {childExpanded[i] && (
-                        <div className="actions-expand ml-[21px] mt-1 mb-1">
+                        <div className="actions-expand mt-1 mb-1 ml-[21px]">
                           <div className="space-y-1 rounded-md border border-border/40 px-3 py-2.5">
                             {task.details.map((d) => (
                               <div key={d.key} className="flex gap-2 text-xs">
-                                <span className="text-muted-foreground">{d.key}:</span>
-                                <span className="text-foreground">{d.value}</span>
+                                <span className="text-muted-foreground">
+                                  {d.key}:
+                                </span>
+                                <span className="text-foreground">
+                                  {d.value}
+                                </span>
                               </div>
                             ))}
                           </div>
@@ -999,39 +1224,64 @@ export function ActionsContent() {
         </div>
 
         {/* Spec table */}
-        <table className="mt-10 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">
+        <Table className="mt-10 w-full text-sm">
+          <TableHeader>
+            <TableRow className="border-b border-border">
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
                 Element
-              </th>
-              <th className="pb-3 text-left text-xs font-medium text-muted-foreground">
+              </TableHead>
+              <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
                 Spec
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {[
-              ["Vertical spine", "1px line from parent icon to last child, masked by bg-background behind each icon"],
-              ["L-connectors", "rounded-bl-lg border-l + border-b connecting spine to each child"],
-              ["Icon masking", "size-6 bg-background circle behind size-5 icon creates clean spine breaks"],
-              ["Hover state", "Row label and icon transition to text-foreground; timestamp fades in on right"],
-              ["Last child", "bg-background mask covers spine below the final L-bend"],
-              ["Sequential fallback", "Flat list of bordered rows, no tree connectors"],
+              [
+                "Vertical spine",
+                "1px line from parent icon to last child, masked by bg-background behind each icon",
+              ],
+              [
+                "L-connectors",
+                "rounded-bl-lg border-l + border-b connecting spine to each child",
+              ],
+              [
+                "Icon masking",
+                "size-6 bg-background circle behind size-5 icon creates clean spine breaks",
+              ],
+              [
+                "Hover state",
+                "Row label and icon transition to text-foreground; timestamp fades in on right",
+              ],
+              [
+                "Last child",
+                "bg-background mask covers spine below the final L-bend",
+              ],
+              [
+                "Sequential fallback",
+                "Flat list of bordered rows, no tree connectors",
+              ],
             ].map(([el, spec], i, arr) => (
-              <tr key={el} className={i < arr.length - 1 ? "border-b border-border/50" : ""}>
-                <td className="py-3 pr-6 font-medium">{el}</td>
-                <td className="py-3 text-muted-foreground">{spec}</td>
-              </tr>
+              <TableRow
+                key={el}
+                className={
+                  i < arr.length - 1 ? "border-b border-border/50" : ""
+                }
+              >
+                <TableCell className="py-3 pr-6 font-medium">{el}</TableCell>
+                <TableCell className="py-3 text-muted-foreground">
+                  {spec}
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
 
-        <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          The tree view uses Perplexity-style connectors — a vertical spine
-          with L-shaped branch lines, icons that mask the spine for clean
-          breaks, and hover-revealed timestamps. Each child row is
-          lightweight: no borders, no cards, just text and an expand chevron.
+        <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
+          The tree view uses Perplexity-style connectors — a vertical spine with
+          L-shaped branch lines, icons that mask the spine for clean breaks, and
+          hover-revealed timestamps. Each child row is lightweight: no borders,
+          no cards, just text and an expand chevron.
         </p>
       </section>
 
@@ -1040,9 +1290,7 @@ export function ActionsContent() {
       {/* ============================================================ */}
       <section id="decisions" className="page-section">
         <p className="section-label mb-3">Decisions</p>
-        <h2 className="text-xl font-semibold tracking-tight">
-          Decision Flow
-        </h2>
+        <h2 className="text-xl font-semibold tracking-tight">Decision Flow</h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           When the agent needs the user to choose between options that have
           different consequences. Each option shows what will happen if
@@ -1059,7 +1307,7 @@ export function ActionsContent() {
             onToggle={toggleDecisionControl}
           />
 
-          <div className="border border-border/40 rounded-lg p-6 space-y-3">
+          <div className="space-y-3 rounded-lg border border-border/40 p-6">
             <div className="flex items-start gap-2">
               <HugeiconsIcon
                 icon={Alert01Icon}
@@ -1068,7 +1316,8 @@ export function ActionsContent() {
                 className="mt-0.5 shrink-0 text-muted-foreground"
               />
               <p className="text-sm">
-                How should I handle the missing audit log entries for FPT_STM.1?
+                How should I handle the missing audit log entries for Timestamp
+                handling?
               </p>
             </div>
 
@@ -1092,7 +1341,7 @@ export function ActionsContent() {
                     <p className="mt-1 text-xs text-muted-foreground">
                       {opt.desc}
                     </p>
-                    <div className="mt-2 border-l-2 border-muted-foreground/15 pl-2.5 py-1">
+                    <div className="mt-2 border-l-2 border-muted-foreground/15 py-1 pl-2.5">
                       <div className="flex items-start gap-1.5">
                         <HugeiconsIcon
                           icon={ArrowRight01Icon}
@@ -1135,7 +1384,9 @@ export function ActionsContent() {
                     strokeWidth={1.5}
                     className="shrink-0"
                   />
-                  <span>Decision confirmed — proceeding with selected action</span>
+                  <span>
+                    Decision confirmed — proceeding with selected action
+                  </span>
                 </div>
               </div>
             )}
@@ -1143,51 +1394,74 @@ export function ActionsContent() {
         </div>
 
         {/* Spec table */}
-        <table className="mt-10 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">
+        <Table className="mt-10 w-full text-sm">
+          <TableHeader>
+            <TableRow className="border-b border-border">
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
                 Pattern
-              </th>
-              <th className="pb-3 text-left text-xs font-medium text-muted-foreground">
+              </TableHead>
+              <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
                 Spec
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {[
-              ["Pending state", "All options clickable with hover effect and consequence preview"],
-              ["Resolved state", "Selected option highlighted, others hidden, confirmation shown"],
-              ["Selected card", "Primary border + subtle primary background tint"],
-              ["Consequence previews", "Border-left callout with arrow indicator inside each option"],
-              ["Auto-selection", "Never auto-select — always wait for explicit user choice"],
+              [
+                "Pending state",
+                "All options clickable with hover effect and consequence preview",
+              ],
+              [
+                "Resolved state",
+                "Selected option highlighted, others hidden, confirmation shown",
+              ],
+              [
+                "Selected card",
+                "Primary border + subtle primary background tint",
+              ],
+              [
+                "Consequence previews",
+                "Border-left callout with arrow indicator inside each option",
+              ],
+              [
+                "Auto-selection",
+                "Never auto-select — always wait for explicit user choice",
+              ],
             ].map(([pat, spec], i, arr) => (
-              <tr key={pat} className={i < arr.length - 1 ? "border-b border-border/50" : ""}>
-                <td className="py-3 pr-6 font-medium">{pat}</td>
-                <td className="py-3 text-muted-foreground">{spec}</td>
-              </tr>
+              <TableRow
+                key={pat}
+                className={
+                  i < arr.length - 1 ? "border-b border-border/50" : ""
+                }
+              >
+                <TableCell className="py-3 pr-6 font-medium">{pat}</TableCell>
+                <TableCell className="py-3 text-muted-foreground">
+                  {spec}
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
 
-        <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          Decisions are the highest-trust pattern in the system — they grant
-          the user explicit control over how the agent proceeds. Never bypass
-          them with auto-selection or hidden defaults.
+        <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
+          Decisions are the highest-trust pattern in the system — they grant the
+          user explicit control over how the agent proceeds. Never bypass them
+          with auto-selection or hidden defaults.
         </p>
       </section>
 
       {/* ============================================================ */}
-      {/*  Section 6 — Structured Ask                                  */}
+      {/*  Section 6 — Clarifying Questions                            */}
       {/* ============================================================ */}
       <section id="ask-blocks" className="page-section">
-        <p className="section-label mb-3">Input</p>
+        <p className="section-label mb-3">Clarification</p>
         <h2 className="text-xl font-semibold tracking-tight">
-          Structured Ask
+          Clarifying Questions
         </h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-          When the agent needs specific text input from the user to proceed.
-          Shows a prompt with context and a typed input field.
+          When the agent is blocked by missing intent, ask a focused question
+          with answerable options, optional free text, and a clear skip path.
+          This keeps clarification out of a vague back-and-forth chat loop.
         </p>
 
         <div className="mt-10">
@@ -1200,119 +1474,127 @@ export function ActionsContent() {
             onToggle={toggleAskControl}
           />
 
-          <div className="border border-border/40 rounded-lg p-6 space-y-4">
-            <div className="flex items-start gap-2">
-              <HugeiconsIcon
-                icon={TextIcon}
-                size={14}
-                strokeWidth={1.5}
-                className="mt-0.5 shrink-0 text-muted-foreground"
+          {!askSubmitted ? (
+            <ClarifyingQuestions.Root
+              className="actions-fade-in mt-5"
+              onSubmit={(event) => {
+                event.preventDefault()
+                handleAskSubmit()
+              }}
+            >
+              <ClarifyingQuestions.Step
+                question={CLARIFYING_QUESTION}
+                index={0}
+                total={1}
+                value={selectedClarifications}
+                otherValue={askOther}
+                onValueChange={(_, value) =>
+                  setSelectedClarifications(
+                    Array.isArray(value) ? value : value ? [value] : []
+                  )
+                }
+                onOtherValueChange={(_, value) => setAskOther(value)}
+                onSkip={handleAskSkip}
+                onContinue={handleAskSubmit}
               />
-              <div>
-                <p className="text-sm">
-                  What assurance level should I target for the evaluation?
-                </p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  This determines the depth of analysis for each SFR family
-                  and the applicable CEM work units.
-                </p>
+            </ClarifyingQuestions.Root>
+          ) : (
+            <div className="actions-fade-in mt-5 flex flex-col gap-3 rounded-lg border border-border/40 p-3 sm:p-4">
+              <div className="rounded-md border border-foreground/20 bg-foreground/[0.04] px-3 py-2.5">
+                {answeredClarifications.length > 0 ? (
+                  <div className="flex flex-wrap gap-1.5">
+                    {answeredClarifications.map((answer) => (
+                      <span
+                        key={answer}
+                        className="inline-flex items-center gap-1.5 rounded-md border border-border/60 px-2 py-1 text-xs text-foreground"
+                      >
+                        <HugeiconsIcon
+                          icon={Tick01Icon}
+                          size={12}
+                          strokeWidth={1.5}
+                          className="shrink-0 text-muted-foreground"
+                        />
+                        {answer}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <span className="text-sm text-muted-foreground">
+                    Clarification skipped
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <HugeiconsIcon
+                  icon={Tick01Icon}
+                  size={12}
+                  strokeWidth={1.5}
+                  className="shrink-0"
+                />
+                <span>Answer recorded — continuing with scoped analysis</span>
               </div>
             </div>
-
-            {!askSubmitted ? (
-              <div className="actions-fade-in space-y-3">
-                <div className="space-y-1">
-                  <label className="text-xs font-medium text-muted-foreground">
-                    Target assurance level
-                  </label>
-                  <input
-                    type="text"
-                    value={askInput}
-                    onChange={(e) => setAskInput(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") handleAskSubmit()
-                    }}
-                    placeholder="e.g., EAL4+ with ALC_FLR.3"
-                    className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none placeholder:text-muted-foreground/50 focus:border-foreground/20"
-                  />
-                </div>
-                <button
-                  type="button"
-                  onClick={handleAskSubmit}
-                  disabled={!askInput.trim()}
-                  className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm transition-colors ${
-                    askInput.trim()
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground cursor-not-allowed"
-                  }`}
-                >
-                  <HugeiconsIcon
-                    icon={SentIcon}
-                    size={12}
-                    strokeWidth={1.5}
-                  />
-                  Submit
-                </button>
-              </div>
-            ) : (
-              <div className="actions-fade-in space-y-3">
-                <div className="rounded-md border border-primary bg-primary/5 px-3 py-2.5">
-                  <div className="flex items-center gap-2">
-                    <HugeiconsIcon
-                      icon={Tick01Icon}
-                      size={14}
-                      strokeWidth={1.5}
-                      className="shrink-0 text-muted-foreground"
-                    />
-                    <span className="text-sm">{askInput}</span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <HugeiconsIcon
-                    icon={Tick01Icon}
-                    size={12}
-                    strokeWidth={1.5}
-                    className="shrink-0"
-                  />
-                  <span>Input received — continuing with analysis</span>
-                </div>
-              </div>
-            )}
-          </div>
+          )}
         </div>
 
         {/* Spec table */}
-        <table className="mt-10 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">
+        <Table className="mt-10 w-full text-sm">
+          <TableHeader>
+            <TableRow className="border-b border-border">
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
                 Property
-              </th>
-              <th className="pb-3 text-left text-xs font-medium text-muted-foreground">
+              </TableHead>
+              <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
                 Spec
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {[
-              ["Open state", "Text input with placeholder, submit button disabled until input"],
-              ["Answered state", "Selected answer highlighted in primary/5 card with check"],
-              ["Input field", "Standard border, bg-background, focus:border-foreground/20"],
-              ["Context", "Muted explanation below the question helps inform the answer"],
-              ["Submit", "Enter key or button click; button disabled when empty"],
+              [
+                "Question shape",
+                "One focused question with 2-5 answerable options",
+              ],
+              [
+                "Selection",
+                "Single or multi-select rows with explicit selected state",
+              ],
+              [
+                "Other input",
+                "Inline textarea for constraints that do not fit the options",
+              ],
+              [
+                "Skip path",
+                "Visible skip control when the agent can continue with defaults",
+              ],
+              [
+                "Submit",
+                "Continue disabled until an option or free-text answer exists",
+              ],
+              [
+                "Answered state",
+                "Selected answers collapse into readable chips before work resumes",
+              ],
             ].map(([prop, spec], i, arr) => (
-              <tr key={prop} className={i < arr.length - 1 ? "border-b border-border/50" : ""}>
-                <td className="py-3 pr-6 font-medium">{prop}</td>
-                <td className="py-3 text-muted-foreground">{spec}</td>
-              </tr>
+              <TableRow
+                key={prop}
+                className={
+                  i < arr.length - 1 ? "border-b border-border/50" : ""
+                }
+              >
+                <TableCell className="py-3 pr-6 font-medium">{prop}</TableCell>
+                <TableCell className="py-3 text-muted-foreground">
+                  {spec}
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
 
-        <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          Structured asks are for when the agent needs free-text input that
-          cannot be reduced to a set of predefined options. Always provide
-          context so the user understands what format is expected.
+        <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
+          Clarifying questions should reduce ambiguity, not create a survey.
+          Prefer choices when the agent can name the likely answers. Use the
+          free-text row only for constraints, missing context, or edge cases.
         </p>
       </section>
 
@@ -1321,9 +1603,7 @@ export function ActionsContent() {
       {/* ============================================================ */}
       <section id="approval-gate" className="page-section">
         <p className="section-label mb-3">Confirmation</p>
-        <h2 className="text-xl font-semibold tracking-tight">
-          Approval Gate
-        </h2>
+        <h2 className="text-xl font-semibold tracking-tight">Approval Gate</h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Human-in-the-loop confirmation before the agent performs a
           consequential action. The user reviews the action details and
@@ -1340,7 +1620,10 @@ export function ActionsContent() {
             onToggle={toggleApprovalControl}
           />
 
-          <div key={approvalAnim} className="border border-border/40 rounded-lg p-6">
+          <div
+            key={approvalAnim}
+            className="rounded-lg border border-border/40 p-6"
+          >
             {approvalCtrl.email ? (
               /* Email approval variant */
               <div className="actions-slide-in space-y-4">
@@ -1352,42 +1635,109 @@ export function ActionsContent() {
                     className="mt-0.5 shrink-0 text-muted-foreground"
                   />
                   <p className="text-sm">
-                    I'd like to send the ETR submission email. Please review and approve.
+                    I'd like to send the launch summary submission email. Please
+                    review and approve.
                   </p>
                 </div>
 
                 {approvalStatus === "pending" && (
                   <div className="actions-fade-in space-y-4">
-                    <div className="rounded-md border border-border/40 bg-muted/30 px-4 py-3 space-y-2">
-                      <div className="flex gap-2 text-xs">
-                        <span className="text-muted-foreground w-16 shrink-0">To</span>
-                        <span className="text-foreground">{APPROVAL_EMAIL.recipient}</span>
-                      </div>
-                      <div className="flex gap-2 text-xs">
-                        <span className="text-muted-foreground w-16 shrink-0">Subject</span>
-                        <span className="text-foreground">{APPROVAL_EMAIL.subject}</span>
-                      </div>
-                      <div className="flex gap-2 text-xs">
-                        <span className="text-muted-foreground w-16 shrink-0">Body</span>
-                        <span className="text-muted-foreground">{APPROVAL_EMAIL.body}</span>
-                      </div>
-                    </div>
+                    <ActionPreview
+                      title="Send launch summary email"
+                      description={APPROVAL_EMAIL.body}
+                      status="locked"
+                      items={[
+                        {
+                          label: "Recipient",
+                          value: APPROVAL_EMAIL.recipient,
+                        },
+                        {
+                          label: "Subject",
+                          value: APPROVAL_EMAIL.subject,
+                        },
+                        {
+                          label: "Affected object",
+                          value: "Project launch summary email",
+                        },
+                        {
+                          label: "Consequence",
+                          value:
+                            "External communication is sent and cannot be recalled.",
+                        },
+                        {
+                          label: "Cost / time",
+                          value: "$0.09 estimated / under 1 min",
+                        },
+                        {
+                          label: "Rollback",
+                          value: "Follow-up correction only",
+                        },
+                      ]}
+                    />
 
                     <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setApprovalStatus("approved")}
-                        className="rounded-md bg-primary px-4 py-1.5 text-sm text-primary-foreground transition-colors hover:bg-primary/90"
-                      >
-                        Approve
-                      </button>
-                      <button
+                      <DecisionSurface.Root>
+                        <DecisionSurface.Trigger
+                          render={<Button type="button" size="sm" />}
+                        >
+                          Approve
+                        </DecisionSurface.Trigger>
+                        <DecisionSurface.Content>
+                          <DecisionSurface.Header>
+                            <DecisionSurface.Title>
+                              Send this email?
+                            </DecisionSurface.Title>
+                            <DecisionSurface.Description>
+                              The agent will send this message to the listed
+                              recipient. Review the impact before approving.
+                            </DecisionSurface.Description>
+                          </DecisionSurface.Header>
+                          <DecisionSurface.Body>
+                            <DecisionSurface.ImpactList>
+                              <DecisionSurface.ImpactItem label="Recipient">
+                                {APPROVAL_EMAIL.recipient}
+                              </DecisionSurface.ImpactItem>
+                              <DecisionSurface.ImpactItem label="Subject">
+                                {APPROVAL_EMAIL.subject}
+                              </DecisionSurface.ImpactItem>
+                              <DecisionSurface.ImpactItem label="Affected object">
+                                Project launch summary email
+                              </DecisionSurface.ImpactItem>
+                              <DecisionSurface.ImpactItem label="Cost / time">
+                                $0.09 estimated / under 1 min
+                              </DecisionSurface.ImpactItem>
+                              <DecisionSurface.ImpactItem label="Permission">
+                                External communication approval
+                              </DecisionSurface.ImpactItem>
+                              <DecisionSurface.ImpactItem label="Source">
+                                Project brief, roadmap, launch checklist
+                              </DecisionSurface.ImpactItem>
+                              <DecisionSurface.ImpactItem label="Reversibility">
+                                Not reversible after send
+                              </DecisionSurface.ImpactItem>
+                              <DecisionSurface.ImpactItem label="Rollback">
+                                Follow-up correction only
+                              </DecisionSurface.ImpactItem>
+                            </DecisionSurface.ImpactList>
+                          </DecisionSurface.Body>
+                          <DecisionSurface.Footer>
+                            <DecisionSurface.Cancel />
+                            <DecisionSurface.Confirm
+                              onClick={() => setApprovalStatus("approved")}
+                            >
+                              Approve
+                            </DecisionSurface.Confirm>
+                          </DecisionSurface.Footer>
+                        </DecisionSurface.Content>
+                      </DecisionSurface.Root>
+                      <Button
                         type="button"
                         onClick={() => setApprovalStatus("denied")}
-                        className="rounded-md border border-border px-4 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent"
+                        variant="outline"
+                        size="sm"
                       >
                         Deny
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 )}
@@ -1407,14 +1757,19 @@ export function ActionsContent() {
                         </span>
                       </div>
                     </div>
-                    <button
+                    <Button
                       type="button"
                       onClick={() => setApprovalStatus("pending")}
-                      className="flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent"
+                      variant="outline"
+                      size="xs"
                     >
-                      <HugeiconsIcon icon={RefreshIcon} size={11} strokeWidth={1.5} />
+                      <HugeiconsIcon
+                        icon={RefreshIcon}
+                        strokeWidth={1.5}
+                        data-icon="inline-start"
+                      />
                       Reset
-                    </button>
+                    </Button>
                   </div>
                 )}
 
@@ -1433,14 +1788,19 @@ export function ActionsContent() {
                         </span>
                       </div>
                     </div>
-                    <button
+                    <Button
                       type="button"
                       onClick={() => setApprovalStatus("pending")}
-                      className="flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent"
+                      variant="outline"
+                      size="xs"
                     >
-                      <HugeiconsIcon icon={RefreshIcon} size={11} strokeWidth={1.5} />
+                      <HugeiconsIcon
+                        icon={RefreshIcon}
+                        strokeWidth={1.5}
+                        data-icon="inline-start"
+                      />
                       Reset
-                    </button>
+                    </Button>
                   </div>
                 )}
               </div>
@@ -1455,52 +1815,132 @@ export function ActionsContent() {
                     className="mt-0.5 shrink-0 text-muted-foreground"
                   />
                   <p className="text-sm">
-                    I'd like to apply these changes to the Security Target. Please review.
+                    I'd like to apply these changes to the project brief. Please
+                    review.
                   </p>
                 </div>
 
                 {approvalStatus === "pending" && (
                   <div className="actions-fade-in space-y-4">
-                    <div className="rounded-md border border-border/40 bg-muted/30 px-4 py-3 space-y-1.5">
-                      {APPROVAL_CHANGES.map((change, i) => (
-                        <div key={i} className="flex items-start gap-2 text-xs">
-                          <span
-                            className={`shrink-0 select-none ${
-                              change.type === "add"
-                                ? "text-emerald-700/70 dark:text-emerald-400/70"
-                                : "text-red-700/70 dark:text-red-400/70"
-                            }`}
-                          >
-                            {change.type === "add" ? "+" : "−"}
-                          </span>
-                          <span
-                            className={
-                              change.type === "add"
-                                ? "text-emerald-800/80 dark:text-emerald-300/80"
-                                : "text-red-800/80 dark:text-red-300/80"
-                            }
-                          >
-                            {change.text}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
+                    <ActionPreview
+                      title="Apply project brief changes"
+                      description="The exact additions and removals below are locked before approval. If source material changes, this approval expires."
+                      status="locked"
+                      items={[
+                        {
+                          label: "Adds",
+                          value: `${APPROVAL_CHANGES.filter((change) => change.type === "add").length} changes`,
+                        },
+                        {
+                          label: "Removes",
+                          value: `${APPROVAL_CHANGES.filter((change) => change.type === "remove").length} references`,
+                        },
+                        {
+                          label: "Affected object",
+                          value: "Project_Brief_v3.pdf",
+                        },
+                        {
+                          label: "Consequence",
+                          value:
+                            "Document content changes and downstream review summaries must be regenerated.",
+                        },
+                        {
+                          label: "Reversibility",
+                          value: "Reversible through document history",
+                        },
+                        {
+                          label: "Rollback",
+                          value: "Restore previous document version",
+                        },
+                      ]}
+                    >
+                      <div className="flex flex-col gap-1.5">
+                        {APPROVAL_CHANGES.map((change, i) => (
+                          <div key={i} className="flex items-start gap-2 text-xs">
+                            <span className="shrink-0 text-muted-foreground select-none">
+                              {change.type === "add" ? "+" : "-"}
+                            </span>
+                            <span className="text-muted-foreground">
+                              {change.text}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </ActionPreview>
 
                     <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setApprovalStatus("approved")}
-                        className="rounded-md bg-primary px-4 py-1.5 text-sm text-primary-foreground transition-colors hover:bg-primary/90"
-                      >
-                        Approve
-                      </button>
-                      <button
+                      <DecisionSurface.Root>
+                        <DecisionSurface.Trigger
+                          render={<Button type="button" size="sm" />}
+                        >
+                          Approve
+                        </DecisionSurface.Trigger>
+                        <DecisionSurface.Content>
+                          <DecisionSurface.Header>
+                            <DecisionSurface.Title>
+                              Apply these document changes?
+                            </DecisionSurface.Title>
+                            <DecisionSurface.Description>
+                              The agent will update the document with the
+                              reviewed additions and removals.
+                            </DecisionSurface.Description>
+                          </DecisionSurface.Header>
+                          <DecisionSurface.Body>
+                            <DecisionSurface.ImpactList>
+                              <DecisionSurface.ImpactItem label="Adds">
+                                {
+                                  APPROVAL_CHANGES.filter(
+                                    (change) => change.type === "add"
+                                  ).length
+                                }{" "}
+                                changes
+                              </DecisionSurface.ImpactItem>
+                              <DecisionSurface.ImpactItem label="Removes">
+                                {
+                                  APPROVAL_CHANGES.filter(
+                                    (change) => change.type === "remove"
+                                  ).length
+                                }{" "}
+                                references
+                              </DecisionSurface.ImpactItem>
+                              <DecisionSurface.ImpactItem label="Affected object">
+                                Project_Brief_v3.pdf
+                              </DecisionSurface.ImpactItem>
+                              <DecisionSurface.ImpactItem label="Cost / time">
+                                $0.04 estimated / under 1 min
+                              </DecisionSurface.ImpactItem>
+                              <DecisionSurface.ImpactItem label="Permission">
+                                Document edit approval
+                              </DecisionSurface.ImpactItem>
+                              <DecisionSurface.ImpactItem label="Source">
+                                Launch Policy v2 and roadmap notes
+                              </DecisionSurface.ImpactItem>
+                              <DecisionSurface.ImpactItem label="Reversibility">
+                                Reversible through document history
+                              </DecisionSurface.ImpactItem>
+                              <DecisionSurface.ImpactItem label="Rollback">
+                                Restore previous document version
+                              </DecisionSurface.ImpactItem>
+                            </DecisionSurface.ImpactList>
+                          </DecisionSurface.Body>
+                          <DecisionSurface.Footer>
+                            <DecisionSurface.Cancel />
+                            <DecisionSurface.Confirm
+                              onClick={() => setApprovalStatus("approved")}
+                            >
+                              Apply changes
+                            </DecisionSurface.Confirm>
+                          </DecisionSurface.Footer>
+                        </DecisionSurface.Content>
+                      </DecisionSurface.Root>
+                      <Button
                         type="button"
                         onClick={() => setApprovalStatus("denied")}
-                        className="rounded-md border border-border px-4 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent"
+                        variant="outline"
+                        size="sm"
                       >
                         Deny
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 )}
@@ -1516,18 +1956,33 @@ export function ActionsContent() {
                           className="shrink-0 text-muted-foreground"
                         />
                         <span className="text-sm">
-                          Approved — applying {APPROVAL_CHANGES.filter((c) => c.type === "add").length} additions, {APPROVAL_CHANGES.filter((c) => c.type === "remove").length} removals
+                          Approved — applying{" "}
+                          {
+                            APPROVAL_CHANGES.filter((c) => c.type === "add")
+                              .length
+                          }{" "}
+                          additions,{" "}
+                          {
+                            APPROVAL_CHANGES.filter((c) => c.type === "remove")
+                              .length
+                          }{" "}
+                          removals
                         </span>
                       </div>
                     </div>
-                    <button
+                    <Button
                       type="button"
                       onClick={() => setApprovalStatus("pending")}
-                      className="flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent"
+                      variant="outline"
+                      size="xs"
                     >
-                      <HugeiconsIcon icon={RefreshIcon} size={11} strokeWidth={1.5} />
+                      <HugeiconsIcon
+                        icon={RefreshIcon}
+                        strokeWidth={1.5}
+                        data-icon="inline-start"
+                      />
                       Reset
-                    </button>
+                    </Button>
                   </div>
                 )}
 
@@ -1546,14 +2001,19 @@ export function ActionsContent() {
                         </span>
                       </div>
                     </div>
-                    <button
+                    <Button
                       type="button"
                       onClick={() => setApprovalStatus("pending")}
-                      className="flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent"
+                      variant="outline"
+                      size="xs"
                     >
-                      <HugeiconsIcon icon={RefreshIcon} size={11} strokeWidth={1.5} />
+                      <HugeiconsIcon
+                        icon={RefreshIcon}
+                        strokeWidth={1.5}
+                        data-icon="inline-start"
+                      />
                       Reset
-                    </button>
+                    </Button>
                   </div>
                 )}
               </div>
@@ -1562,39 +2022,64 @@ export function ActionsContent() {
         </div>
 
         {/* Spec table */}
-        <table className="mt-10 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="pb-3 pr-6 text-left text-xs font-medium text-muted-foreground">
+        <Table className="mt-10 w-full text-sm">
+          <TableHeader>
+            <TableRow className="border-b border-border">
+              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
                 Property
-              </th>
-              <th className="pb-3 text-left text-xs font-medium text-muted-foreground">
+              </TableHead>
+              <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
                 Spec
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {[
-              ["Action summary", "Shield icon + plain-language description of what the agent wants to do"],
-              ["Detail panel", "Muted background container with key-value or diff preview"],
-              ["Diff format", "Green-ish (+) for additions, red-ish (−) for removals, muted tones"],
-              ["Approve button", "Primary fill — should feel deliberate, not default"],
-              ["Deny button", "Ghost/outline — lower visual weight than approve"],
-              ["Result states", "Success (primary border), denied (destructive border), with reset button"],
+              [
+                "Action summary",
+                "Shield icon + plain-language description of what the agent wants to do",
+              ],
+              [
+                "Detail panel",
+                "Muted background container with key-value or diff preview",
+              ],
+              [
+                "Diff format",
+                "Green-ish (+) for additions, red-ish (−) for removals, muted tones",
+              ],
+              [
+                "Approve button",
+                "Primary fill — should feel deliberate, not default",
+              ],
+              [
+                "Deny button",
+                "Ghost/outline — lower visual weight than approve",
+              ],
+              [
+                "Result states",
+                "Success (primary border), denied (destructive border), with reset button",
+              ],
             ].map(([prop, spec], i, arr) => (
-              <tr key={prop} className={i < arr.length - 1 ? "border-b border-border/50" : ""}>
-                <td className="py-3 pr-6 font-medium">{prop}</td>
-                <td className="py-3 text-muted-foreground">{spec}</td>
-              </tr>
+              <TableRow
+                key={prop}
+                className={
+                  i < arr.length - 1 ? "border-b border-border/50" : ""
+                }
+              >
+                <TableCell className="py-3 pr-6 font-medium">{prop}</TableCell>
+                <TableCell className="py-3 text-muted-foreground">
+                  {spec}
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
 
-        <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground">
-          Approval gates are the most critical trust pattern in the system.
-          They ensure the agent never takes consequential actions without
-          explicit human confirmation — essential for certification workflows
-          where mistakes have regulatory consequences.
+        <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
+          Approval gates are the most critical trust pattern in the system. They
+          ensure the agent never takes consequential actions without explicit
+          human confirmation — essential for high-trust workflows where mistakes
+          have regulatory consequences.
         </p>
       </section>
     </article>

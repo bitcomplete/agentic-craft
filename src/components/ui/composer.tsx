@@ -26,99 +26,173 @@ export interface ComposerScopeItem {
 
 /* ── Context ── */
 
-interface ComposerContextValue {
+export interface ComposerState {
   value: string
-  onValueChange: (value: string) => void
   isFocused: boolean
-  setIsFocused: (focused: boolean) => void
   isSending: boolean
-  send: () => void
   disabled: boolean
+  canSend: boolean
+}
+
+export interface ComposerActions {
+  setValue: (value: string) => void
+  setFocused: (focused: boolean) => void
+  send: () => void
+}
+
+export interface ComposerMeta {
   textareaRef: React.RefObject<HTMLTextAreaElement | null>
 }
 
-const ComposerContext = React.createContext<ComposerContextValue | null>(null)
+export interface ComposerContextValue {
+  state: ComposerState
+  actions: ComposerActions
+  meta: ComposerMeta
+}
+
+export const ComposerContext = React.createContext<ComposerContextValue | null>(
+  null
+)
 
 export function useComposer(): ComposerContextValue {
-  const ctx = React.useContext(ComposerContext)
+  const ctx = React.use(ComposerContext)
   if (!ctx) {
-    throw new Error("useComposer must be used within a <Composer />")
+    throw new Error("useComposer must be used within a <ComposerProvider />")
   }
   return ctx
 }
 
-/* ── Composer (root) ── */
+/* ── ComposerProvider ── */
+
+export function ComposerProvider({
+  state,
+  actions,
+  meta,
+  children,
+}: {
+  state: ComposerState
+  actions: ComposerActions
+  meta: ComposerMeta
+  children: React.ReactNode
+}) {
+  const ctx = React.useMemo<ComposerContextValue>(
+    () => ({ state, actions, meta }),
+    [state, actions, meta]
+  )
+
+  return <ComposerContext value={ctx}>{children}</ComposerContext>
+}
+
+/* ── ComposerFrame ── */
+
+export function ComposerFrame({
+  className,
+  children,
+  onSubmit,
+  ...props
+}: React.ComponentProps<"form">) {
+  const {
+    actions: { send },
+  } = useComposer()
+
+  return (
+    <form
+      data-slot="composer"
+      onSubmit={(event) => {
+        event.preventDefault()
+        onSubmit?.(event)
+        send()
+      }}
+      className={cn(
+        "mx-auto flex w-full max-w-[720px] flex-col items-center",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </form>
+  )
+}
+
+/* ── Composer (local-state convenience root) ── */
 
 export function Composer({
   value: valueProp,
   defaultValue = "",
   onValueChange: onValueChangeProp,
   onSend,
+  canSend: canSendProp,
   disabled = false,
   className,
   children,
   ...props
-}: React.ComponentProps<"div"> & {
+}: Omit<React.ComponentProps<"form">, "onSubmit" | "onChange"> & {
   value?: string
   defaultValue?: string
   onValueChange?: (value: string) => void
   onSend?: (value: string) => void
+  canSend?: boolean
   disabled?: boolean
 }) {
   const [_value, _setValue] = React.useState(defaultValue)
   const value = valueProp ?? _value
-  const onValueChange = React.useCallback(
+  const setValue = React.useCallback(
     (v: string) => {
       if (onValueChangeProp) onValueChangeProp(v)
       else _setValue(v)
     },
-    [onValueChangeProp],
+    [onValueChangeProp]
   )
 
   const [isFocused, setIsFocused] = React.useState(false)
   const [isSending, setIsSending] = React.useState(false)
   const textareaRef = React.useRef<HTMLTextAreaElement | null>(null)
+  const canSend = canSendProp ?? value.trim().length > 0
 
   const send = React.useCallback(() => {
     if (disabled) return
-    if (!value.trim()) return
+    if (!canSend) return
     setIsSending(true)
     const currentValue = value
     setTimeout(() => {
-      onValueChange("")
+      setValue("")
       setIsSending(false)
       if (textareaRef.current) textareaRef.current.style.height = "auto"
     }, 400)
     onSend?.(currentValue)
-  }, [value, disabled, onValueChange, onSend])
+  }, [value, disabled, canSend, setValue, onSend])
 
-  const ctx = React.useMemo<ComposerContextValue>(
+  const state = React.useMemo<ComposerState>(
     () => ({
       value,
-      onValueChange,
       isFocused,
-      setIsFocused,
       isSending,
-      send,
       disabled,
-      textareaRef,
+      canSend,
     }),
-    [value, onValueChange, isFocused, isSending, send, disabled],
+    [value, isFocused, isSending, disabled, canSend]
+  )
+
+  const actions = React.useMemo<ComposerActions>(
+    () => ({
+      setValue,
+      setFocused: setIsFocused,
+      send,
+    }),
+    [setValue, send]
+  )
+
+  const meta = React.useMemo<ComposerMeta>(
+    () => ({ textareaRef }),
+    [textareaRef]
   )
 
   return (
-    <ComposerContext.Provider value={ctx}>
-      <div
-        data-slot="composer"
-        className={cn(
-          "mx-auto flex w-full max-w-[720px] flex-col items-center",
-          className,
-        )}
-        {...props}
-      >
+    <ComposerProvider state={state} actions={actions} meta={meta}>
+      <ComposerFrame className={className} {...props}>
         {children}
-      </div>
-    </ComposerContext.Provider>
+      </ComposerFrame>
+    </ComposerProvider>
   )
 }
 
@@ -132,7 +206,12 @@ export function ComposerIslands({
   return (
     <div
       data-slot="composer-islands"
-      className={cn("flex w-full flex-col items-center", className)}
+      className={cn(
+        "flex w-full flex-col items-center",
+        "[&>[data-slot=composer-island-wrap]:first-child>[data-slot=composer-island]]:rounded-t-lg sm:[&>[data-slot=composer-island-wrap]:first-child>[data-slot=composer-island]]:rounded-t-xl [&>[data-slot=composer-island-wrap]:first-child>[data-slot=composer-island]]:shadow-[0_-1px_6px_rgba(0,0,0,0.04),0_-4px_16px_rgba(0,0,0,0.03)]",
+        "[&>[data-slot=composer-island-wrap]:not(:first-child)>[data-slot=composer-island]]:rounded-t-none [&>[data-slot=composer-island-wrap]:not(:first-child)>[data-slot=composer-island]]:border-t-0",
+        className
+      )}
       {...props}
     >
       {children}
@@ -145,19 +224,37 @@ export function ComposerIslands({
 export function ComposerCard({
   className,
   children,
+  onMouseDown,
   ...props
 }: React.ComponentProps<"div">) {
-  const { isFocused } = useComposer()
+  const {
+    state: { isFocused },
+    meta: { textareaRef },
+  } = useComposer()
 
   return (
     <div
       data-slot="composer-card"
+      onMouseDown={(event) => {
+        onMouseDown?.(event)
+        if (event.defaultPrevented) return
+        const target = event.target
+        if (!(target instanceof HTMLElement)) return
+        if (
+          target.closest(
+            "button,a,input,textarea,select,[role=button],[data-no-focus]"
+          )
+        ) {
+          return
+        }
+        textareaRef.current?.focus()
+      }}
       className={cn(
-        "relative z-1 w-full rounded-xl border bg-background transition-shadow duration-300 ease-out",
+        "relative z-1 w-full rounded-lg border bg-background transition-shadow duration-300 ease-out sm:rounded-xl",
         isFocused
           ? "border-foreground/15 shadow-[0_0_0_1px_rgba(0,0,0,0.03),0_2px_12px_rgba(0,0,0,0.06),0_8px_32px_rgba(0,0,0,0.04)]"
           : "border-border shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_16px_rgba(0,0,0,0.03)]",
-        className,
+        className
       )}
       {...props}
     >
@@ -175,10 +272,6 @@ export {
   ComposerContextRing,
   ComposerSend,
 } from "./composer-toolbar"
-export {
-  ComposerScope,
-  ComposerReply,
-  ComposerPlan,
-} from "./composer-islands"
+export { ComposerScope, ComposerReply, ComposerPlan } from "./composer-islands"
 export { ComposerAttachments } from "./composer-attachments"
 export { ComposerSuggestions } from "./composer-suggestions"

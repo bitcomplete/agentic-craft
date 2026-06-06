@@ -3,7 +3,7 @@ import { DemoContent } from '@/views/demo-content'
 
 export const metadata: Metadata = {
   title: 'Agentic Craft',
-  description: 'Interactive design system for agentic AI interfaces',
+  description: 'Reference guide for designing agentic product interfaces beyond chat',
 }
 
 export default function HomePage() {

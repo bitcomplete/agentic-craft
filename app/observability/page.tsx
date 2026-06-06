@@ -3,7 +3,7 @@ import { ObservabilityContent } from '@/views/observability-content'
 
 export const metadata: Metadata = {
   title: 'Observability | Agentic Craft',
-  description: 'Activity timelines, token usage, session timelines, and error log patterns',
+  description: 'Reference patterns for activity, costs, sessions, diagnostics, and operational traces',
 }
 
 export default function ObservabilityPage() {

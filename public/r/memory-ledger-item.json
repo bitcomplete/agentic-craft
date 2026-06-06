@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "memory-ledger-item",
+  "title": "Memory Ledger Item",
+  "description": "A provenance-rich memory row with scope, expiry, last-used metadata, source inspection, edit, and removal actions.",
+  "dependencies": [
+    "@hugeicons/react",
+    "@hugeicons/core-free-icons"
+  ],
+  "registryDependencies": [
+    "badge",
+    "button",
+    "reference-item"
+  ],
+  "files": [
+    {
+      "path": "registry/base-nova/ui/memory-ledger-item.tsx",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\nimport { Brain01Icon, Clock01Icon, File01Icon } from \"@hugeicons/core-free-icons\"\nimport { HugeiconsIcon } from \"@hugeicons/react\"\n\nimport { Badge } from \"@/components/ui/badge\"\nimport { Button } from \"@/components/ui/button\"\nimport { ReferenceItem } from \"@/components/ui/reference-item\"\nimport { cn } from \"@/lib/utils\"\n\ntype MemoryLedgerItemProps = React.ComponentProps<\"div\"> & {\n  title: string\n  value: string\n  source: string\n  lastUsed: string\n  scope: string\n  expiry: string\n  selected?: boolean\n  onInspect?: () => void\n  onEdit?: () => void\n  onDelete?: () => void\n}\n\nfunction MemoryLedgerItem({\n  title,\n  value,\n  source,\n  lastUsed,\n  scope,\n  expiry,\n  selected,\n  onInspect,\n  onEdit,\n  onDelete,\n  className,\n  ...props\n}: MemoryLedgerItemProps) {\n  return (\n    <ReferenceItem.Root\n      data-slot=\"memory-ledger-item\"\n      className={cn(\n        \"flex-wrap sm:flex-nowrap\",\n        selected && \"border-foreground/20 bg-muted/25\",\n        className\n      )}\n      {...props}\n    >\n      <ReferenceItem.Media>\n        <HugeiconsIcon icon={Brain01Icon} strokeWidth={1.5} />\n      </ReferenceItem.Media>\n      <ReferenceItem.Content>\n        <ReferenceItem.Header>\n          <ReferenceItem.Title className=\"whitespace-normal\">\n            {value}\n          </ReferenceItem.Title>\n          <Badge variant=\"outline\">{scope}</Badge>\n        </ReferenceItem.Header>\n        <ReferenceItem.Description>{title}</ReferenceItem.Description>\n        <ReferenceItem.Meta>\n          <span className=\"inline-flex min-w-0 items-center gap-1\">\n            <HugeiconsIcon icon={File01Icon} size={12} strokeWidth={1.5} />\n            <span className=\"truncate\">{source}</span>\n          </span>\n          <span className=\"inline-flex items-center gap-1\">\n            <HugeiconsIcon icon={Clock01Icon} size={12} strokeWidth={1.5} />\n            {lastUsed}\n          </span>\n          <span>Expires {expiry}</span>\n        </ReferenceItem.Meta>\n      </ReferenceItem.Content>\n      <ReferenceItem.Actions className=\"ml-11 w-full justify-start sm:ml-0 sm:w-auto sm:justify-end\">\n        {onInspect && (\n          <Button\n            type=\"button\"\n            onClick={onInspect}\n            variant=\"outline\"\n            size=\"xs\"\n          >\n            Inspect\n          </Button>\n        )}\n        {onEdit && (\n          <Button\n            type=\"button\"\n            onClick={onEdit}\n            variant=\"ghost\"\n            size=\"xs\"\n          >\n            Edit\n          </Button>\n        )}\n        {onDelete && (\n          <Button\n            type=\"button\"\n            onClick={onDelete}\n            variant=\"ghost\"\n            size=\"xs\"\n          >\n            Remove\n          </Button>\n        )}\n      </ReferenceItem.Actions>\n    </ReferenceItem.Root>\n  )\n}\n\nexport { MemoryLedgerItem, type MemoryLedgerItemProps }\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}
