@@ -25,69 +25,11 @@ import {
 } from "@/components/ui/tool-call"
 
 /* ------------------------------------------------------------------ */
-/*  CSS Keyframes                                                      */
-/* ------------------------------------------------------------------ */
-
-const STYLE_ID = "demo-page-styles"
-function ensureStyles() {
-  if (document.getElementById(STYLE_ID)) return
-  const style = document.createElement("style")
-  style.id = STYLE_ID
-  style.textContent = `
-    @keyframes demo-shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
-    @keyframes demo-slide-in {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes demo-fade-in {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    .demo-slide-in {
-      animation: demo-slide-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
-    .demo-fade-in {
-      animation: demo-fade-in 0.2s ease forwards;
-    }
-    .demo-shimmer-text {
-      background: linear-gradient(
-        90deg,
-        var(--color-muted-foreground) 0%,
-        var(--color-muted-foreground) 35%,
-        oklch(0.75 0.02 260) 50%,
-        var(--color-muted-foreground) 65%,
-        var(--color-muted-foreground) 100%
-      );
-      background-size: 200% 100%;
-      animation: demo-shimmer 2.5s ease-in-out 2;
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .demo-slide-in,
-      .demo-fade-in,
-      .demo-shimmer-text {
-        animation: none;
-      }
-      .demo-shimmer-text {
-        background: none;
-        -webkit-text-fill-color: currentColor;
-      }
-    }
-  `
-  document.head.appendChild(style)
-}
-
-/* ------------------------------------------------------------------ */
 /*  Data                                                               */
 /* ------------------------------------------------------------------ */
 
-const THINKING_TEXT =
-  "Let me pull up the project brief and cross-reference it against the roadmap, customer notes, and launch checklist. I'll check for missing decisions, timeline risks, and assumptions that still need an owner..."
+const OBSERVABLE_WORK_TEXT =
+  "Reading the project brief, roadmap, customer notes, and launch checklist. Checking for missing decisions, timeline risks, and assumptions that still need an owner..."
 
 const PARALLEL_TASKS = [
   { label: "Checking roadmap alignment", duration: "2.1s" },
@@ -118,12 +60,8 @@ const FINDINGS = [
 /* ------------------------------------------------------------------ */
 
 export function DemoContent() {
-  useEffect(() => {
-    ensureStyles()
-  }, [])
-
-  /* Thinking block state */
-  const [thinkingState, setThinkingState] = useState<
+  /* Observable work disclosure state */
+  const [workState, setWorkState] = useState<
     "collapsed" | "expanded" | "completed"
   >("collapsed")
 
@@ -159,7 +97,7 @@ export function DemoContent() {
         </p>
       </header>
 
-      <div className="mx-auto max-w-[720px] space-y-6">
+      <div className="mx-auto max-w-[720px] flex flex-col gap-6">
         {/* -------------------------------------------------------- */}
         {/*  Message 1: User message                                  */}
         {/* -------------------------------------------------------- */}
@@ -171,31 +109,33 @@ export function DemoContent() {
         </div>
 
         {/* -------------------------------------------------------- */}
-        {/*  Message 2: Thinking block                                */}
+        {/*  Message 2: Observable work disclosure                     */}
         {/* -------------------------------------------------------- */}
         <div className="flex justify-start">
           <div className="max-w-[85%]">
             <button
               type="button"
+              aria-label="Toggle observable work details"
               onClick={() => {
-                setThinkingState((prev) =>
+                setWorkState((prev) =>
                   prev === "collapsed" ? "expanded" : "completed"
                 )
               }}
               className="w-full cursor-pointer px-1 py-2 text-left"
             >
-              {/* Shimmer overlay — only while collapsed */}
-              {thinkingState === "collapsed" && (
-                <span className="demo-shimmer-text text-sm">Thinking</span>
+              {workState === "collapsed" && (
+                <span className="demo-shimmer-text text-sm">
+                  Reviewing sources
+                </span>
               )}
 
-              {thinkingState === "expanded" && (
+              {workState === "expanded" && (
                 <div className="demo-slide-in">
                   <p
                     className="text-sm text-muted-foreground italic"
                     style={{ lineHeight: "22px" }}
                   >
-                    {THINKING_TEXT}
+                    {OBSERVABLE_WORK_TEXT}
                   </p>
                   <p className="mt-2 text-xs text-muted-foreground/60">
                     Click to collapse
@@ -203,9 +143,9 @@ export function DemoContent() {
                 </div>
               )}
 
-              {thinkingState === "completed" && (
+              {workState === "completed" && (
                 <span className="text-xs text-muted-foreground/60">
-                  Thought for 3.2s
+                  Source review completed in 3.2s
                 </span>
               )}
             </button>
@@ -291,7 +231,7 @@ export function DemoContent() {
             }}
           >
             <p>Based on the analysis, here are the findings:</p>
-            <ul className="mt-3 space-y-2">
+            <ul className="mt-3 flex flex-col gap-2">
               {FINDINGS.map((f) => (
                 <li
                   key={f.id}
@@ -347,6 +287,7 @@ export function DemoContent() {
                   <div className="mt-3 flex items-center gap-2">
                     <button
                       type="button"
+                      aria-label="Approve findings summary"
                       onClick={() => setApprovalState("approved")}
                       className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                     >
@@ -354,6 +295,7 @@ export function DemoContent() {
                     </button>
                     <button
                       type="button"
+                      aria-label="Deny findings summary"
                       onClick={() => setApprovalState("denied")}
                       className="rounded-md border border-border px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-muted/50"
                     >
@@ -375,6 +317,7 @@ export function DemoContent() {
                   </div>
                   <button
                     type="button"
+                    aria-label="Reset approved action"
                     onClick={() => setApprovalState("pending")}
                     className="text-xs text-muted-foreground/60 transition-colors hover:text-muted-foreground"
                   >
@@ -395,6 +338,7 @@ export function DemoContent() {
                   </div>
                   <button
                     type="button"
+                    aria-label="Reset denied action"
                     onClick={() => setApprovalState("pending")}
                     className="text-xs text-muted-foreground/60 transition-colors hover:text-muted-foreground"
                   >

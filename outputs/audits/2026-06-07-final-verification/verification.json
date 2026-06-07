@@ -1,0 +1,186 @@
+{
+  "generatedAt": "2026-06-07T10:15:48.003Z",
+  "fallbackReason": "In-app Browser Page.captureScreenshot timed out; local Playwright used for screenshot evidence.",
+  "results": [
+    {
+      "name": "conversation-citations-desktop",
+      "url": "http://localhost:3000/conversation",
+      "viewport": {
+        "width": 1375,
+        "height": 998
+      },
+      "screenshot": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-07-final-verification/01-conversation-citations-desktop.png",
+      "metrics": {
+        "path": "/conversation",
+        "h1": "Conversation",
+        "overflowX": 0,
+        "banned": [],
+        "smallTargets": [],
+        "nestedCardLike": []
+      },
+      "errors": []
+    },
+    {
+      "name": "templates-desktop",
+      "url": "http://localhost:3000/templates",
+      "viewport": {
+        "width": 1375,
+        "height": 998
+      },
+      "screenshot": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-07-final-verification/02-templates-desktop.png",
+      "metrics": {
+        "path": "/templates",
+        "h1": "Templates",
+        "overflowX": 0,
+        "banned": [],
+        "smallTargets": [],
+        "nestedCardLike": []
+      },
+      "errors": []
+    },
+    {
+      "name": "registry-desktop",
+      "url": "http://localhost:3000/registry",
+      "viewport": {
+        "width": 1375,
+        "height": 998
+      },
+      "screenshot": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-07-final-verification/03-registry-desktop.png",
+      "metrics": {
+        "path": "/registry",
+        "h1": "Registry",
+        "overflowX": 0,
+        "banned": [],
+        "smallTargets": [],
+        "nestedCardLike": []
+      },
+      "errors": []
+    },
+    {
+      "name": "conversation-composer-mobile",
+      "url": "http://localhost:3000/conversation",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "screenshot": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-07-final-verification/04-conversation-composer-mobile.png",
+      "metrics": {
+        "path": "/conversation#composer",
+        "h1": "Conversation",
+        "overflowX": 0,
+        "banned": [],
+        "smallTargets": [],
+        "nestedCardLike": []
+      },
+      "errors": []
+    },
+    {
+      "name": "actions-mobile",
+      "url": "http://localhost:3000/actions",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "screenshot": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-07-final-verification/05-actions-mobile.png",
+      "metrics": {
+        "path": "/actions",
+        "h1": "Agent Actions",
+        "overflowX": 0,
+        "banned": [],
+        "smallTargets": [],
+        "nestedCardLike": []
+      },
+      "errors": []
+    },
+    {
+      "name": "sources-mobile",
+      "url": "http://localhost:3000/sources",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "screenshot": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-07-final-verification/06-sources-mobile.png",
+      "metrics": {
+        "path": "/sources",
+        "h1": "Sources & Artifacts",
+        "overflowX": 0,
+        "banned": [],
+        "smallTargets": [],
+        "nestedCardLike": []
+      },
+      "errors": []
+    },
+    {
+      "name": "memory-mobile",
+      "url": "http://localhost:3000/memory",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "screenshot": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-07-final-verification/07-memory-mobile.png",
+      "metrics": {
+        "path": "/memory",
+        "h1": "Memory",
+        "overflowX": 0,
+        "banned": [],
+        "smallTargets": [],
+        "nestedCardLike": []
+      },
+      "errors": []
+    },
+    {
+      "name": "multi-agent-mobile",
+      "url": "http://localhost:3000/multi-agent",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "screenshot": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-07-final-verification/08-multi-agent-mobile.png",
+      "metrics": {
+        "path": "/multi-agent",
+        "h1": "Multi-Agent Patterns",
+        "overflowX": 0,
+        "banned": [],
+        "smallTargets": [],
+        "nestedCardLike": []
+      },
+      "errors": []
+    },
+    {
+      "name": "observability-mobile",
+      "url": "http://localhost:3000/observability",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "screenshot": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-07-final-verification/09-observability-mobile.png",
+      "metrics": {
+        "path": "/observability",
+        "h1": "Observability",
+        "overflowX": 0,
+        "banned": [],
+        "smallTargets": [],
+        "nestedCardLike": []
+      },
+      "errors": []
+    },
+    {
+      "name": "trust-mobile",
+      "url": "http://localhost:3000/trust",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "screenshot": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-07-final-verification/10-trust-mobile.png",
+      "metrics": {
+        "path": "/trust",
+        "h1": "Trust & Safety",
+        "overflowX": 0,
+        "banned": [],
+        "smallTargets": [],
+        "nestedCardLike": []
+      },
+      "errors": []
+    }
+  ]
+}

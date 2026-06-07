@@ -27,6 +27,8 @@ high-trust agent experiences.
 
 - `Conversation`: message surfaces, citations, observable work, clarifying
   questions, and composer behavior.
+- `Sources & Artifacts`: citation systems, source previews, source-backed
+  documents, and usage meters.
 - `Agent Actions`: tool calls, subagents, parallel execution, plans, decision
   flows, clarifying interruptions, and approval gates.
 - `Trust & Governance`: autonomy settings, consent, context scope, provenance,
@@ -40,6 +42,8 @@ high-trust agent experiences.
 - `Observability`: activity timelines, token usage, session timelines, and
   error states.
 - `Templates`: complete workflow references built from the primitives.
+- `Registry`: local shadcn registry installation, primitives, blocks, and
+  quality gates.
 
 ## Development
 
@@ -62,7 +66,15 @@ Build the shadcn registry artifacts with:
 npm run registry:build
 ```
 
-The generated registry is served from:
+The source registry lives in `registry.json` and is designed for GitHub
+distribution:
+
+```bash
+npx shadcn@latest list arielconti10/agentic-craft
+npx shadcn@latest add arielconti10/agentic-craft/review-workflow
+```
+
+The generated JSON registry is served locally from:
 
 ```bash
 http://localhost:3000/r/registry.json
@@ -81,16 +93,44 @@ Current registry items:
 - `clarifying-questions`
 - `action-preview`
 - `source-preview`
+- `artifact-document`
+- `usage-meter`
 - `effective-policy-preview`
 - `memory-ledger-item`
-- `review-workflow` as the first `registry:block`
+- `run-trace`
+- `handoff-packet`
+- `review-workflow` as an evidence-review `registry:block`
+- `approval-workflow` as a human-in-the-loop `registry:block`
+- `clarifying-workflow` as a missing-decision `registry:block`
+- `source-backed-artifact` as a provenance-focused `registry:block`
+- `memory-review` as a durable-context `registry:block`
+- `run-monitor` as a background-work `registry:block`
+- `multi-agent-handoff` as an ownership-transfer `registry:block`
+- `agent-settings` as a policy-settings `registry:block`
 
-Validate the registry locally with:
+Validate the source registry locally with:
+
+```bash
+npx shadcn@latest registry validate ./registry.json
+```
+
+Inspect the generated local JSON registry with:
 
 ```bash
 npx shadcn@latest list http://localhost:3000/r/registry.json
 npx shadcn@latest view http://localhost:3000/r/review-workflow.json
+npx shadcn@latest view http://localhost:3000/r/approval-workflow.json
+npx shadcn@latest view http://localhost:3000/r/clarifying-workflow.json
+npx shadcn@latest view http://localhost:3000/r/memory-review.json
+npx shadcn@latest view http://localhost:3000/r/run-trace.json
+npx shadcn@latest view http://localhost:3000/r/handoff-packet.json
+npx shadcn@latest view http://localhost:3000/r/run-monitor.json
+npx shadcn@latest view http://localhost:3000/r/multi-agent-handoff.json
+npx shadcn@latest view http://localhost:3000/r/agent-settings.json
 ```
+
+Use the GitHub source-registry address for real installs. The generated local
+JSON is useful for previewing payloads while developing the site.
 
 ## Quality Checks
 
@@ -101,6 +141,7 @@ npm run lint
 npm run typecheck
 npm run build
 npm run registry:build
+npx shadcn@latest registry validate ./registry.json
 ```
 
 For visual QA, check both desktop and mobile breakpoints on the routes touched

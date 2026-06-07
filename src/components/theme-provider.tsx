@@ -19,19 +19,13 @@ const ThemeProviderContext = React.createContext<
 >(undefined)
 
 function disableTransitionsTemporarily() {
-  const style = document.createElement("style")
-  style.appendChild(
-    document.createTextNode(
-      "*,*::before,*::after{-webkit-transition:none!important;transition:none!important}"
-    )
-  )
-  document.head.appendChild(style)
+  document.documentElement.dataset.disableTransitions = "true"
 
   return () => {
     window.getComputedStyle(document.body)
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        style.remove()
+        delete document.documentElement.dataset.disableTransitions
       })
     })
   }

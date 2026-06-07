@@ -48,6 +48,7 @@ export function ComposerSuggestions({
           key={s}
           type="button"
           data-compact-touch
+          aria-label={`Use suggestion: ${s}`}
           onClick={() => handleClick(s)}
           className={cn(
             "min-h-6 shrink-0 whitespace-nowrap rounded-md border border-border/60 px-2 py-1 text-left text-[11px] leading-4 text-muted-foreground transition-colors duration-200 hover:border-border hover:bg-muted/40 hover:text-foreground sm:min-h-7 sm:px-2.5 sm:text-center sm:text-xs sm:leading-snug",

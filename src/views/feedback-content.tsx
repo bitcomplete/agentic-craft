@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback, useRef } from "react"
+import { useState, useCallback, useRef } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   ThumbsUpIcon,
@@ -27,75 +27,6 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Textarea } from "@/components/ui/textarea"
-
-/* ------------------------------------------------------------------ */
-/*  CSS Keyframes                                                      */
-/* ------------------------------------------------------------------ */
-
-const STYLE_ID = "feedback-page-styles"
-function ensureStyles() {
-  if (document.getElementById(STYLE_ID)) return
-  const style = document.createElement("style")
-  style.id = STYLE_ID
-  style.textContent = `
-    @keyframes feedback-slide-in {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes feedback-fade-in {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    @keyframes feedback-flash-green {
-      0% { background-color: transparent; }
-      30% { background-color: oklch(0.72 0.15 155 / 0.15); }
-      100% { background-color: transparent; }
-    }
-    @keyframes feedback-press {
-      0% { transform: scale(1); }
-      40% { transform: scale(0.92); }
-      100% { transform: scale(1); }
-    }
-      @keyframes feedback-expand {
-        from { opacity: 0; transform: translateY(-4px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes feedback-highlight-in {
-      from { background-color: transparent; }
-      to { background-color: oklch(0.72 0.15 155 / 0.08); }
-    }
-    .feedback-slide-in {
-      animation: feedback-slide-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
-    .feedback-fade-in {
-      animation: feedback-fade-in 0.2s ease forwards;
-    }
-    .feedback-flash-green {
-      animation: feedback-flash-green 0.6s ease;
-    }
-    .feedback-press {
-      animation: feedback-press 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .feedback-expand {
-      animation: feedback-expand 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-      overflow: hidden;
-    }
-    .feedback-highlight-in {
-      animation: feedback-highlight-in 0.4s ease forwards;
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .feedback-slide-in,
-      .feedback-fade-in,
-      .feedback-flash-green,
-      .feedback-press,
-      .feedback-expand,
-      .feedback-highlight-in {
-        animation: none;
-      }
-    }
-  `
-  document.head.appendChild(style)
-}
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -164,8 +95,6 @@ const FEEDBACK_HISTORY = [
 /* ------------------------------------------------------------------ */
 
 export function FeedbackContent() {
-  useEffect(ensureStyles, [])
-
   /* ── Section 1: Thumbs Feedback ── */
   const [thumbsState, setThumbsState] = useState<Record<string, boolean>>({
     neutral: true,
@@ -358,7 +287,7 @@ export function FeedbackContent() {
           >
             {/* Agent message */}
             <div
-              className={`rounded-lg border border-border/40 p-4 transition-colors duration-300 ${
+              className={`transition-colors duration-300 ${
                 thumbsFlash ? "feedback-flash-green" : ""
               }`}
             >
@@ -410,7 +339,7 @@ export function FeedbackContent() {
               {thumbsSelection === "down" && (
                 <div className="feedback-expand mt-3">
                   {correctionSubmitted ? (
-                    <div className="feedback-fade-in flex items-center gap-2 rounded-md border border-foreground/10 bg-foreground/[0.02] px-3 py-2.5">
+                    <div className="feedback-fade-in flex items-center gap-2 border-l border-foreground/15 bg-foreground/[0.02] py-2 pl-3">
                       <HugeiconsIcon
                         icon={Tick01Icon}
                         size={14}
@@ -424,7 +353,7 @@ export function FeedbackContent() {
                     </div>
                   ) : (
                     <form
-                      className="space-y-2"
+                      className="flex flex-col gap-2"
                       onSubmit={(event) => {
                         event.preventDefault()
                         handleCorrectionSubmit()
@@ -444,10 +373,7 @@ export function FeedbackContent() {
                           value={correctionText}
                           onChange={(e) => setCorrectionText(e.target.value)}
                           onKeyDown={(e) => {
-                            if (
-                              e.key === "Enter" &&
-                              (e.metaKey || e.ctrlKey)
-                            ) {
+                            if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
                               e.preventDefault()
                               handleCorrectionSubmit()
                             }
@@ -569,7 +495,7 @@ export function FeedbackContent() {
           />
 
           <div className="rounded-lg border border-border/40 p-6">
-            <div className="rounded-lg border border-border/40 p-4">
+            <div>
               {corrState.original ? (
                 <p
                   className="text-base"
@@ -711,7 +637,7 @@ export function FeedbackContent() {
           />
 
           <div className="rounded-lg border border-border/40 p-6">
-            <div className="rounded-lg border border-border/40 p-4">
+            <div>
               <p
                 className="text-base"
                 style={{ ...AGENT_PROSE_STYLE, color: AGENT_PROSE_COLOR }}
@@ -850,7 +776,7 @@ export function FeedbackContent() {
 
           <div className="rounded-lg border border-border/40 p-6">
             {behaviorState.before ? (
-              <div className="rounded-lg border border-border/40 p-4">
+              <div>
                 <p
                   className="text-base"
                   style={{ ...AGENT_PROSE_STYLE, color: AGENT_PROSE_COLOR }}
@@ -878,8 +804,8 @@ export function FeedbackContent() {
                 </div>
               </div>
             ) : (
-              <div className="feedback-fade-in space-y-3">
-                <div className="rounded-lg border border-border/40 p-4">
+              <div className="feedback-fade-in flex flex-col gap-3">
+                <div>
                   <p
                     className="text-base"
                     style={{ ...AGENT_PROSE_STYLE, color: AGENT_PROSE_COLOR }}
@@ -914,14 +840,14 @@ export function FeedbackContent() {
                 </div>
 
                 {/* Annotation */}
-                <div className="feedback-slide-in flex items-start gap-3 rounded-md border border-foreground/10 bg-foreground/[0.02] px-4 py-3">
+                <div className="feedback-slide-in flex items-start gap-3 border-l border-foreground/15 bg-foreground/[0.02] py-3 pl-3">
                   <HugeiconsIcon
                     icon={MessageIcon}
                     size={14}
                     strokeWidth={1.5}
                     className="mt-0.5 shrink-0 text-muted-foreground"
                   />
-                  <div className="space-y-1">
+                  <div className="flex flex-col gap-1">
                     <p className="text-xs text-muted-foreground">
                       <span className="font-medium text-foreground/70">
                         Correction applied
@@ -1018,7 +944,7 @@ export function FeedbackContent() {
           />
 
           <div className="rounded-lg border border-border/40 p-6">
-            <div className="space-y-0">
+            <div className="flex flex-col gap-0">
               {visibleHistory.map((entry, i) => {
                 const isExpanded = expandedRow === entry.id
                 return (
@@ -1032,6 +958,7 @@ export function FeedbackContent() {
                   >
                     <button
                       type="button"
+                      aria-label={`Toggle feedback history entry: ${entry.message}`}
                       onClick={() =>
                         setExpandedRow(isExpanded ? null : entry.id)
                       }
@@ -1102,7 +1029,7 @@ export function FeedbackContent() {
                     {/* Expanded detail */}
                     {isExpanded && (
                       <div className="feedback-expand mb-3 ml-8 px-2">
-                        <div className="feedback-slide-in rounded-md border border-border/40 bg-foreground/[0.01] px-3 py-2.5">
+                        <div className="feedback-slide-in border-l border-border/60 bg-foreground/[0.01] py-2 pl-3">
                           <p className="text-sm text-muted-foreground">
                             {entry.detail}
                           </p>

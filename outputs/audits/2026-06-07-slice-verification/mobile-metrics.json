@@ -1,0 +1,280 @@
+[
+  {
+    "route": "/templates",
+    "width": 390,
+    "height": 844,
+    "scrollWidth": 390,
+    "overflow": 0,
+    "interactiveCount": 22,
+    "smallTargets": [
+      {
+        "tag": "input",
+        "text": "",
+        "width": 1,
+        "height": 1,
+        "effectiveWidth": 1,
+        "effectiveHeight": 1,
+        "top": -1,
+        "left": -1
+      },
+      {
+        "tag": "input",
+        "text": "",
+        "width": 1,
+        "height": 1,
+        "effectiveWidth": 1,
+        "effectiveHeight": 1,
+        "top": -1,
+        "left": -1
+      },
+      {
+        "tag": "a",
+        "text": "Agentic Craft — Open Source",
+        "width": 163,
+        "height": 14,
+        "effectiveWidth": 163,
+        "effectiveHeight": 14,
+        "top": 6347,
+        "left": 114
+      }
+    ],
+    "visibleSmallTargets": []
+  },
+  {
+    "route": "/conversation#composer",
+    "width": 390,
+    "height": 844,
+    "scrollWidth": 390,
+    "overflow": 0,
+    "interactiveCount": 31,
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "Agentic Craft — Open Source",
+        "width": 163,
+        "height": 14,
+        "effectiveWidth": 163,
+        "effectiveHeight": 14,
+        "top": 2887,
+        "left": 114
+      }
+    ],
+    "visibleSmallTargets": []
+  },
+  {
+    "route": "/actions",
+    "width": 390,
+    "height": 844,
+    "scrollWidth": 390,
+    "overflow": 0,
+    "interactiveCount": 44,
+    "smallTargets": [
+      {
+        "tag": "textarea",
+        "text": "",
+        "width": 318,
+        "height": 24,
+        "effectiveWidth": 318,
+        "effectiveHeight": 24,
+        "top": 6526,
+        "left": 36
+      },
+      {
+        "tag": "a",
+        "text": "Agentic Craft — Open Source",
+        "width": 163,
+        "height": 14,
+        "effectiveWidth": 163,
+        "effectiveHeight": 14,
+        "top": 8858,
+        "left": 114
+      }
+    ],
+    "visibleSmallTargets": []
+  },
+  {
+    "route": "/observability",
+    "width": 390,
+    "height": 844,
+    "scrollWidth": 390,
+    "overflow": 0,
+    "interactiveCount": 13,
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "Agentic Craft — Open Source",
+        "width": 163,
+        "height": 14,
+        "effectiveWidth": 163,
+        "effectiveHeight": 14,
+        "top": 5461,
+        "left": 114
+      }
+    ],
+    "visibleSmallTargets": []
+  },
+  {
+    "route": "/sources",
+    "width": 390,
+    "height": 844,
+    "scrollWidth": 390,
+    "overflow": 0,
+    "interactiveCount": 10,
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "Agentic Craft — Open Source",
+        "width": 163,
+        "height": 14,
+        "effectiveWidth": 163,
+        "effectiveHeight": 14,
+        "top": 3482,
+        "left": 114
+      }
+    ],
+    "visibleSmallTargets": []
+  },
+  {
+    "route": "/memory",
+    "width": 390,
+    "height": 844,
+    "scrollWidth": 390,
+    "overflow": 0,
+    "interactiveCount": 48,
+    "smallTargets": [
+      {
+        "tag": "input",
+        "text": "",
+        "width": 1,
+        "height": 1,
+        "effectiveWidth": 1,
+        "effectiveHeight": 1,
+        "top": -1,
+        "left": -1
+      },
+      {
+        "tag": "input",
+        "text": "",
+        "width": 1,
+        "height": 1,
+        "effectiveWidth": 1,
+        "effectiveHeight": 1,
+        "top": -1,
+        "left": -1
+      },
+      {
+        "tag": "input",
+        "text": "",
+        "width": 1,
+        "height": 1,
+        "effectiveWidth": 1,
+        "effectiveHeight": 1,
+        "top": -1,
+        "left": -1
+      },
+      {
+        "tag": "input",
+        "text": "",
+        "width": 1,
+        "height": 1,
+        "effectiveWidth": 1,
+        "effectiveHeight": 1,
+        "top": -1,
+        "left": -1
+      },
+      {
+        "tag": "a",
+        "text": "Agentic Craft — Open Source",
+        "width": 163,
+        "height": 14,
+        "effectiveWidth": 163,
+        "effectiveHeight": 14,
+        "top": 5686,
+        "left": 114
+      }
+    ],
+    "visibleSmallTargets": []
+  },
+  {
+    "route": "/multi-agent",
+    "width": 390,
+    "height": 844,
+    "scrollWidth": 390,
+    "overflow": 0,
+    "interactiveCount": 18,
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "Agentic Craft — Open Source",
+        "width": 163,
+        "height": 14,
+        "effectiveWidth": 163,
+        "effectiveHeight": 14,
+        "top": 6728,
+        "left": 114
+      }
+    ],
+    "visibleSmallTargets": []
+  },
+  {
+    "route": "/trust",
+    "width": 390,
+    "height": 844,
+    "scrollWidth": 390,
+    "overflow": 0,
+    "interactiveCount": 42,
+    "smallTargets": [
+      {
+        "tag": "input",
+        "text": "",
+        "width": 1,
+        "height": 1,
+        "effectiveWidth": 1,
+        "effectiveHeight": 1,
+        "top": -1,
+        "left": -1
+      },
+      {
+        "tag": "input",
+        "text": "",
+        "width": 1,
+        "height": 1,
+        "effectiveWidth": 1,
+        "effectiveHeight": 1,
+        "top": -1,
+        "left": -1
+      },
+      {
+        "tag": "input",
+        "text": "",
+        "width": 1,
+        "height": 1,
+        "effectiveWidth": 1,
+        "effectiveHeight": 1,
+        "top": -1,
+        "left": -1
+      },
+      {
+        "tag": "input",
+        "text": "",
+        "width": 1,
+        "height": 1,
+        "effectiveWidth": 1,
+        "effectiveHeight": 1,
+        "top": -1,
+        "left": -1
+      },
+      {
+        "tag": "a",
+        "text": "Agentic Craft — Open Source",
+        "width": 163,
+        "height": 14,
+        "effectiveWidth": 163,
+        "effectiveHeight": 14,
+        "top": 10007,
+        "left": 114
+      }
+    ],
+    "visibleSmallTargets": []
+  }
+]

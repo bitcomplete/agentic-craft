@@ -35,6 +35,7 @@ export function ComposerInput({
       className={cn("px-2 pt-0.5 pb-0 sm:px-4 sm:pt-3 sm:pb-1", className)}
     >
       <Textarea
+        data-compact-touch
         ref={textareaRef}
         value={state.value}
         onChange={(e) => setValue(e.target.value)}

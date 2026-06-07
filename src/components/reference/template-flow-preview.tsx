@@ -21,14 +21,17 @@ function TemplateFlowPreview({
   return (
     <div
       data-slot="template-flow-preview"
-      className={cn("rounded-lg border border-border/60 p-3 sm:p-4", className)}
+      className={cn("border-y border-border/60 py-3 sm:py-4", className)}
     >
-      <div className="grid gap-2 md:grid-cols-5">
+      <div className="grid divide-y divide-border/50 md:grid-cols-5 md:divide-x md:divide-y-0">
         {steps.map((step, index) => (
-          <div key={step.label} className="relative min-w-0">
-            <div className="flex h-full min-w-0 flex-col rounded-md border border-border/50 bg-muted/20 p-3">
+          <div
+            key={step.label}
+            className="relative min-w-0 py-3 first:pt-0 last:pb-0 md:px-3 md:py-0 md:first:pl-0 md:last:pr-0"
+          >
+            <div className="flex h-full min-w-0 flex-col">
               <div className="flex items-center justify-between gap-2">
-                <div className="flex size-8 items-center justify-center rounded-md border border-border/60 bg-background text-muted-foreground">
+                <div className="flex size-8 items-center justify-center rounded-md bg-muted/40 text-muted-foreground">
                   <HugeiconsIcon icon={step.icon} strokeWidth={1.5} />
                 </div>
                 {step.status && (

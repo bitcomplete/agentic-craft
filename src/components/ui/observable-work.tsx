@@ -77,10 +77,12 @@ function ObservableWorkStep({
       )}
       {...props}
     >
-      <summary className="grid cursor-pointer list-none grid-cols-[1fr_auto] gap-3 rounded-[inherit] px-4 py-3 outline-none transition-colors hover:bg-muted/40 focus-visible:ring-3 focus-visible:ring-ring/50 [&::-webkit-details-marker]:hidden">
+      <summary className="grid cursor-pointer list-none grid-cols-[1fr_auto] gap-3 rounded-[inherit] px-4 py-3 transition-colors outline-none hover:bg-muted/40 focus-visible:ring-3 focus-visible:ring-ring/50 [&::-webkit-details-marker]:hidden">
         <span className="min-w-0">
           <span className="flex min-w-0 flex-wrap items-center gap-2">
-            <span className="truncate font-medium text-foreground">{title}</span>
+            <span className="truncate font-medium text-foreground">
+              {title}
+            </span>
             <Badge variant={statusBadgeVariants[status]}>
               {statusLabels[status]}
             </Badge>
@@ -124,7 +126,7 @@ function ObservableWorkDetail({
   return (
     <div
       data-slot="observable-work-detail"
-      className={cn("rounded-md border border-border/60 p-3", className)}
+      className={cn("border-l border-border/60 py-1 pl-3", className)}
       {...props}
     />
   )

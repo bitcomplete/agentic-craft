@@ -13,6 +13,7 @@ function Switch({
 }) {
   return (
     <SwitchPrimitive.Root
+      data-compact-touch
       data-slot="switch"
       data-size={size}
       className={cn(

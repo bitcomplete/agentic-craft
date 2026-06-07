@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   Activity01Icon,
@@ -22,6 +22,7 @@ import {
   AgentStatusTable,
   type AgentStatusRow,
 } from "@/components/ui/agent-status-table"
+import { RunTrace, type RunTraceEvent } from "@/components/ui/run-trace"
 import {
   Table,
   TableBody,
@@ -31,72 +32,6 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-/* ------------------------------------------------------------------ */
-/*  CSS Keyframes                                                      */
-/* ------------------------------------------------------------------ */
-
-const STYLE_ID = "monitoring-page-styles"
-function ensureStyles() {
-  if (document.getElementById(STYLE_ID)) return
-  const style = document.createElement("style")
-  style.id = STYLE_ID
-  style.textContent = `
-    @keyframes mon-slide-in {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes mon-fade-in {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-      @keyframes mon-expand {
-        from { opacity: 0; transform: translateY(-4px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-      @keyframes mon-progress {
-        from { transform: scaleX(0); }
-        to { transform: scaleX(var(--target-scale)); }
-    }
-    @keyframes mon-pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-    @keyframes mon-sparkline-draw {
-      from { stroke-dashoffset: 200; }
-      to { stroke-dashoffset: 0; }
-    }
-    .mon-slide-in {
-      animation: mon-slide-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
-    .mon-fade-in {
-      animation: mon-fade-in 0.2s ease forwards;
-    }
-    .mon-expand {
-      animation: mon-expand 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-      overflow: hidden;
-    }
-    .mon-pulse {
-      animation: mon-pulse 1.5s ease-in-out 3;
-    }
-    .mon-sparkline-draw {
-      animation: mon-sparkline-draw 0.8s ease forwards;
-      stroke-dasharray: 200;
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .mon-slide-in,
-      .mon-fade-in,
-      .mon-expand,
-      .mon-pulse,
-      .mon-sparkline-draw {
-        animation: none;
-      }
-      .mon-sparkline-draw {
-        stroke-dashoffset: 0;
-      }
-    }
-  `
-  document.head.appendChild(style)
-}
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
 /* ------------------------------------------------------------------ */
@@ -315,6 +250,50 @@ const SESSION_AGENT_ROWS: AgentStatusRow[] = [
   },
 ]
 
+const REVIEW_RUN_TRACE: RunTraceEvent[] = [
+  {
+    id: "sources",
+    title: "Collected launch sources",
+    description: "Read the project brief, launch checklist, and triage policy.",
+    status: "complete",
+    source: "3 sources",
+    timestamp: "11:40 AM",
+    duration: "18s",
+    detail:
+      "The trace records touched source objects and completion state, not hidden reasoning.",
+  },
+  {
+    id: "coverage",
+    title: "Mapped export coverage",
+    description: "Compared CSV-only export text against the current policy.",
+    status: "complete",
+    source: "Project brief v3",
+    timestamp: "11:42 AM",
+    duration: "24s",
+  },
+  {
+    id: "threshold",
+    title: "Coverage threshold warning",
+    description:
+      "JSON export is missing from the draft, so the run stays in review.",
+    status: "warning",
+    source: "Launch Policy v2",
+    timestamp: "11:43 AM",
+    duration: "visible on hover",
+    detail:
+      "Warnings should include the affected object, source, and recovery path before escalation.",
+  },
+  {
+    id: "handoff",
+    title: "Queued reviewer handoff",
+    description: "Prepared a packet for the launch owner to confirm ownership.",
+    status: "running",
+    source: "Review session",
+    timestamp: "now",
+    duration: "running",
+  },
+]
+
 const ERROR_LIST = [
   {
     time: "11:32 AM",
@@ -344,8 +323,6 @@ const ERROR_LIST = [
 /* ------------------------------------------------------------------ */
 
 export function ObservabilityContent() {
-  useEffect(ensureStyles, [])
-
   // Section 1: Activity Timeline
   const [actCtrl, setActCtrl] = useState<Record<string, boolean>>({
     live: true,
@@ -432,6 +409,19 @@ export function ObservabilityContent() {
         </p>
 
         <div className="mt-10">
+          <div className="mb-5 border-l border-border/70 bg-muted/20 py-3 pr-2 pl-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge variant="outline">Threshold warning</Badge>
+              <span className="text-sm font-medium text-foreground">
+                Source coverage is below release-review minimum
+              </span>
+            </div>
+            <p className="mt-1 max-w-[620px] text-xs leading-5 text-muted-foreground">
+              JSON export support is missing from the draft. The run stays in
+              review until the owner resolves the gap or accepts the risk.
+            </p>
+          </div>
+
           <Controls
             options={[
               { key: "live", label: "Live" },
@@ -468,11 +458,11 @@ export function ObservabilityContent() {
             </div>
 
             {/* Activity items */}
-            <div className="space-y-2">
+            <div className="divide-y divide-border/40">
               {activityItems.map((item, i) => (
                 <div
                   key={`${activeAct}-${i}`}
-                  className="mon-slide-in flex items-start gap-3 rounded-md border border-border/30 px-3 py-2.5"
+                  className="mon-slide-in flex items-start gap-3 py-3 first:pt-0 last:pb-0"
                   style={{ animationDelay: `${i * 60}ms` }}
                 >
                   <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-muted">
@@ -500,6 +490,14 @@ export function ObservabilityContent() {
         <div className="mt-8">
           <p className="section-label mb-3">Run state</p>
           <AgentStatusTable agents={SESSION_AGENT_ROWS} />
+        </div>
+
+        <div className="mt-6">
+          <RunTrace
+            title="Export review run trace"
+            description="Operational events, source touches, warning state, and queued handoff for the active review."
+            events={REVIEW_RUN_TRACE}
+          />
         </div>
 
         {/* Spec table */}
@@ -603,7 +601,7 @@ export function ObservabilityContent() {
               </div>
 
               {/* Main meter */}
-              <div className="space-y-2">
+              <div className="flex flex-col gap-2">
                 <div className="flex items-baseline justify-between">
                   <span className="text-2xl font-semibold tracking-tight">
                     {tokenCfg.used.toLocaleString()}
@@ -621,7 +619,7 @@ export function ObservabilityContent() {
 
               {/* Warning for high usage */}
               {isHighUsage && (
-                <div className="mon-fade-in mt-4 flex items-start gap-2 rounded-md border border-foreground/15 bg-foreground/[0.02] px-3 py-2.5">
+                <div className="mon-fade-in mt-4 flex items-start gap-2 border-l border-foreground/20 bg-foreground/[0.02] py-2 pl-3">
                   <HugeiconsIcon
                     icon={Alert01Icon}
                     size={14}
@@ -639,14 +637,14 @@ export function ObservabilityContent() {
               )}
 
               {/* Stats row */}
-              <div className="mt-4 grid grid-cols-3 gap-3">
-                <div className="rounded-md border border-border/30 px-3 py-2">
+              <div className="mt-4 grid grid-cols-3 divide-x divide-border/40">
+                <div className="pr-3">
                   <p className="text-xs text-muted-foreground">Sessions</p>
                   <p className="mt-0.5 text-sm font-medium">
                     {tokenCfg.sessions}
                   </p>
                 </div>
-                <div className="rounded-md border border-border/30 px-3 py-2">
+                <div className="px-3">
                   <p className="text-xs text-muted-foreground">
                     Avg. per session
                   </p>
@@ -656,7 +654,7 @@ export function ObservabilityContent() {
                     ).toLocaleString()}
                   </p>
                 </div>
-                <div className="rounded-md border border-border/30 px-3 py-2">
+                <div className="pl-3">
                   <p className="text-xs text-muted-foreground">Remaining</p>
                   <p className="mt-0.5 text-sm font-medium">
                     {(tokenCfg.budget - tokenCfg.used).toLocaleString()}
@@ -752,7 +750,7 @@ export function ObservabilityContent() {
             className="rounded-lg border border-border/40 p-6"
             key={sessionAnim}
           >
-            <div className="space-y-0">
+            <div className="flex flex-col gap-0">
               {sessionItems.map((item, i) => (
                 <div
                   key={`${activeSession}-${i}`}
@@ -922,18 +920,20 @@ export function ObservabilityContent() {
                 </p>
               </div>
             ) : (
-              <div className="space-y-2">
+              <div className="divide-y divide-border/40">
                 {ERROR_LIST.map((err, i) => (
                   <div
                     key={i}
-                    className="mon-slide-in rounded-md border border-border/40"
+                    className="mon-slide-in"
                     style={{ animationDelay: `${i * 60}ms` }}
                   >
                     <button
+                      type="button"
+                      aria-label={`Toggle error details: ${err.title}`}
                       onClick={() =>
                         setExpandedErr(expandedErr === i ? null : i)
                       }
-                      className="flex w-full items-start gap-3 px-4 py-3 text-left"
+                      className="flex w-full items-start gap-3 py-3 text-left transition-colors hover:bg-muted/30 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
                     >
                       <div className="mt-0.5 shrink-0">
                         <HugeiconsIcon

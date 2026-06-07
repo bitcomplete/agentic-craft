@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useCallback } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   Edit01Icon,
@@ -46,77 +46,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-
-/* ------------------------------------------------------------------ */
-/*  CSS Keyframes                                                      */
-/* ------------------------------------------------------------------ */
-
-const STYLE_ID = "memory-page-styles"
-function ensureStyles() {
-  if (document.getElementById(STYLE_ID)) return
-  const style = document.createElement("style")
-  style.id = STYLE_ID
-  style.textContent = `
-    @keyframes memory-slide-in {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes memory-fade-in {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    @keyframes memory-fade-out {
-      from { opacity: 1; transform: translateY(0); }
-      to { opacity: 0; transform: translateY(-4px); }
-    }
-    @keyframes memory-press {
-      0% { transform: scale(1); }
-      40% { transform: scale(0.97); }
-      100% { transform: scale(1); }
-    }
-      @keyframes memory-expand {
-        from { opacity: 0; transform: translateY(-4px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes memory-ring-fill {
-      from { stroke-dashoffset: var(--ring-circ); }
-      to { stroke-dashoffset: var(--ring-offset); }
-    }
-    .memory-slide-in {
-      animation: memory-slide-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
-    .memory-fade-in {
-      animation: memory-fade-in 0.2s ease forwards;
-    }
-    .memory-fade-out {
-      animation: memory-fade-out 0.2s ease forwards;
-    }
-    .memory-press {
-      animation: memory-press 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .memory-expand {
-      animation: memory-expand 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-      overflow: hidden;
-    }
-    .memory-ring-fill {
-      animation: memory-ring-fill 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .memory-slide-in,
-      .memory-fade-in,
-      .memory-fade-out,
-      .memory-press,
-      .memory-expand,
-      .memory-ring-fill {
-        animation: none;
-      }
-      .memory-ring-fill {
-        stroke-dashoffset: var(--ring-offset);
-      }
-    }
-  `
-  document.head.appendChild(style)
-}
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -225,8 +154,6 @@ const PRIVACY_CATEGORIES = [
 /* ------------------------------------------------------------------ */
 
 export function MemoryContent() {
-  useEffect(ensureStyles, [])
-
   /* ── Section 1: Memory Panel ── */
   const [panelState, setPanelState] = useState<Record<string, boolean>>({
     empty: false,
@@ -386,7 +313,7 @@ export function MemoryContent() {
   return (
     <article>
       <header className="mb-20">
-        <p className="section-label mb-4">Knowledge &amp; Context</p>
+        <p className="section-label mb-4">Memory</p>
         <h1 className="font-serif text-4xl leading-[1.15] font-light tracking-tight">
           Memory
         </h1>
@@ -419,7 +346,7 @@ export function MemoryContent() {
             onToggle={handlePanelToggle}
           />
 
-          <div className="rounded-lg border border-border/40 p-6">
+          <div className="border-y border-border/40 py-6">
             {/* Header */}
             <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -623,7 +550,7 @@ export function MemoryContent() {
             className="rounded-lg border border-border/40 p-6"
             key={crudAnimKey}
           >
-            <div className="memory-slide-in rounded-md border border-border/40 px-4 py-3">
+            <div className="memory-slide-in">
               {/* View mode */}
               {crudState.view && (
                 <div className="flex items-center justify-between">
@@ -707,7 +634,7 @@ export function MemoryContent() {
 
               {/* Delete mode */}
               {crudState.delete && (
-                <div className="space-y-3">
+                <div className="flex flex-col gap-3">
                   <div>
                     <span className="text-xs text-muted-foreground/60">
                       Preferred release tier level
@@ -716,7 +643,7 @@ export function MemoryContent() {
                       enterprise release
                     </p>
                   </div>
-                  <div className="rounded-md border border-foreground/10 bg-foreground/[0.02] px-3 py-2.5">
+                  <div className="border-l border-foreground/15 bg-foreground/[0.02] py-2 pl-3">
                     <div className="flex items-start gap-2">
                       <HugeiconsIcon
                         icon={Alert01Icon}
@@ -847,7 +774,7 @@ export function MemoryContent() {
             key={autoAnimKey}
           >
             {/* Agent message context */}
-            <div className="mb-3 rounded-lg border border-border/40 p-4">
+            <div className="mb-3">
               <p
                 className="text-base"
                 style={{
@@ -868,7 +795,7 @@ export function MemoryContent() {
 
             {/* Detected banner */}
             {autoState.detected && (
-              <div className="memory-slide-in flex items-center justify-between rounded-md border border-foreground/10 bg-foreground/[0.02] px-4 py-3">
+              <div className="memory-slide-in flex items-center justify-between border-l border-foreground/15 bg-foreground/[0.02] py-3 pl-3">
                 <div className="flex items-center gap-2.5">
                   <HugeiconsIcon
                     icon={Brain01Icon}
@@ -912,7 +839,7 @@ export function MemoryContent() {
 
             {/* Saved confirmation */}
             {autoState.saved && (
-              <div className="memory-fade-in flex items-center gap-2 rounded-md border border-foreground/10 bg-foreground/[0.02] px-4 py-3">
+              <div className="memory-fade-in flex items-center gap-2 border-l border-foreground/15 bg-foreground/[0.02] py-3 pl-3">
                 <HugeiconsIcon
                   icon={Tick01Icon}
                   size={14}
@@ -1093,7 +1020,7 @@ export function MemoryContent() {
                     <p className="text-xs font-medium text-foreground/80">
                       Loaded memories
                     </p>
-                    <div className="space-y-1.5">
+                    <div className="flex flex-col gap-1.5">
                       {MEMORY_ENTRIES.slice(0, 4).map((e) => (
                         <div key={e.id} className="flex items-baseline gap-2">
                           <span className="shrink-0 text-[10px] text-muted-foreground/50">
@@ -1230,7 +1157,7 @@ export function MemoryContent() {
 
             {/* All-off confirmation */}
             {showOffConfirm && (
-              <div className="memory-slide-in mt-4 rounded-md border border-foreground/10 bg-foreground/[0.02] px-4 py-3">
+              <div className="memory-slide-in mt-4 border-l border-foreground/15 bg-foreground/[0.02] py-3 pl-3">
                 <div className="flex items-start gap-2.5">
                   <HugeiconsIcon
                     icon={Alert01Icon}

@@ -1,0 +1,1514 @@
+{
+  "checks": [
+    {
+      "route": "/templates",
+      "viewport": {
+        "width": 1223,
+        "height": 998
+      },
+      "file": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-07-current-verification/01-templates-desktop.png",
+      "logs": [],
+      "metrics": {
+        "route": "/templates",
+        "title": "Templates | Agentic Craft",
+        "h1": "Templates",
+        "width": 1223,
+        "height": 998,
+        "scrollWidth": 1223,
+        "overflow": 0,
+        "bodyTextLength": 5497,
+        "hasFrameworkOverlay": false,
+        "visibleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Review Workflow",
+            "width": 110,
+            "height": 28,
+            "effectiveWidth": 110,
+            "effectiveHeight": 28,
+            "top": 138,
+            "left": 33
+          },
+          {
+            "tag": "button",
+            "text": "Approval Workflow",
+            "width": 120,
+            "height": 28,
+            "effectiveWidth": 120,
+            "effectiveHeight": 28,
+            "top": 170,
+            "left": 33
+          },
+          {
+            "tag": "button",
+            "text": "Clarifying Workflow",
+            "width": 124,
+            "height": 28,
+            "effectiveWidth": 124,
+            "effectiveHeight": 28,
+            "top": 202,
+            "left": 33
+          },
+          {
+            "tag": "button",
+            "text": "Source-Backed Artifact",
+            "width": 145,
+            "height": 28,
+            "effectiveWidth": 145,
+            "effectiveHeight": 28,
+            "top": 234,
+            "left": 33
+          },
+          {
+            "tag": "button",
+            "text": "Memory Review",
+            "width": 104,
+            "height": 28,
+            "effectiveWidth": 104,
+            "effectiveHeight": 28,
+            "top": 266,
+            "left": 33
+          },
+          {
+            "tag": "button",
+            "text": "Background Run Monitor",
+            "width": 153,
+            "height": 28,
+            "effectiveWidth": 153,
+            "effectiveHeight": 28,
+            "top": 298,
+            "left": 33
+          },
+          {
+            "tag": "button",
+            "text": "Multi-Agent Handoff",
+            "width": 130,
+            "height": 28,
+            "effectiveWidth": 130,
+            "effectiveHeight": 28,
+            "top": 330,
+            "left": 33
+          },
+          {
+            "tag": "button",
+            "text": "Agent Settings",
+            "width": 97,
+            "height": 28,
+            "effectiveWidth": 97,
+            "effectiveHeight": 28,
+            "top": 362,
+            "left": 33
+          },
+          {
+            "tag": "button",
+            "text": "Toggle Sidebar",
+            "width": 28,
+            "height": 28,
+            "effectiveWidth": 28,
+            "effectiveHeight": 28,
+            "top": 6,
+            "left": 232
+          },
+          {
+            "tag": "input",
+            "text": "",
+            "width": 1,
+            "height": 1,
+            "effectiveWidth": 1,
+            "effectiveHeight": 1,
+            "top": -1,
+            "left": -1
+          },
+          {
+            "tag": "input",
+            "text": "",
+            "width": 1,
+            "height": 1,
+            "effectiveWidth": 1,
+            "effectiveHeight": 1,
+            "top": -1,
+            "left": -1
+          }
+        ],
+        "overflowEls": [],
+        "nestedBorderPairs": [
+          {
+            "tag": "div",
+            "text": ""
+          },
+          {
+            "tag": "div",
+            "text": ""
+          },
+          {
+            "tag": "div",
+            "text": ""
+          },
+          {
+            "tag": "div",
+            "text": ""
+          }
+        ]
+      }
+    },
+    {
+      "route": "/templates",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-07-current-verification/02-templates-mobile.png",
+      "logs": [],
+      "metrics": {
+        "route": "/templates",
+        "title": "Templates | Agentic Craft",
+        "h1": "Templates",
+        "width": 390,
+        "height": 844,
+        "scrollWidth": 390,
+        "overflow": 0,
+        "bodyTextLength": 5204,
+        "hasFrameworkOverlay": false,
+        "visibleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Toggle Sidebar",
+            "width": 28,
+            "height": 28,
+            "effectiveWidth": 28,
+            "effectiveHeight": 28,
+            "top": 10,
+            "left": 12
+          },
+          {
+            "tag": "input",
+            "text": "",
+            "width": 1,
+            "height": 1,
+            "effectiveWidth": 1,
+            "effectiveHeight": 1,
+            "top": -1,
+            "left": -1
+          },
+          {
+            "tag": "input",
+            "text": "",
+            "width": 1,
+            "height": 1,
+            "effectiveWidth": 1,
+            "effectiveHeight": 1,
+            "top": -1,
+            "left": -1
+          }
+        ],
+        "overflowEls": [
+          {
+            "tag": "table",
+            "text": "AgentStatusTaskProgressConfidenceCostUpdatedSource CollectorGathers evidenceWork",
+            "left": 16,
+            "right": 872,
+            "width": 856
+          },
+          {
+            "tag": "thead",
+            "text": "AgentStatusTaskProgressConfidenceCostUpdated",
+            "left": 16,
+            "right": 872,
+            "width": 856
+          },
+          {
+            "tag": "tr",
+            "text": "AgentStatusTaskProgressConfidenceCostUpdated",
+            "left": 16,
+            "right": 872,
+            "width": 856
+          },
+          {
+            "tag": "th",
+            "text": "Task",
+            "left": 273,
+            "right": 529,
+            "width": 256
+          },
+          {
+            "tag": "th",
+            "text": "Progress",
+            "left": 529,
+            "right": 657,
+            "width": 128
+          },
+          {
+            "tag": "th",
+            "text": "Confidence",
+            "left": 657,
+            "right": 747,
+            "width": 90
+          },
+          {
+            "tag": "th",
+            "text": "Cost",
+            "left": 747,
+            "right": 801,
+            "width": 54
+          },
+          {
+            "tag": "th",
+            "text": "Updated",
+            "left": 801,
+            "right": 872,
+            "width": 71
+          },
+          {
+            "tag": "tbody",
+            "text": "Source CollectorGathers evidenceWorkingReading recent source material and extrac",
+            "left": 16,
+            "right": 872,
+            "width": 856
+          },
+          {
+            "tag": "tr",
+            "text": "Source CollectorGathers evidenceWorkingReading recent source material and extrac",
+            "left": 16,
+            "right": 872,
+            "width": 856
+          },
+          {
+            "tag": "td",
+            "text": "Reading recent source material and extracting referenced decisions.",
+            "left": 273,
+            "right": 529,
+            "width": 256
+          },
+          {
+            "tag": "td",
+            "text": "x64%",
+            "left": 529,
+            "right": 657,
+            "width": 128
+          }
+        ],
+        "nestedBorderPairs": []
+      }
+    },
+    {
+      "route": "/conversation#composer",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-07-current-verification/03-conversation-composer-mobile.png",
+      "logs": [],
+      "metrics": {
+        "route": "/conversation#composer",
+        "title": "Conversation | Agentic Craft",
+        "h1": "Conversation",
+        "width": 390,
+        "height": 844,
+        "scrollWidth": 390,
+        "overflow": 0,
+        "bodyTextLength": 8569,
+        "hasFrameworkOverlay": false,
+        "visibleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Toggle Sidebar",
+            "width": 28,
+            "height": 28,
+            "effectiveWidth": 28,
+            "effectiveHeight": 28,
+            "top": 10,
+            "left": 12
+          },
+          {
+            "tag": "button",
+            "text": "Expand plan",
+            "width": 28,
+            "height": 28,
+            "effectiveWidth": 28,
+            "effectiveHeight": 28,
+            "top": 318,
+            "left": 335
+          }
+        ],
+        "overflowEls": [
+          {
+            "tag": "table",
+            "text": "TypeStyleDetailsUserbg-primary, text-primary-foregroundmax-width 75%, rounded-lg",
+            "left": 16,
+            "right": 843,
+            "width": 827
+          },
+          {
+            "tag": "thead",
+            "text": "TypeStyleDetails",
+            "left": 16,
+            "right": 843,
+            "width": 827
+          },
+          {
+            "tag": "tr",
+            "text": "TypeStyleDetails",
+            "left": 16,
+            "right": 843,
+            "width": 827
+          },
+          {
+            "tag": "th",
+            "text": "Details",
+            "left": 368,
+            "right": 843,
+            "width": 475
+          },
+          {
+            "tag": "tbody",
+            "text": "Userbg-primary, text-primary-foregroundmax-width 75%, rounded-lg, right-aligned,",
+            "left": 16,
+            "right": 843,
+            "width": 827
+          },
+          {
+            "tag": "tr",
+            "text": "Userbg-primary, text-primary-foregroundmax-width 75%, rounded-lg, right-aligned,",
+            "left": 16,
+            "right": 843,
+            "width": 827
+          },
+          {
+            "tag": "td",
+            "text": "max-width 75%, rounded-lg, right-aligned, app body font, 14px",
+            "left": 368,
+            "right": 843,
+            "width": 475
+          },
+          {
+            "tag": "tr",
+            "text": "Agentborder border-border bg-mutedmax-width 75%, rounded-lg, left-aligned, user-",
+            "left": 16,
+            "right": 843,
+            "width": 827
+          },
+          {
+            "tag": "td",
+            "text": "max-width 75%, rounded-lg, left-aligned, user-configurable prose style",
+            "left": 368,
+            "right": 843,
+            "width": 475
+          },
+          {
+            "tag": "tr",
+            "text": "Systembg-muted, text-muted-foregroundcentered, text-xs, rounded-md",
+            "left": 16,
+            "right": 843,
+            "width": 827
+          },
+          {
+            "tag": "td",
+            "text": "centered, text-xs, rounded-md",
+            "left": 368,
+            "right": 843,
+            "width": 475
+          },
+          {
+            "tag": "table",
+            "text": "PropertyValueFont preferenceUser or workspace setting; current Serif proseActive",
+            "left": 16,
+            "right": 480,
+            "width": 464
+          }
+        ],
+        "nestedBorderPairs": []
+      }
+    },
+    {
+      "route": "/actions",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-07-current-verification/04-actions-mobile.png",
+      "logs": [],
+      "metrics": {
+        "route": "/actions",
+        "title": "Agent Actions | Agentic Craft",
+        "h1": "Agent Actions",
+        "width": 390,
+        "height": 844,
+        "scrollWidth": 390,
+        "overflow": 0,
+        "bodyTextLength": 8404,
+        "hasFrameworkOverlay": false,
+        "visibleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Toggle Sidebar",
+            "width": 28,
+            "height": 28,
+            "effectiveWidth": 28,
+            "effectiveHeight": 28,
+            "top": 10,
+            "left": 12
+          },
+          {
+            "tag": "button",
+            "text": "Expand All",
+            "width": 78,
+            "height": 28,
+            "effectiveWidth": 78,
+            "effectiveHeight": 28,
+            "top": 514,
+            "left": 98
+          },
+          {
+            "tag": "button",
+            "text": "Error State",
+            "width": 79,
+            "height": 28,
+            "effectiveWidth": 79,
+            "effectiveHeight": 28,
+            "top": 514,
+            "left": 181
+          },
+          {
+            "tag": "button",
+            "text": "Grouped",
+            "width": 69,
+            "height": 28,
+            "effectiveWidth": 69,
+            "effectiveHeight": 28,
+            "top": 514,
+            "left": 264
+          },
+          {
+            "tag": "button",
+            "text": "Searching document repository",
+            "width": 253,
+            "height": 20,
+            "effectiveWidth": 253,
+            "effectiveHeight": 20,
+            "top": 579,
+            "left": 41
+          },
+          {
+            "tag": "button",
+            "text": "Loading project brief definitions",
+            "width": 255,
+            "height": 20,
+            "effectiveWidth": 255,
+            "effectiveHeight": 20,
+            "top": 605,
+            "left": 41
+          },
+          {
+            "tag": "button",
+            "text": "Cross-referencing test case mappings",
+            "width": 276,
+            "height": 20,
+            "effectiveWidth": 276,
+            "effectiveHeight": 20,
+            "top": 631,
+            "left": 41
+          },
+          {
+            "tag": "button",
+            "text": "Generating coverage matrix",
+            "width": 230,
+            "height": 20,
+            "effectiveWidth": 230,
+            "effectiveHeight": 20,
+            "top": 657,
+            "left": 41
+          }
+        ],
+        "overflowEls": [
+          {
+            "tag": "table",
+            "text": "PropertySpecTool title14px sans, font-weight 400 (never bold)Inner detail text12",
+            "left": 16,
+            "right": 519,
+            "width": 503
+          },
+          {
+            "tag": "thead",
+            "text": "PropertySpec",
+            "left": 16,
+            "right": 519,
+            "width": 503
+          },
+          {
+            "tag": "tr",
+            "text": "PropertySpec",
+            "left": 16,
+            "right": 519,
+            "width": 503
+          },
+          {
+            "tag": "th",
+            "text": "Spec",
+            "left": 148,
+            "right": 519,
+            "width": 371
+          },
+          {
+            "tag": "tbody",
+            "text": "Tool title14px sans, font-weight 400 (never bold)Inner detail text12px, key in m",
+            "left": 16,
+            "right": 519,
+            "width": 503
+          },
+          {
+            "tag": "tr",
+            "text": "Tool title14px sans, font-weight 400 (never bold)",
+            "left": 16,
+            "right": 519,
+            "width": 503
+          },
+          {
+            "tag": "td",
+            "text": "14px sans, font-weight 400 (never bold)",
+            "left": 148,
+            "right": 519,
+            "width": 371
+          },
+          {
+            "tag": "tr",
+            "text": "Inner detail text12px, key in muted, value in foreground",
+            "left": 16,
+            "right": 519,
+            "width": 503
+          },
+          {
+            "tag": "td",
+            "text": "12px, key in muted, value in foreground",
+            "left": 148,
+            "right": 519,
+            "width": 371
+          },
+          {
+            "tag": "tr",
+            "text": "IconsAll monochrome — no colored status indicators",
+            "left": 16,
+            "right": 519,
+            "width": 503
+          },
+          {
+            "tag": "td",
+            "text": "All monochrome — no colored status indicators",
+            "left": 148,
+            "right": 519,
+            "width": 371
+          },
+          {
+            "tag": "tr",
+            "text": "LabelsHuman-readable only — no function signatures or code",
+            "left": 16,
+            "right": 519,
+            "width": 503
+          }
+        ],
+        "nestedBorderPairs": []
+      }
+    },
+    {
+      "route": "/observability",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-07-current-verification/05-observability-mobile.png",
+      "logs": [],
+      "metrics": {
+        "route": "/observability",
+        "title": "Observability | Agentic Craft",
+        "h1": "Observability",
+        "width": 390,
+        "height": 844,
+        "scrollWidth": 390,
+        "overflow": 0,
+        "bodyTextLength": 5545,
+        "hasFrameworkOverlay": false,
+        "visibleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Toggle Sidebar",
+            "width": 28,
+            "height": 28,
+            "effectiveWidth": 28,
+            "effectiveHeight": 28,
+            "top": 10,
+            "left": 12
+          },
+          {
+            "tag": "button",
+            "text": "Live",
+            "width": 43,
+            "height": 28,
+            "effectiveWidth": 43,
+            "effectiveHeight": 28,
+            "top": 604,
+            "left": 98
+          },
+          {
+            "tag": "button",
+            "text": "History",
+            "width": 60,
+            "height": 28,
+            "effectiveWidth": 60,
+            "effectiveHeight": 28,
+            "top": 604,
+            "left": 145
+          },
+          {
+            "tag": "button",
+            "text": "Filtered",
+            "width": 62,
+            "height": 28,
+            "effectiveWidth": 62,
+            "effectiveHeight": 28,
+            "top": 604,
+            "left": 209
+          }
+        ],
+        "overflowEls": [
+          {
+            "tag": "table",
+            "text": "AgentStatusTaskProgressConfidenceCostUpdatedReview AgentCoordinates the sessionW",
+            "left": 16,
+            "right": 884,
+            "width": 868
+          },
+          {
+            "tag": "thead",
+            "text": "AgentStatusTaskProgressConfidenceCostUpdated",
+            "left": 16,
+            "right": 884,
+            "width": 868
+          },
+          {
+            "tag": "tr",
+            "text": "AgentStatusTaskProgressConfidenceCostUpdated",
+            "left": 16,
+            "right": 884,
+            "width": 868
+          },
+          {
+            "tag": "th",
+            "text": "Task",
+            "left": 281,
+            "right": 537,
+            "width": 256
+          },
+          {
+            "tag": "th",
+            "text": "Progress",
+            "left": 537,
+            "right": 668,
+            "width": 132
+          },
+          {
+            "tag": "th",
+            "text": "Confidence",
+            "left": 668,
+            "right": 759,
+            "width": 90
+          },
+          {
+            "tag": "th",
+            "text": "Cost",
+            "left": 759,
+            "right": 813,
+            "width": 54
+          },
+          {
+            "tag": "th",
+            "text": "Updated",
+            "left": 813,
+            "right": 884,
+            "width": 71
+          },
+          {
+            "tag": "tbody",
+            "text": "Review AgentCoordinates the sessionWorkingComparing the active request against s",
+            "left": 16,
+            "right": 884,
+            "width": 868
+          },
+          {
+            "tag": "tr",
+            "text": "Review AgentCoordinates the sessionWorkingComparing the active request against s",
+            "left": 16,
+            "right": 884,
+            "width": 868
+          },
+          {
+            "tag": "td",
+            "text": "Comparing the active request against source coverage.",
+            "left": 281,
+            "right": 537,
+            "width": 256
+          },
+          {
+            "tag": "td",
+            "text": "x72%",
+            "left": 537,
+            "right": 668,
+            "width": 132
+          }
+        ],
+        "nestedBorderPairs": []
+      }
+    },
+    {
+      "route": "/sources",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-07-current-verification/06-sources-mobile.png",
+      "logs": [],
+      "metrics": {
+        "route": "/sources",
+        "title": "Sources & Artifacts | Agentic Craft",
+        "h1": "Sources & Artifacts",
+        "width": 390,
+        "height": 844,
+        "scrollWidth": 390,
+        "overflow": 0,
+        "bodyTextLength": 2423,
+        "hasFrameworkOverlay": false,
+        "visibleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Toggle Sidebar",
+            "width": 28,
+            "height": 28,
+            "effectiveWidth": 28,
+            "effectiveHeight": 28,
+            "top": 10,
+            "left": 12
+          },
+          {
+            "tag": "button",
+            "text": "1",
+            "width": 18,
+            "height": 18,
+            "effectiveWidth": 18,
+            "effectiveHeight": 18,
+            "top": 557,
+            "left": 16
+          },
+          {
+            "tag": "button",
+            "text": "2",
+            "width": 21,
+            "height": 18,
+            "effectiveWidth": 21,
+            "effectiveHeight": 18,
+            "top": 557,
+            "left": 277
+          },
+          {
+            "tag": "button",
+            "text": "3",
+            "width": 21,
+            "height": 18,
+            "effectiveWidth": 21,
+            "effectiveHeight": 18,
+            "top": 613,
+            "left": 209
+          },
+          {
+            "tag": "button",
+            "text": "Inspect selected source",
+            "width": 162,
+            "height": 28,
+            "effectiveWidth": 162,
+            "effectiveHeight": 28,
+            "top": 655,
+            "left": 16
+          }
+        ],
+        "overflowEls": [],
+        "nestedBorderPairs": []
+      }
+    },
+    {
+      "route": "/memory",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-07-current-verification/07-memory-mobile.png",
+      "logs": [],
+      "metrics": {
+        "route": "/memory",
+        "title": "Memory | Agentic Craft",
+        "h1": "Memory",
+        "width": 390,
+        "height": 844,
+        "scrollWidth": 390,
+        "overflow": 0,
+        "bodyTextLength": 5279,
+        "hasFrameworkOverlay": false,
+        "visibleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Toggle Sidebar",
+            "width": 28,
+            "height": 28,
+            "effectiveWidth": 28,
+            "effectiveHeight": 28,
+            "top": 10,
+            "left": 12
+          },
+          {
+            "tag": "button",
+            "text": "Empty",
+            "width": 56,
+            "height": 28,
+            "effectiveWidth": 56,
+            "effectiveHeight": 28,
+            "top": 491,
+            "left": 98
+          },
+          {
+            "tag": "button",
+            "text": "Populated",
+            "width": 76,
+            "height": 28,
+            "effectiveWidth": 76,
+            "effectiveHeight": 28,
+            "top": 491,
+            "left": 158
+          },
+          {
+            "tag": "button",
+            "text": "Search",
+            "width": 58,
+            "height": 28,
+            "effectiveWidth": 58,
+            "effectiveHeight": 28,
+            "top": 491,
+            "left": 238
+          },
+          {
+            "tag": "button",
+            "text": "Inspect",
+            "width": 58,
+            "height": 24,
+            "effectiveWidth": 58,
+            "effectiveHeight": 24,
+            "top": 705,
+            "left": 73
+          },
+          {
+            "tag": "button",
+            "text": "Edit",
+            "width": 40,
+            "height": 24,
+            "effectiveWidth": 40,
+            "effectiveHeight": 24,
+            "top": 705,
+            "left": 135
+          },
+          {
+            "tag": "button",
+            "text": "Remove",
+            "width": 63,
+            "height": 24,
+            "effectiveWidth": 63,
+            "effectiveHeight": 24,
+            "top": 705,
+            "left": 179
+          },
+          {
+            "tag": "button",
+            "text": "Inspect",
+            "width": 58,
+            "height": 24,
+            "effectiveWidth": 58,
+            "effectiveHeight": 24,
+            "top": 843,
+            "left": 73
+          },
+          {
+            "tag": "button",
+            "text": "Edit",
+            "width": 40,
+            "height": 24,
+            "effectiveWidth": 40,
+            "effectiveHeight": 24,
+            "top": 843,
+            "left": 135
+          },
+          {
+            "tag": "button",
+            "text": "Remove",
+            "width": 63,
+            "height": 24,
+            "effectiveWidth": 63,
+            "effectiveHeight": 24,
+            "top": 843,
+            "left": 179
+          },
+          {
+            "tag": "input",
+            "text": "",
+            "width": 1,
+            "height": 1,
+            "effectiveWidth": 1,
+            "effectiveHeight": 1,
+            "top": -1,
+            "left": -1
+          },
+          {
+            "tag": "input",
+            "text": "",
+            "width": 1,
+            "height": 1,
+            "effectiveWidth": 1,
+            "effectiveHeight": 1,
+            "top": -1,
+            "left": -1
+          },
+          {
+            "tag": "input",
+            "text": "",
+            "width": 1,
+            "height": 1,
+            "effectiveWidth": 1,
+            "effectiveHeight": 1,
+            "top": -1,
+            "left": -1
+          },
+          {
+            "tag": "input",
+            "text": "",
+            "width": 1,
+            "height": 1,
+            "effectiveWidth": 1,
+            "effectiveHeight": 1,
+            "top": -1,
+            "left": -1
+          }
+        ],
+        "overflowEls": [
+          {
+            "tag": "div",
+            "text": "InspectEditRemove",
+            "left": 73,
+            "right": 405,
+            "width": 332
+          },
+          {
+            "tag": "div",
+            "text": "InspectEditRemove",
+            "left": 73,
+            "right": 405,
+            "width": 332
+          },
+          {
+            "tag": "div",
+            "text": "InspectEditRemove",
+            "left": 73,
+            "right": 405,
+            "width": 332
+          },
+          {
+            "tag": "div",
+            "text": "InspectEditRemove",
+            "left": 73,
+            "right": 405,
+            "width": 332
+          },
+          {
+            "tag": "div",
+            "text": "InspectEditRemove",
+            "left": 73,
+            "right": 405,
+            "width": 332
+          },
+          {
+            "tag": "div",
+            "text": "InspectEditRemove",
+            "left": 73,
+            "right": 405,
+            "width": 332
+          },
+          {
+            "tag": "table",
+            "text": "StateContentBehaviorEmptyPlaceholder with guidance textShown when the agent has ",
+            "left": 16,
+            "right": 674,
+            "width": 658
+          },
+          {
+            "tag": "thead",
+            "text": "StateContentBehavior",
+            "left": 16,
+            "right": 674,
+            "width": 658
+          },
+          {
+            "tag": "tr",
+            "text": "StateContentBehavior",
+            "left": 16,
+            "right": 674,
+            "width": 658
+          },
+          {
+            "tag": "th",
+            "text": "Behavior",
+            "left": 352,
+            "right": 674,
+            "width": 321
+          },
+          {
+            "tag": "tbody",
+            "text": "EmptyPlaceholder with guidance textShown when the agent has no stored memoriesPo",
+            "left": 16,
+            "right": 674,
+            "width": 658
+          },
+          {
+            "tag": "tr",
+            "text": "EmptyPlaceholder with guidance textShown when the agent has no stored memories",
+            "left": 16,
+            "right": 674,
+            "width": 658
+          }
+        ],
+        "nestedBorderPairs": [
+          {
+            "tag": "div",
+            "text": ""
+          },
+          {
+            "tag": "button",
+            "text": "Inspect"
+          },
+          {
+            "tag": "button",
+            "text": "Edit"
+          },
+          {
+            "tag": "button",
+            "text": "Remove"
+          },
+          {
+            "tag": "div",
+            "text": ""
+          },
+          {
+            "tag": "button",
+            "text": "Inspect"
+          },
+          {
+            "tag": "button",
+            "text": "Edit"
+          },
+          {
+            "tag": "button",
+            "text": "Remove"
+          }
+        ]
+      }
+    },
+    {
+      "route": "/multi-agent",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-07-current-verification/08-multi-agent-mobile.png",
+      "logs": [],
+      "metrics": {
+        "route": "/multi-agent",
+        "title": "Multi-Agent | Agentic Craft",
+        "h1": "Multi-Agent Patterns",
+        "width": 390,
+        "height": 844,
+        "scrollWidth": 390,
+        "overflow": 0,
+        "bodyTextLength": 6942,
+        "hasFrameworkOverlay": false,
+        "visibleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Toggle Sidebar",
+            "width": 28,
+            "height": 28,
+            "effectiveWidth": 28,
+            "effectiveHeight": 28,
+            "top": 10,
+            "left": 12
+          },
+          {
+            "tag": "button",
+            "text": "Active",
+            "width": 55,
+            "height": 28,
+            "effectiveWidth": 55,
+            "effectiveHeight": 28,
+            "top": 514,
+            "left": 98
+          },
+          {
+            "tag": "button",
+            "text": "Idle",
+            "width": 40,
+            "height": 28,
+            "effectiveWidth": 40,
+            "effectiveHeight": 28,
+            "top": 514,
+            "left": 158
+          },
+          {
+            "tag": "button",
+            "text": "Error",
+            "width": 47,
+            "height": 28,
+            "effectiveWidth": 47,
+            "effectiveHeight": 28,
+            "top": 514,
+            "left": 202
+          }
+        ],
+        "overflowEls": [
+          {
+            "tag": "table",
+            "text": "AgentStatusTaskProgressConfidenceCostUpdatedSource CollectorGather project artif",
+            "left": 16,
+            "right": 875,
+            "width": 859
+          },
+          {
+            "tag": "thead",
+            "text": "AgentStatusTaskProgressConfidenceCostUpdated",
+            "left": 16,
+            "right": 875,
+            "width": 859
+          },
+          {
+            "tag": "tr",
+            "text": "AgentStatusTaskProgressConfidenceCostUpdated",
+            "left": 16,
+            "right": 875,
+            "width": 859
+          },
+          {
+            "tag": "th",
+            "text": "Task",
+            "left": 276,
+            "right": 532,
+            "width": 256
+          },
+          {
+            "tag": "th",
+            "text": "Progress",
+            "left": 532,
+            "right": 660,
+            "width": 128
+          },
+          {
+            "tag": "th",
+            "text": "Confidence",
+            "left": 660,
+            "right": 750,
+            "width": 90
+          },
+          {
+            "tag": "th",
+            "text": "Cost",
+            "left": 750,
+            "right": 804,
+            "width": 54
+          },
+          {
+            "tag": "th",
+            "text": "Updated",
+            "left": 804,
+            "right": 875,
+            "width": 71
+          },
+          {
+            "tag": "tbody",
+            "text": "Source CollectorGather project artifactsWorkingCollecting delivery readiness art",
+            "left": 16,
+            "right": 875,
+            "width": 859
+          },
+          {
+            "tag": "tr",
+            "text": "Source CollectorGather project artifactsWorkingCollecting delivery readiness art",
+            "left": 16,
+            "right": 875,
+            "width": 859
+          },
+          {
+            "tag": "td",
+            "text": "Collecting delivery readiness artifacts",
+            "left": 276,
+            "right": 532,
+            "width": 256
+          },
+          {
+            "tag": "td",
+            "text": "x67%",
+            "left": 532,
+            "right": 660,
+            "width": 128
+          }
+        ],
+        "nestedBorderPairs": []
+      }
+    },
+    {
+      "route": "/trust",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-07-current-verification/09-trust-mobile.png",
+      "logs": [],
+      "metrics": {
+        "route": "/trust",
+        "title": "Trust & Governance | Agentic Craft",
+        "h1": "Trust & Safety",
+        "width": 390,
+        "height": 844,
+        "scrollWidth": 390,
+        "overflow": 0,
+        "bodyTextLength": 9283,
+        "hasFrameworkOverlay": false,
+        "visibleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Toggle Sidebar",
+            "width": 28,
+            "height": 28,
+            "effectiveWidth": 28,
+            "effectiveHeight": 28,
+            "top": 10,
+            "left": 12
+          },
+          {
+            "tag": "input",
+            "text": "",
+            "width": 1,
+            "height": 1,
+            "effectiveWidth": 1,
+            "effectiveHeight": 1,
+            "top": -1,
+            "left": -1
+          },
+          {
+            "tag": "input",
+            "text": "",
+            "width": 1,
+            "height": 1,
+            "effectiveWidth": 1,
+            "effectiveHeight": 1,
+            "top": -1,
+            "left": -1
+          },
+          {
+            "tag": "input",
+            "text": "",
+            "width": 1,
+            "height": 1,
+            "effectiveWidth": 1,
+            "effectiveHeight": 1,
+            "top": -1,
+            "left": -1
+          },
+          {
+            "tag": "input",
+            "text": "",
+            "width": 1,
+            "height": 1,
+            "effectiveWidth": 1,
+            "effectiveHeight": 1,
+            "top": -1,
+            "left": -1
+          }
+        ],
+        "overflowEls": [
+          {
+            "tag": "table",
+            "text": "PropertyValueNotesScale6 levels (1–6)From Human-Augmented to Human-Out-of-the-Lo",
+            "left": 16,
+            "right": 574,
+            "width": 558
+          },
+          {
+            "tag": "thead",
+            "text": "PropertyValueNotes",
+            "left": 16,
+            "right": 574,
+            "width": 558
+          },
+          {
+            "tag": "tr",
+            "text": "PropertyValueNotes",
+            "left": 16,
+            "right": 574,
+            "width": 558
+          },
+          {
+            "tag": "th",
+            "text": "Notes",
+            "left": 206,
+            "right": 574,
+            "width": 367
+          },
+          {
+            "tag": "tbody",
+            "text": "Scale6 levels (1–6)From Human-Augmented to Human-Out-of-the-LoopDefaultLevel 2St",
+            "left": 16,
+            "right": 574,
+            "width": 558
+          },
+          {
+            "tag": "tr",
+            "text": "Scale6 levels (1–6)From Human-Augmented to Human-Out-of-the-Loop",
+            "left": 16,
+            "right": 574,
+            "width": 558
+          },
+          {
+            "tag": "td",
+            "text": "From Human-Augmented to Human-Out-of-the-Loop",
+            "left": 206,
+            "right": 574,
+            "width": 367
+          },
+          {
+            "tag": "tr",
+            "text": "DefaultLevel 2Start conservative, unlock higher levels over time",
+            "left": 16,
+            "right": 574,
+            "width": 558
+          },
+          {
+            "tag": "td",
+            "text": "Start conservative, unlock higher levels over time",
+            "left": 206,
+            "right": 574,
+            "width": 367
+          },
+          {
+            "tag": "tr",
+            "text": "IndicatorStepped barDiscrete steps, not a continuous slider",
+            "left": 16,
+            "right": 574,
+            "width": 558
+          },
+          {
+            "tag": "td",
+            "text": "Discrete steps, not a continuous slider",
+            "left": 206,
+            "right": 574,
+            "width": 367
+          },
+          {
+            "tag": "table",
+            "text": "ModeFocusToolsRequirementsSource material and policy alignment4 requirements-spe",
+            "left": 16,
+            "right": 599,
+            "width": 583
+          }
+        ],
+        "nestedBorderPairs": []
+      }
+    },
+    {
+      "route": "/registry",
+      "viewport": {
+        "width": 1223,
+        "height": 998
+      },
+      "file": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-07-current-verification/10-registry-desktop.png",
+      "logs": [],
+      "metrics": {
+        "route": "/registry",
+        "title": "Registry | Agentic Craft",
+        "h1": "Registry",
+        "width": 1223,
+        "height": 998,
+        "scrollWidth": 1223,
+        "overflow": 0,
+        "bodyTextLength": 5651,
+        "hasFrameworkOverlay": false,
+        "visibleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Install",
+            "width": 48,
+            "height": 28,
+            "effectiveWidth": 48,
+            "effectiveHeight": 28,
+            "top": 522,
+            "left": 33
+          },
+          {
+            "tag": "button",
+            "text": "Primitives",
+            "width": 71,
+            "height": 28,
+            "effectiveWidth": 71,
+            "effectiveHeight": 28,
+            "top": 554,
+            "left": 33
+          },
+          {
+            "tag": "button",
+            "text": "Workflow Blocks",
+            "width": 107,
+            "height": 28,
+            "effectiveWidth": 107,
+            "effectiveHeight": 28,
+            "top": 586,
+            "left": 33
+          },
+          {
+            "tag": "button",
+            "text": "Quality Gates",
+            "width": 90,
+            "height": 28,
+            "effectiveWidth": 90,
+            "effectiveHeight": 28,
+            "top": 618,
+            "left": 33
+          },
+          {
+            "tag": "button",
+            "text": "Toggle Sidebar",
+            "width": 28,
+            "height": 28,
+            "effectiveWidth": 28,
+            "effectiveHeight": 28,
+            "top": 6,
+            "left": 232
+          },
+          {
+            "tag": "a",
+            "text": "Open registry.json",
+            "width": 130,
+            "height": 28,
+            "effectiveWidth": 130,
+            "effectiveHeight": 28,
+            "top": 223,
+            "left": 332
+          }
+        ],
+        "overflowEls": [],
+        "nestedBorderPairs": []
+      }
+    }
+  ],
+  "interaction": {
+    "textareaCount": 0
+  },
+  "interactionShot": "/Users/arielconti/workspace/agentic-craft/outputs/audits/2026-06-07-current-verification/11-composer-interaction-mobile.png",
+  "browserFallbackReason": "In-app Browser screenshot capture timed out during multi-route run; local Playwright used for screenshot evidence."
+}

@@ -39,7 +39,7 @@ function ActionPreview({
     <div
       data-slot="action-preview"
       className={cn(
-        "rounded-lg border border-border/60 bg-muted/20 p-3 sm:p-4",
+        "border-l border-border/60 bg-muted/20 px-3 py-3 sm:px-4",
         className
       )}
       {...props}
@@ -67,12 +67,9 @@ function ActionPreview({
         </Badge>
       </div>
 
-      <div className="mt-4 grid gap-2 sm:grid-cols-2">
+      <div className="mt-4 grid gap-x-6 gap-y-3 sm:grid-cols-2">
         {items.map((item) => (
-          <div
-            key={item.label}
-            className="rounded-md border border-border/50 bg-background/60 px-3 py-2"
-          >
+          <div key={item.label} className="min-w-0">
             <p className="text-[11px] font-medium text-muted-foreground">
               {item.label}
             </p>

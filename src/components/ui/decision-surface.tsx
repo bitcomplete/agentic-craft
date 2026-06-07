@@ -7,7 +7,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogContentClose,
   DialogDescription,
   DialogFooter,
   DialogHeader,
@@ -39,7 +38,6 @@ function DecisionSurfaceContent({
       className={cn("sm:max-w-lg", className)}
       {...props}
     >
-      <DialogContentClose />
       {children}
     </DialogContent>
   )

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   Alert01Icon,
@@ -43,70 +43,6 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
-
-/* ------------------------------------------------------------------ */
-/*  CSS Keyframes                                                      */
-/* ------------------------------------------------------------------ */
-
-const STYLE_ID = "trust-page-styles"
-function ensureStyles() {
-  if (document.getElementById(STYLE_ID)) return
-  const style = document.createElement("style")
-  style.id = STYLE_ID
-  style.textContent = `
-    @keyframes trust-slide-in {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes trust-fade-in {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-      @keyframes trust-expand {
-        from { opacity: 0; transform: translateY(-4px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-      @keyframes trust-progress {
-        from { transform: scaleX(0); }
-        to { transform: scaleX(var(--target-scale)); }
-    }
-    @keyframes trust-pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-    @keyframes trust-press {
-      0% { transform: scale(1); }
-      50% { transform: scale(0.97); }
-      100% { transform: scale(1); }
-    }
-    .trust-slide-in {
-      animation: trust-slide-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
-    .trust-fade-in {
-      animation: trust-fade-in 0.2s ease forwards;
-    }
-    .trust-expand {
-      animation: trust-expand 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-      overflow: hidden;
-    }
-    .trust-pulse {
-      animation: trust-pulse 1.5s ease-in-out 3;
-    }
-    .trust-press {
-      animation: trust-press 0.15s ease;
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .trust-slide-in,
-      .trust-fade-in,
-      .trust-expand,
-      .trust-pulse,
-      .trust-press {
-        animation: none;
-      }
-    }
-  `
-  document.head.appendChild(style)
-}
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -365,9 +301,9 @@ const PROSE_STYLE: React.CSSProperties = {
   fontFamily: "'Source Serif 4', serif",
   fontSize: "16px",
   lineHeight: "26px",
-  letterSpacing: "-0.4px",
+  letterSpacing: "0",
   fontVariationSettings: '"opsz" 12',
-  color: "oklch(0.2642 0.013 93.9)",
+  color: "var(--foreground)",
 }
 
 /* ------------------------------------------------------------------ */
@@ -375,10 +311,6 @@ const PROSE_STYLE: React.CSSProperties = {
 /* ------------------------------------------------------------------ */
 
 export function TrustContent() {
-  useEffect(() => {
-    ensureStyles()
-  }, [])
-
   const [settingsEnabled, setSettingsEnabled] = useState<
     Record<(typeof SETTINGS_TEMPLATES)[number]["id"], boolean>
   >(() =>
@@ -537,7 +469,9 @@ export function TrustContent() {
         ? "Memory changes require review, scope, provenance, and expiry."
         : "Durable memory is blocked until review settings are enabled.",
       description: "Memory should not expand scope silently.",
-      status: settingsEnabled["memory-privacy-settings"] ? "required" : "blocked",
+      status: settingsEnabled["memory-privacy-settings"]
+        ? "required"
+        : "blocked",
     },
   ]
 
@@ -586,10 +520,7 @@ export function TrustContent() {
           </FieldSet>
         </FieldGroup>
 
-        <EffectivePolicyPreview
-          className="mt-4"
-          policies={effectivePolicies}
-        />
+        <EffectivePolicyPreview className="mt-4" policies={effectivePolicies} />
 
         <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm leading-relaxed text-muted-foreground italic">
           Settings templates should use confirmation or undo for risky changes
@@ -652,7 +583,7 @@ export function TrustContent() {
               </div>
 
               {/* Level details */}
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 <div>
                   <div className="mb-1 flex items-center gap-2">
                     <span className="text-xs text-muted-foreground">
@@ -673,7 +604,7 @@ export function TrustContent() {
                     <p className="mb-2 text-xs text-muted-foreground">
                       Capabilities
                     </p>
-                    <div className="space-y-1.5">
+                    <div className="flex flex-col gap-1.5">
                       {activeLevel.capabilities.map((cap) => (
                         <div key={cap} className="flex items-start gap-2">
                           <HugeiconsIcon
@@ -693,7 +624,7 @@ export function TrustContent() {
                     <p className="mb-2 text-xs text-muted-foreground">
                       Restrictions
                     </p>
-                    <div className="space-y-1.5">
+                    <div className="flex flex-col gap-1.5">
                       {activeLevel.restrictions.map((r) => (
                         <div key={r} className="flex items-start gap-2">
                           <HugeiconsIcon
@@ -803,7 +734,7 @@ export function TrustContent() {
             key={modeAnimKey}
           >
             <div className="trust-slide-in">
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 {/* Mode header */}
                 <div className="flex items-center gap-3">
                   <div className="flex h-8 w-8 items-center justify-center rounded-md bg-muted">
@@ -841,11 +772,11 @@ export function TrustContent() {
                   <p className="mb-2 text-xs text-muted-foreground">
                     Available tools
                   </p>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-x-3 gap-y-2">
                     {activeMode.tools.map((tool, i) => (
                       <div
                         key={tool}
-                        className="trust-slide-in flex items-center gap-2 rounded-md border border-border/60 px-3 py-2"
+                        className="trust-slide-in flex items-center gap-2 bg-foreground/[0.02] px-3 py-2"
                         style={{ animationDelay: `${i * 60}ms` }}
                       >
                         <HugeiconsIcon
@@ -987,7 +918,7 @@ export function TrustContent() {
             key={scopeAnimKey}
           >
             <div className="trust-slide-in">
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 {/* Scope indicator */}
                 <div className="flex items-center gap-3">
                   <div className="flex h-7 w-7 items-center justify-center rounded-md bg-muted">
@@ -1011,11 +942,11 @@ export function TrustContent() {
                   <p className="mb-2 text-xs text-muted-foreground">
                     Accessible documents
                   </p>
-                  <div className="space-y-2">
+                  <div className="divide-y divide-border/40">
                     {activeScope.documents.map((doc, i) => (
                       <div
                         key={doc.name}
-                        className="trust-slide-in flex items-center gap-3 rounded-md border border-border/60 px-3 py-2"
+                        className="trust-slide-in flex items-center gap-3 py-3 first:pt-0 last:pb-0"
                         style={{ animationDelay: `${i * 50}ms` }}
                       >
                         <HugeiconsIcon
@@ -1153,7 +1084,7 @@ export function TrustContent() {
             <div className="trust-slide-in">
               {/* Consent prompt state */}
               {consentCtrl.prompt && (
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   <div className="flex items-start gap-3">
                     <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted">
                       <HugeiconsIcon
@@ -1173,7 +1104,7 @@ export function TrustContent() {
                       </p>
                     </div>
                   </div>
-                  <div className="ml-10 rounded-md border border-border bg-muted/30 px-4 py-3">
+                  <div className="ml-10 border-l border-border/60 bg-muted/30 py-3 pl-4">
                     <p className="mb-1 text-xs text-muted-foreground">
                       Action preview
                     </p>
@@ -1219,9 +1150,9 @@ export function TrustContent() {
 
               {/* Accepted state */}
               {consentCtrl.accepted && (
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   <div className="flex items-start gap-3">
-                    <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-emerald-500/10">
+                    <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted">
                       <HugeiconsIcon
                         icon={Tick01Icon}
                         size={14}
@@ -1253,9 +1184,9 @@ export function TrustContent() {
 
               {/* Declined state */}
               {consentCtrl.declined && (
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   <div className="flex items-start gap-3">
-                    <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-red-500/10">
+                    <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted">
                       <HugeiconsIcon
                         icon={Cancel01Icon}
                         size={14}
@@ -1389,7 +1320,7 @@ export function TrustContent() {
             <div className="trust-slide-in">
               {/* High confidence */}
               {confCtrl.high && (
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   <div className="mb-3 flex items-center gap-2">
                     <Badge variant="secondary">High confidence</Badge>
                   </div>
@@ -1415,7 +1346,7 @@ export function TrustContent() {
 
               {/* Medium confidence */}
               {confCtrl.medium && (
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   <div className="mb-3 flex items-center gap-2">
                     <Badge variant="outline">Medium confidence</Badge>
                   </div>
@@ -1434,8 +1365,8 @@ export function TrustContent() {
                       className="text-muted-foreground"
                     />
                     <span className="text-xs text-muted-foreground">
-                      Qualified — based on indirect source material from
-                      QA Notes 2026-003
+                      Qualified — based on indirect source material from QA
+                      Notes 2026-003
                     </span>
                   </div>
                 </div>
@@ -1443,7 +1374,7 @@ export function TrustContent() {
 
               {/* Low confidence */}
               {confCtrl.low && (
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   <div className="mb-3 flex items-center gap-2">
                     <Badge variant="destructive">Low confidence</Badge>
                   </div>
@@ -1566,7 +1497,7 @@ export function TrustContent() {
             <div className="trust-slide-in">
               {/* Idle state */}
               {killCtrl.idle && (
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="flex h-7 w-7 items-center justify-center rounded-md bg-muted">
@@ -1593,7 +1524,7 @@ export function TrustContent() {
 
               {/* Running state */}
               {killCtrl.running && (
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="flex h-7 w-7 items-center justify-center rounded-md bg-muted">
@@ -1634,10 +1565,10 @@ export function TrustContent() {
 
               {/* Stopped state */}
               {killCtrl.stopped && (
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-7 w-7 items-center justify-center rounded-md bg-red-500/10">
+                      <div className="flex h-7 w-7 items-center justify-center rounded-md bg-muted">
                         <HugeiconsIcon
                           icon={Cancel01Icon}
                           size={14}
@@ -1804,7 +1735,7 @@ export function TrustContent() {
 
               {/* Detailed */}
               {costCtrl.detailed && (
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   <div className="mb-2 flex items-center gap-2">
                     <HugeiconsIcon
                       icon={Activity01Icon}
@@ -1962,11 +1893,11 @@ export function TrustContent() {
             <div className="trust-slide-in">
               {/* Sources */}
               {provCtrl.sources && (
-                <div className="space-y-3">
+                <div className="flex flex-col gap-3">
                   {PROVENANCE_SOURCES.map((src, i) => (
                     <div
                       key={src.document}
-                      className="trust-slide-in flex items-start gap-3 rounded-md border border-border/60 p-3"
+                      className="trust-slide-in flex items-start gap-3 border-b border-border/40 py-3 last:border-b-0"
                       style={{ animationDelay: `${i * 80}ms` }}
                     >
                       <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-muted">
@@ -2004,7 +1935,7 @@ export function TrustContent() {
 
               {/* Chain */}
               {provCtrl.chain && (
-                <div className="space-y-0">
+                <div className="flex flex-col gap-0">
                   {PROVENANCE_CHAIN.map((node, i) => (
                     <div key={node.step}>
                       <div
@@ -2140,7 +2071,7 @@ export function TrustContent() {
             <div className="trust-slide-in">
               {/* Summary */}
               {auditCtrl.summary && (
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2">
                   {AUDIT_ENTRIES.map((entry, i) => (
                     <div
                       key={entry.time}
@@ -2159,11 +2090,11 @@ export function TrustContent() {
 
               {/* Detailed */}
               {auditCtrl.detailed && (
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   {AUDIT_ENTRIES.map((entry, i) => (
                     <div
                       key={entry.time}
-                      className="trust-slide-in rounded-md border border-border/60 p-3"
+                      className="trust-slide-in border-l border-border/60 py-2 pl-3"
                       style={{ animationDelay: `${i * 80}ms` }}
                     >
                       <div className="mb-2 flex items-center justify-between">

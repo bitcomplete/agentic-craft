@@ -51,77 +51,6 @@ import {
 } from "@/components/ui/table"
 
 /* ------------------------------------------------------------------ */
-/*  CSS Keyframes                                                      */
-/* ------------------------------------------------------------------ */
-
-const STYLE_ID = "actions-page-styles"
-function ensureStyles() {
-  if (document.getElementById(STYLE_ID)) return
-  const style = document.createElement("style")
-  style.id = STYLE_ID
-  style.textContent = `
-    @keyframes actions-slide-in {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-      @keyframes actions-expand {
-        from { opacity: 0; transform: translateY(-4px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-      @keyframes actions-collapse {
-        from { opacity: 1; transform: translateY(0); }
-        to { opacity: 0; transform: translateY(-4px); }
-    }
-    @keyframes actions-fade-in {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-      @keyframes actions-progress {
-        from { transform: scaleX(0); }
-        to { transform: scaleX(var(--target-scale)); }
-    }
-    @keyframes actions-pulse-dot {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-      @keyframes actions-timeline-fill {
-        from { transform: scaleX(0); }
-        to { transform: scaleX(1); }
-    }
-    @keyframes actions-step-enter {
-      from { opacity: 0; transform: translateX(-6px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-    .actions-slide-in {
-      animation: actions-slide-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
-    .actions-expand {
-      animation: actions-expand 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-      overflow: hidden;
-    }
-    .actions-fade-in {
-      animation: actions-fade-in 0.2s ease forwards;
-    }
-    .actions-pulse-dot {
-      animation: actions-pulse-dot 1.5s ease-in-out 3;
-    }
-    .actions-step-enter {
-      animation: actions-step-enter 0.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .actions-slide-in,
-      .actions-expand,
-      .actions-fade-in,
-      .actions-pulse-dot,
-      .actions-step-enter {
-        animation: none;
-      }
-    }
-  `
-  document.head.appendChild(style)
-}
-
-/* ------------------------------------------------------------------ */
 /*  Data                                                               */
 /* ------------------------------------------------------------------ */
 
@@ -395,8 +324,6 @@ function PlanStep({
 /* ------------------------------------------------------------------ */
 
 export function ActionsContent() {
-  useEffect(ensureStyles, [])
-
   /* ── Section 1: Tool Calls state ── */
   const [toolState, setToolState] = useState({
     expandAll: false,
@@ -656,7 +583,7 @@ export function ActionsContent() {
 
           <div className="rounded-lg border border-border/40 p-6">
             <div
-              className={`space-y-1.5 ${toolState.grouped ? "border-l-2 border-border pl-3" : ""}`}
+              className={`flex flex-col gap-1.5 ${toolState.grouped ? "border-l-2 border-border pl-3" : ""}`}
             >
               {toolState.error ? (
                 <>
@@ -669,7 +596,7 @@ export function ActionsContent() {
                       <ToolCallLabel>{TOOL_CALLS_DATA[0].label}</ToolCallLabel>
                     </ToolCallTrigger>
                     <ToolCallContent>
-                      <div className="space-y-1 text-xs">
+                      <div className="flex flex-col gap-1 text-xs">
                         {TOOL_CALLS_DATA[0].details.map((d) => (
                           <div key={d.key} className="flex gap-2">
                             <span className="text-muted-foreground">
@@ -704,7 +631,7 @@ export function ActionsContent() {
                       <ToolCallLabel>{tool.label}</ToolCallLabel>
                     </ToolCallTrigger>
                     <ToolCallContent>
-                      <div className="space-y-1 text-xs">
+                      <div className="flex flex-col gap-1 text-xs">
                         {tool.details.map((d) => (
                           <div key={d.key} className="flex gap-2">
                             <span className="text-muted-foreground">
@@ -783,8 +710,8 @@ export function ActionsContent() {
           Subagent Orchestration
         </h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-          Expandable cards showing delegated subagent work. Each card contains
-          its own progress indicator and nested tool calls.
+          Expandable rows showing delegated subagent work. Each row carries its
+          own progress indicator and related tool calls.
         </p>
 
         <div className="mt-10">
@@ -798,11 +725,12 @@ export function ActionsContent() {
           />
 
           <div className="rounded-lg border border-border/40 p-6">
-            <div className="rounded-md border border-border/40">
+            <div className="border-l border-border/60">
               <button
                 type="button"
+                aria-label="Toggle Source Review Agent details"
                 onClick={() => setSubagentOpen(!subagentOpen)}
-                className="flex w-full items-center gap-2.5 px-3 py-2.5 text-left"
+                className="flex w-full items-center gap-2.5 py-2.5 pl-3 text-left"
               >
                 <HugeiconsIcon
                   icon={Brain01Icon}
@@ -967,7 +895,7 @@ export function ActionsContent() {
               </Badge>
             </div>
 
-            <div className="space-y-0">
+            <div className="flex flex-col gap-0">
               {planSteps.map((step, i) => {
                 let state: "done" | "active" | "pending" = "pending"
                 if (planState.executing) {
@@ -1140,7 +1068,7 @@ export function ActionsContent() {
                           <ToolCallLabel>{task.label}</ToolCallLabel>
                         </ToolCallTrigger>
                         <ToolCallContent>
-                          <div className="space-y-1 text-xs">
+                          <div className="flex flex-col gap-1 text-xs">
                             {task.details.map((d) => (
                               <div key={d.key} className="flex gap-2">
                                 <span className="text-muted-foreground">
@@ -1173,13 +1101,14 @@ export function ActionsContent() {
                   </span>
                 </div>
 
-                <div className="space-y-1">
+                <div className="flex flex-col gap-1">
                   {PARALLEL_TASKS.map((task, i) => (
                     <div key={task.label}>
                       <button
                         type="button"
+                        aria-label={`Toggle task details: ${task.label}`}
                         onClick={() => toggleChildExpand(i)}
-                        className="flex w-full items-center gap-2.5 rounded-md border border-border px-3 py-2.5 text-left transition-colors hover:bg-accent/50"
+                        className="flex w-full items-center gap-2.5 border-l border-border/60 px-3 py-2.5 text-left transition-colors hover:bg-accent/50 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
                       >
                         <HugeiconsIcon
                           icon={CodeIcon}
@@ -1201,7 +1130,7 @@ export function ActionsContent() {
                       </button>
                       {childExpanded[i] && (
                         <div className="actions-expand mt-1 mb-1 ml-[21px]">
-                          <div className="space-y-1 rounded-md border border-border/40 px-3 py-2.5">
+                          <div className="flex flex-col gap-1 border-l border-border/60 py-2 pl-3">
                             {task.details.map((d) => (
                               <div key={d.key} className="flex gap-2 text-xs">
                                 <span className="text-muted-foreground">
@@ -1307,7 +1236,7 @@ export function ActionsContent() {
             onToggle={toggleDecisionControl}
           />
 
-          <div className="space-y-3 rounded-lg border border-border/40 p-6">
+          <div className="flex flex-col gap-3 rounded-lg border border-border/40 p-6">
             <div className="flex items-start gap-2">
               <HugeiconsIcon
                 icon={Alert01Icon}
@@ -1322,19 +1251,18 @@ export function ActionsContent() {
             </div>
 
             {decisionState.pending ? (
-              <div className="space-y-2">
+              <div className="flex flex-col gap-2">
                 {DECISION_OPTIONS.map((opt, i) => (
                   <button
                     key={opt.title}
                     type="button"
+                    aria-label={`Choose decision option: ${opt.title}`}
                     onClick={() => {
                       setSelectedOption(i)
                       setDecisionState({ pending: false, resolved: true })
                     }}
-                    className={`w-full rounded-md border p-3 text-left transition-colors ${
-                      selectedOption === i
-                        ? "border-primary bg-primary/5"
-                        : "border-border hover:bg-accent"
+                    className={`w-full rounded-md px-3 py-2.5 text-left transition-colors focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none ${
+                      selectedOption === i ? "bg-primary/5" : "hover:bg-accent"
                     }`}
                   >
                     <span className="text-sm font-medium">{opt.title}</span>
@@ -1358,9 +1286,9 @@ export function ActionsContent() {
                 ))}
               </div>
             ) : (
-              <div className="actions-fade-in space-y-3">
+              <div className="actions-fade-in flex flex-col gap-3">
                 {selectedOption !== null && (
-                  <div className="rounded-md border border-primary bg-primary/5 p-3">
+                  <div className="border-l border-primary bg-primary/5 py-2 pl-3">
                     <div className="flex items-center gap-2">
                       <HugeiconsIcon
                         icon={Tick01Icon}
@@ -1499,8 +1427,8 @@ export function ActionsContent() {
               />
             </ClarifyingQuestions.Root>
           ) : (
-            <div className="actions-fade-in mt-5 flex flex-col gap-3 rounded-lg border border-border/40 p-3 sm:p-4">
-              <div className="rounded-md border border-foreground/20 bg-foreground/[0.04] px-3 py-2.5">
+            <div className="actions-fade-in mt-5 flex flex-col gap-3 border-l border-border/60 bg-foreground/[0.02] px-3 py-3">
+              <div>
                 {answeredClarifications.length > 0 ? (
                   <div className="flex flex-wrap gap-1.5">
                     {answeredClarifications.map((answer) => (
@@ -1626,7 +1554,7 @@ export function ActionsContent() {
           >
             {approvalCtrl.email ? (
               /* Email approval variant */
-              <div className="actions-slide-in space-y-4">
+              <div className="actions-slide-in flex flex-col gap-4">
                 <div className="flex items-start gap-2.5">
                   <HugeiconsIcon
                     icon={Shield01Icon}
@@ -1641,7 +1569,7 @@ export function ActionsContent() {
                 </div>
 
                 {approvalStatus === "pending" && (
-                  <div className="actions-fade-in space-y-4">
+                  <div className="actions-fade-in flex flex-col gap-4">
                     <ActionPreview
                       title="Send launch summary email"
                       description={APPROVAL_EMAIL.body}
@@ -1743,8 +1671,8 @@ export function ActionsContent() {
                 )}
 
                 {approvalStatus === "approved" && (
-                  <div className="actions-fade-in space-y-3">
-                    <div className="rounded-md border border-primary bg-primary/5 px-3 py-2.5">
+                  <div className="actions-fade-in flex flex-col gap-3">
+                    <div className="border-l border-primary bg-primary/5 py-2 pl-3">
                       <div className="flex items-center gap-2">
                         <HugeiconsIcon
                           icon={Tick01Icon}
@@ -1774,8 +1702,8 @@ export function ActionsContent() {
                 )}
 
                 {approvalStatus === "denied" && (
-                  <div className="actions-fade-in space-y-3">
-                    <div className="rounded-md border border-destructive/40 bg-destructive/5 px-3 py-2.5">
+                  <div className="actions-fade-in flex flex-col gap-3">
+                    <div className="border-l border-destructive/50 bg-destructive/5 py-2 pl-3">
                       <div className="flex items-center gap-2">
                         <HugeiconsIcon
                           icon={Cancel01Icon}
@@ -1806,7 +1734,7 @@ export function ActionsContent() {
               </div>
             ) : (
               /* Document changes variant */
-              <div className="actions-slide-in space-y-4">
+              <div className="actions-slide-in flex flex-col gap-4">
                 <div className="flex items-start gap-2.5">
                   <HugeiconsIcon
                     icon={Shield01Icon}
@@ -1821,7 +1749,7 @@ export function ActionsContent() {
                 </div>
 
                 {approvalStatus === "pending" && (
-                  <div className="actions-fade-in space-y-4">
+                  <div className="actions-fade-in flex flex-col gap-4">
                     <ActionPreview
                       title="Apply project brief changes"
                       description="The exact additions and removals below are locked before approval. If source material changes, this approval expires."
@@ -1856,7 +1784,10 @@ export function ActionsContent() {
                     >
                       <div className="flex flex-col gap-1.5">
                         {APPROVAL_CHANGES.map((change, i) => (
-                          <div key={i} className="flex items-start gap-2 text-xs">
+                          <div
+                            key={i}
+                            className="flex items-start gap-2 text-xs"
+                          >
                             <span className="shrink-0 text-muted-foreground select-none">
                               {change.type === "add" ? "+" : "-"}
                             </span>
@@ -1946,8 +1877,8 @@ export function ActionsContent() {
                 )}
 
                 {approvalStatus === "approved" && (
-                  <div className="actions-fade-in space-y-3">
-                    <div className="rounded-md border border-primary bg-primary/5 px-3 py-2.5">
+                  <div className="actions-fade-in flex flex-col gap-3">
+                    <div className="border-l border-primary bg-primary/5 py-2 pl-3">
                       <div className="flex items-center gap-2">
                         <HugeiconsIcon
                           icon={Tick01Icon}
@@ -1987,8 +1918,8 @@ export function ActionsContent() {
                 )}
 
                 {approvalStatus === "denied" && (
-                  <div className="actions-fade-in space-y-3">
-                    <div className="rounded-md border border-destructive/40 bg-destructive/5 px-3 py-2.5">
+                  <div className="actions-fade-in flex flex-col gap-3">
+                    <div className="border-l border-destructive/50 bg-destructive/5 py-2 pl-3">
                       <div className="flex items-center gap-2">
                         <HugeiconsIcon
                           icon={Cancel01Icon}

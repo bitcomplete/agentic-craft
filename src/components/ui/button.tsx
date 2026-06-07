@@ -46,11 +46,25 @@ function Button({
   className,
   variant = "default",
   size = "default",
+  "data-compact-touch": dataCompactTouch,
   ...props
-}: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
+}: ButtonPrimitive.Props &
+  VariantProps<typeof buttonVariants> & {
+    "data-compact-touch"?: boolean | "true" | ""
+  }) {
+  const compactTouch =
+    dataCompactTouch ??
+    (size === "xs" ||
+    size === "sm" ||
+    size === "icon-xs" ||
+    size === "icon-sm"
+      ? true
+      : undefined)
+
   return (
     <ButtonPrimitive
       data-slot="button"
+      data-compact-touch={compactTouch}
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     />

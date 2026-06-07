@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   Shield01Icon,
@@ -21,64 +21,6 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { CompactComposerPlayground } from "../components/InteractiveComposer"
-
-/* ------------------------------------------------------------------ */
-/*  CSS Keyframes                                                      */
-/* ------------------------------------------------------------------ */
-
-const STYLE_ID = "conversation-page-styles"
-function ensureStyles() {
-  if (document.getElementById(STYLE_ID)) return
-  const style = document.createElement("style")
-  style.id = STYLE_ID
-  style.textContent = `
-    @keyframes conv-shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
-    @keyframes conv-slide-in {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes conv-fade-in {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    .conv-shimmer-text {
-      background: linear-gradient(
-        90deg,
-        var(--color-muted-foreground) 0%,
-        var(--color-muted-foreground) 35%,
-        oklch(0.75 0.02 260) 50%,
-        var(--color-muted-foreground) 65%,
-        var(--color-muted-foreground) 100%
-      );
-      background-size: 200% 100%;
-      animation: conv-shimmer 2.5s ease-in-out 2;
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .conv-slide-in {
-      animation: conv-slide-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
-    .conv-fade-in {
-      animation: conv-fade-in 0.2s ease forwards;
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .conv-shimmer-text,
-      .conv-slide-in,
-      .conv-fade-in {
-        animation: none;
-      }
-      .conv-shimmer-text {
-        background: none;
-        -webkit-text-fill-color: currentColor;
-      }
-    }
-  `
-  document.head.appendChild(style)
-}
 
 /* ------------------------------------------------------------------ */
 /*  Constants                                                          */
@@ -169,33 +111,6 @@ const PROGRESS_STEPS = [
     detail: "Hidden until source checks finish",
     status: "pending",
     source: "pending",
-  },
-] as const
-
-const COMPOSER_UPGRADE_CHECKLIST = [
-  {
-    item: "Controlled value",
-    spec: "Expose value and onValueChange so the app owns draft state.",
-  },
-  {
-    item: "File lifecycle",
-    spec: "Track accepted files, dedupe repeated drops, remove per file, and surface limits.",
-  },
-  {
-    item: "Drag/drop state",
-    spec: "Swap placeholder and border state while files are over the composer.",
-  },
-  {
-    item: "Slot API",
-    spec: "Keep left and right action zones composable without hard-coding every tool.",
-  },
-  {
-    item: "Send gating",
-    spec: "Enable send only when text or attachments exist; Enter sends, Shift+Enter inserts a line.",
-  },
-  {
-    item: "Click-to-focus",
-    spec: "Clicking empty composer space focuses the textarea without stealing button clicks.",
   },
 ] as const
 
@@ -311,16 +226,26 @@ function CitationToken({
   citation,
   active,
   onSelect,
+  onPreview,
+  onClearPreview,
 }: {
   citation: CitationReference
   active: boolean
   onSelect: () => void
+  onPreview: () => void
+  onClearPreview: () => void
 }) {
   return (
     <button
       type="button"
+      data-compact-touch
       aria-pressed={active}
+      aria-label={`${citation.title}, ${citation.page}`}
       onClick={onSelect}
+      onMouseEnter={onPreview}
+      onMouseLeave={onClearPreview}
+      onFocus={onPreview}
+      onBlur={onClearPreview}
       className={`mx-1 inline-flex translate-y-[-1px] items-center gap-1 rounded-md border px-1.5 py-0.5 font-sans text-xs leading-none transition-[background-color,border-color,color,box-shadow] focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none ${
         active
           ? "border-primary/30 bg-primary/10 text-primary shadow-[0_0_0_1px_rgba(255,255,255,0.04)]"
@@ -343,30 +268,26 @@ function CitationToken({
 /* ------------------------------------------------------------------ */
 
 export function ConversationContent() {
-  useEffect(() => {
-    ensureStyles()
-  }, [])
-
-  /* Thinking block state */
-  const [thinkCtrl, setThinkCtrl] = useState<Record<string, boolean>>({
+  /* Observable work state */
+  const [workCtrl, setWorkCtrl] = useState<Record<string, boolean>>({
     collapsed: true,
     expanded: false,
     completed: false,
   })
-  const [thinkAnim, setThinkAnim] = useState(0)
+  const [workAnim, setWorkAnim] = useState(0)
   const [showCursor, setShowCursor] = useState(true)
-  const toggleThink = (key: string) => {
+  const toggleWork = (key: string) => {
     setShowCursor(true)
-    setThinkCtrl((prev) => {
+    setWorkCtrl((prev) => {
       const next: Record<string, boolean> = {}
       for (const k of Object.keys(prev)) next[k] = k === key
       return next
     })
-    setThinkAnim((n) => n + 1)
+    setWorkAnim((n) => n + 1)
   }
-  const thinkMode = thinkCtrl.collapsed
+  const workMode = workCtrl.collapsed
     ? "collapsed"
-    : thinkCtrl.expanded
+    : workCtrl.expanded
       ? "expanded"
       : "completed"
 
@@ -374,7 +295,7 @@ export function ConversationContent() {
   useEffect(() => {
     const t = setTimeout(() => setShowCursor(false), 3000)
     return () => clearTimeout(t)
-  }, [thinkAnim])
+  }, [workAnim])
 
   /* Prose preference state */
   const [prosePreference, setProsePreference] =
@@ -399,40 +320,19 @@ export function ConversationContent() {
   }
 
   /* Citation preview state */
-  const citationPreviewRef = useRef<HTMLDivElement>(null)
   const [activeCitationId, setActiveCitationId] =
     useState<CitationReference["id"]>(2)
+  const [previewCitationId, setPreviewCitationId] = useState<
+    CitationReference["id"] | null
+  >(null)
   const activeCitation =
     CITATION_REFERENCES.find((citation) => citation.id === activeCitationId) ??
     CITATION_REFERENCES[0]
-  const activeCitationIndex = CITATION_REFERENCES.findIndex(
-    (citation) => citation.id === activeCitation.id
-  )
-  const revealCitationPreview = () => {
-    if (typeof window === "undefined" || window.innerWidth >= 640) {
-      return
-    }
-
-    window.requestAnimationFrame(() => {
-      citationPreviewRef.current?.scrollIntoView({
-        block: "nearest",
-        inline: "nearest",
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-          ? "auto"
-          : "smooth",
-      })
-    })
-  }
+  const previewCitation = previewCitationId
+    ? CITATION_REFERENCES.find((citation) => citation.id === previewCitationId)
+    : null
   const selectCitation = (id: CitationReference["id"]) => {
     setActiveCitationId(id)
-    revealCitationPreview()
-  }
-  const goToCitation = (direction: "previous" | "next") => {
-    const offset = direction === "previous" ? -1 : 1
-    const nextIndex =
-      (activeCitationIndex + offset + CITATION_REFERENCES.length) %
-      CITATION_REFERENCES.length
-    selectCitation(CITATION_REFERENCES[nextIndex].id)
   }
 
   /* Feedback state */
@@ -463,7 +363,7 @@ export function ConversationContent() {
           prose typography can be a reader or workspace preference.
         </p>
 
-        <div className="mt-10 rounded-lg border border-border/40 p-6">
+        <div className="mt-10 border-y border-border/40 py-6">
           <div className="mb-5 flex flex-wrap items-start justify-between gap-4 border-b border-border/50 pb-4">
             <div className="max-w-[420px]">
               <p className="section-label">Reader preference</p>
@@ -479,7 +379,7 @@ export function ConversationContent() {
               className="pb-0"
             />
           </div>
-          <div className="space-y-4">
+          <div className="flex flex-col gap-4">
             {/* System message */}
             <div className="flex justify-center">
               <div className="rounded-md bg-muted px-3 py-1.5 text-xs text-muted-foreground">
@@ -537,7 +437,7 @@ export function ConversationContent() {
                     The following requirements from Launch Policy v2 are not
                     mapped in the appendix:
                   </p>
-                  <ul className="mt-3 ml-5 list-disc space-y-1">
+                  <ul className="mt-3 ml-5 list-disc flex flex-col gap-1">
                     <li>Retention setting — Account data retention</li>
                     <li>Cleanup rule — Stale export cleanup</li>
                     <li>Access workflow — Role-based access behavior</li>
@@ -697,7 +597,7 @@ export function ConversationContent() {
 
         {/* Prose preference explanation */}
         <div className="mt-10">
-          <ul className="space-y-2 text-sm text-muted-foreground">
+          <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
             <li>
               <span className="font-medium text-foreground">
                 Required ownership signals
@@ -746,13 +646,13 @@ export function ConversationContent() {
         <div className="mt-10">
           <Controls
             options={["collapsed", "expanded", "completed"]}
-            active={thinkCtrl}
-            onToggle={toggleThink}
+            active={workCtrl}
+            onToggle={toggleWork}
           />
         </div>
 
-        <div key={thinkAnim} className="rounded-lg border border-border/40 p-6">
-          {thinkMode === "collapsed" && (
+        <div key={workAnim} className="mt-4 border-y border-border/40 py-4">
+          {workMode === "collapsed" && (
             <div className="conv-slide-in flex items-center justify-between gap-4 px-1 py-2">
               <div>
                 <span className="conv-shimmer-text text-sm">
@@ -768,7 +668,7 @@ export function ConversationContent() {
             </div>
           )}
 
-          {thinkMode === "expanded" && (
+          {workMode === "expanded" && (
             <div className="conv-slide-in">
               <div className="mb-4 flex items-center justify-between gap-4 px-1">
                 <span className="conv-shimmer-text text-sm">
@@ -800,14 +700,14 @@ export function ConversationContent() {
             </div>
           )}
 
-          {thinkMode === "completed" && (
+          {workMode === "completed" && (
             <div className="conv-slide-in">
               <div className="px-1 py-2">
                 <span className="text-xs text-muted-foreground/60">
                   Completed 4 source checks in 4.2s
                 </span>
               </div>
-              <div className="conv-fade-in mt-4 rounded-lg border border-border bg-muted px-4 py-3">
+              <div className="conv-fade-in mt-4 rounded-lg bg-muted px-4 py-3">
                 <div
                   className={prosePreferenceDetail.className}
                   style={agentProseStyle}
@@ -824,17 +724,18 @@ export function ConversationContent() {
           )}
         </div>
 
-        {/* Thinking block feedback row */}
+        {/* Progress steps feedback row */}
         <div className="mt-4 flex items-center gap-3">
           <span className="text-xs text-muted-foreground">
             Was this helpful?
           </span>
           <button
             type="button"
+            data-compact-touch
             onClick={() => setFeedback(feedback === "up" ? "none" : "up")}
             aria-label="Mark progress steps as helpful"
             aria-pressed={feedback === "up"}
-            className={`rounded-md p-1 transition-colors ${
+            className={`flex size-8 items-center justify-center rounded-md transition-colors ${
               feedback === "up"
                 ? "bg-foreground/[0.06] text-foreground"
                 : "text-muted-foreground hover:text-foreground"
@@ -844,10 +745,11 @@ export function ConversationContent() {
           </button>
           <button
             type="button"
+            data-compact-touch
             onClick={() => setFeedback(feedback === "down" ? "none" : "down")}
             aria-label="Mark progress steps as not helpful"
             aria-pressed={feedback === "down"}
-            className={`rounded-md p-1 transition-colors ${
+            className={`flex size-8 items-center justify-center rounded-md transition-colors ${
               feedback === "down"
                 ? "bg-foreground/[0.06] text-foreground"
                 : "text-muted-foreground hover:text-foreground"
@@ -925,83 +827,93 @@ export function ConversationContent() {
           immediately inspectable.
         </p>
 
-        <div className="mt-10 rounded-lg border border-border/40 bg-background p-3 sm:p-6">
-          <div className="relative mx-auto max-w-[760px]">
-            <div
-              ref={citationPreviewRef}
-              className="sticky top-3 z-20 sm:absolute sm:top-auto sm:right-0 sm:left-auto sm:z-10 sm:w-[520px]"
-            >
-              <SourcePreview
-                title={activeCitation.title}
-                excerpt={activeCitation.excerpt}
-                location={activeCitation.page}
-                source={activeCitation.source}
-                icon={activeCitation.icon}
-                index={activeCitationIndex}
-                total={CITATION_REFERENCES.length}
-                onPrevious={() => goToCitation("previous")}
-                onNext={() => goToCitation("next")}
-              />
-            </div>
+        <div className="mt-7 border-y border-border/50 py-3">
+          <div className="relative mx-auto max-w-[720px]">
+            {previewCitation && (
+              <div className="pointer-events-none absolute top-2 right-2 z-20 w-[min(360px,calc(100%-16px))] animate-in duration-150 fade-in-0 zoom-in-95 motion-reduce:animate-none sm:w-[360px]">
+                <SourcePreview
+                  title={previewCitation.title}
+                  excerpt={previewCitation.excerpt}
+                  location={previewCitation.page}
+                  source={previewCitation.source}
+                  icon={previewCitation.icon}
+                />
+              </div>
+            )}
 
-            <div className="pt-5 sm:pt-[300px]">
-              <div className="rounded-xl border border-border/40 bg-muted/20 px-4 py-5 sm:px-6 sm:py-7">
-                <div
-                  className={prosePreferenceDetail.className}
-                  style={agentProseStyle}
-                >
-                  <p>
-                    The launch readiness plan has been set to enterprise
-                    release, which requires independent risk analysis by the
-                    review team
-                    <CitationToken
-                      citation={CITATION_REFERENCES[0]}
-                      active={activeCitation.id === CITATION_REFERENCES[0].id}
-                      onSelect={() => selectCitation(CITATION_REFERENCES[0].id)}
-                    />
-                    and a dedicated support plan with documented issue triage
-                    timelines
-                    <CitationToken
-                      citation={CITATION_REFERENCES[1]}
-                      active={activeCitation.id === CITATION_REFERENCES[1].id}
-                      onSelect={() => selectCitation(CITATION_REFERENCES[1].id)}
-                    />
-                    . The internal launch guidance also requires every
-                    decision-supporting source to be linked from the final
-                    review summary, including modules that were excluded from
-                    the initial boundary
-                    <CitationToken
-                      citation={CITATION_REFERENCES[2]}
-                      active={activeCitation.id === CITATION_REFERENCES[2].id}
-                      onSelect={() => selectCitation(CITATION_REFERENCES[2].id)}
-                    />
-                    .
-                  </p>
-                </div>
+            <div className="bg-muted/20 px-3 py-4 sm:px-4 sm:py-5">
+              <div
+                className={prosePreferenceDetail.className}
+                style={agentProseStyle}
+              >
+                <p>
+                  The launch readiness plan has been set to enterprise release,
+                  which requires independent risk analysis by the review team
+                  <CitationToken
+                    citation={CITATION_REFERENCES[0]}
+                    active={activeCitation.id === CITATION_REFERENCES[0].id}
+                    onSelect={() => selectCitation(CITATION_REFERENCES[0].id)}
+                    onPreview={() =>
+                      setPreviewCitationId(CITATION_REFERENCES[0].id)
+                    }
+                    onClearPreview={() => setPreviewCitationId(null)}
+                  />
+                  and a dedicated support plan with documented issue triage
+                  timelines
+                  <CitationToken
+                    citation={CITATION_REFERENCES[1]}
+                    active={activeCitation.id === CITATION_REFERENCES[1].id}
+                    onSelect={() => selectCitation(CITATION_REFERENCES[1].id)}
+                    onPreview={() =>
+                      setPreviewCitationId(CITATION_REFERENCES[1].id)
+                    }
+                    onClearPreview={() => setPreviewCitationId(null)}
+                  />
+                  . The internal launch guidance also requires every
+                  decision-supporting source to be linked from the final review
+                  summary, including modules that were excluded from the initial
+                  boundary
+                  <CitationToken
+                    citation={CITATION_REFERENCES[2]}
+                    active={activeCitation.id === CITATION_REFERENCES[2].id}
+                    onSelect={() => selectCitation(CITATION_REFERENCES[2].id)}
+                    onPreview={() =>
+                      setPreviewCitationId(CITATION_REFERENCES[2].id)
+                    }
+                    onClearPreview={() => setPreviewCitationId(null)}
+                  />
+                  .
+                </p>
+              </div>
 
-                <div className="mt-6 flex flex-wrap gap-2">
-                  {CITATION_REFERENCES.map((citation) => (
-                    <button
-                      key={citation.id}
-                      type="button"
-                      aria-pressed={activeCitation.id === citation.id}
-                      onClick={() => selectCitation(citation.id)}
-                      className={`inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs transition-[background-color,border-color,color] focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none ${
-                        activeCitation.id === citation.id
-                          ? "border-primary/30 bg-primary/10 text-primary"
-                          : "border-border text-muted-foreground hover:bg-muted hover:text-foreground"
-                      }`}
-                    >
-                      <HugeiconsIcon
-                        icon={citation.icon}
-                        size={12}
-                        strokeWidth={1.5}
-                        aria-hidden="true"
-                      />
-                      {citation.title}
-                    </button>
-                  ))}
-                </div>
+              <div className="mt-4 flex flex-wrap gap-1.5">
+                {CITATION_REFERENCES.map((citation) => (
+                  <button
+                    key={citation.id}
+                    type="button"
+                    data-compact-touch
+                    aria-label={`Inspect source ${citation.id}: ${citation.title}`}
+                    aria-pressed={activeCitation.id === citation.id}
+                    onClick={() => selectCitation(citation.id)}
+                    onMouseEnter={() => setPreviewCitationId(citation.id)}
+                    onMouseLeave={() => setPreviewCitationId(null)}
+                    onFocus={() => setPreviewCitationId(citation.id)}
+                    onBlur={() => setPreviewCitationId(null)}
+                    className={`inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs transition-[background-color,border-color,color] focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none ${
+                      activeCitation.id === citation.id
+                        ? "border-primary/30 bg-primary/10 text-primary"
+                        : "border-border text-muted-foreground hover:bg-muted hover:text-foreground"
+                    }`}
+                  >
+                    <HugeiconsIcon
+                      icon={citation.icon}
+                      size={12}
+                      strokeWidth={1.5}
+                      aria-hidden="true"
+                    />
+                    {citation.title}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
@@ -1026,11 +938,11 @@ export function ConversationContent() {
               ],
               [
                 "Preview card",
-                "Source title, quote excerpt, page chip, previous/next controls, and view-source action.",
+                "Source title, quote excerpt, page chip, and source affordance shown only on hover or keyboard focus.",
               ],
               [
                 "Placement",
-                "Anchored close to the cited sentence on desktop; stacked above prose on mobile.",
+                "Overlaid near the cited prose without reserving permanent vertical space.",
               ],
               [
                 "Source strip",
@@ -1075,7 +987,7 @@ export function ConversationContent() {
           </p>
         </div>
 
-        <div className="mt-5 rounded-lg border border-border/60 bg-background/70 p-1.5 sm:mt-10 sm:p-4">
+        <div className="mt-5 bg-background/70 sm:mt-10">
           <div className="mb-2 border-b border-border/50 pb-1.5 sm:mb-4 sm:pb-3">
             <div>
               <p className="section-label">Live specimen</p>
@@ -1163,29 +1075,6 @@ export function ConversationContent() {
                 <p className="text-foreground">{item.principle}</p>
                 <p className="text-xs leading-relaxed text-muted-foreground">
                   {item.avoid}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-10 border-y border-border/50">
-          <div className="grid gap-2 border-b border-border/50 py-3 text-xs md:grid-cols-[190px_minmax(0,1fr)]">
-            <p className="section-label">Upgrade checklist</p>
-            <p className="text-muted-foreground">
-              Implementation contracts that keep the composer predictable when
-              it grows beyond a basic textarea.
-            </p>
-          </div>
-          <div className="divide-y divide-border/50">
-            {COMPOSER_UPGRADE_CHECKLIST.map((check) => (
-              <div
-                key={check.item}
-                className="grid gap-2 py-3 text-sm md:grid-cols-[210px_minmax(0,1fr)]"
-              >
-                <p className="font-medium text-foreground">{check.item}</p>
-                <p className="text-xs leading-relaxed text-muted-foreground">
-                  {check.spec}
                 </p>
               </div>
             ))}

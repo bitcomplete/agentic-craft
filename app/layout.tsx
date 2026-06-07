@@ -79,7 +79,7 @@ export default function RootLayout({
                     href="https://github.com/arielconti10/agentic-craft"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="transition-colors hover:text-muted-foreground"
+                    className="inline-flex min-h-8 items-center transition-colors hover:text-muted-foreground"
                   >
                     Agentic Craft — Open Source
                   </a>

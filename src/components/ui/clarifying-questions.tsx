@@ -225,6 +225,7 @@ function ClarifyingQuestionOptionRow({
     <button
       type="button"
       aria-pressed={selected}
+      aria-label={`${selected ? "Deselect" : "Select"} ${option.label}`}
       onClick={onSelect}
       className={cn(
         "group flex min-h-11 w-full gap-2 rounded-md border px-2.5 py-1.5 text-left transition-[background-color,border-color,box-shadow] hover:bg-foreground/[0.03] focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none sm:gap-3 sm:px-3 sm:py-2.5",

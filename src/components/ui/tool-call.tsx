@@ -95,10 +95,12 @@ function ToolCallTrigger({
     >
       <button
         type="button"
+        data-compact-touch
         onClick={canExpand ? () => onExpandedChange(!expanded) : undefined}
         aria-expanded={canExpand ? expanded : undefined}
+        aria-label={canExpand ? "Toggle tool call details" : "Tool call"}
         className={cn(
-          "flex w-fit max-w-full min-w-0 items-center gap-2",
+          "flex min-h-8 w-fit max-w-full min-w-0 items-center gap-2 py-1",
           canExpand ? "cursor-pointer" : "cursor-default",
           className
         )}
@@ -220,6 +222,7 @@ function ToolCallRetry({
     <button
       type="button"
       data-slot="tool-call-retry"
+      data-compact-touch
       className={cn(
         "mt-2 rounded-md border border-border px-3 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent",
         className

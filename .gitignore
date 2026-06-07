@@ -29,3 +29,6 @@ dist-backup
 .next/
 next-env.d.ts
 tsconfig.tsbuildinfo
+
+# Test artifacts
+test-results/

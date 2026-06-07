@@ -75,7 +75,8 @@ function MemoryLedgerItem({
             type="button"
             onClick={onInspect}
             variant="outline"
-            size="xs"
+            size="sm"
+            data-compact-touch
           >
             Inspect
           </Button>
@@ -85,7 +86,8 @@ function MemoryLedgerItem({
             type="button"
             onClick={onEdit}
             variant="ghost"
-            size="xs"
+            size="sm"
+            data-compact-touch
           >
             Edit
           </Button>
@@ -95,7 +97,8 @@ function MemoryLedgerItem({
             type="button"
             onClick={onDelete}
             variant="ghost"
-            size="xs"
+            size="sm"
+            data-compact-touch
           >
             Remove
           </Button>

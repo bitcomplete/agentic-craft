@@ -28,7 +28,7 @@ function ReferenceItemMedia({
     <div
       data-slot="reference-item-media"
       className={cn(
-        "flex size-8 shrink-0 items-center justify-center rounded-md border border-border/60 bg-muted/40 text-muted-foreground [&_svg:not([class*='size-'])]:size-4",
+        "flex size-8 shrink-0 items-center justify-center rounded-md bg-muted/40 text-muted-foreground [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       {...props}

@@ -11,6 +11,7 @@ import {
   HelpCircleIcon,
   Settings01Icon,
   Shield01Icon,
+  File01Icon,
 } from "@hugeicons/core-free-icons"
 
 import {
@@ -65,6 +66,14 @@ const templateIndex = [
     primitives: "Clarifying Questions",
   },
   {
+    id: "source-backed-artifact",
+    title: "Source-backed artifact",
+    description:
+      "Turn an agent answer into a cited document with source previews, missing-source states, and usage budget.",
+    icon: File01Icon,
+    primitives: "Artifact Document, Source Preview",
+  },
+  {
     id: "memory-review",
     title: "Memory review",
     description:
@@ -78,7 +87,7 @@ const templateIndex = [
     description:
       "Track background work, agent state, progress, cost, confidence, and blocked tasks.",
     icon: Alert01Icon,
-    primitives: "Agent Status Table",
+    primitives: "Run Trace, Usage Meter",
   },
   {
     id: "multi-agent-handoff",
@@ -86,7 +95,7 @@ const templateIndex = [
     description:
       "Make ownership transfer visible with sender, receiver, payload, current state, and next action.",
     icon: GitBranchIcon,
-    primitives: "Observable Work, Agent Status Table",
+    primitives: "Handoff Packet, Run Trace",
   },
   {
     id: "agent-settings",
@@ -352,7 +361,7 @@ export function TemplatesContent() {
           Use this when the agent is about to change external state, spend
           budget, notify people, or publish an output.
         </p>
-        <div className="mt-8 rounded-lg border border-border p-6">
+        <div className="mt-8">
           <DecisionSurface.Root>
             <DecisionSurface.Trigger render={<Button variant="outline" />}>
               Review proposed action
@@ -520,7 +529,7 @@ export function TemplatesContent() {
         <p className="mt-3 max-w-[640px] text-sm leading-relaxed text-muted-foreground">
           Agentic products need durable controls, not only per-action prompts.
         </p>
-        <FieldGroup className="mt-8 rounded-lg border border-border p-4">
+        <FieldGroup className="mt-8 border-y border-border/70 py-4">
           <FieldSet>
             <Field orientation="horizontal">
               <Switch id="approval-required" defaultChecked />

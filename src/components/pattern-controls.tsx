@@ -127,7 +127,7 @@ function PatternControlsItem({
     <ToggleGroupItem
       data-slot="pattern-controls-item"
       className={cn(
-        "rounded-md border-transparent text-xs text-muted-foreground hover:bg-muted/50 hover:text-foreground aria-pressed:bg-foreground/[0.04] aria-pressed:text-foreground",
+        "min-h-8 rounded-md border-transparent text-xs text-muted-foreground hover:bg-muted/50 hover:text-foreground aria-pressed:bg-foreground/[0.04] aria-pressed:text-foreground",
         className
       )}
       {...props}

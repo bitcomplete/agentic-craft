@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "agent-settings",
+  "title": "Agent Settings",
+  "description": "A durable agent policy settings block with clickable switch labels and effective policy preview.",
+  "registryDependencies": [
+    "badge",
+    "arielconti10/agentic-craft/effective-policy-preview",
+    "field",
+    "switch"
+  ],
+  "files": [
+    {
+      "path": "registry/base-nova/blocks/agent-settings.tsx",
+      "content": "\"use client\"\n\nimport { Badge } from \"@/components/ui/badge\"\nimport { EffectivePolicyPreview } from \"@/components/ui/effective-policy-preview\"\nimport {\n  Field,\n  FieldContent,\n  FieldDescription,\n  FieldGroup,\n  FieldLabel,\n  FieldSet,\n  FieldTitle,\n} from \"@/components/ui/field\"\nimport { Switch } from \"@/components/ui/switch\"\n\nfunction AgentSettingsBlock() {\n  return (\n    <div className=\"mx-auto grid w-full max-w-5xl gap-5 lg:grid-cols-[minmax(0,1fr)_340px]\">\n      <FieldSet className=\"rounded-lg border border-border/60 p-4\">\n        <div className=\"flex items-start justify-between gap-3\">\n          <FieldContent>\n            <FieldTitle>Agent settings</FieldTitle>\n            <FieldDescription>\n              Durable controls for autonomy, approvals, notifications, and\n              memory boundaries.\n            </FieldDescription>\n          </FieldContent>\n          <Badge variant=\"outline\">Policy</Badge>\n        </div>\n        <FieldGroup className=\"mt-4 gap-4\">\n          <Field orientation=\"horizontal\">\n            <Switch id=\"autonomy-settings\" defaultChecked />\n            <FieldLabel htmlFor=\"autonomy-settings\">\n              <FieldTitle>Autonomy settings</FieldTitle>\n              <FieldDescription>\n                Let the agent prepare drafts and analyses without external side\n                effects.\n              </FieldDescription>\n            </FieldLabel>\n          </Field>\n          <Field orientation=\"horizontal\">\n            <Switch id=\"approval-policy\" defaultChecked />\n            <FieldLabel htmlFor=\"approval-policy\">\n              <FieldTitle>Approval policy settings</FieldTitle>\n              <FieldDescription>\n                Require review for publishing, spending, external sends, and\n                destructive edits.\n              </FieldDescription>\n            </FieldLabel>\n          </Field>\n          <Field orientation=\"horizontal\">\n            <Switch id=\"memory-privacy\" defaultChecked />\n            <FieldLabel htmlFor=\"memory-privacy\">\n              <FieldTitle>Memory and privacy settings</FieldTitle>\n              <FieldDescription>\n                Store only scoped memories with source, expiry, and review\n                affordances.\n              </FieldDescription>\n            </FieldLabel>\n          </Field>\n        </FieldGroup>\n      </FieldSet>\n\n      <EffectivePolicyPreview\n        title=\"Effective policy\"\n        policies={[\n          {\n            label: \"Allowed\",\n            value: \"Draft, summarize, compare sources, and prepare previews.\",\n            status: \"allowed\",\n          },\n          {\n            label: \"Requires approval\",\n            value: \"External communication, publishing, spending, and record edits.\",\n            status: \"required\",\n          },\n          {\n            label: \"Blocked\",\n            value: \"Saving memory without source, scope, and expiry.\",\n            status: \"blocked\",\n          },\n        ]}\n      />\n    </div>\n  )\n}\n\nexport { AgentSettingsBlock }\n",
+      "type": "registry:block"
+    }
+  ],
+  "type": "registry:block"
+}

@@ -2,10 +2,12 @@ import {
   Activity01Icon,
   Brain01Icon,
   BubbleChatIcon,
+  CheckListIcon,
   DashboardSpeed01Icon,
   File01Icon,
   GridIcon,
   Home01Icon,
+  Link01Icon,
   Shield01Icon,
   ZapIcon,
 } from "@hugeicons/core-free-icons"
@@ -31,6 +33,21 @@ export const sections: NavigationSection[] = [
     subs: [],
   },
   {
+    title: "Templates",
+    path: "/templates",
+    icon: CheckListIcon,
+    subs: [
+      { title: "Review Workflow", id: "review-workflow" },
+      { title: "Approval Workflow", id: "approval-workflow" },
+      { title: "Clarifying Workflow", id: "clarifying-workflow" },
+      { title: "Source-Backed Artifact", id: "source-backed-artifact" },
+      { title: "Memory Review", id: "memory-review" },
+      { title: "Background Run Monitor", id: "run-monitor" },
+      { title: "Multi-Agent Handoff", id: "multi-agent-handoff" },
+      { title: "Agent Settings", id: "agent-settings" },
+    ],
+  },
+  {
     title: "Conversation",
     path: "/conversation",
     icon: BubbleChatIcon,
@@ -39,6 +56,18 @@ export const sections: NavigationSection[] = [
       { title: "Citations", id: "citations" },
       { title: "Progress Steps", id: "progress-steps" },
       { title: "Composer", id: "composer" },
+    ],
+  },
+  {
+    title: "Sources & Artifacts",
+    path: "/sources",
+    icon: Link01Icon,
+    subs: [
+      { title: "Citation System", id: "citations" },
+      { title: "Source Companion", id: "source-list" },
+      { title: "Artifact Document", id: "artifact-document" },
+      { title: "Usage Meter", id: "usage-meter" },
+      { title: "Implementation", id: "implementation" },
     ],
   },
   {
@@ -56,7 +85,7 @@ export const sections: NavigationSection[] = [
     ],
   },
   {
-    title: "Trust & Governance",
+    title: "Trust & Control Plane",
     path: "/trust",
     icon: Shield01Icon,
     subs: [
@@ -109,6 +138,17 @@ export const sections: NavigationSection[] = [
     ],
   },
   {
+    title: "Registry",
+    path: "/registry",
+    icon: File01Icon,
+    subs: [
+      { title: "Install", id: "install" },
+      { title: "Primitives", id: "primitives" },
+      { title: "Workflow Blocks", id: "blocks" },
+      { title: "Quality Gates", id: "quality-gates" },
+    ],
+  },
+  {
     title: "Observability",
     path: "/observability",
     icon: DashboardSpeed01Icon,
@@ -117,20 +157,6 @@ export const sections: NavigationSection[] = [
       { title: "Token Usage", id: "token-usage" },
       { title: "Session Timeline", id: "session-timeline" },
       { title: "Error Log", id: "error-log" },
-    ],
-  },
-  {
-    title: "Templates",
-    path: "/templates",
-    icon: File01Icon,
-    subs: [
-      { title: "Review Workflow", id: "review-workflow" },
-      { title: "Approval Workflow", id: "approval-workflow" },
-      { title: "Clarifying Workflow", id: "clarifying-workflow" },
-      { title: "Memory Review", id: "memory-review" },
-      { title: "Background Run Monitor", id: "run-monitor" },
-      { title: "Multi-Agent Handoff", id: "multi-agent-handoff" },
-      { title: "Agent Settings", id: "agent-settings" },
     ],
   },
 ]

@@ -46,43 +46,45 @@ function SourcePreview({
       data-slot="source-preview"
       aria-label={`${title} source preview`}
       className={cn(
-        "relative rounded-2xl border border-white/10 bg-black text-white shadow-[0_18px_70px_rgba(0,0,0,0.45)]",
+        "relative rounded-xl border border-white/10 bg-black text-white shadow-[0_14px_52px_rgba(0,0,0,0.42)]",
         className
       )}
       {...props}
     >
-      <div className="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-3 sm:px-5">
+      <div className="flex items-center justify-between gap-2 border-b border-white/10 px-3 py-1.5">
         <div className="flex min-w-0 items-center gap-2">
           <HugeiconsIcon
             icon={icon}
-            size={15}
+            size={13}
             strokeWidth={1.7}
             className="shrink-0 text-white/60"
             aria-hidden="true"
           />
-          <p className="truncate text-sm font-semibold sm:text-base">
-            {title}
-          </p>
-          <Button
-            type="button"
-            aria-label={`Open ${title}`}
-            onClick={onOpenSource}
-            variant="ghost"
-            size="icon-xs"
-            className="shrink-0 text-white/70 hover:bg-white/10 hover:text-white focus-visible:ring-white/40"
-          >
-            <HugeiconsIcon
-              icon={ArrowExpand01Icon}
-              strokeWidth={1.7}
-              data-icon="inline-start"
-            />
-          </Button>
+          <p className="truncate text-xs font-semibold sm:text-sm">{title}</p>
+          {onOpenSource && (
+            <Button
+              type="button"
+              data-compact-touch
+              aria-label={`Open ${title}`}
+              onClick={onOpenSource}
+              variant="ghost"
+              size="icon-xs"
+              className="shrink-0 text-white/70 hover:bg-white/10 hover:text-white focus-visible:ring-white/40"
+            >
+              <HugeiconsIcon
+                icon={ArrowExpand01Icon}
+                strokeWidth={1.7}
+                data-icon="inline-start"
+              />
+            </Button>
+          )}
         </div>
 
         {showNavigation && (
           <div className="flex shrink-0 items-center gap-1 text-xs text-white/70">
             <Button
               type="button"
+              data-compact-touch
               aria-label="Previous source"
               onClick={onPrevious}
               variant="ghost"
@@ -100,6 +102,7 @@ function SourcePreview({
             </span>
             <Button
               type="button"
+              data-compact-touch
               aria-label="Next source"
               onClick={onNext}
               variant="ghost"
@@ -116,22 +119,21 @@ function SourcePreview({
         )}
       </div>
 
-      <div className="px-4 py-5 sm:px-5">
-        <p className="text-base leading-relaxed text-white/88 sm:text-lg sm:leading-8">
-          "{excerpt}"
-        </p>
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/12 px-3 py-1.5 text-xs text-white/75">
-            <HugeiconsIcon icon={File01Icon} size={14} strokeWidth={1.7} />
+      <div className="px-3 py-2.5">
+        <p className="text-[13px] leading-5 text-white/88">"{excerpt}"</p>
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-white/12 px-2 py-1 text-[11px] text-white/75">
+            <HugeiconsIcon icon={File01Icon} size={12} strokeWidth={1.7} />
             {location}
           </div>
-          {source && (
+          {source && onOpenSource ? (
             <Button
               type="button"
+              data-compact-touch
               onClick={onOpenSource}
               variant="ghost"
               size="sm"
-              className="rounded-full bg-white/12 px-3 py-1.5 text-xs font-medium text-white hover:bg-white/18 focus-visible:ring-white/40"
+              className="h-6 rounded-full bg-white/12 px-2 text-[11px] font-medium text-white hover:bg-white/18 focus-visible:ring-white/40"
             >
               View source
               <HugeiconsIcon
@@ -140,10 +142,14 @@ function SourcePreview({
                 data-icon="inline-end"
               />
             </Button>
-          )}
+          ) : source ? (
+            <span className="inline-flex h-6 items-center rounded-full bg-white/12 px-2 text-[11px] font-medium text-white">
+              View source
+            </span>
+          ) : null}
         </div>
         {source && (
-          <p className="mt-3 truncate text-xs text-white/45">{source}</p>
+          <p className="mt-2 truncate text-[11px] text-white/45">{source}</p>
         )}
       </div>
     </aside>

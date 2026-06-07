@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "clarifying-workflow",
+  "title": "Clarifying Workflow",
+  "description": "A missing-decision collection block with structured answer options and a paused observable-work trace.",
+  "registryDependencies": [
+    "badge",
+    "arielconti10/agentic-craft/clarifying-questions",
+    "arielconti10/agentic-craft/observable-work"
+  ],
+  "files": [
+    {
+      "path": "registry/base-nova/blocks/clarifying-workflow.tsx",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\n\nimport {\n  ClarifyingQuestions,\n  type ClarifyingQuestion,\n  type ClarifyingQuestionValue,\n} from \"@/components/ui/clarifying-questions\"\nimport { Badge } from \"@/components/ui/badge\"\nimport { ObservableWork } from \"@/components/ui/observable-work\"\n\nconst questions: ClarifyingQuestion[] = [\n  {\n    id: \"release-scope\",\n    label: \"Which release scope should the agent validate?\",\n    description:\n      \"This prevents the agent from inventing whether the review covers pilot or enterprise launch.\",\n    kind: \"single\",\n    skippable: true,\n    options: [\n      {\n        value: \"enterprise\",\n        label: \"Enterprise release\",\n        description: \"Use the highest-risk launch scope and support policy.\",\n      },\n      {\n        value: \"pilot\",\n        label: \"Pilot release\",\n        description: \"Limit review to the pilot customer cohort.\",\n      },\n      {\n        value: \"unsure\",\n        label: \"Keep blocked\",\n        description: \"Do not continue until the owner confirms scope.\",\n      },\n    ],\n  },\n]\n\nfunction ClarifyingWorkflowBlock() {\n  const [value, setValue] =\n    React.useState<ClarifyingQuestionValue>(\"enterprise\")\n\n  return (\n    <div className=\"mx-auto grid w-full max-w-5xl gap-4 lg:grid-cols-[minmax(0,1fr)_320px]\">\n      <div className=\"flex flex-col gap-4\">\n        <div className=\"flex items-start justify-between gap-3 border-l border-border/70 bg-muted/20 px-3 py-3\">\n          <div className=\"min-w-0\">\n            <p className=\"text-sm font-medium text-foreground\">\n              Clarifying workflow\n            </p>\n            <p className=\"mt-1 text-sm leading-5 text-muted-foreground\">\n              Ask only for the missing decision that blocks useful work.\n            </p>\n          </div>\n          <Badge variant=\"outline\">Input required</Badge>\n        </div>\n\n        <ClarifyingQuestions.Root\n          onSubmit={(event) => {\n            event.preventDefault()\n          }}\n        >\n          <ClarifyingQuestions.Step\n            question={questions[0]}\n            index={0}\n            total={1}\n            value={value}\n            onValueChange={(_, nextValue) => setValue(nextValue)}\n          />\n        </ClarifyingQuestions.Root>\n      </div>\n\n      <ObservableWork.Root>\n        <ObservableWork.Step\n          status=\"complete\"\n          title=\"Found missing release scope\"\n          description=\"The draft references enterprise release and pilot release in different places.\"\n          source=\"Project brief v3\"\n          meta=\"detected\"\n        />\n        <ObservableWork.Step\n          status=\"active\"\n          title=\"Paused dependent synthesis\"\n          description=\"The agent waits before producing findings that would rely on an invented assumption.\"\n          source=\"Launch review run\"\n          meta=\"blocked\"\n          defaultOpen\n        >\n          <ObservableWork.Detail>\n            Clarifying questions should resume the same run with a validated\n            response payload and an explicit skipped/default state.\n          </ObservableWork.Detail>\n        </ObservableWork.Step>\n      </ObservableWork.Root>\n    </div>\n  )\n}\n\nexport { ClarifyingWorkflowBlock }\n",
+      "type": "registry:block"
+    }
+  ],
+  "type": "registry:block"
+}

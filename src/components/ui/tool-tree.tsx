@@ -99,9 +99,12 @@ function ToolTreeTrigger({
     >
       <button
         type="button"
+        data-compact-touch
         onClick={() => onOpenChange(!open)}
+        aria-expanded={open}
+        aria-label={open ? "Collapse tool group" : "Expand tool group"}
         className={cn(
-          "flex w-fit max-w-full min-w-0 cursor-pointer items-center gap-2",
+          "flex min-h-8 w-fit max-w-full min-w-0 cursor-pointer items-center gap-2 py-1",
           className
         )}
         {...props}

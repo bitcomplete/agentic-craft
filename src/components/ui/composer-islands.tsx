@@ -23,7 +23,7 @@ function Island({
   return (
     <div
       data-slot="composer-island-wrap"
-      className={cn("animate-composer-island w-full sm:w-[95%]", className)}
+      className={cn("animate-composer-island w-full", className)}
       style={{ zIndex: 0 }}
       {...props}
     >
@@ -161,10 +161,11 @@ export function ComposerPlan({
           </div>
           <button
             type="button"
+            data-compact-touch
             onClick={() => setExpanded(!expanded)}
             aria-label={expanded ? "Collapse plan" : "Expand plan"}
             aria-expanded={expanded}
-            className="flex size-7 items-center justify-center rounded-md text-muted-foreground/60 transition-colors hover:bg-muted/50 hover:text-foreground"
+            className="flex size-8 items-center justify-center rounded-md text-muted-foreground/60 transition-colors hover:bg-muted/50 hover:text-foreground"
           >
             <HugeiconsIcon
               icon={expanded ? ArrowShrink01Icon : ArrowExpand01Icon}

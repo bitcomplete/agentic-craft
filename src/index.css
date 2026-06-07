@@ -120,6 +120,12 @@
 }
 
 @layer base {
+  html[data-disable-transitions="true"] *,
+  html[data-disable-transitions="true"] *::before,
+  html[data-disable-transitions="true"] *::after {
+    transition: none !important;
+  }
+
   * {
     @apply border-border outline-ring/50;
   }
@@ -232,4 +238,368 @@
   line-height: 1;
   color: oklch(0.556 0 0 / 40%);
   font-variant-numeric: tabular-nums;
+}
+
+/* Route specimen motion */
+@keyframes actions-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes actions-expand {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes actions-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes actions-pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes actions-step-enter {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes route-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes route-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes route-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes feedback-flash-green {
+  0% {
+    background-color: transparent;
+  }
+  30% {
+    background-color: oklch(0.72 0.15 155 / 15%);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+@keyframes feedback-press {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(0.92);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes feedback-highlight-in {
+  from {
+    background-color: transparent;
+  }
+  to {
+    background-color: oklch(0.72 0.15 155 / 8%);
+  }
+}
+
+@keyframes route-expand {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes memory-fade-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes memory-press {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(0.97);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes memory-ring-fill {
+  from {
+    stroke-dashoffset: var(--ring-circ);
+  }
+  to {
+    stroke-dashoffset: var(--ring-offset);
+  }
+}
+
+@keyframes route-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(var(--target-scale));
+  }
+}
+
+@keyframes route-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes mon-sparkline-draw {
+  from {
+    stroke-dashoffset: 200;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes trust-press {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.97);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.actions-slide-in {
+  animation: actions-slide-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.actions-expand,
+.feedback-expand,
+.memory-expand,
+.mon-expand,
+.trust-expand {
+  animation: route-expand 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  overflow: hidden;
+}
+
+.actions-fade-in {
+  animation: actions-fade-in 0.2s ease forwards;
+}
+
+.actions-pulse-dot {
+  animation: actions-pulse-dot 1.5s ease-in-out 3;
+}
+
+.actions-step-enter {
+  animation: actions-step-enter 0.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.conv-slide-in,
+.demo-slide-in,
+.feedback-slide-in,
+.memory-slide-in,
+.ma-slide-in,
+.mon-slide-in,
+.trust-slide-in {
+  animation: route-slide-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.conv-fade-in,
+.demo-fade-in,
+.feedback-fade-in,
+.memory-fade-in,
+.ma-fade-in,
+.mon-fade-in,
+.trust-fade-in {
+  animation: route-fade-in 0.2s ease forwards;
+}
+
+.conv-shimmer-text,
+.demo-shimmer-text {
+  background: linear-gradient(
+    90deg,
+    var(--color-muted-foreground) 0%,
+    var(--color-muted-foreground) 35%,
+    oklch(0.75 0.02 260) 50%,
+    var(--color-muted-foreground) 65%,
+    var(--color-muted-foreground) 100%
+  );
+  background-size: 200% 100%;
+  animation: route-shimmer 2.5s ease-in-out 2;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.feedback-flash-green {
+  animation: feedback-flash-green 0.6s ease;
+}
+
+.feedback-press {
+  animation: feedback-press 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.feedback-highlight-in {
+  animation: feedback-highlight-in 0.4s ease forwards;
+}
+
+.memory-fade-out {
+  animation: memory-fade-out 0.2s ease forwards;
+}
+
+.memory-press {
+  animation: memory-press 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.memory-ring-fill {
+  animation: memory-ring-fill 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.ma-pulse,
+.mon-pulse,
+.trust-pulse {
+  animation: route-pulse 1.5s ease-in-out 3;
+}
+
+.ma-progress {
+  transform-origin: left;
+  animation: route-progress 0.6s ease forwards;
+}
+
+.mon-sparkline-draw {
+  animation: mon-sparkline-draw 0.8s ease forwards;
+  stroke-dasharray: 200;
+}
+
+.trust-press {
+  animation: trust-press 0.15s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .actions-slide-in,
+  .actions-expand,
+  .actions-fade-in,
+  .actions-pulse-dot,
+  .actions-step-enter,
+  .conv-shimmer-text,
+  .conv-slide-in,
+  .conv-fade-in,
+  .demo-slide-in,
+  .demo-fade-in,
+  .demo-shimmer-text,
+  .feedback-slide-in,
+  .feedback-fade-in,
+  .feedback-flash-green,
+  .feedback-press,
+  .feedback-expand,
+  .feedback-highlight-in,
+  .memory-slide-in,
+  .memory-fade-in,
+  .memory-fade-out,
+  .memory-press,
+  .memory-expand,
+  .memory-ring-fill,
+  .ma-slide-in,
+  .ma-fade-in,
+  .ma-pulse,
+  .ma-progress,
+  .mon-slide-in,
+  .mon-fade-in,
+  .mon-expand,
+  .mon-pulse,
+  .mon-sparkline-draw,
+  .trust-slide-in,
+  .trust-fade-in,
+  .trust-expand,
+  .trust-pulse,
+  .trust-press {
+    animation: none;
+  }
+
+  .conv-shimmer-text,
+  .demo-shimmer-text {
+    background: none;
+    -webkit-text-fill-color: currentColor;
+  }
+
+  .memory-ring-fill {
+    stroke-dashoffset: var(--ring-offset);
+  }
+
+  .ma-progress {
+    transform: scaleX(var(--target-scale));
+  }
+
+  .mon-sparkline-draw {
+    stroke-dashoffset: 0;
+  }
 }

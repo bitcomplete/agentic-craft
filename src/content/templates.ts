@@ -2,6 +2,7 @@ export type TemplateSlug =
   | "review-workflow"
   | "approval-workflow"
   | "clarifying-workflow"
+  | "source-backed-artifact"
   | "memory-review"
   | "run-monitor"
   | "multi-agent-handoff"
@@ -110,6 +111,34 @@ export const templateDetails: TemplateDetail[] = [
     ],
   },
   {
+    slug: "source-backed-artifact",
+    title: "Source-Backed Artifact",
+    eyebrow: "Template",
+    summary: "Turn an agent answer into a cited output document with source preview, missing-source state, and usage budget.",
+    whenToUse: "Use when the agent produces a durable answer, report, summary, document, or file that users need to inspect after the conversation.",
+    humanControl: "Users can inspect sources, see uncited sections, review usage, and decide whether the artifact is ready to share.",
+    failureMode: "The output mixes cited and uncited claims, hides missing sources, or separates cost from the generated artifact.",
+    recovery: "Keep the artifact in review, mark sections that need source material, and ask for scope clarification before publishing.",
+    pieces: ["Artifact Document", "Source Preview", "Usage Meter", "Reference Item"],
+    states: [
+      {
+        state: "Draft",
+        userSees: "Document sections, linked sources, uncited gaps, and current budget.",
+        systemDoes: "Keeps the output local and editable.",
+      },
+      {
+        state: "Needs source",
+        userSees: "The exact section that cannot be verified.",
+        systemDoes: "Blocks sharing until a source or human override is supplied.",
+      },
+      {
+        state: "Ready",
+        userSees: "Cited sections, source list, version, owner, and final usage.",
+        systemDoes: "Prepares the artifact for approval or export.",
+      },
+    ],
+  },
+  {
     slug: "memory-review",
     title: "Memory Review",
     eyebrow: "Template",
@@ -146,7 +175,7 @@ export const templateDetails: TemplateDetail[] = [
     humanControl: "Users can inspect progress, cost, confidence, blockers, and cancellation points.",
     failureMode: "The run stalls silently, exceeds budget, or hides which source caused the block.",
     recovery: "Expose blocked state, partial output, retry action, and cancellation affordance.",
-    pieces: ["Agent Status Table", "Progress", "Badge", "Observable Work"],
+    pieces: ["Run Trace", "Usage Meter", "Agent Status Table", "Badge"],
     states: [
       {
         state: "Running",
@@ -174,7 +203,7 @@ export const templateDetails: TemplateDetail[] = [
     humanControl: "Users can see sender, receiver, carried context, omitted context, and current owner.",
     failureMode: "The receiving agent lacks context, duplicates work, or users cannot tell who owns the task.",
     recovery: "Keep the handoff packet inspectable and require acceptance before downstream work starts.",
-    pieces: ["Observable Work", "Agent Status Table", "Reference Item"],
+    pieces: ["Handoff Packet", "Run Trace", "Agent Status Table"],
     states: [
       {
         state: "Prepared",
@@ -226,4 +255,3 @@ export const templateDetails: TemplateDetail[] = [
 export function getTemplateDetail(slug: string) {
   return templateDetails.find((template) => template.slug === slug)
 }
-

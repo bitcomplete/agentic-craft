@@ -13,39 +13,97 @@
         "@hugeicons/core-free-icons",
         "@base-ui/react"
       ],
-      "registryDependencies": ["dropdown-menu", "textarea", "tooltip"],
+      "registryDependencies": [
+        "dropdown-menu",
+        "textarea",
+        "tooltip"
+      ],
       "files": [
-        { "path": "registry/base-nova/ui/composer.tsx", "type": "registry:ui" },
-        { "path": "registry/base-nova/ui/composer-input.tsx", "type": "registry:ui" },
-        { "path": "registry/base-nova/ui/composer-toolbar.tsx", "type": "registry:ui" },
-        { "path": "registry/base-nova/ui/composer-islands.tsx", "type": "registry:ui" },
-        { "path": "registry/base-nova/ui/composer-attachments.tsx", "type": "registry:ui" },
-        { "path": "registry/base-nova/ui/composer-suggestions.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/base-nova/ui/composer.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "registry/base-nova/ui/composer-input.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "registry/base-nova/ui/composer-toolbar.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "registry/base-nova/ui/composer-islands.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "registry/base-nova/ui/composer-attachments.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "registry/base-nova/ui/composer-suggestions.tsx",
+          "type": "registry:ui"
+        }
       ],
       "css": {
         "@keyframes composer-send-press": {
-          "0%": { "transform": "scale(1)" },
-          "40%": { "transform": "scale(0.82)" },
-          "100%": { "transform": "scale(1)" }
+          "0%": {
+            "transform": "scale(1)"
+          },
+          "40%": {
+            "transform": "scale(0.82)"
+          },
+          "100%": {
+            "transform": "scale(1)"
+          }
         },
         "@keyframes composer-island-enter": {
-          "from": { "opacity": "0", "transform": "translateY(16px)" },
-          "to": { "opacity": "1", "transform": "translateY(0)" }
+          "from": {
+            "opacity": "0",
+            "transform": "translateY(16px)"
+          },
+          "to": {
+            "opacity": "1",
+            "transform": "translateY(0)"
+          }
         },
         "@keyframes composer-arrow-up": {
-          "0%": { "transform": "translateY(0)", "opacity": "1" },
-          "50%": { "transform": "translateY(-6px)", "opacity": "0" },
-          "51%": { "transform": "translateY(6px)", "opacity": "0" },
-          "100%": { "transform": "translateY(0)", "opacity": "1" }
+          "0%": {
+            "transform": "translateY(0)",
+            "opacity": "1"
+          },
+          "50%": {
+            "transform": "translateY(-6px)",
+            "opacity": "0"
+          },
+          "51%": {
+            "transform": "translateY(6px)",
+            "opacity": "0"
+          },
+          "100%": {
+            "transform": "translateY(0)",
+            "opacity": "1"
+          }
         },
         "@keyframes composer-chip-fill": {
-          "0%": { "background-color": "transparent" },
-          "30%": { "background-color": "var(--color-muted)" },
-          "100%": { "background-color": "transparent" }
+          "0%": {
+            "background-color": "transparent"
+          },
+          "30%": {
+            "background-color": "var(--color-muted)"
+          },
+          "100%": {
+            "background-color": "transparent"
+          }
         },
         "@keyframes composer-slide-in": {
-          "from": { "opacity": "0", "transform": "translateY(4px)" },
-          "to": { "opacity": "1", "transform": "translateY(0)" }
+          "from": {
+            "opacity": "0",
+            "transform": "translateY(4px)"
+          },
+          "to": {
+            "opacity": "1",
+            "transform": "translateY(0)"
+          }
         },
         "@utility animate-composer-send": {
           "animation": "composer-send-press 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)"
@@ -92,7 +150,10 @@
         "@hugeicons/core-free-icons"
       ],
       "files": [
-        { "path": "registry/base-nova/ui/tool-call.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/base-nova/ui/tool-call.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -104,9 +165,14 @@
         "@hugeicons/react",
         "@hugeicons/core-free-icons"
       ],
-      "registryDependencies": ["tool-call"],
+      "registryDependencies": [
+        "arielconti10/agentic-craft/tool-call"
+      ],
       "files": [
-        { "path": "registry/base-nova/ui/tool-tree.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/base-nova/ui/tool-tree.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -115,7 +181,10 @@
       "title": "Reference Item",
       "description": "A composable item row for sources, memories, findings, files, tasks, and agent activity with media, metadata, and action slots.",
       "files": [
-        { "path": "registry/base-nova/ui/reference-item.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/base-nova/ui/reference-item.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -127,9 +196,14 @@
         "@hugeicons/react",
         "@hugeicons/core-free-icons"
       ],
-      "registryDependencies": ["badge"],
+      "registryDependencies": [
+        "badge"
+      ],
       "files": [
-        { "path": "registry/base-nova/ui/observable-work.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/base-nova/ui/observable-work.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -137,9 +211,15 @@
       "type": "registry:ui",
       "title": "Decision Surface",
       "description": "A composable confirmation surface for approvals, risky actions, clarifying interruptions, and rollback decisions.",
-      "registryDependencies": ["button", "dialog"],
+      "registryDependencies": [
+        "button",
+        "dialog"
+      ],
       "files": [
-        { "path": "registry/base-nova/ui/decision-surface.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/base-nova/ui/decision-surface.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -151,9 +231,16 @@
         "@hugeicons/react",
         "@hugeicons/core-free-icons"
       ],
-      "registryDependencies": ["badge", "button", "progress"],
+      "registryDependencies": [
+        "badge",
+        "button",
+        "progress"
+      ],
       "files": [
-        { "path": "registry/base-nova/ui/file-lifecycle.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/base-nova/ui/file-lifecycle.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -161,9 +248,16 @@
       "type": "registry:ui",
       "title": "Agent Status Table",
       "description": "A rich operational table for multiple agents with status, active task, progress, confidence, cost, and last activity.",
-      "registryDependencies": ["badge", "progress", "table"],
+      "registryDependencies": [
+        "badge",
+        "progress",
+        "table"
+      ],
       "files": [
-        { "path": "registry/base-nova/ui/agent-status-table.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/base-nova/ui/agent-status-table.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -178,7 +272,10 @@
         "toggle-group"
       ],
       "files": [
-        { "path": "registry/base-nova/ui/clarifying-questions.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/base-nova/ui/clarifying-questions.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -190,9 +287,14 @@
         "@hugeicons/react",
         "@hugeicons/core-free-icons"
       ],
-      "registryDependencies": ["badge"],
+      "registryDependencies": [
+        "badge"
+      ],
       "files": [
-        { "path": "registry/base-nova/ui/action-preview.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/base-nova/ui/action-preview.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -204,9 +306,49 @@
         "@hugeicons/react",
         "@hugeicons/core-free-icons"
       ],
-      "registryDependencies": ["button"],
+      "registryDependencies": [
+        "button"
+      ],
       "files": [
-        { "path": "registry/base-nova/ui/source-preview.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/base-nova/ui/source-preview.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "artifact-document",
+      "type": "registry:ui",
+      "title": "Artifact Document",
+      "description": "A source-backed output document surface with cited sections, missing-source states, version metadata, and review status.",
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
+      "registryDependencies": [
+        "badge",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "registry/base-nova/ui/artifact-document.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "usage-meter",
+      "type": "registry:ui",
+      "title": "Usage Meter",
+      "description": "A compact token, cost, limit, and coverage meter for visible agent run budgets.",
+      "registryDependencies": [
+        "progress"
+      ],
+      "files": [
+        {
+          "path": "registry/base-nova/ui/usage-meter.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -218,9 +360,14 @@
         "@hugeicons/react",
         "@hugeicons/core-free-icons"
       ],
-      "registryDependencies": ["badge"],
+      "registryDependencies": [
+        "badge"
+      ],
       "files": [
-        { "path": "registry/base-nova/ui/effective-policy-preview.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/base-nova/ui/effective-policy-preview.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -232,9 +379,55 @@
         "@hugeicons/react",
         "@hugeicons/core-free-icons"
       ],
-      "registryDependencies": ["badge", "button", "reference-item"],
+      "registryDependencies": [
+        "badge",
+        "button",
+        "arielconti10/agentic-craft/reference-item"
+      ],
       "files": [
-        { "path": "registry/base-nova/ui/memory-ledger-item.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/base-nova/ui/memory-ledger-item.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "run-trace",
+      "type": "registry:ui",
+      "title": "Run Trace",
+      "description": "A dense operational trace for background runs with source touches, status, warnings, timing metadata, and expandable recovery detail.",
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
+      "registryDependencies": [
+        "badge"
+      ],
+      "files": [
+        {
+          "path": "registry/base-nova/ui/run-trace.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "handoff-packet",
+      "type": "registry:ui",
+      "title": "Handoff Packet",
+      "description": "An ownership-transfer surface for multi-agent workflows with sender, receiver, payload, source basis, receiver action, and recovery path.",
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
+      "registryDependencies": [
+        "badge",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "registry/base-nova/ui/handoff-packet.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -243,16 +436,146 @@
       "title": "Review Workflow",
       "description": "An end-to-end agentic review workflow block with observable work, source-scope clarification, locked action preview, and approval.",
       "registryDependencies": [
-        "action-preview",
+        "arielconti10/agentic-craft/action-preview",
         "badge",
         "button",
-        "clarifying-questions",
-        "decision-surface",
-        "observable-work",
-        "reference-item"
+        "arielconti10/agentic-craft/clarifying-questions",
+        "arielconti10/agentic-craft/decision-surface",
+        "arielconti10/agentic-craft/observable-work",
+        "arielconti10/agentic-craft/reference-item"
       ],
       "files": [
-        { "path": "registry/base-nova/blocks/review-workflow.tsx", "type": "registry:block" }
+        {
+          "path": "registry/base-nova/blocks/review-workflow.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "approval-workflow",
+      "type": "registry:block",
+      "title": "Approval Workflow",
+      "description": "A human-in-the-loop approval block with observable preparation, locked action preview, policy reason, expiry, and decision surface.",
+      "registryDependencies": [
+        "arielconti10/agentic-craft/action-preview",
+        "badge",
+        "button",
+        "arielconti10/agentic-craft/decision-surface",
+        "arielconti10/agentic-craft/observable-work"
+      ],
+      "files": [
+        {
+          "path": "registry/base-nova/blocks/approval-workflow.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "clarifying-workflow",
+      "type": "registry:block",
+      "title": "Clarifying Workflow",
+      "description": "A missing-decision collection block with structured answer options and a paused observable-work trace.",
+      "registryDependencies": [
+        "badge",
+        "arielconti10/agentic-craft/clarifying-questions",
+        "arielconti10/agentic-craft/observable-work"
+      ],
+      "files": [
+        {
+          "path": "registry/base-nova/blocks/clarifying-workflow.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "source-backed-artifact",
+      "type": "registry:block",
+      "title": "Source Backed Artifact",
+      "description": "A provenance workflow block that pairs a source-backed output document with source previews and usage budget.",
+      "registryDependencies": [
+        "arielconti10/agentic-craft/artifact-document",
+        "button",
+        "arielconti10/agentic-craft/source-preview",
+        "arielconti10/agentic-craft/usage-meter"
+      ],
+      "files": [
+        {
+          "path": "registry/base-nova/blocks/source-backed-artifact.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "memory-review",
+      "type": "registry:block",
+      "title": "Memory Review",
+      "description": "A memory review queue block with provenance, scope, expiry, source preview, and save/reject decision.",
+      "registryDependencies": [
+        "badge",
+        "button",
+        "arielconti10/agentic-craft/decision-surface",
+        "arielconti10/agentic-craft/memory-ledger-item",
+        "arielconti10/agentic-craft/source-preview"
+      ],
+      "files": [
+        {
+          "path": "registry/base-nova/blocks/memory-review.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "run-monitor",
+      "type": "registry:block",
+      "title": "Run Monitor",
+      "description": "A background run monitoring block with an operational trace, visible run budget, agent status table, warnings, and blocked recovery path.",
+      "registryDependencies": [
+        "arielconti10/agentic-craft/agent-status-table",
+        "badge",
+        "arielconti10/agentic-craft/run-trace",
+        "arielconti10/agentic-craft/usage-meter"
+      ],
+      "files": [
+        {
+          "path": "registry/base-nova/blocks/run-monitor.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "multi-agent-handoff",
+      "type": "registry:block",
+      "title": "Multi Agent Handoff",
+      "description": "A multi-agent ownership transfer block with handoff packet, sender/receiver state, source basis, recovery path, trace, and agent status table.",
+      "registryDependencies": [
+        "arielconti10/agentic-craft/agent-status-table",
+        "badge",
+        "arielconti10/agentic-craft/handoff-packet",
+        "arielconti10/agentic-craft/run-trace"
+      ],
+      "files": [
+        {
+          "path": "registry/base-nova/blocks/multi-agent-handoff.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "agent-settings",
+      "type": "registry:block",
+      "title": "Agent Settings",
+      "description": "A durable agent policy settings block with clickable switch labels and effective policy preview.",
+      "registryDependencies": [
+        "badge",
+        "arielconti10/agentic-craft/effective-policy-preview",
+        "field",
+        "switch"
+      ],
+      "files": [
+        {
+          "path": "registry/base-nova/blocks/agent-settings.tsx",
+          "type": "registry:block"
+        }
       ]
     }
   ]

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   ArrowRight01Icon,
@@ -19,6 +19,7 @@ import {
   type AgentStatusRow,
 } from "@/components/ui/agent-status-table"
 import { Badge } from "@/components/ui/badge"
+import { HandoffPacket } from "@/components/ui/handoff-packet"
 import { Progress } from "@/components/ui/progress"
 import {
   Table,
@@ -28,60 +29,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-
-/* ------------------------------------------------------------------ */
-/*  CSS Keyframes                                                      */
-/* ------------------------------------------------------------------ */
-
-const STYLE_ID = "multi-agent-page-styles"
-function ensureStyles() {
-  if (document.getElementById(STYLE_ID)) return
-  const style = document.createElement("style")
-  style.id = STYLE_ID
-  style.textContent = `
-    @keyframes ma-slide-in {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes ma-fade-in {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    @keyframes ma-pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-      @keyframes ma-progress {
-        from { transform: scaleX(0); }
-        to { transform: scaleX(var(--target-scale)); }
-    }
-    .ma-slide-in {
-      animation: ma-slide-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
-    .ma-fade-in {
-      animation: ma-fade-in 0.2s ease forwards;
-    }
-    .ma-pulse {
-      animation: ma-pulse 1.5s ease-in-out 3;
-    }
-      .ma-progress {
-        transform-origin: left;
-        animation: ma-progress 0.6s ease forwards;
-      }
-    @media (prefers-reduced-motion: reduce) {
-      .ma-slide-in,
-      .ma-fade-in,
-      .ma-pulse,
-      .ma-progress {
-        animation: none;
-      }
-      .ma-progress {
-        transform: scaleX(var(--target-scale));
-      }
-    }
-  `
-  document.head.appendChild(style)
-}
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
@@ -166,6 +113,28 @@ const HANDOFF_STEPS = [
   { label: "Parse project brief", agent: "Document Drafter" },
   { label: "Map requirement coverage", agent: "Requirements Mapper" },
   { label: "Generate review report", agent: "Report Generator" },
+]
+
+const HANDOFF_PACKET_ITEMS = [
+  {
+    label: "Payload",
+    value:
+      "Requirement coverage delta for Export workflow, including missing JSON export support.",
+  },
+  {
+    label: "Source basis",
+    value: "Project brief v3, Launch Policy v2, Support readiness checklist",
+  },
+  {
+    label: "Receiver action",
+    value:
+      "Confirm whether Document Drafter should update implementation notes section 6.1.3.",
+  },
+  {
+    label: "Recovery",
+    value:
+      "Rejecting the packet keeps the run blocked and asks Source Collector to gather more evidence.",
+  },
 ]
 
 const PARALLEL_AGENTS = [
@@ -254,10 +223,6 @@ const SHARED_CONTEXT_ITEMS = [
 /* ------------------------------------------------------------------ */
 
 export function MultiAgentContent() {
-  useEffect(() => {
-    ensureStyles()
-  }, [])
-
   /* Section 1 — Agent Cards */
   const [cardCtrl, setCardCtrl] = useState<Record<string, boolean>>({
     active: true,
@@ -355,11 +320,11 @@ export function MultiAgentContent() {
             className="rounded-lg border border-border/40 p-4 sm:p-6"
             key={cardAnim}
           >
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
+            <div className="grid grid-cols-1 divide-y divide-border/40 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
               {AGENT_CARDS.map((agent, i) => (
                 <div
                   key={agent.name}
-                  className="ma-slide-in space-y-3 rounded-md border border-border/40 p-4"
+                  className="ma-slide-in min-w-0 flex flex-col gap-3 py-4 first:pt-0 last:pb-0 sm:px-4 sm:py-0 sm:first:pl-0 sm:last:pr-0"
                   style={{ animationDelay: `${i * 60}ms` }}
                 >
                   {/* Header */}
@@ -392,7 +357,7 @@ export function MultiAgentContent() {
 
                   {/* Status body */}
                   {activeCardMode === "active" && (
-                    <div className="space-y-1.5">
+                    <div className="flex flex-col gap-1.5">
                       <p className="text-xs text-muted-foreground">
                         {agent.task}
                       </p>
@@ -409,12 +374,16 @@ export function MultiAgentContent() {
                     </div>
                   )}
                   {activeCardMode === "error" && (
-                    <div className="space-y-2">
+                    <div className="flex flex-col gap-2">
                       <p className="text-xs text-muted-foreground">
                         Failed to connect to project source repository — timeout
                         after 30s
                       </p>
-                      <button className="inline-flex items-center gap-1.5 rounded-md border border-border px-2 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground">
+                      <button
+                        type="button"
+                        aria-label={`Retry ${agent.name}`}
+                        className="inline-flex items-center gap-1.5 rounded-md border border-border px-2 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
+                      >
                         <HugeiconsIcon
                           icon={RefreshIcon}
                           size={10}
@@ -515,6 +484,22 @@ export function MultiAgentContent() {
             onToggle={toggleHandoff}
           />
 
+          <HandoffPacket
+            className="mb-5"
+            sender="Requirements Mapper"
+            receiver="Document Drafter"
+            title="Export workflow coverage packet"
+            description="Ownership transfer for a requirement gap that must be resolved before the review report can be finalized."
+            status={
+              activeHandoff === "complete"
+                ? "accepted"
+                : activeHandoff === "inprogress"
+                  ? "sent"
+                  : "draft"
+            }
+            items={HANDOFF_PACKET_ITEMS}
+          />
+
           <div
             className="rounded-lg border border-border/40 p-4 sm:p-6"
             key={handoffAnim}
@@ -538,9 +523,9 @@ export function MultiAgentContent() {
                     className="flex flex-col items-stretch sm:flex-row sm:items-center"
                   >
                     <div
-                      className={`flex w-full flex-col items-center gap-2 rounded-md border p-4 transition-colors duration-200 sm:w-48 ${
+                      className={`flex w-full flex-col items-center gap-2 border-l-2 px-4 py-3 transition-colors duration-200 sm:w-48 sm:border-t-2 sm:border-l-0 ${
                         stepState === "complete"
-                          ? "border-foreground/20 bg-foreground/[0.03]"
+                          ? "border-foreground/25 bg-foreground/[0.03]"
                           : stepState === "active"
                             ? "border-foreground/15 bg-foreground/[0.02]"
                             : "border-border/40 opacity-50"
@@ -679,11 +664,11 @@ export function MultiAgentContent() {
             className="rounded-lg border border-border/40 p-6"
             key={parallelAnim}
           >
-            <div className="space-y-3">
+            <div className="divide-y divide-border/40">
               {PARALLEL_AGENTS.map((agent, i) => (
                 <div
                   key={agent.name}
-                  className="ma-slide-in rounded-md border border-border/40 p-4"
+                  className="ma-slide-in py-4 first:pt-0 last:pb-0"
                   style={{ animationDelay: `${i * 60}ms` }}
                 >
                   <div className="flex items-start gap-3">
@@ -695,7 +680,7 @@ export function MultiAgentContent() {
                         className="text-muted-foreground"
                       />
                     </div>
-                    <div className="min-w-0 flex-1 space-y-2">
+                    <div className="min-w-0 flex-1 flex flex-col gap-2">
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-sm font-medium">{agent.name}</p>
@@ -825,9 +810,9 @@ export function MultiAgentContent() {
             className="rounded-lg border border-border/40 p-4 sm:p-6"
             key={routeAnim}
           >
-            <div className="ma-slide-in space-y-5">
+            <div className="ma-slide-in flex flex-col gap-5">
               {/* Incoming task */}
-              <div className="rounded-md border border-border/40 p-4">
+              <div className="border-l border-border/60 py-3 pl-4">
                 <div className="mb-2 flex items-center gap-2">
                   <HugeiconsIcon
                     icon={Route01Icon}
@@ -869,17 +854,19 @@ export function MultiAgentContent() {
                   return (
                     <button
                       key={agentName}
+                      type="button"
+                      aria-label={`Route task to ${agentName}`}
                       onClick={() => {
                         if (activeRoute === "manual") {
                           setManualSelection(agentName)
                         }
                       }}
-                      className={`rounded-md border p-3 text-left transition-colors duration-200 ${
+                      className={`rounded-md p-3 text-left transition-colors duration-200 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none ${
                         isSelected
-                          ? "border-foreground/20 bg-foreground/[0.03]"
+                          ? "bg-foreground/[0.06] text-foreground"
                           : activeRoute === "manual"
-                            ? "cursor-pointer border-border/40 hover:border-foreground/10"
-                            : "border-border/40 opacity-40"
+                            ? "cursor-pointer hover:bg-foreground/[0.03]"
+                            : "opacity-40"
                       }`}
                     >
                       <div className="flex items-center gap-2">
@@ -1005,7 +992,7 @@ export function MultiAgentContent() {
             key={commAnim}
           >
             {activeComm === "direct" ? (
-              <div className="ma-slide-in space-y-3">
+              <div className="ma-slide-in flex flex-col gap-3">
                 <div className="mb-4 flex items-center gap-2">
                   <HugeiconsIcon
                     icon={Message01Icon}
@@ -1035,7 +1022,7 @@ export function MultiAgentContent() {
                         />
                       </div>
                       <div
-                        className={`flex-1 rounded-md border border-border/40 p-3 ${
+                        className={`flex-1 border-l border-border/50 py-2 pl-3 ${
                           msg.from === "Document Drafter"
                             ? "bg-foreground/[0.02]"
                             : ""
@@ -1064,7 +1051,7 @@ export function MultiAgentContent() {
                 ))}
               </div>
             ) : (
-              <div className="ma-slide-in space-y-3">
+              <div className="ma-slide-in flex flex-col gap-3">
                 <div className="mb-4 flex items-center gap-2">
                   <HugeiconsIcon
                     icon={Share01Icon}
@@ -1079,7 +1066,7 @@ export function MultiAgentContent() {
                 {SHARED_CONTEXT_ITEMS.map((item, i) => (
                   <div
                     key={i}
-                    className="ma-slide-in flex items-center gap-3 rounded-md border border-border/40 px-4 py-3"
+                    className="ma-slide-in flex items-center gap-3 border-b border-border/40 py-3 last:border-b-0"
                     style={{ animationDelay: `${i * 50}ms` }}
                   >
                     <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted">
