@@ -27,7 +27,7 @@ export function ComposerToolbar({
     <div
       data-slot="composer-toolbar"
       className={cn(
-        "flex items-center gap-1 px-1.5 pt-0 pb-0.5 sm:px-3 sm:pt-0.5 sm:pb-3",
+        "flex items-center gap-1 px-2.5 pt-0 pb-2 sm:px-3 sm:pb-3",
         className
       )}
       {...props}
@@ -53,7 +53,7 @@ export function ComposerMenu({
         data-slot="composer-menu-trigger"
         aria-label="Open composer menu"
         className={cn(
-          "flex size-7 items-center justify-center rounded-md text-muted-foreground/50 transition-colors duration-200 outline-none hover:bg-muted/60 hover:text-foreground",
+          "flex size-8 items-center justify-center rounded-lg text-muted-foreground/60 transition-colors duration-200 outline-none hover:bg-muted/70 hover:text-foreground",
           className
         )}
       >
@@ -101,7 +101,7 @@ export function ComposerContextRing({
             data-slot="composer-context-ring"
             aria-label={`${displayLabel}, ${pctLabel} used`}
             className={cn(
-              "mr-1 flex size-7 items-center justify-center rounded-md text-muted-foreground/70 transition-colors hover:bg-muted/60 hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none",
+              "mr-1 flex size-8 items-center justify-center rounded-lg text-muted-foreground/70 transition-colors hover:bg-muted/70 hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none",
               className
             )}
             {...props}
@@ -162,7 +162,7 @@ export function ComposerSend({
       disabled={!state.canSend}
       aria-label={state.canSend ? "Send message" : "Send message unavailable"}
       className={cn(
-        "flex size-7 items-center justify-center rounded-md transition-[opacity,transform] duration-200 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none",
+        "flex size-8 items-center justify-center rounded-lg transition-[opacity,transform] duration-200 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none",
         state.canSend ? "hover:opacity-90" : "cursor-not-allowed",
         state.isSending ? "animate-composer-send" : "",
         className

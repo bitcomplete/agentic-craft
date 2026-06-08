@@ -38,7 +38,7 @@ export function ComposerSuggestions({
     <div
       data-slot="composer-suggestions"
       className={cn(
-        "animate-composer-slide mt-1.5 flex w-full gap-1 overflow-x-auto px-0.5 pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] sm:mt-3 sm:flex-wrap sm:justify-center sm:gap-1.5 sm:overflow-visible sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden",
+        "animate-composer-slide mt-2 flex w-full gap-1 overflow-x-auto px-0.5 pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] sm:mt-2 sm:flex-wrap sm:justify-center sm:gap-1.5 sm:overflow-visible sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden",
         className
       )}
       {...props}
@@ -51,7 +51,7 @@ export function ComposerSuggestions({
           aria-label={`Use suggestion: ${s}`}
           onClick={() => handleClick(s)}
           className={cn(
-            "min-h-6 shrink-0 whitespace-nowrap rounded-md border border-border/60 px-2 py-1 text-left text-[11px] leading-4 text-muted-foreground transition-colors duration-200 hover:border-border hover:bg-muted/40 hover:text-foreground sm:min-h-7 sm:px-2.5 sm:text-center sm:text-xs sm:leading-snug",
+            "min-h-7 shrink-0 whitespace-nowrap rounded-lg border border-border/60 bg-background/70 px-2.5 py-1 text-left text-xs leading-4 text-muted-foreground transition-colors duration-200 hover:border-border hover:bg-muted/40 hover:text-foreground sm:text-center sm:leading-snug",
             flashChip === s ? "animate-composer-chip" : ""
           )}
         >

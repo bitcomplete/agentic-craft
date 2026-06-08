@@ -116,6 +116,7 @@ function SourceBackedArtifact() {
           <button
             key={source.id}
             type="button"
+            aria-label={`Inspect source ${source.id}: ${source.title}`}
             aria-pressed={activeSourceId === source.id}
             onClick={() => setActiveSourceId(source.id)}
             className="rounded-md border border-border px-3 py-2 text-left text-sm transition-colors hover:bg-muted/40 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none aria-pressed:bg-muted/50"

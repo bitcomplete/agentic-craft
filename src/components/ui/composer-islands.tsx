@@ -29,7 +29,7 @@ function Island({
     >
       <div
         data-slot="composer-island"
-        className="border border-b-0 border-border bg-background"
+        className="border border-b-0 border-border/80 bg-background/95 shadow-[0_-1px_10px_rgba(0,0,0,0.08)]"
       >
         {children}
       </div>
@@ -52,7 +52,7 @@ export function ComposerScope({
 }) {
   return (
     <Island className={className} {...props}>
-      <div className="flex items-center gap-2 px-2 py-1.5 sm:px-3 sm:py-2.5">
+      <div className="flex items-center gap-2 px-2 py-1.5 sm:px-3 sm:py-2">
         <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
           {items.map((item) => (
             <span
@@ -110,7 +110,7 @@ export function ComposerReply({
 }) {
   return (
     <Island className={className} {...props}>
-      <div className="flex items-center gap-2 px-2.5 py-1.5 sm:px-4 sm:py-2.5">
+      <div className="flex items-center gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2">
         <HugeiconsIcon
           icon={MailReply01Icon}
           size={13}
@@ -139,7 +139,7 @@ export function ComposerReply({
 
 export function ComposerPlan({
   tasks,
-  defaultExpanded = false,
+  defaultExpanded = true,
   className,
   ...props
 }: React.ComponentProps<"div"> & {
@@ -151,12 +151,13 @@ export function ComposerPlan({
 
   return (
     <Island className={className} {...props}>
-      <div className="px-2.5 py-1.5 sm:px-4 sm:py-3">
+      <div className="px-2.5 py-1.5 sm:px-3 sm:py-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <HugeiconsIcon icon={Task01Icon} size={13} strokeWidth={1.5} />
-            <span>
-              {completedCount} out of {tasks.length} tasks completed
+            <span className="font-medium text-foreground">Plan</span>
+            <span className="tabular-nums">
+              {completedCount}/{tasks.length}
             </span>
           </div>
           <button
@@ -176,29 +177,19 @@ export function ComposerPlan({
         </div>
 
         {expanded && (
-          <div className="animate-composer-slide mt-1.5 flex flex-col gap-1.5 sm:mt-3 sm:gap-2.5">
+          <ol className="animate-composer-slide mt-1.5 grid gap-1 pl-5 text-xs text-muted-foreground sm:mt-2">
             {tasks.map((task, i) => (
-              <div
+              <li
                 key={i}
                 className={cn(
-                  "flex items-start gap-2.5 text-xs leading-snug",
-                  task.dimmed ? "text-muted-foreground/40" : "text-foreground"
+                  "list-decimal pl-0.5 leading-4 marker:text-muted-foreground/60",
+                  task.dimmed && "text-muted-foreground/45"
                 )}
               >
-                <span
-                  className={cn(
-                    "mt-[3px] flex h-[14px] w-[14px] shrink-0 items-center justify-center rounded-full border",
-                    task.dimmed
-                      ? "border-muted-foreground/20"
-                      : "border-muted-foreground/40"
-                  )}
-                />
-                <span>
-                  {i + 1}. {task.label}
-                </span>
-              </div>
+                <span>{task.label}</span>
+              </li>
             ))}
-          </div>
+          </ol>
         )}
       </div>
     </Island>

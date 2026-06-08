@@ -207,9 +207,10 @@ export function ComposerIslands({
     <div
       data-slot="composer-islands"
       className={cn(
-        "flex w-full flex-col items-center",
-        "[&>[data-slot=composer-island-wrap]:first-child>[data-slot=composer-island]]:rounded-t-lg sm:[&>[data-slot=composer-island-wrap]:first-child>[data-slot=composer-island]]:rounded-t-xl [&>[data-slot=composer-island-wrap]:first-child>[data-slot=composer-island]]:shadow-[0_-1px_6px_rgba(0,0,0,0.04),0_-4px_16px_rgba(0,0,0,0.03)]",
-        "[&>[data-slot=composer-island-wrap]:not(:first-child)>[data-slot=composer-island]]:rounded-t-none [&>[data-slot=composer-island-wrap]:not(:first-child)>[data-slot=composer-island]]:border-t-0",
+        "relative z-0 -mb-px flex w-[95%] max-w-[684px] flex-col items-stretch self-center",
+        "[&>[data-slot=composer-island-wrap]:first-child>[data-slot=composer-island]]:rounded-t-lg sm:[&>[data-slot=composer-island-wrap]:first-child>[data-slot=composer-island]]:rounded-t-xl",
+        "[&>[data-slot=composer-island-wrap]:not(:first-child)>[data-slot=composer-island]]:rounded-t-none",
+        "[&>[data-slot=composer-island-wrap]:last-child>[data-slot=composer-island]]:rounded-b-none",
         className
       )}
       {...props}
@@ -250,10 +251,10 @@ export function ComposerCard({
         textareaRef.current?.focus()
       }}
       className={cn(
-        "relative z-1 w-full rounded-lg border bg-background transition-shadow duration-300 ease-out sm:rounded-xl",
+        "relative z-1 w-full rounded-xl border bg-background/95 transition-[border-color,box-shadow] duration-200 ease-out sm:rounded-2xl",
         isFocused
-          ? "border-foreground/15 shadow-[0_0_0_1px_rgba(0,0,0,0.03),0_2px_12px_rgba(0,0,0,0.06),0_8px_32px_rgba(0,0,0,0.04)]"
-          : "border-border shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_16px_rgba(0,0,0,0.03)]",
+          ? "border-foreground/20 shadow-[0_0_0_1px_rgba(255,255,255,0.04),0_6px_24px_rgba(0,0,0,0.18)]"
+          : "border-border/80 shadow-[0_1px_1px_rgba(0,0,0,0.12)]",
         className
       )}
       {...props}

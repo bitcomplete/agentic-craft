@@ -231,6 +231,7 @@ export function SourcesContent() {
               key={source.id}
               type="button"
               data-compact-touch
+              aria-label={`Inspect source ${source.id}: ${source.title}`}
               onClick={() => setActiveSourceId(source.id)}
               className="grid w-full gap-2 px-0 py-3 text-left transition-colors hover:bg-muted/25 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none sm:grid-cols-[32px_1fr_auto]"
             >

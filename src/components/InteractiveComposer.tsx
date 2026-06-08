@@ -21,23 +21,23 @@ import { PatternControls } from "@/components/pattern-controls"
 import { cn } from "@/lib/utils"
 import {
   Composer,
-  ComposerIslands,
   ComposerCard,
   ComposerInput,
   ComposerToolbar,
   ComposerMenu,
   ComposerContextRing,
   ComposerSend,
+  ComposerSuggestions,
+  ComposerIslands,
   ComposerScope,
   ComposerReply,
   ComposerPlan,
-  ComposerSuggestions,
+  ComposerAttachments,
 } from "@/components/ui/composer"
 import type { ComposerScopeItem } from "@/components/ui/composer"
-import {
-  FileLifecycle,
-  type FileLifecycleFile,
-  type FileLifecycleSurface,
+import type {
+  FileLifecycleFile,
+  FileLifecycleSurface,
 } from "@/components/ui/file-lifecycle"
 
 /* ─── Demo Data ─── */
@@ -124,11 +124,11 @@ type ComposerDemoPresentation = "playground" | "compact-playground" | "embedded"
 const COMPOSER_DEMO_PRESENTATIONS = {
   playground: {
     controls: "full",
-    defaultPlan: true,
+    defaultPlan: false,
   },
   "compact-playground": {
     controls: "compact",
-    defaultPlan: true,
+    defaultPlan: false,
   },
   embedded: {
     controls: "none",
@@ -242,7 +242,11 @@ function ComposerDemo({
     if (features.scopeBanner) return PLACEHOLDER_MAP.scope
     return PLACEHOLDER_MAP.default
   }
-  const hasIslands = features.plan || features.scopeBanner || features.replyTo
+
+  const hasIslands =
+    features.plan ||
+    features.replyTo ||
+    (features.scopeBanner && scopeItems.length > 0)
 
   return (
     <div
@@ -284,7 +288,7 @@ function ComposerDemo({
         {hasIslands && (
           <ComposerIslands>
             {features.plan && <ComposerPlan tasks={PLAN_TASKS} />}
-            {features.scopeBanner && (
+            {features.scopeBanner && scopeItems.length > 0 && (
               <ComposerScope
                 items={scopeItems}
                 onRemove={removeScopeItem}
@@ -299,62 +303,16 @@ function ComposerDemo({
           </ComposerIslands>
         )}
 
-        <ComposerCard
-          className={
-            hasIslands
-              ? "rounded-t-none border-t-0 sm:rounded-t-none"
-              : undefined
-          }
-        >
-          {features.attachments && (
-            <div className="px-1.5 pt-1.5 sm:px-4 sm:pt-3" aria-live="polite">
-              <FileLifecycle.Root
-                className="border-0 bg-transparent sm:border sm:bg-background"
-                surface={fileSurface}
-                onDragEnter={(event) => {
-                  event.preventDefault()
-                  setFileSurface("dragging")
-                }}
-                onDragOver={(event) => {
-                  event.preventDefault()
-                  setFileSurface("dragging")
-                }}
-                onDragLeave={(event) => {
-                  if (
-                    event.currentTarget.contains(event.relatedTarget as Node)
-                  ) {
-                    return
-                  }
-                  setFileSurface("idle")
-                }}
-                onDrop={(event) => {
-                  event.preventDefault()
-                  addDroppedFile()
-                }}
-              >
-                <FileLifecycle.Dropzone className="border-b border-border/70 sm:border-b-0">
-                  <div className="flex flex-col gap-1 text-left">
-                    <p className="text-xs font-medium sm:text-sm">
-                      Files attached to this message
-                    </p>
-                    <p className="hidden text-xs leading-relaxed text-muted-foreground sm:block">
-                      Drop another source here, retry rejected files, or remove
-                      anything before sending.
-                    </p>
-                  </div>
-                </FileLifecycle.Dropzone>
-                <FileLifecycle.List>
-                  {files.map((file) => (
-                    <FileLifecycle.Item
-                      key={file.id}
-                      file={file}
-                      onRemove={removeFile}
-                      onRetry={retryFile}
-                    />
-                  ))}
-                </FileLifecycle.List>
-              </FileLifecycle.Root>
-            </div>
+        <ComposerCard>
+          {features.attachments && files.length > 0 && (
+            <ComposerAttachments
+              files={files}
+              surface={fileSurface}
+              onRemove={removeFile}
+              onRetry={retryFile}
+              onDropFile={addDroppedFile}
+              onSurfaceChange={setFileSurface}
+            />
           )}
           <ComposerInput placeholder={getPlaceholder()} />
           <ComposerToolbar>

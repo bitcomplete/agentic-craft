@@ -32,7 +32,7 @@ export function ComposerInput({
   return (
     <div
       data-slot="composer-input"
-      className={cn("px-2 pt-0.5 pb-0 sm:px-4 sm:pt-3 sm:pb-1", className)}
+      className={cn("px-3 pt-2 pb-1 sm:px-4 sm:pt-3", className)}
     >
       <Textarea
         data-compact-touch
@@ -53,7 +53,7 @@ export function ComposerInput({
         autoComplete={autoComplete}
         disabled={state.disabled}
         rows={1}
-        className="max-h-[160px] min-h-6 resize-none rounded-none border-0 bg-transparent px-0 py-0 text-base leading-5 shadow-none placeholder:text-[12px] placeholder:leading-4 placeholder:text-muted-foreground/50 focus-visible:ring-0 sm:leading-6 sm:placeholder:text-sm md:text-sm dark:bg-transparent"
+        className="max-h-[160px] min-h-8 resize-none rounded-none border-0 bg-transparent px-0 py-0 text-sm leading-5 shadow-none placeholder:text-[13px] placeholder:leading-5 placeholder:text-muted-foreground/50 focus-visible:ring-0 dark:bg-transparent"
         style={{ maxHeight }}
         {...props}
       />

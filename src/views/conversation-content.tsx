@@ -118,7 +118,7 @@ const COMPOSER_CHECKS = [
   {
     check: "The user can see the active scope",
     reason:
-      "Files, reply targets, and plan state sit outside the drafted text so they cannot be mistaken for authored input.",
+      "Reply targets and generated state use connected islands above the drafting surface, while files stay inside the composer as message payload.",
   },
   {
     check: "The next commitment is explicit",
@@ -133,14 +133,14 @@ const COMPOSER_CHECKS = [
   {
     check: "Every added object is reversible",
     reason:
-      "Context islands, attachments, and reply targets expose a local dismiss path without changing the primary action.",
+      "Context objects, attachments, and reply targets expose a local dismiss path without changing the primary action.",
   },
 ] as const
 
 const COMPOSER_ANATOMY = [
   {
     part: "Context islands",
-    role: "Stacked, dismissible surfaces for reply, plan, scope, and attachments.",
+    role: "A connected 95%-width stack for plan, reply, and scope above the input surface.",
   },
   {
     part: "Primary input",
@@ -171,7 +171,7 @@ const COMPOSER_VARIANTS = [
   },
   {
     name: "State-rendered",
-    text: "Keep plan, scope, and attachments synced to agent state.",
+    text: "Keep scope and plan synced as connected islands, with attachments kept inside the draft payload.",
   },
 ] as const
 
@@ -182,7 +182,7 @@ const COMPOSER_GUIDANCE = [
   },
   {
     principle: "Expose what will be sent before commitment",
-    avoid: "Do not hide plan, attachment, or scope state behind menus.",
+    avoid: "Do not place generated plans inside the user-authored input surface.",
   },
   {
     principle: "Keep generated affordances reversible",
@@ -653,27 +653,37 @@ export function ConversationContent() {
 
         <div key={workAnim} className="mt-4 border-y border-border/40 py-4">
           {workMode === "collapsed" && (
-            <div className="conv-slide-in flex items-center justify-between gap-4 px-1 py-2">
-              <div>
-                <span className="conv-shimmer-text text-sm">
-                  Checking launch sources
-                </span>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  2 complete, 1 active, 1 waiting
+            <div className="conv-slide-in grid gap-3 px-1 py-2 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-sm font-medium text-foreground">
+                    Checking launch sources
+                  </span>
+                  <span className="rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
+                    Active
+                  </span>
+                </div>
+                <p className="mt-1 truncate text-xs text-muted-foreground">
+                  Launch checklist, issue triage policy, source scope
                 </p>
               </div>
-              <span className="rounded-md border border-border px-2 py-1 text-xs text-muted-foreground">
-                4 steps
+              <span className="w-fit rounded-md border border-border px-2 py-1 text-xs text-muted-foreground">
+                2 done / 1 active / 1 waiting
               </span>
             </div>
           )}
 
           {workMode === "expanded" && (
             <div className="conv-slide-in">
-              <div className="mb-4 flex items-center justify-between gap-4 px-1">
-                <span className="conv-shimmer-text text-sm">
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-3 px-1">
+                <div className="flex min-w-0 flex-wrap items-center gap-2">
+                  <span className="text-sm font-medium text-foreground">
                   Checking launch sources
-                </span>
+                  </span>
+                  <span className="rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
+                    Active
+                  </span>
+                </div>
                 <span className="text-xs text-muted-foreground">
                   Sources visible
                 </span>
@@ -992,8 +1002,8 @@ export function ConversationContent() {
             <div>
               <p className="section-label">Live specimen</p>
               <p className="mt-1 hidden text-xs leading-relaxed text-muted-foreground sm:block">
-                Plan, context, reply target, suggestions, and attachments in one
-                compact surface.
+                A clean drafting surface with context and generated plan state
+                kept outside authored text.
               </p>
             </div>
           </div>
@@ -1099,7 +1109,8 @@ export function ConversationContent() {
                 Container
               </TableCell>
               <TableCell className="py-3">
-                max-w-[720px], rounded-lg, border border-border
+                max-w-[720px], rounded-xl on mobile, rounded-2xl on desktop,
+                border border-border
               </TableCell>
             </TableRow>
             <TableRow className="border-b border-border/50">
@@ -1115,7 +1126,8 @@ export function ConversationContent() {
                 Send button
               </TableCell>
               <TableCell className="py-3">
-                32×32px, bg-primary when active, bg-muted when empty, spring
+                32×32px hit area, 24px inner icon button, foreground when active,
+                muted when empty, spring
                 press animation
               </TableCell>
             </TableRow>
@@ -1132,7 +1144,7 @@ export function ConversationContent() {
                 Scope island
               </TableCell>
               <TableCell className="py-3">
-                max-w-[690px], bg-muted/50, slides in/out, dismissible × button
+                Compact dismissible chips in the connected island stack.
               </TableCell>
             </TableRow>
             <TableRow className="border-b border-border/50">
@@ -1140,7 +1152,16 @@ export function ConversationContent() {
                 Reply island
               </TableCell>
               <TableCell className="py-3">
-                ↩ icon + truncated quote, no label or border-quote, 12px
+                Reply icon plus truncated quote with a local dismiss action.
+              </TableCell>
+            </TableRow>
+            <TableRow className="border-b border-border/50">
+              <TableCell className="py-3 pr-6 font-medium text-foreground">
+                Plan island
+              </TableCell>
+              <TableCell className="py-3">
+                Rendered in the connected 95%-width stack above the composer,
+                not inside the authored text area.
               </TableCell>
             </TableRow>
             <TableRow className="border-b border-border/50">
@@ -1149,7 +1170,7 @@ export function ConversationContent() {
               </TableCell>
               <TableCell className="py-3">
                 Multi-select toggle group, active = subtle foreground tint,
-                drives visible context islands
+                drives visible reference states without resizing the input
               </TableCell>
             </TableRow>
             <TableRow className="border-b border-border/50">
@@ -1167,7 +1188,8 @@ export function ConversationContent() {
               </TableCell>
               <TableCell className="py-3">
                 File preview chips with name/size, dismiss per-file, enables
-                send
+                send; rendered inside the composer card because files belong to
+                the message being drafted.
               </TableCell>
             </TableRow>
           </TableBody>
@@ -1176,11 +1198,11 @@ export function ConversationContent() {
         <div className="mt-10 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
           <p>
             Scope and reply-to are mutually exclusive — enabling one dismisses
-            the other. Plan, scope, reply, attachments, and suggestions stay
-            visible as separate objects until the user chooses what to send. The
-            send button uses a spring-based press animation (cubic-bezier 0.34,
-            1.56, 0.64, 1) with an arrow flyout on send. Every island and chip
-            set slides in with a 250ms ease-out. Suggestion chips fill the
+            the other. Plan/progress, scope, and reply stay in a connected
+            island stack above the composer; attachments stay inside the
+            composer because they are part of the message payload. The send
+            button uses a spring-based press animation (cubic-bezier 0.34, 1.56,
+            0.64, 1) with an arrow flyout on send. Suggestion chips fill the
             textarea on click with a brief color flash to confirm the action.
           </p>
         </div>
