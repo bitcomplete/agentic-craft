@@ -328,7 +328,13 @@ export function TemplatesContent() {
               description="Read user-selected files, previous decisions, and current requirements."
               source="4 sources"
               meta="completed"
-            />
+            >
+              <ObservableWork.Detail>
+                Project brief v3, Launch Policy v2, the support readiness
+                checklist, and the prior review decision were read in full and
+                pinned as citable sources.
+              </ObservableWork.Detail>
+            </ObservableWork.Step>
             <ObservableWork.Step
               status="active"
               title="Compare claims against evidence"
@@ -347,7 +353,12 @@ export function TemplatesContent() {
               title="Prepare reviewable result"
               description="Generate a summary only after the evidence pass finishes."
               source="pending"
-            />
+            >
+              <ObservableWork.Detail>
+                The summary will cite every claim back to a pinned source and
+                list unresolved gaps for human review before anything is sent.
+              </ObservableWork.Detail>
+            </ObservableWork.Step>
           </ObservableWork.Root>
         </div>
       </section>

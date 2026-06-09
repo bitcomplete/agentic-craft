@@ -246,6 +246,31 @@ article > header {
    control is reintroduced, gate it on an explicit class and never hide a
    section's only content. */
 
+/* Observable work: reveal step content when a step opens. Native <details>
+   snaps open; this eases the content in (opacity/transform only). */
+details[data-slot="observable-work-step"][open]
+  > [data-slot="observable-work-step-content"] {
+  animation: observable-work-reveal 0.18s ease-out;
+}
+
+@keyframes observable-work-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  details[data-slot="observable-work-step"][open]
+    > [data-slot="observable-work-step-content"] {
+    animation: none;
+  }
+}
+
 /* Section label — small caps category */
 .section-label {
   font-size: 11px;
