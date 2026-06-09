@@ -44,64 +44,56 @@ const templateIndex = [
   {
     id: "review-workflow",
     title: "Review workflow",
-    description:
-      "Collect sources, inspect gaps, ask targeted follow-ups, and produce a reviewable result.",
+    description: "Collect sources, inspect gaps, and produce a cited result.",
     icon: CheckListIcon,
     primitives: "Observable Work, Reference Item",
   },
   {
     id: "approval-workflow",
     title: "Approval workflow",
-    description:
-      "Pause before an irreversible action and show the decision, impact, cost, and rollback path.",
+    description: "Preview impact, cost, rollback, then ask for approval.",
     icon: Shield01Icon,
     primitives: "Decision Surface",
   },
   {
     id: "clarifying-workflow",
     title: "Clarifying workflow",
-    description:
-      "Ask only for missing information, keep defaults visible, and let users answer in structured form.",
+    description: "Ask only for missing decisions with visible defaults.",
     icon: HelpCircleIcon,
     primitives: "Clarifying Questions",
   },
   {
     id: "source-backed-artifact",
     title: "Source-backed artifact",
-    description:
-      "Turn an agent answer into a cited document with source previews, missing-source states, and usage budget.",
+    description: "Turn an answer into a cited, reviewable document.",
     icon: File01Icon,
     primitives: "Artifact Document, Source Preview",
   },
   {
     id: "memory-review",
     title: "Memory review",
-    description:
-      "Show what the agent wants to remember, why it matters, source provenance, and removal controls.",
+    description: "Review proposed durable context before it is saved.",
     icon: Brain01Icon,
     primitives: "Reference Item",
   },
   {
     id: "run-monitor",
     title: "Run monitor",
-    description:
-      "Track background work, agent state, progress, cost, confidence, and blocked tasks.",
+    description: "Track background work, budget, blockers, and agents.",
     icon: Alert01Icon,
     primitives: "Run Trace, Usage Meter",
   },
   {
     id: "multi-agent-handoff",
     title: "Multi-agent handoff",
-    description:
-      "Make ownership transfer visible with sender, receiver, payload, current state, and next action.",
+    description: "Show sender, receiver, payload, and current owner.",
     icon: GitBranchIcon,
     primitives: "Handoff Packet, Run Trace",
   },
   {
     id: "agent-settings",
     title: "Agent settings",
-    description:
-      "Give teams durable controls for autonomy, notifications, approvals, and memory boundaries.",
+    description: "Set durable boundaries for autonomy, approvals, and memory.",
     icon: Settings01Icon,
     primitives: "Field, Switch, Decision Surface",
   },
@@ -204,7 +196,8 @@ const runAgents: AgentStatusRow[] = [
 const templateFlowSteps = [
   {
     label: "Collect",
-    description: "Gather selected files, policies, prior decisions, and user intent.",
+    description:
+      "Gather selected files, policies, prior decisions, and user intent.",
     icon: CheckListIcon,
     status: "input" as const,
   },
@@ -216,19 +209,22 @@ const templateFlowSteps = [
   },
   {
     label: "Clarify",
-    description: "Ask only for missing decisions that would otherwise be invented.",
+    description:
+      "Ask only for missing decisions that would otherwise be invented.",
     icon: HelpCircleIcon,
     status: "human" as const,
   },
   {
     label: "Approve",
-    description: "Lock the consequence preview before external or costly actions.",
+    description:
+      "Lock the consequence preview before external or costly actions.",
     icon: Shield01Icon,
     status: "human" as const,
   },
   {
     label: "Deliver",
-    description: "Return cited output, durable memory updates, and recovery paths.",
+    description:
+      "Return cited output, durable memory updates, and recovery paths.",
     icon: GitBranchIcon,
     status: "output" as const,
   },
@@ -236,13 +232,13 @@ const templateFlowSteps = [
 
 export function TemplatesContent() {
   const [clarifyingIndex, setClarifyingIndex] = useState(0)
-  const [answers, setAnswers] = useState<Record<string, ClarifyingQuestionValue>>(
-    {
-      scope: "approved",
-      constraints: ["privacy"],
-      note: "",
-    }
-  )
+  const [answers, setAnswers] = useState<
+    Record<string, ClarifyingQuestionValue>
+  >({
+    scope: "approved",
+    constraints: ["privacy"],
+    note: "",
+  })
   const [otherAnswers, setOtherAnswers] = useState<Record<string, string>>({
     constraints: "",
   })
@@ -270,8 +266,8 @@ export function TemplatesContent() {
               Review to delivery
             </h2>
             <p className="mt-2 max-w-[640px] text-sm leading-relaxed text-muted-foreground">
-              Templates should describe the whole job, not a single widget.
-              This map is the reusable backbone across review, approval,
+              Templates should describe the whole job, not a single widget. This
+              map is the reusable backbone across review, approval,
               clarification, memory, and monitoring flows.
             </p>
           </div>

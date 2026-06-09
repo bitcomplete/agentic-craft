@@ -65,6 +65,7 @@ export const sections: NavigationSection[] = [
     subs: [
       { title: "Citation System", id: "citations" },
       { title: "Source Companion", id: "source-list" },
+      { title: "Contextual Workbench", id: "contextual-workbench" },
       { title: "Artifact Document", id: "artifact-document" },
       { title: "Usage Meter", id: "usage-meter" },
       { title: "Implementation", id: "implementation" },

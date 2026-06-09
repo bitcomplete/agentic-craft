@@ -4,10 +4,17 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { useCallback } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { ArrowDown01Icon } from "@hugeicons/core-free-icons"
+import {
+  ArrowDown01Icon,
+  ComputerIcon,
+  Moon02Icon,
+  Sun02Icon,
+} from "@hugeicons/core-free-icons"
+import { Button } from "@/components/ui/button"
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarHeader,
   SidebarMenu,
@@ -22,7 +29,51 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
+import { useTheme } from "@/components/theme-provider"
 import { sections } from "@/content/navigation"
+
+const themeOptions = [
+  { value: "system", label: "System", icon: ComputerIcon },
+  { value: "light", label: "Light", icon: Sun02Icon },
+  { value: "dark", label: "Dark", icon: Moon02Icon },
+] as const
+
+function ThemeMenu() {
+  const { theme, setTheme } = useTheme()
+
+  return (
+    <div
+      role="group"
+      aria-label="Choose appearance"
+      className="flex rounded-lg border border-sidebar-border/70 p-1"
+    >
+      {themeOptions.map((option) => (
+        <Button
+          key={option.value}
+          type="button"
+          variant={theme === option.value ? "secondary" : "ghost"}
+          size="xs"
+          aria-pressed={theme === option.value}
+          aria-label={
+            option.value === "system"
+              ? "Use system theme"
+              : `Use ${option.label.toLowerCase()} theme`
+          }
+          onClick={() => setTheme(option.value)}
+          className="min-w-0 flex-1 px-1 text-[11px]"
+        >
+          <HugeiconsIcon
+            icon={option.icon}
+            data-icon="inline-start"
+            strokeWidth={1.5}
+            aria-hidden="true"
+          />
+          <span className="truncate">{option.label}</span>
+        </Button>
+      ))}
+    </div>
+  )
+}
 
 export function AppSidebar() {
   const pathname = usePathname()
@@ -145,6 +196,9 @@ export function AppSidebar() {
           )
         })}
       </SidebarContent>
+      <SidebarFooter>
+        <ThemeMenu />
+      </SidebarFooter>
     </Sidebar>
   )
 }

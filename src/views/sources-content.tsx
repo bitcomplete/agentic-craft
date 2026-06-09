@@ -10,8 +10,8 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react"
 
 import { ArtifactDocument } from "@/components/ui/artifact-document"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { ContextualWorkbench } from "@/components/ui/contextual-workbench"
 import {
   Sheet,
   SheetContent,
@@ -110,7 +110,9 @@ function SourceMarker({
 
 export function SourcesContent() {
   const [activeSourceId, setActiveSourceId] = useState(1)
-  const activeIndex = sources.findIndex((source) => source.id === activeSourceId)
+  const activeIndex = sources.findIndex(
+    (source) => source.id === activeSourceId
+  )
   const activeSource = sources[activeIndex] ?? sources[0]
   const selectOffset = (offset: number) => {
     const next = (activeIndex + offset + sources.length) % sources.length
@@ -170,9 +172,7 @@ export function SourcesContent() {
             <div className="mt-5 flex flex-wrap gap-2">
               <Sheet>
                 <SheetTrigger
-                  render={
-                    <Button type="button" variant="outline" />
-                  }
+                  render={<Button type="button" variant="outline" />}
                 >
                   Inspect selected source
                 </SheetTrigger>
@@ -200,8 +200,6 @@ export function SourcesContent() {
                   <SheetContentClose />
                 </SheetContent>
               </Sheet>
-              <Badge variant="outline">Hover/focus on desktop</Badge>
-              <Badge variant="outline">Bottom sheet on mobile</Badge>
             </div>
           </div>
 
@@ -235,7 +233,7 @@ export function SourcesContent() {
               onClick={() => setActiveSourceId(source.id)}
               className="grid w-full gap-2 px-0 py-3 text-left transition-colors hover:bg-muted/25 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none sm:grid-cols-[32px_1fr_auto]"
             >
-              <span className="flex size-7 items-center justify-center rounded-md border border-border text-xs tabular-nums text-muted-foreground">
+              <span className="flex size-7 items-center justify-center rounded-md border border-border text-xs text-muted-foreground tabular-nums">
                 {source.id}
               </span>
               <span className="min-w-0">
@@ -256,6 +254,15 @@ export function SourcesContent() {
               </span>
             </button>
           ))}
+        </div>
+      </section>
+
+      <section id="contextual-workbench" className="page-section">
+        <h2 className="text-xl font-semibold tracking-tight">
+          Side panel work surface
+        </h2>
+        <div className="mt-6 md:-mx-14 lg:-mx-28">
+          <ContextualWorkbench />
         </div>
       </section>
 
@@ -337,19 +344,33 @@ export function SourcesContent() {
             <TableBody>
               <TableRow>
                 <TableCell>Inline citation</TableCell>
-                <TableCell>Hover, focus, selected, broken, mobile sheet</TableCell>
+                <TableCell>
+                  Hover, focus, selected, broken, mobile sheet
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Source preview</TableCell>
-                <TableCell>Excerpt, location, navigation, open-source action</TableCell>
+                <TableCell>
+                  Excerpt, location, navigation, open-source action
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Artifact document</TableCell>
-                <TableCell>Cited, draft, needs-source, blocked, approved</TableCell>
+                <TableCell>
+                  Cited, draft, needs-source, blocked, approved
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Contextual workbench</TableCell>
+                <TableCell>
+                  Closed, open, active, review, blocked, mobile switch
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Usage meter</TableCell>
-                <TableCell>Tokens, cost, source coverage, threshold warning</TableCell>
+                <TableCell>
+                  Tokens, cost, source coverage, threshold warning
+                </TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -357,8 +378,18 @@ export function SourcesContent() {
         <div className="mt-8 grid gap-2 md:hidden">
           {[
             ["Inline citation", "Hover, focus, selected, broken, mobile sheet"],
-            ["Source preview", "Excerpt, location, navigation, open-source action"],
-            ["Artifact document", "Cited, draft, needs-source, blocked, approved"],
+            [
+              "Source preview",
+              "Excerpt, location, navigation, open-source action",
+            ],
+            [
+              "Artifact document",
+              "Cited, draft, needs-source, blocked, approved",
+            ],
+            [
+              "Contextual workbench",
+              "Closed, open, active, review, blocked, mobile switch",
+            ],
             ["Usage meter", "Tokens, cost, source coverage, threshold warning"],
           ].map(([pattern, requirement]) => (
             <div

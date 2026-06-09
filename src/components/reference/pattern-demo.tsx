@@ -16,12 +16,15 @@ function PatternDemo({
   return (
     <div
       data-slot="pattern-demo"
-      className={cn("mt-8 rounded-lg border border-border bg-background", className)}
+      className={cn(
+        "mt-8 rounded-lg border border-border bg-background",
+        className
+      )}
     >
       <div className="border-b border-border/60 px-4 py-3">
         <p className="text-sm font-medium text-foreground">{title}</p>
         {description && (
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+          <p className="mt-1 hidden text-xs leading-relaxed text-muted-foreground sm:block">
             {description}
           </p>
         )}
@@ -32,4 +35,3 @@ function PatternDemo({
 }
 
 export { PatternDemo }
-

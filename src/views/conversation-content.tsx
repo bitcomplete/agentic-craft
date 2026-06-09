@@ -182,7 +182,8 @@ const COMPOSER_GUIDANCE = [
   },
   {
     principle: "Expose what will be sent before commitment",
-    avoid: "Do not place generated plans inside the user-authored input surface.",
+    avoid:
+      "Do not place generated plans inside the user-authored input surface.",
   },
   {
     principle: "Keep generated affordances reversible",
@@ -437,7 +438,7 @@ export function ConversationContent() {
                     The following requirements from Launch Policy v2 are not
                     mapped in the appendix:
                   </p>
-                  <ul className="mt-3 ml-5 list-disc flex flex-col gap-1">
+                  <ul className="mt-3 ml-5 flex list-disc flex-col gap-1">
                     <li>Retention setting — Account data retention</li>
                     <li>Cleanup rule — Stale export cleanup</li>
                     <li>Access workflow — Role-based access behavior</li>
@@ -587,16 +588,16 @@ export function ConversationContent() {
               </TableCell>
             </TableRow>
             <TableRow className="border-b border-border/50">
-              <TableCell className="py-3 pr-6">Light-mode color</TableCell>
+              <TableCell className="py-3 pr-6">Prose color</TableCell>
               <TableCell className="py-3 font-medium text-foreground">
-                oklch(0.2642 0.013 93.9)
+                var(--foreground)
               </TableCell>
             </TableRow>
           </TableBody>
         </Table>
 
         {/* Prose preference explanation */}
-        <div className="mt-10">
+        <div className="hidden">
           <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
             <li>
               <span className="font-medium text-foreground">
@@ -678,7 +679,7 @@ export function ConversationContent() {
               <div className="mb-4 flex flex-wrap items-center justify-between gap-3 px-1">
                 <div className="flex min-w-0 flex-wrap items-center gap-2">
                   <span className="text-sm font-medium text-foreground">
-                  Checking launch sources
+                    Checking launch sources
                   </span>
                   <span className="rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
                     Active
@@ -1010,7 +1011,7 @@ export function ConversationContent() {
           <CompactComposerPlayground />
         </div>
 
-        <div className="mt-10 border-y border-border/50">
+        <div className="hidden">
           <div className="grid gap-2 border-b border-border/50 py-3 text-xs md:grid-cols-[180px_minmax(0,1fr)]">
             <p className="section-label">Inspect for</p>
             <p className="text-muted-foreground">
@@ -1033,7 +1034,7 @@ export function ConversationContent() {
           </div>
         </div>
 
-        <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_280px]">
+        <div className="hidden">
           <div>
             <div className="flex items-end justify-between gap-4 border-b border-border pb-3">
               <p className="section-label">Anatomy</p>
@@ -1071,7 +1072,7 @@ export function ConversationContent() {
           </aside>
         </div>
 
-        <div className="mt-10">
+        <div className="hidden">
           <div className="grid border-b border-border pb-3 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
             <p className="section-label">Rule</p>
             <p className="section-label hidden md:block">Failure to avoid</p>
@@ -1126,9 +1127,8 @@ export function ConversationContent() {
                 Send button
               </TableCell>
               <TableCell className="py-3">
-                32×32px hit area, 24px inner icon button, foreground when active,
-                muted when empty, spring
-                press animation
+                32×32px hit area, 24px inner icon button, foreground when
+                active, muted when empty, spring press animation
               </TableCell>
             </TableRow>
             <TableRow className="border-b border-border/50">

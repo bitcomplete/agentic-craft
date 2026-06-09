@@ -784,7 +784,7 @@ export function MemoryContent() {
                   letterSpacing: "-0.4px",
                   fontVariationSettings: '"opsz" 12',
                   WebkitFontSmoothing: "antialiased",
-                  color: "oklch(0.2642 0.013 93.9)",
+                  color: "var(--foreground)",
                 }}
               >
                 I see you&apos;ve been consistently requesting enterprise

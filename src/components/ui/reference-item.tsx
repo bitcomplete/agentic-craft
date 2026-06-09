@@ -56,7 +56,10 @@ function ReferenceItemHeader({
   return (
     <div
       data-slot="reference-item-header"
-      className={cn("flex min-w-0 items-start justify-between gap-3", className)}
+      className={cn(
+        "flex min-w-0 items-start justify-between gap-3",
+        className
+      )}
       {...props}
     />
   )
@@ -83,7 +86,7 @@ function ReferenceItemDescription({
     <p
       data-slot="reference-item-description"
       className={cn(
-        "mt-1 text-sm leading-5 text-muted-foreground",
+        "mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground",
         className
       )}
       {...props}

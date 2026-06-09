@@ -32,7 +32,7 @@ function PatternStateMatrix({ rows }: { rows: PatternStateRow[] }) {
               <p className="text-xs font-medium text-muted-foreground">
                 User sees
               </p>
-              <div className="leading-5 break-words text-foreground">
+              <div className="line-clamp-2 text-xs leading-5 break-words text-foreground">
                 {row.userSees}
               </div>
             </div>
@@ -40,7 +40,7 @@ function PatternStateMatrix({ rows }: { rows: PatternStateRow[] }) {
               <p className="text-xs font-medium text-muted-foreground">
                 System does
               </p>
-              <div className="leading-5 break-words text-muted-foreground">
+              <div className="line-clamp-2 text-xs leading-5 break-words text-muted-foreground">
                 {row.systemDoes}
               </div>
             </div>
@@ -64,10 +64,10 @@ function PatternStateMatrix({ rows }: { rows: PatternStateRow[] }) {
                   <Badge variant="outline">{row.state}</Badge>
                 </TableCell>
                 <TableCell className="min-w-56 whitespace-normal text-muted-foreground">
-                  {row.userSees}
+                  <span className="line-clamp-1">{row.userSees}</span>
                 </TableCell>
                 <TableCell className="min-w-56 whitespace-normal text-muted-foreground">
-                  {row.systemDoes}
+                  <span className="line-clamp-1">{row.systemDoes}</span>
                 </TableCell>
               </TableRow>
             ))}

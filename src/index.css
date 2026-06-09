@@ -25,6 +25,8 @@
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
+  --success-highlight: oklch(0.54 0.14 155 / 10%);
+  --success-flash: oklch(0.54 0.14 155 / 16%);
   --chart-1: oklch(0.809 0.105 251.813);
   --chart-2: oklch(0.623 0.214 259.815);
   --chart-3: oklch(0.546 0.245 262.881);
@@ -61,6 +63,8 @@
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
+  --success-highlight: oklch(0.72 0.15 155 / 10%);
+  --success-flash: oklch(0.72 0.15 155 / 16%);
   --chart-1: oklch(0.809 0.105 251.813);
   --chart-2: oklch(0.623 0.214 259.815);
   --chart-3: oklch(0.546 0.245 262.881);
@@ -199,6 +203,16 @@
 }
 
 /* Editorial page rhythm */
+article > header {
+  margin-bottom: 3rem !important;
+}
+
+@media (min-width: 640px) {
+  article > header {
+    margin-bottom: 4rem !important;
+  }
+}
+
 .page-section + .page-section {
   padding-top: 3rem;
 }
@@ -207,7 +221,7 @@
   content: "";
   display: block;
   width: 100%;
-  border-top: 1px dashed oklch(0.556 0 0 / 20%);
+  border-top: 1px dashed color-mix(in oklch, var(--border) 72%, transparent);
   margin-bottom: 3rem;
 }
 
@@ -221,13 +235,28 @@
   }
 }
 
+/* Content density
+   Keep the reference pages specimen-first: route headers provide context, while
+   repeated section summaries, spec tables, and explainer callouts stay out of
+   the default reading path. */
+.page-section > h2 + p.text-muted-foreground,
+.page-section > .max-w-\[660px\] > h2 + p.text-muted-foreground,
+.page-section > [data-slot="table-container"],
+.page-section [data-slot="table-container"]:has(> table.mt-10),
+.page-section
+  > div.mt-8:has(> [data-slot="table-container"] > table.w-full.text-sm),
+.page-section > p.border-l-2,
+.page-section > div.border-l-2 {
+  display: none;
+}
+
 /* Section label — small caps category */
 .section-label {
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: oklch(0.556 0 0);
+  color: var(--muted-foreground);
 }
 
 /* Principle number — large serif numeral */
@@ -236,7 +265,7 @@
   font-size: 28px;
   font-weight: 300;
   line-height: 1;
-  color: oklch(0.556 0 0 / 40%);
+  color: color-mix(in oklch, var(--muted-foreground) 45%, transparent);
   font-variant-numeric: tabular-nums;
 }
 
@@ -327,7 +356,7 @@
     background-color: transparent;
   }
   30% {
-    background-color: oklch(0.72 0.15 155 / 15%);
+    background-color: var(--success-flash);
   }
   100% {
     background-color: transparent;
@@ -351,7 +380,7 @@
     background-color: transparent;
   }
   to {
-    background-color: oklch(0.72 0.15 155 / 8%);
+    background-color: var(--success-highlight);
   }
 }
 
@@ -509,6 +538,7 @@
 }
 
 .feedback-highlight-in {
+  background-color: var(--success-highlight);
   animation: feedback-highlight-in 0.4s ease forwards;
 }
 

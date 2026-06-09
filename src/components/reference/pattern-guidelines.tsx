@@ -20,9 +20,14 @@ function PatternGuidelines({
       <AlertDescription>
         <ul className="mt-3 flex flex-col gap-2">
           {items.map((item, index) => (
-            <li key={index} className="grid gap-1 text-sm sm:grid-cols-[180px_1fr]">
+            <li
+              key={index}
+              className="grid gap-1 text-sm sm:grid-cols-[180px_1fr]"
+            >
               <span className="font-medium text-foreground">{item.title}</span>
-              <span className="text-muted-foreground">{item.description}</span>
+              <span className="line-clamp-2 text-xs leading-5 text-muted-foreground">
+                {item.description}
+              </span>
             </li>
           ))}
         </ul>
@@ -32,4 +37,3 @@ function PatternGuidelines({
 }
 
 export { PatternGuidelines, type PatternGuideline }
-

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next"
 import { Albert_Sans, Source_Serif_4 } from "next/font/google"
+import Script from "next/script"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { ThemeProvider } from "@/components/theme-provider"
 import {
@@ -34,6 +35,31 @@ export const viewport: Viewport = {
   ],
 }
 
+const themeInitializerScript = `
+  (function () {
+    try {
+      var storageKey = "agentic-craft-theme";
+      var storedTheme = window.localStorage.getItem(storageKey);
+      var theme =
+        storedTheme === "light" || storedTheme === "dark" || storedTheme === "system"
+          ? storedTheme
+          : "system";
+      var resolved =
+        theme === "system"
+          ? window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light"
+          : theme;
+      var root = document.documentElement;
+      root.classList.remove("light", "dark");
+      root.classList.add(resolved);
+      root.dataset.theme = theme;
+      root.dataset.resolvedTheme = resolved;
+      root.style.colorScheme = resolved;
+    } catch (error) {}
+  })();
+`
+
 export default function RootLayout({
   children,
 }: {
@@ -42,9 +68,15 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${albertSans.variable} ${sourceSerif4.variable} dark`}
+      suppressHydrationWarning
+      className={`${albertSans.variable} ${sourceSerif4.variable}`}
     >
       <body>
+        <Script
+          id="agentic-craft-theme"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: themeInitializerScript }}
+        />
         <a
           href="#main-content"
           className="fixed top-4 left-4 z-50 -translate-y-16 rounded-md bg-background px-3 py-2 text-sm text-foreground shadow-sm ring-1 ring-border transition-transform focus:translate-y-0"
@@ -52,7 +84,7 @@ export default function RootLayout({
           Skip to content
         </a>
         <TooltipProvider>
-          <ThemeProvider>
+          <ThemeProvider defaultTheme="system">
             <SidebarProvider
               style={{ "--sidebar-width": "220px" } as React.CSSProperties}
             >

@@ -13,11 +13,7 @@
         "@hugeicons/core-free-icons",
         "@base-ui/react"
       ],
-      "registryDependencies": [
-        "dropdown-menu",
-        "textarea",
-        "tooltip"
-      ],
+      "registryDependencies": ["dropdown-menu", "textarea", "tooltip"],
       "files": [
         {
           "path": "registry/base-nova/ui/composer.tsx",
@@ -145,10 +141,7 @@
       "type": "registry:ui",
       "title": "Tool Call",
       "description": "Universal tool call component with running/completed/failed status states. Works standalone for sequential calls or inside ToolTree for parallel execution.",
-      "dependencies": [
-        "@hugeicons/react",
-        "@hugeicons/core-free-icons"
-      ],
+      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
       "files": [
         {
           "path": "registry/base-nova/ui/tool-call.tsx",
@@ -161,13 +154,8 @@
       "type": "registry:ui",
       "title": "Tool Tree",
       "description": "A composable tree visualization for parallel tool calls with L-connectors, expandable children, and hover timestamps. Wraps ToolCall children.",
-      "dependencies": [
-        "@hugeicons/react",
-        "@hugeicons/core-free-icons"
-      ],
-      "registryDependencies": [
-        "arielconti10/agentic-craft/tool-call"
-      ],
+      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "registryDependencies": ["arielconti10/agentic-craft/tool-call"],
       "files": [
         {
           "path": "registry/base-nova/ui/tool-tree.tsx",
@@ -192,13 +180,8 @@
       "type": "registry:ui",
       "title": "Observable Work",
       "description": "A step disclosure pattern for showing visible agent work, touched sources, state, and completion without exposing hidden reasoning traces.",
-      "dependencies": [
-        "@hugeicons/react",
-        "@hugeicons/core-free-icons"
-      ],
-      "registryDependencies": [
-        "badge"
-      ],
+      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "registryDependencies": ["badge"],
       "files": [
         {
           "path": "registry/base-nova/ui/observable-work.tsx",
@@ -211,10 +194,7 @@
       "type": "registry:ui",
       "title": "Decision Surface",
       "description": "A composable confirmation surface for approvals, risky actions, clarifying interruptions, and rollback decisions.",
-      "registryDependencies": [
-        "button",
-        "dialog"
-      ],
+      "registryDependencies": ["button", "dialog"],
       "files": [
         {
           "path": "registry/base-nova/ui/decision-surface.tsx",
@@ -227,15 +207,8 @@
       "type": "registry:ui",
       "title": "File Lifecycle",
       "description": "A file attachment lifecycle pattern for drag states, validation, upload progress, rejection, retry, and removal.",
-      "dependencies": [
-        "@hugeicons/react",
-        "@hugeicons/core-free-icons"
-      ],
-      "registryDependencies": [
-        "badge",
-        "button",
-        "progress"
-      ],
+      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "registryDependencies": ["badge", "button", "progress"],
       "files": [
         {
           "path": "registry/base-nova/ui/file-lifecycle.tsx",
@@ -248,11 +221,7 @@
       "type": "registry:ui",
       "title": "Agent Status Table",
       "description": "A rich operational table for multiple agents with status, active task, progress, confidence, cost, and last activity.",
-      "registryDependencies": [
-        "badge",
-        "progress",
-        "table"
-      ],
+      "registryDependencies": ["badge", "progress", "table"],
       "files": [
         {
           "path": "registry/base-nova/ui/agent-status-table.tsx",
@@ -283,13 +252,8 @@
       "type": "registry:ui",
       "title": "Action Preview",
       "description": "A locked consequence preview for approvals, external actions, document changes, and rollback-aware agent work.",
-      "dependencies": [
-        "@hugeicons/react",
-        "@hugeicons/core-free-icons"
-      ],
-      "registryDependencies": [
-        "badge"
-      ],
+      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "registryDependencies": ["badge"],
       "files": [
         {
           "path": "registry/base-nova/ui/action-preview.tsx",
@@ -302,13 +266,8 @@
       "type": "registry:ui",
       "title": "Source Preview",
       "description": "A citation and provenance preview card with source title, excerpt, location, navigation, and open-source action.",
-      "dependencies": [
-        "@hugeicons/react",
-        "@hugeicons/core-free-icons"
-      ],
-      "registryDependencies": [
-        "button"
-      ],
+      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "registryDependencies": ["button"],
       "files": [
         {
           "path": "registry/base-nova/ui/source-preview.tsx",
@@ -321,14 +280,8 @@
       "type": "registry:ui",
       "title": "Artifact Document",
       "description": "A source-backed output document surface with cited sections, missing-source states, version metadata, and review status.",
-      "dependencies": [
-        "@hugeicons/react",
-        "@hugeicons/core-free-icons"
-      ],
-      "registryDependencies": [
-        "badge",
-        "button"
-      ],
+      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "registryDependencies": ["badge", "button"],
       "files": [
         {
           "path": "registry/base-nova/ui/artifact-document.tsx",
@@ -341,12 +294,24 @@
       "type": "registry:ui",
       "title": "Usage Meter",
       "description": "A compact token, cost, limit, and coverage meter for visible agent run budgets.",
-      "registryDependencies": [
-        "progress"
-      ],
+      "registryDependencies": ["progress"],
       "files": [
         {
           "path": "registry/base-nova/ui/usage-meter.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "contextual-workbench",
+      "type": "registry:ui",
+      "title": "Contextual Workbench",
+      "description": "A responsive agent workbench that keeps chat visible while opening an inspectable browser, source, diff, or artifact surface beside it.",
+      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "registryDependencies": ["badge", "button", "resizable", "toggle-group"],
+      "files": [
+        {
+          "path": "registry/base-nova/ui/contextual-workbench.tsx",
           "type": "registry:ui"
         }
       ]
@@ -356,13 +321,8 @@
       "type": "registry:ui",
       "title": "Effective Policy Preview",
       "description": "A compact settings summary showing the agent policy currently produced by autonomy, approval, notification, and memory controls.",
-      "dependencies": [
-        "@hugeicons/react",
-        "@hugeicons/core-free-icons"
-      ],
-      "registryDependencies": [
-        "badge"
-      ],
+      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "registryDependencies": ["badge"],
       "files": [
         {
           "path": "registry/base-nova/ui/effective-policy-preview.tsx",
@@ -375,10 +335,7 @@
       "type": "registry:ui",
       "title": "Memory Ledger Item",
       "description": "A provenance-rich memory row with scope, expiry, last-used metadata, source inspection, edit, and removal actions.",
-      "dependencies": [
-        "@hugeicons/react",
-        "@hugeicons/core-free-icons"
-      ],
+      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
       "registryDependencies": [
         "badge",
         "button",
@@ -396,13 +353,8 @@
       "type": "registry:ui",
       "title": "Run Trace",
       "description": "A dense operational trace for background runs with source touches, status, warnings, timing metadata, and expandable recovery detail.",
-      "dependencies": [
-        "@hugeicons/react",
-        "@hugeicons/core-free-icons"
-      ],
-      "registryDependencies": [
-        "badge"
-      ],
+      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "registryDependencies": ["badge"],
       "files": [
         {
           "path": "registry/base-nova/ui/run-trace.tsx",
@@ -415,14 +367,8 @@
       "type": "registry:ui",
       "title": "Handoff Packet",
       "description": "An ownership-transfer surface for multi-agent workflows with sender, receiver, payload, source basis, receiver action, and recovery path.",
-      "dependencies": [
-        "@hugeicons/react",
-        "@hugeicons/core-free-icons"
-      ],
-      "registryDependencies": [
-        "badge",
-        "button"
-      ],
+      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "registryDependencies": ["badge", "button"],
       "files": [
         {
           "path": "registry/base-nova/ui/handoff-packet.tsx",

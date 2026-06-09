@@ -26,7 +26,7 @@ function PatternSpecTable({ rows }: { rows: PatternSpecRow[] }) {
             <div className="text-sm font-medium text-foreground">
               {row.element}
             </div>
-            <div className="text-sm leading-5 break-words text-muted-foreground">
+            <div className="line-clamp-2 text-xs leading-5 break-words text-muted-foreground">
               {row.spec}
             </div>
           </div>
@@ -48,7 +48,7 @@ function PatternSpecTable({ rows }: { rows: PatternSpecRow[] }) {
                   {row.element}
                 </TableCell>
                 <TableCell className="min-w-0 whitespace-normal text-muted-foreground">
-                  {row.spec}
+                  <span className="line-clamp-1">{row.spec}</span>
                 </TableCell>
               </TableRow>
             ))}

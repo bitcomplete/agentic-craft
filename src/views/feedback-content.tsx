@@ -531,10 +531,7 @@ export function FeedbackContent() {
                     style={{ ...AGENT_PROSE_STYLE, color: AGENT_PROSE_COLOR }}
                   >
                     The launch readiness plan requires{" "}
-                    <span
-                      className="feedback-highlight-in rounded-md px-1"
-                      style={{ backgroundColor: "oklch(0.72 0.15 155 / 0.08)" }}
-                    >
+                    <span className="feedback-highlight-in rounded-md px-1">
                       standard support plan
                     </span>{" "}
                     for issue triage procedures. This pattern ensures that the
@@ -811,10 +808,7 @@ export function FeedbackContent() {
                     style={{ ...AGENT_PROSE_STYLE, color: AGENT_PROSE_COLOR }}
                   >
                     The launch readiness plan requires{" "}
-                    <span
-                      className="rounded-md px-1"
-                      style={{ backgroundColor: "oklch(0.72 0.15 155 / 0.08)" }}
-                    >
+                    <span className="feedback-highlight-in rounded-md px-1">
                       standard support plan
                     </span>{" "}
                     for issue triage procedures. This pattern ensures that the

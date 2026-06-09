@@ -18,14 +18,14 @@ const registryItems = registry.items.map((item) => ({
   dependencies: "registryDependencies" in item ? item.registryDependencies : [],
 }))
 
-const primitiveItems = registryItems.filter((item) => item.type === "registry:ui")
-const blockItems = registryItems.filter((item) => item.type === "registry:block")
+const primitiveItems = registryItems.filter(
+  (item) => item.type === "registry:ui"
+)
+const blockItems = registryItems.filter(
+  (item) => item.type === "registry:block"
+)
 
-function RegistryItemList({
-  items,
-}: {
-  items: typeof registryItems
-}) {
+function RegistryItemList({ items }: { items: typeof registryItems }) {
   return (
     <div className="divide-y divide-border/70 border-y border-border/70 md:hidden">
       {items.map((item) => (
@@ -37,9 +37,11 @@ function RegistryItemList({
               </p>
               <p className="mt-1 text-xs text-muted-foreground">{item.name}</p>
             </div>
-            <Badge variant="outline">{item.type.replace("registry:", "")}</Badge>
+            <Badge variant="outline">
+              {item.type.replace("registry:", "")}
+            </Badge>
           </div>
-          <p className="mt-2 text-xs leading-5 text-muted-foreground">
+          <p className="mt-2 line-clamp-1 text-xs leading-5 text-muted-foreground">
             {item.description}
           </p>
         </div>
@@ -48,11 +50,7 @@ function RegistryItemList({
   )
 }
 
-function RegistryItemTable({
-  items,
-}: {
-  items: typeof registryItems
-}) {
+function RegistryItemTable({ items }: { items: typeof registryItems }) {
   return (
     <div className="hidden md:block">
       <Table>
@@ -60,7 +58,7 @@ function RegistryItemTable({
           <TableRow>
             <TableHead>Item</TableHead>
             <TableHead>Type</TableHead>
-            <TableHead>Description</TableHead>
+            <TableHead className="hidden lg:table-cell">Use</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -79,8 +77,8 @@ function RegistryItemTable({
                   {item.type.replace("registry:", "")}
                 </Badge>
               </TableCell>
-              <TableCell className="max-w-[420px] text-muted-foreground">
-                {item.description}
+              <TableCell className="hidden max-w-[360px] whitespace-normal text-muted-foreground lg:table-cell">
+                <span className="line-clamp-1">{item.description}</span>
               </TableCell>
             </TableRow>
           ))}
