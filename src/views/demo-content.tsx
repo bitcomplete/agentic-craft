@@ -29,7 +29,7 @@ import {
 /* ------------------------------------------------------------------ */
 
 const OBSERVABLE_WORK_TEXT =
-  "Reading the project brief, roadmap, customer notes, and launch checklist. Checking for missing decisions, timeline risks, and assumptions that still need an owner..."
+  "Reading the project brief, roadmap, customer notes, and launch checklist. Checking for missing decisions, timeline risks, and assumptions that still need an owner…"
 
 const PARALLEL_TASKS = [
   { label: "Checking roadmap alignment", duration: "2.1s" },
@@ -97,7 +97,7 @@ export function DemoContent() {
         </p>
       </header>
 
-      <div className="mx-auto max-w-[720px] flex flex-col gap-6">
+      <div className="mx-auto flex max-w-[720px] flex-col gap-6">
         {/* -------------------------------------------------------- */}
         {/*  Message 1: User message                                  */}
         {/* -------------------------------------------------------- */}

@@ -247,7 +247,7 @@ function CitationToken({
       onMouseLeave={onClearPreview}
       onFocus={onPreview}
       onBlur={onClearPreview}
-      className={`relative mx-1 inline-flex translate-y-[-1px] items-center gap-1 rounded-md border px-1.5 py-0.5 font-sans text-xs leading-none transition-[background-color,border-color,color,box-shadow] after:absolute after:-inset-x-1 after:-inset-y-2 after:content-[''] focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none ${
+      className={`mx-1 inline-flex translate-y-[-1px] items-center gap-1 rounded-md border px-1.5 py-0.5 font-sans text-xs leading-none transition-[background-color,border-color,color,box-shadow] focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none ${
         active
           ? "border-primary/30 bg-primary/10 text-primary shadow-[0_0_0_1px_rgba(255,255,255,0.04)]"
           : "border-border bg-background text-muted-foreground hover:bg-muted hover:text-foreground"

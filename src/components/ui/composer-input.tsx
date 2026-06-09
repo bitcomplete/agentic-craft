@@ -12,6 +12,7 @@ export function ComposerInput({
   "aria-label": ariaLabel,
   name = "message",
   autoComplete = "off",
+  spellCheck = false,
   ...props
 }: Omit<React.ComponentProps<"textarea">, "value" | "onChange"> & {
   maxHeight?: number
@@ -51,6 +52,7 @@ export function ComposerInput({
         aria-label={ariaLabel ?? "Message"}
         name={name}
         autoComplete={autoComplete}
+        spellCheck={spellCheck}
         disabled={state.disabled}
         rows={1}
         className="max-h-[160px] min-h-8 resize-none rounded-none border-0 bg-transparent px-0 py-0 text-sm leading-5 shadow-none placeholder:text-[13px] placeholder:leading-5 placeholder:text-muted-foreground/50 focus-visible:ring-0 dark:bg-transparent"

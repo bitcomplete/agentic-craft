@@ -154,7 +154,7 @@ const clarifyingQuestions: ClarifyingQuestion[] = [
     id: "note",
     label: "Anything the agent should avoid?",
     kind: "text",
-    placeholder: "Example: Do not contact customers before approval...",
+    placeholder: "Example: Do not contact customers before approval…",
   },
 ]
 

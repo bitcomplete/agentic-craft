@@ -417,6 +417,15 @@ export function MemoryContent() {
                   preferences, frequently referenced reference documents, and
                   workflow habits.
                 </p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="mt-4"
+                  onClick={() => handlePanelToggle("populated")}
+                >
+                  View example memories
+                </Button>
               </div>
             )}
 

@@ -28,31 +28,43 @@ recommends). The findings below are the gaps.
 
 ### F1 — `data-compact-touch` opts out of the 44px touch floor (touch-accessibility)
 
-`button.tsx` enforces `[@media(pointer:coarse)]:min-h-11 min-w-11` (44px) —
-exactly the skill's rule — but `data-compact-touch` disables it, and it is
-set on the most frequently used controls: every pattern-demo control chip
-(24–28px on touch), composer island toggles (~24px), the composer menu
-trigger (32px), and the theme switcher. The skill's own remedy applies:
-keep the visual size, extend the hit area with a pseudo-element
-(`after:absolute after:-inset-*`), as was already done for citation markers.
+**Correction + resolved.** The original finding overstated this: a
+`@media (pointer: coarse)` block in `index.css` already gives every
+`[data-compact-touch]` element a centered 44×44 `::after` hit area — the
+skill's exact pseudo-element technique — and runtime probing
+(`elementFromPoint` beyond the visual bounds on touch emulation) confirms it
+works. The audit's tap-target measurements used bounding rects, which cannot
+see pseudo-element hit areas. The real gap was that the hit box was a fixed
+44px square, so chips wider than 44px had no vertical extension near their
+edges; fixed with `width/height: max(100%, 44px)`. The redundant per-marker
+`after:-inset-*` hacks were removed in favor of the one global rule.
 
 ### F2 — Composer menu trigger has no visible keyboard focus (design-rules: Interaction 2)
 
-`src/components/ui/composer-toolbar.tsx:56`: the dropdown trigger sets
-`outline-none` with only hover styles — keyboard focus is invisible.
-Needs `focus-visible:ring-3 focus-visible:ring-ring/50` (the app's standard
-ring) or equivalent. Its resting color is also `text-muted-foreground/60`
-(sub-AA).
+**Resolved.** `src/components/ui/composer-toolbar.tsx:56`: the dropdown
+trigger set `outline-none` with only hover styles — keyboard focus was
+invisible. Fixed with the app's standard `focus-visible:ring-3
+focus-visible:ring-ring/50` ring (verified via keyboard Tab) and the resting
+color raised from `text-muted-foreground/60` to full `text-muted-foreground`.
 
 ### F3 — Section anchors scroll under the sticky mobile header (ui-polish: Scroll Margins)
 
-`PatternSection` has `scroll-mt-20`, but the pattern pages build their
-sections with raw `<section className="page-section">` and no scroll margin.
-On mobile the header is sticky (48px), so sidebar subnav jumps hide the
-section heading underneath it. Add `scroll-mt` to `.page-section` (or the
-`[id]` rule the skill suggests).
+**Resolved.** `PatternSection` had `scroll-mt-20`, but the pattern pages
+build their sections with raw `<section className="page-section">` and no
+scroll margin, so on mobile (sticky 48px header) subnav jumps hid the
+section heading. Fixed with `scroll-margin-top: 4rem` on `.page-section`;
+verified on mobile emulation (section lands at 64px, below the 48px header).
 
 ### Nits
+
+**Status:** entrance easing, ellipsis characters, `spellcheck`, and the
+memory empty-state CTA are fixed (entrances now `ease-out`, the
+`memory-fade-out` exit now `ease-in` per the blueprint). Kept as-is by
+judgment: `dark:` overrides and `opacity-50` disabled states (stock shadcn
+conventions — changing them is churn against upstream), Title Case nav
+labels (short section names, brand voice), and `env(safe-area-inset-*)`
+(requires a `viewport-fit=cover` migration and there are no fixed bars to
+protect yet).
 
 - **Entrance easing**: the demo entrance classes (`*-fade-in`, `*-slide-in`)
   use `ease` rather than `ease-out` (animations.md easing blueprint:

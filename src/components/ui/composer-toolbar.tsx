@@ -53,7 +53,7 @@ export function ComposerMenu({
         data-slot="composer-menu-trigger"
         aria-label="Open composer menu"
         className={cn(
-          "flex size-8 items-center justify-center rounded-lg text-muted-foreground/60 transition-colors duration-200 outline-none hover:bg-muted/70 hover:text-foreground",
+          "flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors duration-200 outline-none hover:bg-muted/70 hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50",
           className
         )}
       >
