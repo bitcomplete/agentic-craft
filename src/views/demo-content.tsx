@@ -21,6 +21,7 @@ import {
   ToolCallLabel,
   ToolCallContent,
 } from "@/components/ui/tool-call"
+import { SourcePreviewCitation } from "@/components/ui/source-preview"
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -34,11 +35,17 @@ const CITATIONS = [
     id: 1,
     title: "Project Brief v3",
     source: "Project-Brief-v3.pdf",
+    location: "Page 2",
+    excerpt:
+      "The launch covers the self-serve and team tiers at release, with the enterprise tier following once the support plan is in place.",
   },
   {
     id: 2,
     title: "Launch Checklist: Support Readiness",
     source: "docs.internal/launch/support-readiness",
+    location: "§3 — Support readiness",
+    excerpt:
+      "The standard support plan requires issue triage procedures, named owners, and response timelines before enterprise release.",
   },
 ] as const
 
@@ -70,29 +77,6 @@ const FINDINGS = [
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
-function CitationMarker({
-  id,
-  active,
-  onToggle,
-}: {
-  id: number
-  active: boolean
-  onToggle: () => void
-}) {
-  return (
-    <button
-      type="button"
-      data-compact-touch
-      aria-label={`Inspect source ${id}`}
-      aria-pressed={active}
-      onClick={onToggle}
-      className="relative inline-flex translate-y-[-1px] items-center rounded-md border border-border bg-background px-1.5 py-0.5 font-sans text-xs leading-none text-muted-foreground transition-[background-color,border-color,color,box-shadow] after:absolute after:-inset-x-1 after:-inset-y-2 after:content-[''] hover:bg-muted hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none aria-pressed:border-primary/30 aria-pressed:bg-primary/10 aria-pressed:text-primary"
-    >
-      {id}
-    </button>
-  )
-}
-
 export function DemoContent() {
   /* Observable work disclosure state */
   const [workState, setWorkState] = useState<
@@ -105,10 +89,6 @@ export function DemoContent() {
     const timer = setTimeout(() => setShowCursor(false), 2000)
     return () => clearTimeout(timer)
   }, [])
-
-  /* Citations */
-  const [activeCitationId, setActiveCitationId] = useState<number | null>(null)
-  const activeCitation = CITATIONS.find((c) => c.id === activeCitationId)
 
   /* Tool call expansion */
   const [toolTreeOpen, setToolTreeOpen] = useState(true)
@@ -206,32 +186,14 @@ export function DemoContent() {
             <p className="text-foreground">
               I've completed the initial review. The brief covers the main
               launch goals
-              <CitationMarker
-                id={1}
-                active={activeCitationId === 1}
-                onToggle={() =>
-                  setActiveCitationId((prev) => (prev === 1 ? null : 1))
-                }
-              />
+              <SourcePreviewCitation sources={CITATIONS} sourceIndex={0} />
               , but I found three areas that need attention before the release
               planning meeting
-              <CitationMarker
-                id={2}
-                active={activeCitationId === 2}
-                onToggle={() =>
-                  setActiveCitationId((prev) => (prev === 2 ? null : 2))
-                }
-              />
-              .
+              <SourcePreviewCitation sources={CITATIONS} sourceIndex={1} />.
               {showCursor && (
                 <span className="ml-0.5 inline-block h-4 w-0.5 bg-foreground/70 align-middle" />
               )}
             </p>
-            {activeCitation && (
-              <p className="demo-slide-in mt-2 font-sans text-xs text-muted-foreground">
-                {activeCitation.title} — {activeCitation.source}
-              </p>
-            )}
           </div>
         </div>
 
