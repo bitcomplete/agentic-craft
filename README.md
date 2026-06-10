@@ -138,19 +138,16 @@ JSON is useful for previewing payloads while developing the site.
 
 ## Quality Checks
 
-Run the standard verification suite before publishing changes:
+Run the full verification suite before publishing changes:
 
 ```bash
-npm run lint
-npm run typecheck
-npm run build
-npm run registry:build
-npx shadcn@latest registry validate ./registry.json
+npm run verify
 ```
 
-For visual QA, check both desktop and mobile breakpoints on the routes touched
-by the change. The current mobile bar is especially strict for composer,
-clarifying questions, citations, memory ledger rows, and template maps.
+CI runs this command on every PR and push to main. For visual QA, check both
+desktop and mobile breakpoints on the routes touched by the change. The current
+mobile bar is especially strict for composer, clarifying questions, citations,
+memory ledger rows, and template maps.
 
 ## Design Direction
 
