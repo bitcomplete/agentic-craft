@@ -35,9 +35,8 @@ for (const name of names) {
   const dest = resolve(uiDir, name)
 
   // Verify source exists
-  let srcStat
   try {
-    srcStat = lstatSync(src)
+    lstatSync(src)
   } catch {
     console.error(`Missing source: src/components/ui/${name}`)
     process.exit(1)

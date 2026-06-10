@@ -88,12 +88,10 @@ const findings = []
 for (const file of files) {
   const abs = resolve(root, file)
   const source = readFileSync(abs, "utf8")
-  const lines = source.split("\n")
 
   for (const check of checks) {
     for (const match of source.matchAll(check.pattern)) {
-      const line =
-        source.slice(0, match.index).split("\n").length
+      const line = source.slice(0, match.index).split("\n").length
       findings.push({
         file: relative(root, abs),
         line,
