@@ -282,7 +282,11 @@
       "type": "registry:ui",
       "title": "Source Preview",
       "description": "A citation and provenance preview card with source title, excerpt, location, navigation, and open-source action.",
-      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "dependencies": [
+        "@base-ui/react",
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
       "registryDependencies": ["button"],
       "files": [
         {

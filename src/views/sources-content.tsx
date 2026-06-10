@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import {
   ArrowExpand01Icon,
   File01Icon,
@@ -10,18 +9,14 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react"
 
 import { ArtifactDocument } from "@/components/ui/artifact-document"
-import { Button } from "@/components/ui/button"
 import { ContextualWorkbench } from "@/components/ui/contextual-workbench"
 import {
-  Sheet,
-  SheetContent,
-  SheetContentClose,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet"
-import { SourcePreview } from "@/components/ui/source-preview"
+  SourcePreview,
+  SourcePreviewCitation,
+  SourcePreviewPopover,
+  SourcePreviewPopoverContent,
+  SourcePreviewPopoverTrigger,
+} from "@/components/ui/source-preview"
 import { UsageMeter } from "@/components/ui/usage-meter"
 import {
   Table,
@@ -85,40 +80,7 @@ const artifactSections = [
   },
 ]
 
-function SourceMarker({
-  id,
-  active,
-  onSelect,
-}: {
-  id: number
-  active?: boolean
-  onSelect: () => void
-}) {
-  return (
-    <button
-      type="button"
-      data-compact-touch
-      aria-label={`Inspect source ${id}`}
-      aria-pressed={active}
-      onClick={onSelect}
-      className="relative inline-flex translate-y-[-1px] items-center rounded-md border border-border bg-background px-1.5 py-0.5 font-sans text-xs leading-none text-muted-foreground transition-[background-color,border-color,color,box-shadow] after:absolute after:-inset-x-1 after:-inset-y-2 after:content-[''] hover:bg-muted hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none aria-pressed:border-primary/30 aria-pressed:bg-primary/10 aria-pressed:text-primary"
-    >
-      {id}
-    </button>
-  )
-}
-
 export function SourcesContent() {
-  const [activeSourceId, setActiveSourceId] = useState(1)
-  const activeIndex = sources.findIndex(
-    (source) => source.id === activeSourceId
-  )
-  const activeSource = sources[activeIndex] ?? sources[0]
-  const selectOffset = (offset: number) => {
-    const next = (activeIndex + offset + sources.length) % sources.length
-    setActiveSourceId(sources[next].id)
-  }
-
   return (
     <article>
       <header className="mb-12 sm:mb-20">
@@ -139,82 +101,22 @@ export function SourcesContent() {
           Inline Marker to Source Preview
         </h2>
         <p className="mt-3 max-w-[660px] text-sm leading-relaxed text-muted-foreground">
-          Desktop can reveal the source on hover or focus. Mobile should use an
-          explicit sheet because cramped tooltips make source inspection feel
-          fragile.
+          Hovering or focusing a citation marker opens the source preview
+          anchored at the marker itself, so verification never leaves the
+          sentence. On touch, tapping the marker opens the same card; Escape or
+          tapping outside dismisses it.
         </p>
 
-        <div className="mt-8 grid gap-5 lg:grid-cols-[minmax(0,1fr)_360px]">
-          <div className="border-y border-border/70 py-5">
-            <p className="font-serif text-base leading-7 text-foreground">
-              The launch readiness plan is set to enterprise release, which
-              requires named support owners
-              <SourceMarker
-                id={1}
-                active={activeSourceId === 1}
-                onSelect={() => setActiveSourceId(1)}
-              />{" "}
-              and a documented triage policy
-              <SourceMarker
-                id={2}
-                active={activeSourceId === 2}
-                onSelect={() => setActiveSourceId(2)}
-              />
-              . Every final claim should link back to the source scope used for
-              the review
-              <SourceMarker
-                id={3}
-                active={activeSourceId === 3}
-                onSelect={() => setActiveSourceId(3)}
-              />
-              .
-            </p>
-            <div className="mt-5 flex flex-wrap gap-2">
-              <Sheet>
-                <SheetTrigger
-                  render={<Button type="button" variant="outline" />}
-                >
-                  Inspect selected source
-                </SheetTrigger>
-                <SheetContent side="bottom" className="rounded-t-xl">
-                  <SheetHeader>
-                    <SheetTitle>{activeSource.title}</SheetTitle>
-                    <SheetDescription>
-                      {activeSource.location} - {activeSource.source}
-                    </SheetDescription>
-                  </SheetHeader>
-                  <div className="px-4 pb-4">
-                    <SourcePreview
-                      title={activeSource.title}
-                      excerpt={activeSource.excerpt}
-                      location={activeSource.location}
-                      source={activeSource.source}
-                      icon={activeSource.icon}
-                      index={activeIndex}
-                      total={sources.length}
-                      onPrevious={() => selectOffset(-1)}
-                      onNext={() => selectOffset(1)}
-                      className="shadow-none"
-                    />
-                  </div>
-                  <SheetContentClose />
-                </SheetContent>
-              </Sheet>
-            </div>
-          </div>
-
-          <SourcePreview
-            title={activeSource.title}
-            excerpt={activeSource.excerpt}
-            location={activeSource.location}
-            source={activeSource.source}
-            icon={activeSource.icon}
-            index={activeIndex}
-            total={sources.length}
-            onPrevious={() => selectOffset(-1)}
-            onNext={() => selectOffset(1)}
-            className="hidden lg:block"
-          />
+        <div className="mt-8 border-y border-border/70 py-5">
+          <p className="font-serif text-base leading-7 text-foreground">
+            The launch readiness plan is set to enterprise release, which
+            requires named support owners
+            <SourcePreviewCitation sources={sources} sourceIndex={0} /> and a
+            documented triage policy
+            <SourcePreviewCitation sources={sources} sourceIndex={1} />. Every
+            final claim should link back to the source scope used for the review
+            <SourcePreviewCitation sources={sources} sourceIndex={2} />.
+          </p>
         </div>
       </section>
 
@@ -225,38 +127,46 @@ export function SourcesContent() {
         </h2>
         <div className="mt-8 divide-y divide-border/70 border-y border-border/70">
           {sources.map((source) => (
-            <button
-              key={source.id}
-              type="button"
-              data-compact-touch
-              aria-label={`Inspect source ${source.id}: ${source.title}`}
-              onClick={() => setActiveSourceId(source.id)}
-              className="grid w-full gap-2 px-0 py-3 text-left transition-colors hover:bg-muted/25 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none sm:grid-cols-[32px_1fr_auto]"
-            >
-              <span className="flex size-7 items-center justify-center rounded-md border border-border text-xs text-muted-foreground tabular-nums">
-                {source.id}
-              </span>
-              <span className="min-w-0">
-                <span className="flex min-w-0 items-baseline gap-2">
-                  <span className="truncate text-sm font-medium text-foreground">
-                    {source.title}
+            <SourcePreviewPopover key={source.id}>
+              <SourcePreviewPopoverTrigger
+                data-compact-touch
+                aria-label={`Inspect source ${source.id}: ${source.title}`}
+                className="grid w-full gap-2 px-0 py-3 text-left transition-colors hover:bg-muted/25 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none sm:grid-cols-[32px_1fr_auto]"
+              >
+                <span className="flex size-7 items-center justify-center rounded-md border border-border text-xs text-muted-foreground tabular-nums">
+                  {source.id}
+                </span>
+                <span className="min-w-0">
+                  <span className="flex min-w-0 items-baseline gap-2">
+                    <span className="truncate text-sm font-medium text-foreground">
+                      {source.title}
+                    </span>
+                    <span className="shrink-0 text-xs text-muted-foreground">
+                      {source.location}
+                    </span>
                   </span>
-                  <span className="shrink-0 text-xs text-muted-foreground">
-                    {source.location}
+                  <span className="mt-1 block truncate text-xs text-muted-foreground">
+                    {source.source}
                   </span>
                 </span>
-                <span className="mt-1 block truncate text-xs text-muted-foreground">
-                  {source.source}
+                <span className="inline-flex items-center self-center text-muted-foreground">
+                  <HugeiconsIcon
+                    icon={ArrowExpand01Icon}
+                    strokeWidth={1.5}
+                    aria-hidden="true"
+                  />
                 </span>
-              </span>
-              <span className="inline-flex items-center self-center text-muted-foreground">
-                <HugeiconsIcon
-                  icon={ArrowExpand01Icon}
-                  strokeWidth={1.5}
-                  aria-hidden="true"
+              </SourcePreviewPopoverTrigger>
+              <SourcePreviewPopoverContent side="top" align="start">
+                <SourcePreview
+                  title={source.title}
+                  excerpt={source.excerpt}
+                  location={source.location}
+                  source={source.source}
+                  icon={source.icon}
                 />
-              </span>
-            </button>
+              </SourcePreviewPopoverContent>
+            </SourcePreviewPopover>
           ))}
         </div>
       </section>
@@ -349,7 +259,7 @@ export function SourcesContent() {
               <TableRow>
                 <TableCell>Inline citation</TableCell>
                 <TableCell>
-                  Hover, focus, selected, broken, mobile sheet
+                  Hover, focus, touch tap, broken, escape dismiss
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -381,7 +291,10 @@ export function SourcesContent() {
         </div>
         <div className="mt-8 grid gap-2 md:hidden">
           {[
-            ["Inline citation", "Hover, focus, selected, broken, mobile sheet"],
+            [
+              "Inline citation",
+              "Hover, focus, touch tap, broken, escape dismiss",
+            ],
             [
               "Source preview",
               "Excerpt, location, navigation, open-source action",
