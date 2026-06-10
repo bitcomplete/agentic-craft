@@ -147,10 +147,21 @@ export function ComposerSend({
 }: React.ComponentProps<"button">) {
   const { state } = useComposer()
   const [arrowAnim, setArrowAnim] = React.useState(false)
+  const arrowTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  React.useEffect(() => {
+    return () => {
+      if (arrowTimerRef.current !== null) clearTimeout(arrowTimerRef.current)
+    }
+  }, [])
 
   const handleClick = React.useCallback(() => {
+    if (arrowTimerRef.current !== null) clearTimeout(arrowTimerRef.current)
     setArrowAnim(true)
-    setTimeout(() => setArrowAnim(false), 500)
+    arrowTimerRef.current = setTimeout(() => {
+      arrowTimerRef.current = null
+      setArrowAnim(false)
+    }, 500)
   }, [])
 
   return (

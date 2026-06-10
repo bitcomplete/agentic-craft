@@ -18,11 +18,20 @@ export function ComposerSuggestions({
     meta: { textareaRef },
   } = useComposer()
   const [flashChip, setFlashChip] = React.useState<string | null>(null)
+  const flashTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  React.useEffect(() => {
+    return () => {
+      if (flashTimerRef.current !== null) clearTimeout(flashTimerRef.current)
+    }
+  }, [])
 
   const handleClick = React.useCallback(
     (suggestion: string) => {
+      if (flashTimerRef.current !== null) clearTimeout(flashTimerRef.current)
       setFlashChip(suggestion)
-      setTimeout(() => {
+      flashTimerRef.current = setTimeout(() => {
+        flashTimerRef.current = null
         setValue(suggestion)
         setFlashChip(null)
         textareaRef.current?.focus()

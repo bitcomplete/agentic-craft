@@ -151,6 +151,7 @@ export function Composer({
 
   const send = React.useCallback(() => {
     if (disabled) return
+    if (isSending) return
     if (!canSend) return
     setIsSending(true)
     const currentValue = value
@@ -160,7 +161,7 @@ export function Composer({
       if (textareaRef.current) textareaRef.current.style.height = "auto"
     }, 400)
     onSend?.(currentValue)
-  }, [value, disabled, canSend, setValue, onSend])
+  }, [value, disabled, isSending, canSend, setValue, onSend])
 
   const state = React.useMemo<ComposerState>(
     () => ({

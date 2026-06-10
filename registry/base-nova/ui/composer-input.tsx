@@ -44,6 +44,7 @@ export function ComposerInput({
         onBlur={() => setFocused(false)}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
+            if (e.nativeEvent.isComposing) return
             e.preventDefault()
             send()
           }
