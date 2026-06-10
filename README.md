@@ -47,6 +47,8 @@ high-trust agent experiences.
 
 ## Development
 
+See [CLAUDE.md](./CLAUDE.md) for stack details, all commands, the registry invariant, and the QA bar.
+
 ```bash
 npm install
 npm run dev
