@@ -1,11 +1,28 @@
-import { readFileSync } from "node:fs"
-import { relative, resolve } from "node:path"
+import { readFileSync, realpathSync } from "node:fs"
+import { basename, relative, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 import { execFileSync } from "node:child_process"
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)))
 const shouldFail = process.argv.includes("--fail")
-const files = execFileSync("git", [
+
+// Build the set of basenames in src/components/ui/ for real-file-copy dedup.
+let srcUiBasenames
+try {
+  srcUiBasenames = new Set(
+    execFileSync("git", ["ls-files", "src/components/ui"], {
+      cwd: root,
+      encoding: "utf8",
+    })
+      .split("\n")
+      .filter(Boolean)
+      .map((f) => basename(f))
+  )
+} catch {
+  srcUiBasenames = new Set()
+}
+
+const rawFiles = execFileSync("git", [
   "ls-files",
   "app",
   "src",
@@ -16,6 +33,27 @@ const files = execFileSync("git", [
 })
   .split("\n")
   .filter((file) => /\.(tsx|ts|css)$/.test(file))
+
+// Deduplicate: skip registry/base-nova/ui/ entries whose basename also exists
+// in src/components/ui/ (handles both symlink and real-file-copy cases).
+const seenRealPaths = new Set()
+const files = rawFiles.filter((file) => {
+  const abs = resolve(root, file)
+  // Skip registry/base-nova/ui/ files if a counterpart exists under src/components/ui/
+  if (file.startsWith("registry/base-nova/ui/") && srcUiBasenames.has(basename(file))) {
+    return false
+  }
+  // Skip files that resolve to a real path we have already seen (symlink dedup)
+  let real
+  try {
+    real = realpathSync(abs)
+  } catch {
+    real = abs
+  }
+  if (seenRealPaths.has(real)) return false
+  seenRealPaths.add(real)
+  return true
+})
 
 const checks = [
   {
@@ -65,13 +103,26 @@ for (const file of files) {
     }
   }
 
-  for (const match of source.matchAll(/<button\b[\s\S]*?<\/button>/g)) {
-    const block = match[0]
-    if (
-      !/aria-label=/.test(block) &&
-      !/<span[^>]+className="sr-only"/.test(block) &&
-      !/<button[^>]*>[^<\s]/.test(block)
-    ) {
+  for (const match of source.matchAll(/<button\b[^>]*>/g)) {
+    const openTag = match[0]
+    // Inspection window: the opening tag + 300 chars of following source
+    const windowStart = match.index + openTag.length
+    const window = openTag + source.slice(windowStart, windowStart + 300)
+    // After the closing '>' of the opening tag, strip whitespace and check
+    // whether the content starts with a text character or a JSX expression.
+    const afterTag = source.slice(windowStart).trimStart()
+    const hasVisibleLabel =
+      // Explicit aria-label on the button itself
+      /aria-label=/.test(openTag) ||
+      // sr-only span anywhere in the window
+      /<span[^>]+className="sr-only"/.test(window) ||
+      // visible text span (a <span> without sr-only class) anywhere in the window
+      /<span(?![^>]*className="sr-only")[^>]*>[^<]/.test(window) ||
+      // content starts directly with text (after whitespace) — same-line label
+      /^[^<\s{]/.test(afterTag) ||
+      // content starts with a JSX expression — e.g. {label}
+      /^\{/.test(afterTag)
+    if (!hasVisibleLabel) {
       const line = source.slice(0, match.index).split("\n").length
       findings.push({
         file,
