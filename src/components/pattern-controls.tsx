@@ -137,7 +137,7 @@ function PatternControlsItem({
   )
 }
 
-function PatternControlsLegacy({
+function PatternControls({
   options,
   active,
   onToggle,
@@ -199,19 +199,8 @@ function PatternControlsLegacy({
   )
 }
 
-const PatternControls = Object.assign(PatternControlsLegacy, {
-  Root: PatternControlsRoot,
-  Label: PatternControlsLabel,
-  List: PatternControlsList,
-  Item: PatternControlsItem,
-})
-
 export {
   PatternControls,
-  PatternControlsRoot,
-  PatternControlsLabel,
-  PatternControlsList,
-  PatternControlsItem,
   type PatternControlMode,
   type PatternControlOption,
 }
