@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "agentic-craft",
-  "homepage": "https://agentic-craft.dev",
+  "homepage": "https://agentic-craft.vercel.app",
   "items": [
     {
       "name": "composer",
