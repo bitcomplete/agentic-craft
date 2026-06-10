@@ -23,6 +23,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from "@/components/ui/sidebar"
 import {
   Collapsible,
@@ -90,6 +91,7 @@ function ThemeMenu() {
 export function AppSidebar() {
   const pathname = usePathname()
   const router = useRouter()
+  const { setOpenMobile } = useSidebar()
 
   const scrollToSection = useCallback(
     (sectionPath: string, elementId: string) => {
@@ -148,7 +150,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                   <SidebarMenuItem>
                     <SidebarMenuButton
-                      render={<Link href={section.path} />}
+                      render={<Link href={section.path} onClick={() => setOpenMobile(false)} />}
                       isActive={isActive}
                     >
                       <HugeiconsIcon
@@ -171,7 +173,7 @@ export function AppSidebar() {
                   <SidebarMenuItem>
                     <CollapsibleTrigger className="w-full [&[data-panel-open]>div>svg:last-child]:rotate-180">
                       <SidebarMenuButton
-                        render={<Link href={section.path} />}
+                        render={<Link href={section.path} onClick={() => setOpenMobile(false)} />}
                         isActive={isActive}
                       >
                         <HugeiconsIcon
@@ -198,6 +200,7 @@ export function AppSidebar() {
                                   type="button"
                                   onClick={(e) => {
                                     e.preventDefault()
+                                    setOpenMobile(false)
                                     scrollToSection(section.path, sub.id)
                                   }}
                                 />
