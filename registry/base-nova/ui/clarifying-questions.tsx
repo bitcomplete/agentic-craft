@@ -141,13 +141,13 @@ function ClarifyingQuestionField({
             )}
           </FieldContent>
           <ToggleGroup
-            multiple
+            multiple={multiple}
             value={current}
             onValueChange={(next) => {
-              onValueChange?.(
-                question.id,
-                multiple ? next : (next.at(-1) ?? "")
-              )
+              if (multiple) { onValueChange?.(question.id, next); return }
+              const value = next.at(-1)
+              if (value === undefined) return
+              onValueChange?.(question.id, value)
             }}
             aria-describedby={descriptionId}
             size="sm"
@@ -197,6 +197,7 @@ function ClarifyingQuestionOptionRow({
   index,
   selected,
   onSelect,
+  multiple = true,
   layout = "inline",
   chipPosition = "right",
 }: {
@@ -204,6 +205,7 @@ function ClarifyingQuestionOptionRow({
   index: number
   selected?: boolean
   onSelect?: () => void
+  multiple?: boolean
   layout?: ClarifyingQuestionsLayout
   chipPosition?: ClarifyingQuestionsChipPosition
 }) {
@@ -225,7 +227,7 @@ function ClarifyingQuestionOptionRow({
     <button
       type="button"
       aria-pressed={selected}
-      aria-label={`${selected ? "Deselect" : "Select"} ${option.label}`}
+      aria-label={multiple ? `${selected ? "Deselect" : "Select"} ${option.label}` : option.label}
       onClick={onSelect}
       className={cn(
         "group flex min-h-11 w-full gap-2 rounded-md border px-2.5 py-1.5 text-left transition-[background-color,border-color,box-shadow] hover:bg-foreground/[0.03] focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none sm:gap-3 sm:px-3 sm:py-2.5",
@@ -369,6 +371,7 @@ function ClarifyingQuestionStep({
               index={optionIndex}
               selected={selectedValues.includes(option.value)}
               onSelect={() => toggleOption(option.value)}
+              multiple={multiple}
               layout={layout}
               chipPosition={chipPosition}
             />
