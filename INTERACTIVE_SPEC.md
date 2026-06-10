@@ -1,5 +1,7 @@
 # Interactive Reference Page Specification
 
+> Read alongside CLAUDE.md.
+
 Every page in this reference guide must have interactive examples at the level
 of InteractiveComposer.tsx. Here's what that means:
 
@@ -15,7 +17,8 @@ of InteractiveComposer.tsx. Here's what that means:
 
 3. **Animations** — islands slide up (translateY 16→0, 250ms ease-out).
    Press effects (scale 0.97). Fade in/out for appearing/disappearing elements.
-   No motion libraries — pure CSS keyframes injected via `<style>`.
+   No motion libraries — pure CSS keyframes defined in `src/index.css` (shared)
+   or in a registry item's `css` block (item-local).
 
 4. **Single interactive example per section** — NOT 5 static screenshots. One
    component, many states controlled by the controls panel.
@@ -30,14 +33,16 @@ of InteractiveComposer.tsx. Here's what that means:
 
 ## Tech constraints
 
-- React 19 + Vite 7 + Tailwind CSS v4 + shadcn/ui v4 (neutral, inset)
+- Next.js 16 App Router + React 19 + Tailwind CSS 4 + `@base-ui/react` (NOT Radix)
 - Icons: `@hugeicons/react` + `@hugeicons/core-free-icons`
   - Usage: `<HugeiconsIcon icon={SomeIcon} size={14} strokeWidth={1.5} />`
   - All icons monochrome, no colors
-- No motion/framer-motion — pure CSS animations via injected `<style>` tags
+- No motion/framer-motion — pure CSS keyframes only; define in `src/index.css`
+  (for shared use) or in a registry item's `css` block (item-local). Never use
+  `document.createElement("style")` — banned by `audit-ui` (`no-page-style-injection`).
 - Import pattern: `import { HugeiconsIcon } from "@hugeicons/react"`
   then `import { IconName } from "@hugeicons/core-free-icons"`
-- shadcn components from `@/components/ui/*` (DropdownMenu, Tooltip, etc.)
+- Base UI components from `@/components/ui/*` (DropdownMenu, Tooltip, etc.)
 - Page structure: `<article>` with `<header>` + `<section className="page-section">`
 - Section labels: `<p className="section-label mb-3">CATEGORY</p>`
 - Headings: `<h2 className="text-xl font-semibold tracking-tight">Title</h2>`
