@@ -111,8 +111,12 @@ export function FeedbackContent() {
   const thumbsRef = useRef<HTMLDivElement>(null)
   const correctionConfirmRef = useRef<HTMLDivElement>(null)
   const thumbsFlashTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const ratingPressedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const ratingConfirmTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const ratingPressedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  )
+  const ratingConfirmTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  )
 
   const handleThumbsToggle = useCallback((key: string) => {
     setThumbsState((prev) => {
@@ -147,17 +151,35 @@ export function FeedbackContent() {
     (which: "up" | "down") => {
       if (thumbsSelection === which) {
         setThumbsSelection(null)
-        setThumbsState({ neutral: true, positive: false, negative: false, withCorrection: false })
+        setThumbsState({
+          neutral: true,
+          positive: false,
+          negative: false,
+          withCorrection: false,
+        })
         return
       }
       setThumbsSelection(which)
       if (which === "up") {
-        setThumbsState({ neutral: false, positive: true, negative: false, withCorrection: false })
+        setThumbsState({
+          neutral: false,
+          positive: true,
+          negative: false,
+          withCorrection: false,
+        })
         clearTimeout(thumbsFlashTimerRef.current ?? undefined)
         setThumbsFlash(true)
-        thumbsFlashTimerRef.current = setTimeout(() => setThumbsFlash(false), 600)
+        thumbsFlashTimerRef.current = setTimeout(
+          () => setThumbsFlash(false),
+          600
+        )
       } else {
-        setThumbsState({ neutral: false, positive: false, negative: true, withCorrection: false })
+        setThumbsState({
+          neutral: false,
+          positive: false,
+          negative: true,
+          withCorrection: false,
+        })
       }
     },
     [thumbsSelection]
@@ -230,11 +252,17 @@ export function FeedbackContent() {
   const handleRatingClick = useCallback((n: number) => {
     setRatingPressed(n)
     clearTimeout(ratingPressedTimerRef.current ?? undefined)
-    ratingPressedTimerRef.current = setTimeout(() => setRatingPressed(null), 250)
+    ratingPressedTimerRef.current = setTimeout(
+      () => setRatingPressed(null),
+      250
+    )
     setSelectedRating(n)
     setRatingConfirm(true)
     clearTimeout(ratingConfirmTimerRef.current ?? undefined)
-    ratingConfirmTimerRef.current = setTimeout(() => setRatingConfirm(false), 2500)
+    ratingConfirmTimerRef.current = setTimeout(
+      () => setRatingConfirm(false),
+      2500
+    )
   }, [])
 
   /* ── Section 4: Behavioral Consequence ── */

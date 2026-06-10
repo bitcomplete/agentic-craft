@@ -20,11 +20,11 @@ function PatternSection({
   return (
     <section id={id} className={cn("page-section scroll-mt-20", className)}>
       {eyebrow && <p className="section-label mb-3">{eyebrow}</p>}
-      <h2 className="text-balance text-xl font-semibold tracking-tight">
+      <h2 className="text-xl font-semibold tracking-tight text-balance">
         {title}
       </h2>
       {description && (
-        <p className="mt-3 max-w-[680px] text-pretty text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-3 max-w-[680px] text-sm leading-relaxed text-pretty text-muted-foreground">
           {description}
         </p>
       )}
@@ -34,4 +34,3 @@ function PatternSection({
 }
 
 export { PatternSection }
-

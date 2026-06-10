@@ -19,11 +19,11 @@ function PatternPage({
     <article className={cn("pb-24", className)}>
       <header className="mb-16">
         {eyebrow && <p className="section-label mb-3">{eyebrow}</p>}
-        <h1 className="text-balance font-serif text-4xl leading-[1.15] font-light tracking-tight">
+        <h1 className="font-serif text-4xl leading-[1.15] font-light tracking-tight text-balance">
           {title}
         </h1>
         {description && (
-          <p className="mt-4 max-w-[680px] text-pretty text-sm leading-relaxed text-muted-foreground">
+          <p className="mt-4 max-w-[680px] text-sm leading-relaxed text-pretty text-muted-foreground">
             {description}
           </p>
         )}
@@ -34,4 +34,3 @@ function PatternPage({
 }
 
 export { PatternPage }
-

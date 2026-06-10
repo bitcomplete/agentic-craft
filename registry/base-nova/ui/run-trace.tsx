@@ -117,9 +117,7 @@ function RunTrace({
                     aria-hidden="true"
                   />
                 )}
-                <span className="sr-only">
-                  {indicatorLabel[event.status]}
-                </span>
+                <span className="sr-only">{indicatorLabel[event.status]}</span>
               </span>
               <span className="min-w-0">
                 <span className="block min-w-0 truncate font-medium text-foreground">

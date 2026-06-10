@@ -24,4 +24,3 @@ function PatternAnatomy({ items }: { items: PatternAnatomyItem[] }) {
 }
 
 export { PatternAnatomy, type PatternAnatomyItem }
-

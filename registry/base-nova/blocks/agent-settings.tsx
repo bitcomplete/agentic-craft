@@ -71,7 +71,8 @@ function AgentSettingsBlock() {
           },
           {
             label: "Requires approval",
-            value: "External communication, publishing, spending, and record edits.",
+            value:
+              "External communication, publishing, spending, and record edits.",
             status: "required",
           },
           {

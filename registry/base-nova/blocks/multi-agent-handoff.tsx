@@ -1,6 +1,9 @@
 "use client"
 
-import { AgentStatusTable, type AgentStatusRow } from "@/components/ui/agent-status-table"
+import {
+  AgentStatusTable,
+  type AgentStatusRow,
+} from "@/components/ui/agent-status-table"
 import { Badge } from "@/components/ui/badge"
 import { HandoffPacket } from "@/components/ui/handoff-packet"
 import { RunTrace, type RunTraceEvent } from "@/components/ui/run-trace"
@@ -54,7 +57,8 @@ const trace: RunTraceEvent[] = [
   {
     id: "transfer",
     title: "Handoff packet sent",
-    description: "Document Drafter received payload, source basis, and recovery path.",
+    description:
+      "Document Drafter received payload, source basis, and recovery path.",
     status: "running",
     source: "Export workflow",
     timestamp: "now",
@@ -63,7 +67,8 @@ const trace: RunTraceEvent[] = [
   {
     id: "accept",
     title: "Acceptance required",
-    description: "Downstream drafting waits until the receiver accepts ownership.",
+    description:
+      "Downstream drafting waits until the receiver accepts ownership.",
     status: "queued",
     source: "Review session",
     timestamp: "pending",

@@ -199,8 +199,4 @@ function PatternControls({
   )
 }
 
-export {
-  PatternControls,
-  type PatternControlMode,
-  type PatternControlOption,
-}
+export { PatternControls, type PatternControlMode, type PatternControlOption }

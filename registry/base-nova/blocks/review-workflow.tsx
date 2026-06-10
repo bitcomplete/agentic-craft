@@ -39,7 +39,8 @@ const sourceQuestion = {
 } satisfies ClarifyingQuestion
 
 function ReviewWorkflowBlock() {
-  const [answer, setAnswer] = React.useState<ClarifyingQuestionValue>("approved")
+  const [answer, setAnswer] =
+    React.useState<ClarifyingQuestionValue>("approved")
 
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-4">
@@ -75,8 +76,8 @@ function ReviewWorkflowBlock() {
           defaultOpen
         >
           <ObservableWork.Detail>
-            Show touched sources, claim coverage, and unresolved assumptions.
-            Do not expose hidden reasoning traces.
+            Show touched sources, claim coverage, and unresolved assumptions. Do
+            not expose hidden reasoning traces.
           </ObservableWork.Detail>
         </ObservableWork.Step>
         <ObservableWork.Step

@@ -150,7 +150,12 @@ export function AppSidebar() {
                 <SidebarMenu>
                   <SidebarMenuItem>
                     <SidebarMenuButton
-                      render={<Link href={section.path} onClick={() => setOpenMobile(false)} />}
+                      render={
+                        <Link
+                          href={section.path}
+                          onClick={() => setOpenMobile(false)}
+                        />
+                      }
                       isActive={isActive}
                     >
                       <HugeiconsIcon
@@ -173,7 +178,12 @@ export function AppSidebar() {
                   <SidebarMenuItem>
                     <CollapsibleTrigger className="w-full [&[data-panel-open]>div>svg:last-child]:rotate-180">
                       <SidebarMenuButton
-                        render={<Link href={section.path} onClick={() => setOpenMobile(false)} />}
+                        render={
+                          <Link
+                            href={section.path}
+                            onClick={() => setOpenMobile(false)}
+                          />
+                        }
                         isActive={isActive}
                       >
                         <HugeiconsIcon
