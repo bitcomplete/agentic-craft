@@ -21,9 +21,27 @@ const sourceSerif4 = Source_Serif_4({
 })
 
 export const metadata: Metadata = {
-  title: "Agentic Craft",
+  metadataBase: new URL("https://agentic-craft.vercel.app"),
+  title: {
+    default: "Agentic Craft",
+    template: "%s · Agentic Craft",
+  },
   description:
     "Reference guide for designing agentic product interfaces beyond chat",
+  openGraph: {
+    title: "Agentic Craft",
+    description:
+      "Interaction patterns for agent orchestration, tool use, approvals, memory, and observability.",
+    url: "/",
+    siteName: "Agentic Craft",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Agentic Craft",
+    description:
+      "Interaction patterns for agent orchestration, tool use, approvals, memory, and observability.",
+  },
 }
 
 export const viewport: Viewport = {
