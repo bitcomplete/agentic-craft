@@ -52,6 +52,8 @@ npm install
 npm run dev
 ```
 
+npm is the supported package manager (see `packageManager` in package.json).
+
 By default, the app runs at:
 
 ```bash
