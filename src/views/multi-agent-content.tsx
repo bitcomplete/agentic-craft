@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useExclusiveToggle } from "@/hooks/use-exclusive-toggle"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   ArrowRight01Icon,
@@ -30,25 +31,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-
-/* ------------------------------------------------------------------ */
-/*  Helpers                                                            */
-/* ------------------------------------------------------------------ */
-
-function makeToggle(
-  setter: React.Dispatch<React.SetStateAction<Record<string, boolean>>>,
-  animSetter: React.Dispatch<React.SetStateAction<number>>
-) {
-  return (key: string) => {
-    setter((prev) => {
-      const next: Record<string, boolean> = {}
-      for (const k of Object.keys(prev)) next[k] = false
-      next[key] = true
-      return next
-    })
-    animSetter((n) => n + 1)
-  }
-}
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -228,13 +210,11 @@ const SHARED_CONTEXT_ITEMS = [
 
 export function MultiAgentContent() {
   /* Section 1 — Agent Cards */
-  const [cardCtrl, setCardCtrl] = useState<Record<string, boolean>>({
+  const [cardCtrl, cardAnim, toggleCard] = useExclusiveToggle({
     active: true,
     idle: false,
     error: false,
   })
-  const [cardAnim, setCardAnim] = useState(0)
-  const toggleCard = makeToggle(setCardCtrl, setCardAnim)
   const activeCardMode = cardCtrl.active
     ? "active"
     : cardCtrl.idle
@@ -242,13 +222,11 @@ export function MultiAgentContent() {
       : "error"
 
   /* Section 2 — Handoff Flow */
-  const [handoffCtrl, setHandoffCtrl] = useState<Record<string, boolean>>({
+  const [handoffCtrl, handoffAnim, toggleHandoff] = useExclusiveToggle({
     pending: true,
     inprogress: false,
     complete: false,
   })
-  const [handoffAnim, setHandoffAnim] = useState(0)
-  const toggleHandoff = makeToggle(setHandoffCtrl, setHandoffAnim)
   const activeHandoff = handoffCtrl.pending
     ? "pending"
     : handoffCtrl.inprogress
@@ -256,31 +234,25 @@ export function MultiAgentContent() {
       : "complete"
 
   /* Section 3 — Parallel Agents */
-  const [parallelCtrl, setParallelCtrl] = useState<Record<string, boolean>>({
+  const [parallelCtrl, parallelAnim, toggleParallel] = useExclusiveToggle({
     running: true,
     complete: false,
   })
-  const [parallelAnim, setParallelAnim] = useState(0)
-  const toggleParallel = makeToggle(setParallelCtrl, setParallelAnim)
   const activeParallel = parallelCtrl.running ? "running" : "complete"
 
   /* Section 4 — Agent Routing */
-  const [routeCtrl, setRouteCtrl] = useState<Record<string, boolean>>({
+  const [routeCtrl, routeAnim, toggleRoute] = useExclusiveToggle({
     auto: true,
     manual: false,
   })
-  const [routeAnim, setRouteAnim] = useState(0)
-  const toggleRoute = makeToggle(setRouteCtrl, setRouteAnim)
   const activeRoute = routeCtrl.auto ? "auto" : "manual"
   const [manualSelection, setManualSelection] = useState<string | null>(null)
 
   /* Section 5 — Agent Communication */
-  const [commCtrl, setCommCtrl] = useState<Record<string, boolean>>({
+  const [commCtrl, commAnim, toggleComm] = useExclusiveToggle({
     direct: true,
     shared: false,
   })
-  const [commAnim, setCommAnim] = useState(0)
-  const toggleComm = makeToggle(setCommCtrl, setCommAnim)
   const activeComm = commCtrl.direct ? "direct" : "shared"
 
   return (

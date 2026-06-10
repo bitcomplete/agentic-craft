@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useExclusiveToggle } from "@/hooks/use-exclusive-toggle"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   Activity01Icon,
@@ -31,25 +32,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-
-/* ------------------------------------------------------------------ */
-/*  Helpers                                                            */
-/* ------------------------------------------------------------------ */
-
-function makeToggle(
-  setter: React.Dispatch<React.SetStateAction<Record<string, boolean>>>,
-  animSetter: React.Dispatch<React.SetStateAction<number>>
-) {
-  return (key: string) => {
-    setter((prev) => {
-      const next: Record<string, boolean> = {}
-      for (const k of Object.keys(prev)) next[k] = false
-      next[key] = true
-      return next
-    })
-    animSetter((n) => n + 1)
-  }
-}
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -323,59 +305,56 @@ const ERROR_LIST = [
 
 export function ObservabilityContent() {
   // Section 1: Activity Timeline
-  const [actCtrl, setActCtrl] = useState<Record<string, boolean>>({
+  const [actCtrl, actAnim, toggleAct] = useExclusiveToggle({
     live: true,
     history: false,
     filtered: false,
   })
-  const [actAnim, setActAnim] = useState(0)
-  const toggleAct = makeToggle(setActCtrl, setActAnim)
 
   // Section 2: Token Usage
-  const [tokenCtrl, setTokenCtrl] = useState<Record<string, boolean>>({
+  const [tokenCtrl, tokenAnim, toggleToken] = useExclusiveToggle({
     low: true,
     medium: false,
     high: false,
   })
-  const [tokenAnim, setTokenAnim] = useState(0)
-  const toggleToken = makeToggle(setTokenCtrl, setTokenAnim)
 
   // Section 3: Session Timeline
   // Section 4: Session Timeline
-  const [sessionCtrl, setSessionCtrl] = useState<Record<string, boolean>>({
+  const [sessionCtrl, sessionAnim, toggleSession] = useExclusiveToggle({
     single: true,
     multi: false,
   })
-  const [sessionAnim, setSessionAnim] = useState(0)
-  const toggleSession = makeToggle(setSessionCtrl, setSessionAnim)
 
   // Section 4: Error Log
   // Section 6: Error Log
-  const [errCtrl, setErrCtrl] = useState<Record<string, boolean>>({
+  const [errCtrl, errAnim, toggleErr] = useExclusiveToggle({
     empty: true,
     withErrors: false,
   })
-  const [errAnim, setErrAnim] = useState(0)
-  const toggleErr = makeToggle(setErrCtrl, setErrAnim)
 
   // Expanded error index
   const [expandedErr, setExpandedErr] = useState<number | null>(null)
 
   // Derived state
-  const activeAct = Object.keys(actCtrl).find((k) => actCtrl[k]) || "live"
+  const actCtrlMap = actCtrl as Record<string, boolean>
+  const activeAct = Object.keys(actCtrl).find((k) => actCtrlMap[k]) || "live"
   const activityItems =
     activeAct === "live"
       ? ACTIVITY_LIVE
       : activeAct === "history"
         ? ACTIVITY_HISTORY
         : ACTIVITY_FILTERED
-  const activeToken = Object.keys(tokenCtrl).find((k) => tokenCtrl[k]) || "low"
+  const tokenCtrlMap = tokenCtrl as Record<string, boolean>
+  const activeToken =
+    Object.keys(tokenCtrl).find((k) => tokenCtrlMap[k]) || "low"
   const tokenCfg = TOKEN_CONFIGS[activeToken as keyof typeof TOKEN_CONFIGS]
+  const sessionCtrlMap = sessionCtrl as Record<string, boolean>
   const activeSession =
-    Object.keys(sessionCtrl).find((k) => sessionCtrl[k]) || "single"
+    Object.keys(sessionCtrl).find((k) => sessionCtrlMap[k]) || "single"
   const sessionItems =
     activeSession === "single" ? SESSION_SINGLE : SESSION_MULTI
-  const activeErr = Object.keys(errCtrl).find((k) => errCtrl[k]) || "empty"
+  const errCtrlMap = errCtrl as Record<string, boolean>
+  const activeErr = Object.keys(errCtrl).find((k) => errCtrlMap[k]) || "empty"
 
   const tokenPct = Math.min((tokenCfg.used / tokenCfg.budget) * 100, 100)
   const isHighUsage = tokenPct > 80

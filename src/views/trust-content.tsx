@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from "react"
+import { useExclusiveToggle } from "@/hooks/use-exclusive-toggle"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   Alert01Icon,
@@ -329,36 +330,32 @@ export function TrustContent() {
   }
 
   /* — Autonomy Level — */
-  const [autoCtrl, setAutoCtrl] = useState<Record<string, boolean>>({
+  const [autoCtrl, autoAnimKey, autoToggle] = useExclusiveToggle({
     level2: true,
     level3: false,
     level4: false,
   })
-  const [autoAnimKey, setAutoAnimKey] = useState(0)
 
   /* — Mode Toggles — */
-  const [modeCtrl, setModeCtrl] = useState<Record<string, boolean>>({
+  const [modeCtrl, modeAnimKey, modeToggle] = useExclusiveToggle({
     requirements: true,
     research: false,
     review: false,
   })
-  const [modeAnimKey, setModeAnimKey] = useState(0)
 
   /* — Context Scope — */
-  const [scopeCtrl, setScopeCtrl] = useState<Record<string, boolean>>({
+  const [scopeCtrl, scopeAnimKey, scopeToggle] = useExclusiveToggle({
     portal: true,
     portalPolicy: false,
     global: false,
   })
-  const [scopeAnimKey, setScopeAnimKey] = useState(0)
 
   /* — Consent Flow — */
-  const [consentCtrl, setConsentCtrl] = useState<Record<string, boolean>>({
+  const [consentCtrl, consentAnimKey, consentToggle] = useExclusiveToggle({
     prompt: true,
     accepted: false,
     declined: false,
   })
-  const [consentAnimKey, setConsentAnimKey] = useState(0)
   const consentOutcomeRef = useRef<HTMLDivElement>(null)
   const consentFocusPending = useRef(false)
 
@@ -374,68 +371,45 @@ export function TrustContent() {
   }, [consentCtrl])
 
   /* — Confidence Display — */
-  const [confCtrl, setConfCtrl] = useState<Record<string, boolean>>({
+  const [confCtrl, confAnimKey, confToggle] = useExclusiveToggle({
     high: true,
     medium: false,
     low: false,
   })
-  const [confAnimKey, setConfAnimKey] = useState(0)
   const [verifyClicked, setVerifyClicked] = useState(false)
 
-  const handleConfToggle = useCallback((key: string) => {
-    setConfCtrl((prev) => {
-      const next: Record<string, boolean> = {}
-      for (const k of Object.keys(prev)) next[k] = false
-      next[key] = true
-      return next
-    })
-    setConfAnimKey((n) => n + 1)
-    setVerifyClicked(false)
-  }, [])
+  const handleConfToggle = useCallback(
+    (key: string) => {
+      confToggle(key)
+      setVerifyClicked(false)
+    },
+    [confToggle]
+  )
 
   /* — Kill Switch — */
-  const [killCtrl, setKillCtrl] = useState<Record<string, boolean>>({
+  const [killCtrl, killAnimKey, killToggle] = useExclusiveToggle({
     idle: true,
     running: false,
     stopped: false,
   })
-  const [killAnimKey, setKillAnimKey] = useState(0)
 
   /* — Cost Transparency — */
-  const [costCtrl, setCostCtrl] = useState<Record<string, boolean>>({
+  const [costCtrl, costAnimKey, costToggle] = useExclusiveToggle({
     compact: true,
     detailed: false,
   })
-  const [costAnimKey, setCostAnimKey] = useState(0)
 
   /* — Data Provenance — */
-  const [provCtrl, setProvCtrl] = useState<Record<string, boolean>>({
+  const [provCtrl, provAnimKey, provToggle] = useExclusiveToggle({
     sources: true,
     chain: false,
   })
-  const [provAnimKey, setProvAnimKey] = useState(0)
 
   /* — Audit Trail — */
-  const [auditCtrl, setAuditCtrl] = useState<Record<string, boolean>>({
+  const [auditCtrl, auditAnimKey, auditToggle] = useExclusiveToggle({
     summary: true,
     detailed: false,
   })
-  const [auditAnimKey, setAuditAnimKey] = useState(0)
-
-  function makeToggle(
-    setter: React.Dispatch<React.SetStateAction<Record<string, boolean>>>,
-    animSetter: React.Dispatch<React.SetStateAction<number>>
-  ) {
-    return (key: string) => {
-      setter((prev) => {
-        const next: Record<string, boolean> = {}
-        for (const k of Object.keys(prev)) next[k] = false
-        next[key] = true
-        return next
-      })
-      animSetter((n) => n + 1)
-    }
-  }
 
   /* Resolve active autonomy level */
   const activeLevel = autoCtrl.level2
@@ -571,7 +545,7 @@ export function TrustContent() {
               { key: "level4", label: "Level 4" },
             ]}
             active={autoCtrl}
-            onToggle={makeToggle(setAutoCtrl, setAutoAnimKey)}
+            onToggle={autoToggle}
           />
 
           <div
@@ -748,7 +722,7 @@ export function TrustContent() {
               { key: "review", label: "Review" },
             ]}
             active={modeCtrl}
-            onToggle={makeToggle(setModeCtrl, setModeAnimKey)}
+            onToggle={modeToggle}
           />
 
           <div
@@ -899,7 +873,7 @@ export function TrustContent() {
               { key: "global", label: "Global" },
             ]}
             active={scopeCtrl}
-            onToggle={makeToggle(setScopeCtrl, setScopeAnimKey)}
+            onToggle={scopeToggle}
           />
 
           <div
@@ -1063,7 +1037,7 @@ export function TrustContent() {
               { key: "declined", label: "Declined" },
             ]}
             active={consentCtrl}
-            onToggle={makeToggle(setConsentCtrl, setConsentAnimKey)}
+            onToggle={consentToggle}
           />
 
           <div
@@ -1107,10 +1081,7 @@ export function TrustContent() {
                     <Button
                       onClick={() => {
                         consentFocusPending.current = true
-                        makeToggle(
-                          setConsentCtrl,
-                          setConsentAnimKey
-                        )("accepted")
+                        consentToggle("accepted")
                       }}
                       size="xs"
                     >
@@ -1119,10 +1090,7 @@ export function TrustContent() {
                     <Button
                       onClick={() => {
                         consentFocusPending.current = true
-                        makeToggle(
-                          setConsentCtrl,
-                          setConsentAnimKey
-                        )("declined")
+                        consentToggle("declined")
                       }}
                       variant="outline"
                       size="xs"
@@ -1166,9 +1134,7 @@ export function TrustContent() {
                   </div>
                   <div className="ml-10">
                     <Button
-                      onClick={() =>
-                        makeToggle(setConsentCtrl, setConsentAnimKey)("prompt")
-                      }
+                      onClick={() => consentToggle("prompt")}
                       variant="outline"
                       size="xs"
                     >
@@ -1204,9 +1170,7 @@ export function TrustContent() {
                   </div>
                   <div className="ml-10">
                     <Button
-                      onClick={() =>
-                        makeToggle(setConsentCtrl, setConsentAnimKey)("prompt")
-                      }
+                      onClick={() => consentToggle("prompt")}
                       variant="outline"
                       size="xs"
                     >
@@ -1509,7 +1473,7 @@ export function TrustContent() {
               { key: "stopped", label: "Stopped" },
             ]}
             active={killCtrl}
-            onToggle={makeToggle(setKillCtrl, setKillAnimKey)}
+            onToggle={killToggle}
           />
 
           <div
@@ -1571,9 +1535,7 @@ export function TrustContent() {
                       </div>
                     </div>
                     <Button
-                      onClick={() =>
-                        makeToggle(setKillCtrl, setKillAnimKey)("stopped")
-                      }
+                      onClick={() => killToggle("stopped")}
                       variant="destructive"
                       size="xs"
                     >
@@ -1612,18 +1574,11 @@ export function TrustContent() {
                     </div>
                   </div>
                   <div className="ml-10 flex items-center gap-3">
-                    <Button
-                      onClick={() =>
-                        makeToggle(setKillCtrl, setKillAnimKey)("running")
-                      }
-                      size="xs"
-                    >
+                    <Button onClick={() => killToggle("running")} size="xs">
                       Resume
                     </Button>
                     <Button
-                      onClick={() =>
-                        makeToggle(setKillCtrl, setKillAnimKey)("idle")
-                      }
+                      onClick={() => killToggle("idle")}
                       variant="outline"
                       size="xs"
                     >
@@ -1718,7 +1673,7 @@ export function TrustContent() {
               { key: "detailed", label: "Detailed" },
             ]}
             active={costCtrl}
-            onToggle={makeToggle(setCostCtrl, setCostAnimKey)}
+            onToggle={costToggle}
           />
 
           <div
@@ -1909,7 +1864,7 @@ export function TrustContent() {
               { key: "chain", label: "Chain" },
             ]}
             active={provCtrl}
-            onToggle={makeToggle(setProvCtrl, setProvAnimKey)}
+            onToggle={provToggle}
           />
 
           <div
@@ -2089,7 +2044,7 @@ export function TrustContent() {
               { key: "detailed", label: "Detailed" },
             ]}
             active={auditCtrl}
-            onToggle={makeToggle(setAuditCtrl, setAuditAnimKey)}
+            onToggle={auditToggle}
           />
 
           <div
