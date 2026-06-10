@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   Alert01Icon,
@@ -381,6 +381,17 @@ export function TrustContent() {
   })
   const [confAnimKey, setConfAnimKey] = useState(0)
   const [verifyClicked, setVerifyClicked] = useState(false)
+
+  const handleConfToggle = useCallback((key: string) => {
+    setConfCtrl((prev) => {
+      const next: Record<string, boolean> = {}
+      for (const k of Object.keys(prev)) next[k] = false
+      next[key] = true
+      return next
+    })
+    setConfAnimKey((n) => n + 1)
+    setVerifyClicked(false)
+  }, [])
 
   /* — Kill Switch — */
   const [killCtrl, setKillCtrl] = useState<Record<string, boolean>>({
@@ -1299,7 +1310,7 @@ export function TrustContent() {
               { key: "low", label: "Low" },
             ]}
             active={confCtrl}
-            onToggle={makeToggle(setConfCtrl, setConfAnimKey)}
+            onToggle={handleConfToggle}
           />
 
           <div

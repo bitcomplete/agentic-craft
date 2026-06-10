@@ -110,6 +110,9 @@ export function FeedbackContent() {
   const [correctionSubmitted, setCorrectionSubmitted] = useState(false)
   const thumbsRef = useRef<HTMLDivElement>(null)
   const correctionConfirmRef = useRef<HTMLDivElement>(null)
+  const thumbsFlashTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const ratingPressedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const ratingConfirmTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const handleThumbsToggle = useCallback((key: string) => {
     setThumbsState((prev) => {
@@ -125,8 +128,9 @@ export function FeedbackContent() {
     setCorrectionText("")
     if (key === "positive") {
       setThumbsSelection("up")
+      clearTimeout(thumbsFlashTimerRef.current ?? undefined)
       setThumbsFlash(true)
-      setTimeout(() => setThumbsFlash(false), 600)
+      thumbsFlashTimerRef.current = setTimeout(() => setThumbsFlash(false), 600)
     } else if (key === "negative") {
       setThumbsSelection("down")
     } else if (key === "withCorrection") {
@@ -143,12 +147,17 @@ export function FeedbackContent() {
     (which: "up" | "down") => {
       if (thumbsSelection === which) {
         setThumbsSelection(null)
+        setThumbsState({ neutral: true, positive: false, negative: false, withCorrection: false })
         return
       }
       setThumbsSelection(which)
       if (which === "up") {
+        setThumbsState({ neutral: false, positive: true, negative: false, withCorrection: false })
+        clearTimeout(thumbsFlashTimerRef.current ?? undefined)
         setThumbsFlash(true)
-        setTimeout(() => setThumbsFlash(false), 600)
+        thumbsFlashTimerRef.current = setTimeout(() => setThumbsFlash(false), 600)
+      } else {
+        setThumbsState({ neutral: false, positive: false, negative: true, withCorrection: false })
       }
     },
     [thumbsSelection]
@@ -163,6 +172,19 @@ export function FeedbackContent() {
   useEffect(() => {
     if (correctionSubmitted) correctionConfirmRef.current?.focus()
   }, [correctionSubmitted])
+
+  // Cleanup all timers on unmount — capture ref objects, not their .current values,
+  // so the cleanup always sees the latest id when it runs.
+  useEffect(() => {
+    const tRef = thumbsFlashTimerRef
+    const rpRef = ratingPressedTimerRef
+    const rcRef = ratingConfirmTimerRef
+    return () => {
+      clearTimeout(tRef.current ?? undefined)
+      clearTimeout(rpRef.current ?? undefined)
+      clearTimeout(rcRef.current ?? undefined)
+    }
+  }, [])
 
   /* ── Section 2: Inline Correction ── */
   const [corrState, setCorrState] = useState<Record<string, boolean>>({
@@ -207,10 +229,12 @@ export function FeedbackContent() {
 
   const handleRatingClick = useCallback((n: number) => {
     setRatingPressed(n)
-    setTimeout(() => setRatingPressed(null), 250)
+    clearTimeout(ratingPressedTimerRef.current ?? undefined)
+    ratingPressedTimerRef.current = setTimeout(() => setRatingPressed(null), 250)
     setSelectedRating(n)
     setRatingConfirm(true)
-    setTimeout(() => setRatingConfirm(false), 2500)
+    clearTimeout(ratingConfirmTimerRef.current ?? undefined)
+    ratingConfirmTimerRef.current = setTimeout(() => setRatingConfirm(false), 2500)
   }, [])
 
   /* ── Section 4: Behavioral Consequence ── */

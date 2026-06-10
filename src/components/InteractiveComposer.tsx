@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect, useRef } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   File01Icon,
@@ -178,20 +178,33 @@ function ComposerDemo({
   const [fileSurface, setFileSurface] = useState<FileLifecycleSurface>("idle")
   const [files, setFiles] = useState<FileLifecycleFile[]>([])
   const [justSent, setJustSent] = useState(false)
+  const justSentTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const toggle = useCallback((key: keyof FeatureState) => {
-    setFeatures((prev) => {
-      const next = { ...prev, [key]: !prev[key] }
-      if (key === "scopeBanner" && next.scopeBanner) next.replyTo = false
-      if (key === "replyTo" && next.replyTo) next.scopeBanner = false
+  // Cleanup timers on unmount
+  useEffect(() => {
+    const justSentTimer = justSentTimerRef
+    return () => {
+      clearTimeout(justSentTimer.current ?? undefined)
+    }
+  }, [])
+
+  const toggle = useCallback(
+    (key: keyof FeatureState) => {
+      const nextValue = !features[key]
+      const nextFeatures: FeatureState = { ...features, [key]: nextValue }
+      if (key === "scopeBanner" && nextFeatures.scopeBanner)
+        nextFeatures.replyTo = false
+      if (key === "replyTo" && nextFeatures.replyTo)
+        nextFeatures.scopeBanner = false
+      setFeatures(nextFeatures)
       if (key === "attachments") {
-        setFiles(next.attachments ? INITIAL_LIFECYCLE_FILES : [])
+        setFiles(nextFeatures.attachments ? INITIAL_LIFECYCLE_FILES : [])
         setFileSurface("idle")
       }
-      return next
-    })
-    if (key === "scopeBanner") setScopeItems(INITIAL_SCOPE_ITEMS)
-  }, [])
+      if (key === "scopeBanner") setScopeItems(INITIAL_SCOPE_ITEMS)
+    },
+    [features]
+  )
 
   const showAttachments = useCallback(() => {
     setFeatures((prev) => ({ ...prev, attachments: true }))
@@ -217,15 +230,16 @@ function ComposerDemo({
     setDraft((prev) => (prev ? `${prev} ${text}` : text))
   }, [])
 
-  const removeFile = useCallback((file: FileLifecycleFile) => {
-    setFiles((prev) => {
-      const next = prev.filter((item) => item.id !== file.id)
+  const removeFile = useCallback(
+    (file: FileLifecycleFile) => {
+      const next = files.filter((item) => item.id !== file.id)
+      setFiles(next)
       if (next.length === 0) {
         setFeatures((current) => ({ ...current, attachments: false }))
       }
-      return next
-    })
-  }, [])
+    },
+    [files]
+  )
 
   const retryFile = useCallback((file: FileLifecycleFile) => {
     setFiles((prev) =>
@@ -261,15 +275,16 @@ function ComposerDemo({
     })
   }, [])
 
-  const removeScopeItem = useCallback((id: string) => {
-    setScopeItems((prev) => {
-      const next = prev.filter((item) => item.id !== id)
+  const removeScopeItem = useCallback(
+    (id: string) => {
+      const next = scopeItems.filter((item) => item.id !== id)
+      setScopeItems(next)
       if (next.length === 0) {
         setFeatures((f) => ({ ...f, scopeBanner: false }))
       }
-      return next
-    })
-  }, [])
+    },
+    [scopeItems]
+  )
 
   const getPlaceholder = () => {
     if (features.replyTo) return PLACEHOLDER_MAP.reply
@@ -317,7 +332,8 @@ function ComposerDemo({
           setFiles([])
           setFeatures((current) => ({ ...current, attachments: false }))
           setJustSent(true)
-          setTimeout(() => setJustSent(false), 2500)
+          clearTimeout(justSentTimerRef.current ?? undefined)
+          justSentTimerRef.current = setTimeout(() => setJustSent(false), 2500)
         }}
       >
         {hasIslands && (
