@@ -5,6 +5,7 @@ import { describe, it, expect, vi } from "vitest"
 
 import {
   ClarifyingQuestions,
+  ClarifyingQuestionField,
   ClarifyingQuestionStep,
   type ClarifyingQuestion,
   type ClarifyingQuestionValue,
@@ -142,5 +143,68 @@ describe("ClarifyingQuestions — multiple kind", () => {
     // Feature Y is not selected so should show Select
     const select = root.getByRole("button", { name: /select feature y/i })
     expect(select).toBeInTheDocument()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// ClarifyingQuestionField — ToggleGroup variant (single-kind regression)
+// ---------------------------------------------------------------------------
+// The ToggleGroup path differs from the ClarifyingQuestionOptionRow path used
+// by ClarifyingQuestionStep. When multiple=false and the already-selected chip
+// is clicked, Base UI fires onValueChange([]) (empty array). The fix returns
+// early when next.at(-1) is undefined so onValueChange is never called with "".
+
+function SingleField({
+  onValueChange,
+}: {
+  onValueChange?: (id: string, value: ClarifyingQuestionValue) => void
+}) {
+  const [value, setValue] = React.useState<ClarifyingQuestionValue>("a")
+
+  return (
+    <ClarifyingQuestions.Root>
+      <ClarifyingQuestionField
+        question={singleQuestion}
+        value={value}
+        onValueChange={(id, val) => {
+          setValue(val)
+          onValueChange?.(id, val)
+        }}
+      />
+    </ClarifyingQuestions.Root>
+  )
+}
+
+describe("ClarifyingQuestionField — ToggleGroup single-kind regression", () => {
+  it("clicking the already-selected chip does not call onValueChange with empty string", async () => {
+    const onValueChange = vi.fn()
+    const { container } = render(<SingleField onValueChange={onValueChange} />)
+    const root = within(container)
+
+    // "Option A" chip is currently selected (value="a")
+    const chipA = root.getByRole("button", { name: "Option A" })
+    await userEvent.click(chipA)
+
+    // The guard must prevent any call with "" or with an empty-array collapse
+    const emittedValues = onValueChange.mock.calls.map((c) => c[1])
+    expect(emittedValues).not.toContain("")
+    // If the guard fired, onValueChange is not called at all — value stays "a"
+    if (onValueChange.mock.calls.length > 0) {
+      expect(emittedValues.at(-1)).toBe("a")
+    }
+  })
+
+  it("clicking the other chip calls onValueChange with the new value", async () => {
+    const onValueChange = vi.fn()
+    const { container } = render(<SingleField onValueChange={onValueChange} />)
+    const root = within(container)
+
+    // "Option B" chip is not selected; clicking it should move selection to "b"
+    const chipB = root.getByRole("button", { name: "Option B" })
+    await userEvent.click(chipB)
+
+    expect(onValueChange).toHaveBeenCalled()
+    const lastValue = onValueChange.mock.calls.at(-1)![1]
+    expect(lastValue).toBe("b")
   })
 })
