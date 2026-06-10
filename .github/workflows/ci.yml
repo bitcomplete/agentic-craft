@@ -15,6 +15,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run verify
+      - run: npm test
       - name: Registry output is committed and fresh
         run: git diff --exit-code -- public/r registry.json
       - name: Registry manifest validates
