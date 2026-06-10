@@ -76,9 +76,9 @@ export function CitationsSection() {
       <h2 className="text-xl font-semibold tracking-tight">Citations</h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
         Citations ground agent responses in verifiable sources. Hovering or
-        focusing a marker opens the preview anchored at the citation itself,
-        so verification never leaves the sentence; on touch, tapping the
-        marker opens the same card.
+        focusing a marker opens the preview anchored at the citation itself, so
+        verification never leaves the sentence; on touch, tapping the marker
+        opens the same card.
       </p>
 
       <div className="mt-7 border-y border-border/50 py-3">
