@@ -1,10 +1,14 @@
 "use client"
 
 import * as React from "react"
-import { ArrowDown01Icon } from "@hugeicons/core-free-icons"
+import {
+  Alert01Icon,
+  ArrowDown01Icon,
+  Clock01Icon,
+  Tick01Icon,
+} from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 
-import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 
 type ObservableWorkStatus =
@@ -22,17 +26,6 @@ const statusLabels: Record<ObservableWorkStatus, string> = {
   error: "Error",
 }
 
-const statusBadgeVariants: Record<
-  ObservableWorkStatus,
-  React.ComponentProps<typeof Badge>["variant"]
-> = {
-  pending: "outline",
-  active: "secondary",
-  complete: "default",
-  blocked: "outline",
-  error: "destructive",
-}
-
 function ObservableWorkRoot({
   className,
   ...props
@@ -44,6 +37,56 @@ function ObservableWorkRoot({
       className={cn("flex flex-col rounded-lg border border-border", className)}
       {...props}
     />
+  )
+}
+
+/* Icon-only status with distinct shapes per state (not color alone), plus
+   visually hidden text so the status survives screen readers. */
+function ObservableWorkStatusIndicator({
+  status,
+}: {
+  status: ObservableWorkStatus
+}) {
+  return (
+    <span
+      data-slot="observable-work-status"
+      data-status={status}
+      title={statusLabels[status]}
+      className="flex size-5 shrink-0 items-center justify-center"
+    >
+      {status === "complete" ? (
+        <span className="flex size-5 items-center justify-center rounded-md bg-foreground/10">
+          <HugeiconsIcon
+            icon={Tick01Icon}
+            size={12}
+            strokeWidth={2}
+            className="text-foreground/70"
+            aria-hidden="true"
+          />
+        </span>
+      ) : status === "active" ? (
+        <span className="observable-work-pulse size-2 rounded-full bg-foreground/70" />
+      ) : status === "pending" ? (
+        <span className="size-2 rounded-full border border-muted-foreground/60" />
+      ) : status === "blocked" ? (
+        <HugeiconsIcon
+          icon={Clock01Icon}
+          size={14}
+          strokeWidth={1.5}
+          className="text-muted-foreground"
+          aria-hidden="true"
+        />
+      ) : (
+        <HugeiconsIcon
+          icon={Alert01Icon}
+          size={14}
+          strokeWidth={1.5}
+          className="text-destructive"
+          aria-hidden="true"
+        />
+      )}
+      <span className="sr-only">{statusLabels[status]}</span>
+    </span>
   )
 }
 
@@ -65,11 +108,8 @@ function ObservableWorkStepHeader({
   return (
     <>
       <span className="min-w-0">
-        <span className="flex min-w-0 flex-wrap items-center gap-2">
-          <span className="truncate font-medium text-foreground">{title}</span>
-          <Badge variant={statusBadgeVariants[status]}>
-            {statusLabels[status]}
-          </Badge>
+        <span className="block truncate font-medium text-foreground">
+          {title}
         </span>
         {description && (
           <span className="mt-1 block text-sm leading-5 text-muted-foreground">
@@ -84,14 +124,17 @@ function ObservableWorkStepHeader({
           </span>
         )}
       </span>
-      {chevron && (
-        <span
-          aria-hidden="true"
-          className="mt-1 text-muted-foreground transition-transform group-open/observable-step:rotate-180 motion-reduce:transition-none [&_svg]:size-3.5"
-        >
-          <HugeiconsIcon icon={ArrowDown01Icon} strokeWidth={1.5} />
-        </span>
-      )}
+      <span className="mt-0.5 flex shrink-0 items-center gap-2 self-start">
+        <ObservableWorkStatusIndicator status={status} />
+        {chevron && (
+          <span
+            aria-hidden="true"
+            className="text-muted-foreground transition-transform group-open/observable-step:rotate-180 motion-reduce:transition-none [&_svg]:size-3.5"
+          >
+            <HugeiconsIcon icon={ArrowDown01Icon} strokeWidth={1.5} />
+          </span>
+        )}
+      </span>
     </>
   )
 }

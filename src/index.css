@@ -264,9 +264,17 @@ details[data-slot="observable-work-step"][open]
   }
 }
 
+.observable-work-pulse {
+  animation: route-pulse 1.5s ease-in-out 3;
+}
+
 @media (prefers-reduced-motion: reduce) {
   details[data-slot="observable-work-step"][open]
     > [data-slot="observable-work-step-content"] {
+    animation: none;
+  }
+
+  .observable-work-pulse {
     animation: none;
   }
 }
