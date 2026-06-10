@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { TrustContent } from "@/views/trust-content"
 
 export const metadata: Metadata = {
-  title: "Trust & Control Plane | Agentic Craft",
+  title: "Trust & Control Plane",
   description:
     "Controls that let users decide how much autonomy an agent gets before it acts on their behalf",
 }

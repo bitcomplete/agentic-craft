@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import { SourcesContent } from "@/views/sources-content"
 
 export const metadata: Metadata = {
-  title: "Sources & Artifacts | Agentic Craft",
+  title: "Sources & Artifacts",
   description:
     "How an agent answer becomes a cited document the user can still inspect after the conversation ends",
 }

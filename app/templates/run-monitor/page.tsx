@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import { TemplateDetailContent } from "@/views/template-detail-content"
 
 export const metadata: Metadata = {
-  title: "Background Run Monitor | Agentic Craft",
+  title: "Background Run Monitor",
   description:
     "A status surface for tracking background agent work after the user leaves the conversation",
 }
