@@ -76,10 +76,7 @@ export function TokenUsageSection() {
           onToggle={toggleToken}
         />
 
-        <div
-          className="rounded-lg border border-border/40 p-6"
-          key={tokenAnim}
-        >
+        <div className="rounded-lg border border-border/40 p-6" key={tokenAnim}>
           <div className="mon-slide-in">
             {/* Usage header */}
             <div className="mb-4 flex items-center justify-between">
@@ -146,9 +143,9 @@ export function TokenUsageSection() {
                   Avg. per session
                 </p>
                 <p className="mt-0.5 text-sm font-medium">
-                  {Math.round(
-                    tokenCfg.used / tokenCfg.sessions
-                  ).toLocaleString("en-US")}
+                  {Math.round(tokenCfg.used / tokenCfg.sessions).toLocaleString(
+                    "en-US"
+                  )}
                 </p>
               </div>
               <div className="pl-3">
@@ -215,8 +212,7 @@ export function TokenUsageSection() {
         Token meters translate raw API consumption into a budget metaphor that
         product teams understand. The 80% warning threshold provides time to
         prioritize remaining review tasks before throttling begins —
-        particularly important during time-bounded review team session
-        sessions.
+        particularly important during time-bounded review team session sessions.
       </div>
     </section>
   )

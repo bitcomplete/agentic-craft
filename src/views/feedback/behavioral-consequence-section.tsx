@@ -49,9 +49,9 @@ export function BehavioralConsequenceSection() {
         Behavioral Consequence
       </h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-        How the agent&apos;s behavior visibly changes after receiving
-        feedback. Demonstrates the feedback loop closing — the reviewer sees
-        the before and after side by side.
+        How the agent&apos;s behavior visibly changes after receiving feedback.
+        Demonstrates the feedback loop closing — the reviewer sees the before
+        and after side by side.
       </p>
 
       <div className="mt-10">
@@ -72,9 +72,9 @@ export function BehavioralConsequenceSection() {
                 style={{ ...AGENT_PROSE_STYLE, color: AGENT_PROSE_COLOR }}
               >
                 The launch readiness plan requires dedicated support plan for
-                issue triage procedures. This pattern ensures that the team
-                has an explicit process to track and correct issues reported
-                by users of the product.
+                issue triage procedures. This pattern ensures that the team has
+                an explicit process to track and correct issues reported by
+                users of the product.
               </p>
               <div className="mt-3 flex items-center gap-1">
                 <span className="text-muted-foreground/50">
@@ -185,9 +185,7 @@ export function BehavioralConsequenceSection() {
               key={state}
               className={i < 1 ? "border-b border-border/50" : ""}
             >
-              <TableCell className="py-2.5 pr-6 font-medium">
-                {state}
-              </TableCell>
+              <TableCell className="py-2.5 pr-6 font-medium">{state}</TableCell>
               <TableCell className="py-2.5 pr-6 text-muted-foreground">
                 {content}
               </TableCell>

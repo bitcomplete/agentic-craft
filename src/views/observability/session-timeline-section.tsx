@@ -85,9 +85,7 @@ export function SessionTimelineSection() {
   return (
     <section id="session-timeline" className="page-section">
       <p className="section-label mb-3">Conversation</p>
-      <h2 className="text-xl font-semibold tracking-tight">
-        Session Timeline
-      </h2>
+      <h2 className="text-xl font-semibold tracking-tight">Session Timeline</h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
         A vertical timeline showing the sequence of requests, tool calls, and
         agent responses within a review session.
@@ -123,9 +121,7 @@ export function SessionTimelineSection() {
                   {/* Node */}
                   <div
                     className={`mt-1.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md ${
-                      item.role === "user"
-                        ? "bg-muted"
-                        : "bg-foreground/[0.06]"
+                      item.role === "user" ? "bg-muted" : "bg-foreground/[0.06]"
                     }`}
                   >
                     <HugeiconsIcon
@@ -228,11 +224,11 @@ export function SessionTimelineSection() {
       </Table>
 
       <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Session timelines provide the conversation-level audit trail that
-        review team reviewers need when reviewing how an agent arrived at its
+        Session timelines provide the conversation-level audit trail that review
+        team reviewers need when reviewing how an agent arrived at its
         conclusions. Multi-turn sessions show how iterative refinement (e.g.,
-        narrowing scope from all requirements to just the integration and
-        export sections) leads to more targeted analysis.
+        narrowing scope from all requirements to just the integration and export
+        sections) leads to more targeted analysis.
       </div>
     </section>
   )

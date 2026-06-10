@@ -267,10 +267,7 @@ export function PlansSection() {
             ["Done state", "Muted foreground + line-through"],
             ["Active state", "Foreground + pulse animation"],
             ["Pending state", "Muted foreground at 60% opacity"],
-            [
-              "Editable mode",
-              "Drag handle + remove button on hover per step",
-            ],
+            ["Editable mode", "Drag handle + remove button on hover per step"],
             [
               "Progress badge",
               '"N of M complete" or step count in editable mode',
@@ -278,9 +275,7 @@ export function PlansSection() {
           ].map(([prop, spec], i, arr) => (
             <TableRow
               key={prop}
-              className={
-                i < arr.length - 1 ? "border-b border-border/50" : ""
-              }
+              className={i < arr.length - 1 ? "border-b border-border/50" : ""}
             >
               <TableCell className="py-3 pr-6 font-medium">{prop}</TableCell>
               <TableCell className="py-3 text-muted-foreground">
@@ -293,8 +288,8 @@ export function PlansSection() {
 
       <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
         Plan cards give users a sense of progress and predictability. The
-        editable mode allows corrections before the agent commits to an
-        approach — a key trust-building pattern.
+        editable mode allows corrections before the agent commits to an approach
+        — a key trust-building pattern.
       </p>
     </section>
   )

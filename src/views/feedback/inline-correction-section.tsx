@@ -91,9 +91,9 @@ export function InlineCorrectionSection() {
                     Fix this
                   </Button>
                 </span>{" "}
-                for issue triage procedures. This pattern ensures that the
-                team has an explicit process to track and correct issues
-                reported by users.
+                for issue triage procedures. This pattern ensures that the team
+                has an explicit process to track and correct issues reported by
+                users.
               </p>
             ) : (
               <div className="feedback-fade-in">
@@ -160,9 +160,7 @@ export function InlineCorrectionSection() {
               key={state}
               className={i < 1 ? "border-b border-border/50" : ""}
             >
-              <TableCell className="py-2.5 pr-6 font-medium">
-                {state}
-              </TableCell>
+              <TableCell className="py-2.5 pr-6 font-medium">{state}</TableCell>
               <TableCell className="py-2.5 pr-6 text-muted-foreground">
                 {visual}
               </TableCell>

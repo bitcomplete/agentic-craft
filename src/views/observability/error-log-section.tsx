@@ -65,8 +65,8 @@ export function ErrorLogSection() {
       <p className="section-label mb-3">Diagnostics</p>
       <h2 className="text-xl font-semibold tracking-tight">Error Log</h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-        A filterable log of errors, warnings, and operational anomalies from
-        the current review session with expandable detail views.
+        A filterable log of errors, warnings, and operational anomalies from the
+        current review session with expandable detail views.
       </p>
 
       <div className="mt-10">
@@ -94,8 +94,7 @@ export function ErrorLogSection() {
                 No errors in current session
               </p>
               <p className="mt-1 text-xs text-muted-foreground">
-                All agent operations completed successfully since session
-                start.
+                All agent operations completed successfully since session start.
               </p>
             </div>
           ) : (
@@ -110,17 +109,13 @@ export function ErrorLogSection() {
                     type="button"
                     aria-label={`Toggle error details: ${err.title}`}
                     aria-expanded={expandedErr === i}
-                    onClick={() =>
-                      setExpandedErr(expandedErr === i ? null : i)
-                    }
+                    onClick={() => setExpandedErr(expandedErr === i ? null : i)}
                     className="flex w-full items-start gap-3 py-3 text-left transition-colors hover:bg-muted/30 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
                   >
                     <div className="mt-0.5 shrink-0">
                       <HugeiconsIcon
                         icon={
-                          err.severity === "error"
-                            ? Cancel01Icon
-                            : Alert01Icon
+                          err.severity === "error" ? Cancel01Icon : Alert01Icon
                         }
                         size={14}
                         strokeWidth={1.5}
@@ -187,8 +182,7 @@ export function ErrorLogSection() {
               Error entries
             </TableCell>
             <TableCell className="py-3">
-              Clickable rows with severity badge, timestamp, and
-              expand/collapse
+              Clickable rows with severity badge, timestamp, and expand/collapse
             </TableCell>
           </TableRow>
           <TableRow className="border-b border-border/50">
@@ -211,10 +205,10 @@ export function ErrorLogSection() {
       </Table>
 
       <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        The error log provides the diagnostic transparency that activity
-        review requires — reviewers can inspect every operational anomaly,
-        understand its context, and verify that the agent's error handling
-        meets the product's claimed readiness level.
+        The error log provides the diagnostic transparency that activity review
+        requires — reviewers can inspect every operational anomaly, understand
+        its context, and verify that the agent's error handling meets the
+        product's claimed readiness level.
       </div>
     </section>
   )

@@ -223,8 +223,8 @@ export function HandoffFlowSection() {
       <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
         Handoff flows model the sequential dependencies in complex review
         workflows — a project brief must be parsed before requirement coverage
-        can be mapped, and coverage must be mapped before the review report
-        can be generated. Each handoff creates an auditable transition record.
+        can be mapped, and coverage must be mapped before the review report can
+        be generated. Each handoff creates an auditable transition record.
       </div>
     </section>
   )

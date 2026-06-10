@@ -279,11 +279,7 @@ export function ActivityTimelineSection() {
                 style={{ animationDelay: `${i * 60}ms` }}
               >
                 <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-muted">
-                  <HugeiconsIcon
-                    icon={item.icon}
-                    size={12}
-                    strokeWidth={1.5}
-                  />
+                  <HugeiconsIcon icon={item.icon} size={12} strokeWidth={1.5} />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-sm">{item.action}</p>

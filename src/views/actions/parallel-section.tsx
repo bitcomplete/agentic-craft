@@ -125,10 +125,7 @@ export function ParallelSection() {
           {parallelState.parallel ? (
             <div className="actions-slide-in">
               <ToolTree open={treeOpen} onOpenChange={setTreeOpen}>
-                <ToolTreeTrigger
-                  icon={GitBranchIcon}
-                  timestamp="10:44 AM · 1s"
-                >
+                <ToolTreeTrigger icon={GitBranchIcon} timestamp="10:44 AM · 1s">
                   Running tasks in parallel
                 </ToolTreeTrigger>
                 <ToolTreeContent>
@@ -149,9 +146,7 @@ export function ParallelSection() {
                               <span className="text-muted-foreground">
                                 {d.key}:
                               </span>
-                              <span className="text-foreground">
-                                {d.value}
-                              </span>
+                              <span className="text-foreground">{d.value}</span>
                             </div>
                           ))}
                         </div>
@@ -211,9 +206,7 @@ export function ParallelSection() {
                               <span className="text-muted-foreground">
                                 {d.key}:
                               </span>
-                              <span className="text-foreground">
-                                {d.value}
-                              </span>
+                              <span className="text-foreground">{d.value}</span>
                             </div>
                           ))}
                         </div>
@@ -268,9 +261,7 @@ export function ParallelSection() {
           ].map(([el, spec], i, arr) => (
             <TableRow
               key={el}
-              className={
-                i < arr.length - 1 ? "border-b border-border/50" : ""
-              }
+              className={i < arr.length - 1 ? "border-b border-border/50" : ""}
             >
               <TableCell className="py-3 pr-6 font-medium">{el}</TableCell>
               <TableCell className="py-3 text-muted-foreground">
@@ -284,8 +275,8 @@ export function ParallelSection() {
       <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
         The tree view uses Perplexity-style connectors — a vertical spine with
         L-shaped branch lines, icons that mask the spine for clean breaks, and
-        hover-revealed timestamps. Each child row is lightweight: no borders,
-        no cards, just text and an expand chevron.
+        hover-revealed timestamps. Each child row is lightweight: no borders, no
+        cards, just text and an expand chevron.
       </p>
     </section>
   )

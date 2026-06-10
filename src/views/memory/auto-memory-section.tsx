@@ -2,10 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
-import {
-  Brain01Icon,
-  Tick01Icon,
-} from "@hugeicons/core-free-icons"
+import { Brain01Icon, Tick01Icon } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
 import { Button } from "@/components/ui/button"
 import {
@@ -43,8 +40,8 @@ export function AutoMemorySection() {
       <p className="section-label mb-3">Detection</p>
       <h2 className="text-xl font-semibold tracking-tight">Auto-Memory</h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-        The agent detects learnable information from conversation and offers
-        to save it as a memory — the reviewer always has the final say.
+        The agent detects learnable information from conversation and offers to
+        save it as a memory — the reviewer always has the final say.
       </p>
 
       <div className="mt-10">
@@ -76,9 +73,9 @@ export function AutoMemorySection() {
                 color: "var(--foreground)",
               }}
             >
-              I see you&apos;ve been consistently requesting enterprise
-              release reviews across the last three sessions. The reference
-              document Launch Policy v2 appears to be your default reference.
+              I see you&apos;ve been consistently requesting enterprise release
+              reviews across the last three sessions. The reference document
+              Launch Policy v2 appears to be your default reference.
             </p>
           </div>
 
@@ -135,9 +132,7 @@ export function AutoMemorySection() {
                 strokeWidth={1.5}
                 className="text-muted-foreground"
               />
-              <p className="text-sm text-muted-foreground">
-                Preference saved
-              </p>
+              <p className="text-sm text-muted-foreground">Preference saved</p>
             </div>
           )}
 
@@ -190,9 +185,7 @@ export function AutoMemorySection() {
               key={state}
               className={i < 2 ? "border-b border-border/50" : ""}
             >
-              <TableCell className="py-2.5 pr-6 font-medium">
-                {state}
-              </TableCell>
+              <TableCell className="py-2.5 pr-6 font-medium">{state}</TableCell>
               <TableCell className="py-2.5 pr-6 text-muted-foreground">
                 {visual}
               </TableCell>
@@ -207,8 +200,8 @@ export function AutoMemorySection() {
       <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
         Auto-memory is opt-in by design. The agent detects patterns but never
         persists without explicit reviewer consent. This is critical for
-        regulated environments where auditors may need to justify what data
-        the tool retains.
+        regulated environments where auditors may need to justify what data the
+        tool retains.
       </div>
     </section>
   )

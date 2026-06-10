@@ -113,9 +113,9 @@ export function AskBlocksSection() {
         Clarifying Questions
       </h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-        When the agent is blocked by missing intent, ask a focused question
-        with answerable options, optional free text, and a clear skip path.
-        This keeps clarification out of a vague back-and-forth chat loop.
+        When the agent is blocked by missing intent, ask a focused question with
+        answerable options, optional free text, and a clear skip path. This
+        keeps clarification out of a vague back-and-forth chat loop.
       </p>
 
       <div className="mt-10">
@@ -232,9 +232,7 @@ export function AskBlocksSection() {
           ].map(([prop, spec], i, arr) => (
             <TableRow
               key={prop}
-              className={
-                i < arr.length - 1 ? "border-b border-border/50" : ""
-              }
+              className={i < arr.length - 1 ? "border-b border-border/50" : ""}
             >
               <TableCell className="py-3 pr-6 font-medium">{prop}</TableCell>
               <TableCell className="py-3 text-muted-foreground">

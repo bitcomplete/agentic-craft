@@ -130,9 +130,9 @@ export function CitationsSection() {
       <p className="section-label mb-3">Sourcing</p>
       <h2 className="text-xl font-semibold tracking-tight">Citations</h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-        Citations ground agent responses in verifiable sources. The best
-        version keeps the prose readable while making the selected source
-        immediately inspectable.
+        Citations ground agent responses in verifiable sources. The best version
+        keeps the prose readable while making the selected source immediately
+        inspectable.
       </p>
 
       <div className="mt-7 border-y border-border/50 py-3">
@@ -260,9 +260,7 @@ export function CitationsSection() {
                 index < rows.length - 1 ? "border-b border-border/50" : ""
               }
             >
-              <TableCell className="py-3 pr-6 font-medium">
-                {element}
-              </TableCell>
+              <TableCell className="py-3 pr-6 font-medium">{element}</TableCell>
               <TableCell className="py-3 text-muted-foreground">
                 {spec}
               </TableCell>
@@ -273,10 +271,10 @@ export function CitationsSection() {
 
       <div className="mt-10 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
         <p>
-          The citation preview should answer "why should I trust this
-          sentence?" without forcing the user away from the current answer.
-          Keep the quote short, show the exact source location, and make the
-          full document one click away.
+          The citation preview should answer "why should I trust this sentence?"
+          without forcing the user away from the current answer. Keep the quote
+          short, show the exact source location, and make the full document one
+          click away.
         </p>
       </div>
     </section>

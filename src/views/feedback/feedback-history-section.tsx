@@ -96,13 +96,11 @@ export function FeedbackHistorySection() {
   return (
     <section id="feedback-history" className="page-section">
       <p className="section-label mb-3">Record</p>
-      <h2 className="text-xl font-semibold tracking-tight">
-        Feedback History
-      </h2>
+      <h2 className="text-xl font-semibold tracking-tight">Feedback History</h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
         A running log of all reviewer feedback — positive signals, negative
-        signals, and corrections. Provides an audit trail and training
-        reference for the agent.
+        signals, and corrections. Provides an audit trail and training reference
+        for the agent.
       </p>
 
       <div className="mt-10">
@@ -131,9 +129,7 @@ export function FeedbackHistorySection() {
                   <button
                     type="button"
                     aria-label={`Toggle feedback history entry: ${entry.message}`}
-                    onClick={() =>
-                      setExpandedRow(isExpanded ? null : entry.id)
-                    }
+                    onClick={() => setExpandedRow(isExpanded ? null : entry.id)}
                     className="flex w-full items-start gap-3 rounded-md px-2 py-3 text-left transition-colors hover:bg-muted/30"
                   >
                     {/* Type indicator */}

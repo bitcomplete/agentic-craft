@@ -65,8 +65,7 @@ export function ContextRingSection() {
       </h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
         Visual indicator showing how much memory context is loaded into the
-        current session. Details are revealed on hover to avoid visual
-        clutter.
+        current session. Details are revealed on hover to avoid visual clutter.
       </p>
 
       <div className="mt-10">
@@ -218,9 +217,7 @@ export function ContextRingSection() {
               key={state}
               className={i < 1 ? "border-b border-border/50" : ""}
             >
-              <TableCell className="py-2.5 pr-6 font-medium">
-                {state}
-              </TableCell>
+              <TableCell className="py-2.5 pr-6 font-medium">{state}</TableCell>
               <TableCell className="py-2.5 pr-6 text-muted-foreground">
                 {ring}
               </TableCell>
@@ -234,8 +231,8 @@ export function ContextRingSection() {
 
       <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
         No number inside the ring — the icon signals presence, and the tooltip
-        provides detail on demand. This avoids cognitive load for reviewers
-        who don&apos;t need to know the exact count at a glance.
+        provides detail on demand. This avoids cognitive load for reviewers who
+        don&apos;t need to know the exact count at a glance.
       </div>
     </section>
   )

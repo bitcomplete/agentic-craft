@@ -106,13 +106,11 @@ export function PrivacyControlsSection() {
   return (
     <section id="privacy-controls" className="page-section">
       <p className="section-label mb-3">Governance</p>
-      <h2 className="text-xl font-semibold tracking-tight">
-        Privacy Controls
-      </h2>
+      <h2 className="text-xl font-semibold tracking-tight">Privacy Controls</h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
         Category-level toggles for what the agent is allowed to remember.
-        Reviewers working under NDA or handling sensitive product data may
-        need to disable specific categories.
+        Reviewers working under NDA or handling sensitive product data may need
+        to disable specific categories.
       </p>
 
       <div className="mt-10">
@@ -164,9 +162,8 @@ export function PrivacyControlsSection() {
                     All memory categories are disabled
                   </p>
                   <p className="mt-0.5 text-xs text-muted-foreground">
-                    The agent will not retain any information between
-                    sessions. Existing memories remain but will not be used or
-                    updated.
+                    The agent will not retain any information between sessions.
+                    Existing memories remain but will not be used or updated.
                   </p>
                 </div>
               </div>
@@ -192,11 +189,7 @@ export function PrivacyControlsSection() {
         </TableHeader>
         <TableBody>
           {[
-            [
-              "All On",
-              "All categories enabled",
-              "Default for most reviewers",
-            ],
+            ["All On", "All categories enabled", "Default for most reviewers"],
             [
               "Selective",
               "Preferences + Documents on, Context + Personal off",
@@ -229,9 +222,9 @@ export function PrivacyControlsSection() {
       <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
         Privacy controls are category-level, not per-entry — this keeps the
         mental model simple. Disabling a category does not delete existing
-        memories, it just prevents the agent from reading or updating them.
-        This distinction matters for complex review workflows where data
-        retention policies may differ from data access policies.
+        memories, it just prevents the agent from reading or updating them. This
+        distinction matters for complex review workflows where data retention
+        policies may differ from data access policies.
       </div>
     </section>
   )

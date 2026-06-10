@@ -93,8 +93,7 @@ export function AgentCommunicationSection() {
       </h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
         Inter-agent information exchange via direct messaging or a shared
-        context workspace. Both patterns create auditable communication
-        records.
+        context workspace. Both patterns create auditable communication records.
       </p>
 
       <div className="mt-10">
@@ -107,10 +106,7 @@ export function AgentCommunicationSection() {
           onToggle={toggleComm}
         />
 
-        <div
-          className="rounded-lg border border-border/40 p-6"
-          key={commAnim}
-        >
+        <div className="rounded-lg border border-border/40 p-6" key={commAnim}>
           {activeComm === "direct" ? (
             <div className="ma-slide-in flex flex-col gap-3">
               <div className="mb-4 flex items-center gap-2">
@@ -149,9 +145,7 @@ export function AgentCommunicationSection() {
                       }`}
                     >
                       <div className="mb-1.5 flex items-center gap-2">
-                        <span className="text-xs font-medium">
-                          {msg.from}
-                        </span>
+                        <span className="text-xs font-medium">{msg.from}</span>
                         <HugeiconsIcon
                           icon={ArrowRight01Icon}
                           size={10}
@@ -254,8 +248,8 @@ export function AgentCommunicationSection() {
               Shared context
             </TableCell>
             <TableCell className="py-3">
-              List of contributed items with agent attribution, type badge,
-              and timestamp
+              List of contributed items with agent attribution, type badge, and
+              timestamp
             </TableCell>
           </TableRow>
           <TableRow className="border-b border-border/50">
@@ -272,11 +266,10 @@ export function AgentCommunicationSection() {
 
       <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
         Agent communication patterns support the traceability requirements of
-        complex review workflows. Direct messaging creates point-to-point
-        audit trails (e.g., when the Requirements Mapper flags an requirement
-        gap for the Document Drafter), while shared context provides a
-        workspace where all agents can contribute findings visible to the
-        project team.
+        complex review workflows. Direct messaging creates point-to-point audit
+        trails (e.g., when the Requirements Mapper flags an requirement gap for
+        the Document Drafter), while shared context provides a workspace where
+        all agents can contribute findings visible to the project team.
       </div>
     </section>
   )

@@ -197,10 +197,7 @@ export function ToolCallsSection() {
             ["Tool title", "14px sans, font-weight 400 (never bold)"],
             ["Inner detail text", "12px, key in muted, value in foreground"],
             ["Icons", "All monochrome — no colored status indicators"],
-            [
-              "Labels",
-              "Human-readable only — no function signatures or code",
-            ],
+            ["Labels", "Human-readable only — no function signatures or code"],
             [
               "Duration",
               'Right-aligned in muted text; errors show "failed ·" prefix',
@@ -212,9 +209,7 @@ export function ToolCallsSection() {
           ].map(([prop, spec], i, arr) => (
             <TableRow
               key={prop}
-              className={
-                i < arr.length - 1 ? "border-b border-border/50" : ""
-              }
+              className={i < arr.length - 1 ? "border-b border-border/50" : ""}
             >
               <TableCell className="py-3 pr-6 font-medium">{prop}</TableCell>
               <TableCell className="py-3 text-muted-foreground">

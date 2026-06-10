@@ -49,9 +49,7 @@ export function ParallelAgentsSection() {
   return (
     <section id="parallel-agents" className="page-section">
       <p className="section-label mb-3">Concurrency</p>
-      <h2 className="text-xl font-semibold tracking-tight">
-        Parallel Agents
-      </h2>
+      <h2 className="text-xl font-semibold tracking-tight">Parallel Agents</h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
         Multiple agents executing independent tasks simultaneously. Each agent
         reports individual progress toward its own objective.
@@ -174,8 +172,7 @@ export function ParallelAgentsSection() {
               Complete state
             </TableCell>
             <TableCell className="py-3">
-              Tick icon, results summary replaces task description, bar at
-              100%
+              Tick icon, results summary replaces task description, bar at 100%
             </TableCell>
           </TableRow>
         </TableBody>

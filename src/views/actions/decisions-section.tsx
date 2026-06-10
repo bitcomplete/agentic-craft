@@ -74,8 +74,7 @@ export function DecisionsSection() {
       <h2 className="text-xl font-semibold tracking-tight">Decision Flow</h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
         When the agent needs the user to choose between options that have
-        different consequences. Each option shows what will happen if
-        selected.
+        different consequences. Each option shows what will happen if selected.
       </p>
 
       <div className="mt-10">
@@ -124,9 +123,7 @@ export function DecisionsSection() {
                   <p className="mt-1 text-xs text-muted-foreground">
                     {opt.desc}
                   </p>
-                  <div
-                    className={`mt-2 border-l-2 py-1 pl-2.5 ${opt.accent}`}
-                  >
+                  <div className={`mt-2 border-l-2 py-1 pl-2.5 ${opt.accent}`}>
                     <div className="flex items-start gap-1.5">
                       <HugeiconsIcon
                         icon={ArrowRight01Icon}
@@ -222,9 +219,7 @@ export function DecisionsSection() {
           ].map(([pat, spec], i, arr) => (
             <TableRow
               key={pat}
-              className={
-                i < arr.length - 1 ? "border-b border-border/50" : ""
-              }
+              className={i < arr.length - 1 ? "border-b border-border/50" : ""}
             >
               <TableCell className="py-3 pr-6 font-medium">{pat}</TableCell>
               <TableCell className="py-3 text-muted-foreground">

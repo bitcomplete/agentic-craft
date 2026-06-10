@@ -79,9 +79,9 @@ export function ApprovalGateSection() {
       <p className="section-label mb-3">Confirmation</p>
       <h2 className="text-xl font-semibold tracking-tight">Approval Gate</h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-        Human-in-the-loop confirmation before the agent performs a
-        consequential action. The user reviews the action details and
-        explicitly approves or denies.
+        Human-in-the-loop confirmation before the agent performs a consequential
+        action. The user reviews the action details and explicitly approves or
+        denies.
       </p>
 
       <div className="mt-10">
@@ -337,10 +337,7 @@ export function ApprovalGateSection() {
                   >
                     <div className="flex flex-col gap-1.5">
                       {APPROVAL_CHANGES.map((change, i) => (
-                        <div
-                          key={i}
-                          className="flex items-start gap-2 text-xs"
-                        >
+                        <div key={i} className="flex items-start gap-2 text-xs">
                           <span className="shrink-0 text-muted-foreground select-none">
                             {change.type === "add" ? "+" : "-"}
                           </span>
@@ -365,8 +362,8 @@ export function ApprovalGateSection() {
                             Apply these document changes?
                           </DecisionSurface.Title>
                           <DecisionSurface.Description>
-                            The agent will update the document with the
-                            reviewed additions and removals.
+                            The agent will update the document with the reviewed
+                            additions and removals.
                           </DecisionSurface.Description>
                         </DecisionSurface.Header>
                         <DecisionSurface.Body>
@@ -535,10 +532,7 @@ export function ApprovalGateSection() {
               "Approve button",
               "Primary fill — should feel deliberate, not default",
             ],
-            [
-              "Deny button",
-              "Ghost/outline — lower visual weight than approve",
-            ],
+            ["Deny button", "Ghost/outline — lower visual weight than approve"],
             [
               "Result states",
               "Success (primary border), denied (destructive border), with reset button",
@@ -546,9 +540,7 @@ export function ApprovalGateSection() {
           ].map(([prop, spec], i, arr) => (
             <TableRow
               key={prop}
-              className={
-                i < arr.length - 1 ? "border-b border-border/50" : ""
-              }
+              className={i < arr.length - 1 ? "border-b border-border/50" : ""}
             >
               <TableCell className="py-3 pr-6 font-medium">{prop}</TableCell>
               <TableCell className="py-3 text-muted-foreground">

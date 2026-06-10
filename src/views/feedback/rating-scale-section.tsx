@@ -83,9 +83,9 @@ export function RatingScaleSection() {
       <p className="section-label mb-3">Assessment</p>
       <h2 className="text-xl font-semibold tracking-tight">Rating Scale</h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-        Numeric quality rating for agent responses, used to build a
-        calibration dataset over time. More granular than thumbs, less
-        intrusive than a full correction.
+        Numeric quality rating for agent responses, used to build a calibration
+        dataset over time. More granular than thumbs, less intrusive than a full
+        correction.
       </p>
 
       <div className="mt-10">

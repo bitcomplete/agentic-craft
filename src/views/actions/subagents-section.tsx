@@ -171,8 +171,8 @@ function SubagentSection() {
           <div className="actions-expand flex flex-col gap-2 py-3 pl-6">
             <Separator />
             <p className="text-xs text-muted-foreground">
-              Validating completeness and traceability of review source
-              material for each review area.
+              Validating completeness and traceability of review source material
+              for each review area.
             </p>
             <Progress value={(subagentProgress / 8) * 100} />
             {/* Nested tool calls */}
@@ -260,9 +260,7 @@ export function SubagentsSection() {
           ].map(([prop, spec], i, arr) => (
             <TableRow
               key={prop}
-              className={
-                i < arr.length - 1 ? "border-b border-border/50" : ""
-              }
+              className={i < arr.length - 1 ? "border-b border-border/50" : ""}
             >
               <TableCell className="py-3 pr-6 font-medium">{prop}</TableCell>
               <TableCell className="py-3 text-muted-foreground">

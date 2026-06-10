@@ -41,8 +41,8 @@ export function AgentRoutingSection() {
       <p className="section-label mb-3">Dispatch</p>
       <h2 className="text-xl font-semibold tracking-tight">Agent Routing</h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-        Routing incoming tasks to the most appropriate agent based on task
-        type analysis or manual selection by the workflow owner.
+        Routing incoming tasks to the most appropriate agent based on task type
+        analysis or manual selection by the workflow owner.
       </p>
 
       <div className="mt-10">

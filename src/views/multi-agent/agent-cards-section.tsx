@@ -101,9 +101,8 @@ export function AgentCardsSection() {
       <p className="section-label mb-3">Identity</p>
       <h2 className="text-xl font-semibold tracking-tight">Agent Cards</h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-        Individual agent identity cards showing name, role, current status,
-        and active task. Cards reflect the agent's operational state in real
-        time.
+        Individual agent identity cards showing name, role, current status, and
+        active task. Cards reflect the agent's operational state in real time.
       </p>
 
       <div className="mt-10">
@@ -242,8 +241,7 @@ export function AgentCardsSection() {
               Idle state
             </TableCell>
             <TableCell className="py-3">
-              Role-specific waiting note ("Waiting for a source packet to
-              map")
+              Role-specific waiting note ("Waiting for a source packet to map")
             </TableCell>
           </TableRow>
           <TableRow className="border-b border-border/50">
@@ -258,9 +256,9 @@ export function AgentCardsSection() {
       </Table>
 
       <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Agent cards provide the identity foundation for multi-agent
-        interfaces. In review workflow contexts, each card maps to a distinct
-        review activity — source collection, requirements mapping, or document
+        Agent cards provide the identity foundation for multi-agent interfaces.
+        In review workflow contexts, each card maps to a distinct review
+        activity — source collection, requirements mapping, or document
         authoring — making it clear which agent is responsible for which
         workstream deliverable.
       </div>

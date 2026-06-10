@@ -138,9 +138,7 @@ export function ThumbsFeedbackSection() {
   return (
     <section id="thumbs-feedback" className="page-section">
       <p className="section-label mb-3">Rating</p>
-      <h2 className="text-xl font-semibold tracking-tight">
-        Thumbs Feedback
-      </h2>
+      <h2 className="text-xl font-semibold tracking-tight">Thumbs Feedback</h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
         Quick signal from the reviewer on response quality. Thumbs up confirms
         accuracy. Thumbs down opens a correction flow for structured
@@ -159,10 +157,7 @@ export function ThumbsFeedbackSection() {
           onToggle={handleThumbsToggle}
         />
 
-        <div
-          className="rounded-lg border border-border/40 p-6"
-          ref={thumbsRef}
-        >
+        <div className="rounded-lg border border-border/40 p-6" ref={thumbsRef}>
           {/* Agent message */}
           <div
             className={`transition-colors duration-300 ${
@@ -230,8 +225,8 @@ export function ThumbsFeedbackSection() {
                       className="text-muted-foreground"
                     />
                     <span className="text-sm text-muted-foreground">
-                      Correction recorded — the agent will apply this in
-                      future responses.
+                      Correction recorded — the agent will apply this in future
+                      responses.
                     </span>
                   </div>
                 ) : (
@@ -331,9 +326,7 @@ export function ThumbsFeedbackSection() {
               key={state}
               className={i < 3 ? "border-b border-border/50" : ""}
             >
-              <TableCell className="py-2.5 pr-6 font-medium">
-                {state}
-              </TableCell>
+              <TableCell className="py-2.5 pr-6 font-medium">{state}</TableCell>
               <TableCell className="py-2.5 pr-6 text-muted-foreground">
                 {trigger}
               </TableCell>
