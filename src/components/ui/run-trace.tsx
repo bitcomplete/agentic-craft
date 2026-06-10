@@ -90,79 +90,96 @@ function RunTrace({
         {events.map((event, index) => {
           const isLast = index === events.length - 1
 
-          return (
-            <details
-              key={event.id}
-              data-slot="run-trace-event"
-              data-status={event.status}
-              className="group/run-trace-event"
-            >
-              <summary className="grid cursor-pointer list-none grid-cols-[24px_1fr] gap-3 px-3 py-3 transition-colors outline-none hover:bg-muted/30 focus-visible:ring-3 focus-visible:ring-ring/50 sm:px-4 [&::-webkit-details-marker]:hidden">
-                <span
-                  title={indicatorLabel[event.status]}
-                  className="relative mt-0.5 flex size-6 items-center justify-center rounded-md border border-border/70 bg-muted/30 text-muted-foreground"
-                >
-                  {!isLast && (
-                    <span
-                      aria-hidden="true"
-                      className="absolute top-6 left-1/2 h-[calc(100%+12px)] w-px -translate-x-1/2 bg-border/70"
-                    />
-                  )}
-                  {event.status === "queued" ? (
-                    <span className="size-3 rounded-full border border-dashed border-muted-foreground/70" />
-                  ) : (
-                    <HugeiconsIcon
-                      icon={statusIcon[event.status]}
-                      size={13}
-                      strokeWidth={1.5}
-                      className={
-                        event.status === "running"
-                          ? "animate-spin motion-reduce:animate-none"
-                          : undefined
-                      }
-                      aria-hidden="true"
-                    />
-                  )}
-                  <span className="sr-only">
-                    {indicatorLabel[event.status]}
-                  </span>
+          const innerContent = (
+            <>
+              <span
+                title={indicatorLabel[event.status]}
+                className="relative mt-0.5 flex size-6 items-center justify-center rounded-md border border-border/70 bg-muted/30 text-muted-foreground"
+              >
+                {!isLast && (
+                  <span
+                    aria-hidden="true"
+                    className="absolute top-6 left-1/2 h-[calc(100%+12px)] w-px -translate-x-1/2 bg-border/70"
+                  />
+                )}
+                {event.status === "queued" ? (
+                  <span className="size-3 rounded-full border border-dashed border-muted-foreground/70" />
+                ) : (
+                  <HugeiconsIcon
+                    icon={statusIcon[event.status]}
+                    size={13}
+                    strokeWidth={1.5}
+                    className={
+                      event.status === "running"
+                        ? "animate-spin motion-reduce:animate-none"
+                        : undefined
+                    }
+                    aria-hidden="true"
+                  />
+                )}
+                <span className="sr-only">
+                  {indicatorLabel[event.status]}
                 </span>
-                <span className="min-w-0">
-                  <span className="block min-w-0 truncate font-medium text-foreground">
-                    {event.title}
-                  </span>
-                  {event.description && (
-                    <span className="mt-1 block text-xs leading-5 text-muted-foreground">
-                      {event.description}
-                    </span>
-                  )}
-                  {(event.source || event.timestamp || event.duration) && (
-                    <span className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
-                      {event.source && <span>{event.source}</span>}
-                      {event.source && (event.timestamp || event.duration) && (
-                        <span aria-hidden="true">/</span>
-                      )}
-                      {event.timestamp && <span>{event.timestamp}</span>}
-                      {event.timestamp && event.duration && (
-                        <span aria-hidden="true">/</span>
-                      )}
-                      {event.duration && (
-                        <span className="opacity-100 sm:opacity-0 sm:transition-opacity sm:group-focus-within/run-trace-event:opacity-100 sm:group-hover/run-trace-event:opacity-100">
-                          {event.duration}
-                        </span>
-                      )}
-                    </span>
-                  )}
+              </span>
+              <span className="min-w-0">
+                <span className="block min-w-0 truncate font-medium text-foreground">
+                  {event.title}
                 </span>
-              </summary>
-              {event.detail && (
+                {event.description && (
+                  <span className="mt-1 block text-xs leading-5 text-muted-foreground">
+                    {event.description}
+                  </span>
+                )}
+                {(event.source || event.timestamp || event.duration) && (
+                  <span className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
+                    {event.source && <span>{event.source}</span>}
+                    {event.source && (event.timestamp || event.duration) && (
+                      <span aria-hidden="true">/</span>
+                    )}
+                    {event.timestamp && <span>{event.timestamp}</span>}
+                    {event.timestamp && event.duration && (
+                      <span aria-hidden="true">/</span>
+                    )}
+                    {event.duration && (
+                      <span className="opacity-100 sm:opacity-0 sm:transition-opacity sm:group-focus-within/run-trace-event:opacity-100 sm:group-hover/run-trace-event:opacity-100">
+                        {event.duration}
+                      </span>
+                    )}
+                  </span>
+                )}
+              </span>
+            </>
+          )
+
+          if (event.detail) {
+            return (
+              <details
+                key={event.id}
+                data-slot="run-trace-event"
+                data-status={event.status}
+                className="group/run-trace-event"
+              >
+                <summary className="grid cursor-pointer list-none grid-cols-[24px_1fr] gap-3 px-3 py-3 transition-colors outline-none hover:bg-muted/30 focus-visible:ring-3 focus-visible:ring-ring/50 sm:px-4 [&::-webkit-details-marker]:hidden">
+                  {innerContent}
+                </summary>
                 <div className="px-12 pb-3 text-xs leading-5 text-muted-foreground">
                   <div className="border-l border-border/70 pl-3">
                     {event.detail}
                   </div>
                 </div>
-              )}
-            </details>
+              </details>
+            )
+          }
+
+          return (
+            <div
+              key={event.id}
+              data-slot="run-trace-event"
+              data-status={event.status}
+              className="group/run-trace-event grid grid-cols-[24px_1fr] gap-3 px-3 py-3 sm:px-4"
+            >
+              {innerContent}
+            </div>
           )
         })}
       </div>
