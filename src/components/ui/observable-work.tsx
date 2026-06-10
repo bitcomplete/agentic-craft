@@ -5,6 +5,7 @@ import {
   Alert01Icon,
   ArrowDown01Icon,
   Clock01Icon,
+  Loading03Icon,
   Tick01Icon,
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
@@ -65,9 +66,15 @@ function ObservableWorkStatusIndicator({
           />
         </span>
       ) : status === "active" ? (
-        <span className="observable-work-pulse size-2 rounded-full bg-foreground/70" />
+        <HugeiconsIcon
+          icon={Loading03Icon}
+          size={14}
+          strokeWidth={1.5}
+          className="animate-spin text-foreground/70 motion-reduce:animate-none"
+          aria-hidden="true"
+        />
       ) : status === "pending" ? (
-        <span className="size-2 rounded-full border border-muted-foreground/60" />
+        <span className="size-3 rounded-full border border-dashed border-muted-foreground/70" />
       ) : status === "blocked" ? (
         <HugeiconsIcon
           icon={Clock01Icon}
