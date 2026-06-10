@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { useCallback } from "react"
+import { useCallback, useSyncExternalStore } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   ArrowDown01Icon,
@@ -40,8 +40,18 @@ const themeOptions = [
   { value: "dark", label: "Dark", icon: Moon02Icon },
 ] as const
 
+const emptySubscribe = () => () => {}
+
 function ThemeMenu() {
   const { theme, setTheme } = useTheme()
+  // The stored theme is only known on the client — show no selection until
+  // hydration so the first client render matches the server HTML.
+  const hydrated = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  )
+  const activeTheme = hydrated ? theme : undefined
 
   return (
     <div
@@ -53,9 +63,9 @@ function ThemeMenu() {
         <Button
           key={option.value}
           type="button"
-          variant={theme === option.value ? "secondary" : "ghost"}
+          variant={activeTheme === option.value ? "secondary" : "ghost"}
           size="xs"
-          aria-pressed={theme === option.value}
+          aria-pressed={activeTheme === option.value}
           aria-label={
             option.value === "system"
               ? "Use system theme"
@@ -83,26 +93,35 @@ export function AppSidebar() {
 
   const scrollToSection = useCallback(
     (sectionPath: string, elementId: string) => {
-      const doScroll = () => {
-        requestAnimationFrame(() => {
-          const el = document.getElementById(elementId)
-          if (el) {
-            const prefersReducedMotion = window.matchMedia(
-              "(prefers-reduced-motion: reduce)"
-            ).matches
-            el.scrollIntoView({
-              behavior: prefersReducedMotion ? "auto" : "smooth",
-              block: "start",
-            })
-          }
+      const scrollTo = (el: HTMLElement) => {
+        const prefersReducedMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        ).matches
+        el.scrollIntoView({
+          behavior: prefersReducedMotion ? "auto" : "smooth",
+          block: "start",
         })
       }
 
       if (pathname !== sectionPath) {
         router.push(sectionPath)
-        setTimeout(doScroll, 100)
+        // The target section mounts after navigation — retry each frame
+        // (up to ~2s) instead of racing a fixed timeout.
+        const deadline = Date.now() + 2000
+        const tryScroll = () => {
+          const el = document.getElementById(elementId)
+          if (el) {
+            scrollTo(el)
+          } else if (Date.now() < deadline) {
+            requestAnimationFrame(tryScroll)
+          }
+        }
+        requestAnimationFrame(tryScroll)
       } else {
-        doScroll()
+        requestAnimationFrame(() => {
+          const el = document.getElementById(elementId)
+          if (el) scrollTo(el)
+        })
       }
     },
     [pathname, router]

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback, useRef } from "react"
+import { useState, useCallback, useEffect, useRef } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   ThumbsUpIcon,
@@ -48,7 +48,7 @@ const FEEDBACK_HISTORY = [
     id: "fb-1",
     timestamp: "2026-03-14 · 14:32",
     message:
-      "The project brief defines 14 requirements across 5 classes. Implementation notes summarize the workflow behavior and open dependencies.",
+      "The project brief defines 23 requirements across 5 classes. Implementation notes summarize the workflow behavior and open dependencies.",
     type: "positive" as const,
     detail:
       "Accurate requirement count and implementation notes description confirmed against Brief v3.",
@@ -109,6 +109,7 @@ export function FeedbackContent() {
   const [correctionText, setCorrectionText] = useState("")
   const [correctionSubmitted, setCorrectionSubmitted] = useState(false)
   const thumbsRef = useRef<HTMLDivElement>(null)
+  const correctionConfirmRef = useRef<HTMLDivElement>(null)
 
   const handleThumbsToggle = useCallback((key: string) => {
     setThumbsState((prev) => {
@@ -157,6 +158,11 @@ export function FeedbackContent() {
     if (!correctionText.trim()) return
     setCorrectionSubmitted(true)
   }, [correctionText])
+
+  // Move focus to the confirmation once, on the submit transition
+  useEffect(() => {
+    if (correctionSubmitted) correctionConfirmRef.current?.focus()
+  }, [correctionSubmitted])
 
   /* ── Section 2: Inline Correction ── */
   const [corrState, setCorrState] = useState<Record<string, boolean>>({
@@ -295,7 +301,7 @@ export function FeedbackContent() {
                 className="text-base"
                 style={{ ...AGENT_PROSE_STYLE, color: AGENT_PROSE_COLOR }}
               >
-                The project brief defines 14 requirements across 5 classes.
+                The project brief defines 23 requirements across 5 classes.
                 implementation notes summarize the workflow behavior and open
                 dependencies. I&apos;ve mapped each requirement to its
                 corresponding test case in the review plan.
@@ -339,7 +345,12 @@ export function FeedbackContent() {
               {thumbsSelection === "down" && (
                 <div className="feedback-expand mt-3">
                   {correctionSubmitted ? (
-                    <div className="feedback-fade-in flex items-center gap-2 border-l border-foreground/15 bg-foreground/[0.02] py-2 pl-3">
+                    <div
+                      ref={correctionConfirmRef}
+                      tabIndex={-1}
+                      role="status"
+                      className="feedback-fade-in flex items-center gap-2 border-l border-foreground/15 bg-foreground/[0.02] py-2 pl-3"
+                    >
                       <HugeiconsIcon
                         icon={Tick01Icon}
                         size={14}
@@ -669,7 +680,10 @@ export function FeedbackContent() {
                   ))}
                 </div>
                 {ratingConfirm && (
-                  <span className="feedback-fade-in text-xs text-muted-foreground/60">
+                  <span
+                    role="status"
+                    className="feedback-fade-in text-xs text-muted-foreground/60"
+                  >
                     Feedback recorded
                   </span>
                 )}

@@ -56,7 +56,7 @@ function SourcePreview({
           <HugeiconsIcon
             icon={icon}
             size={13}
-            strokeWidth={1.7}
+            strokeWidth={1.5}
             className="shrink-0 text-white/60"
             aria-hidden="true"
           />
@@ -73,7 +73,7 @@ function SourcePreview({
             >
               <HugeiconsIcon
                 icon={ArrowExpand01Icon}
-                strokeWidth={1.7}
+                strokeWidth={1.5}
                 data-icon="inline-start"
               />
             </Button>
@@ -93,7 +93,7 @@ function SourcePreview({
             >
               <HugeiconsIcon
                 icon={ArrowLeft01Icon}
-                strokeWidth={1.7}
+                strokeWidth={1.5}
                 data-icon="inline-start"
               />
             </Button>
@@ -111,7 +111,7 @@ function SourcePreview({
             >
               <HugeiconsIcon
                 icon={ArrowRight01Icon}
-                strokeWidth={1.7}
+                strokeWidth={1.5}
                 data-icon="inline-start"
               />
             </Button>
@@ -123,7 +123,7 @@ function SourcePreview({
         <p className="text-[13px] leading-5 text-white/88">"{excerpt}"</p>
         <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
           <div className="inline-flex items-center gap-1.5 rounded-full bg-white/12 px-2 py-1 text-[11px] text-white/75">
-            <HugeiconsIcon icon={File01Icon} size={12} strokeWidth={1.7} />
+            <HugeiconsIcon icon={File01Icon} size={12} strokeWidth={1.5} />
             {location}
           </div>
           {source && onOpenSource ? (
@@ -138,7 +138,7 @@ function SourcePreview({
               View source
               <HugeiconsIcon
                 icon={ArrowExpand01Icon}
-                strokeWidth={1.7}
+                strokeWidth={1.5}
                 data-icon="inline-end"
               />
             </Button>

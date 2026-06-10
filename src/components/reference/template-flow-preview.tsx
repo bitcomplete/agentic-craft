@@ -1,14 +1,12 @@
 import { ArrowRight01Icon } from "@hugeicons/core-free-icons"
-import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react"
+import { HugeiconsIcon } from "@hugeicons/react"
 
-import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 
 type TemplateFlowStep = {
   label: string
   description: string
-  icon: IconSvgElement
-  status?: "input" | "agent" | "human" | "output"
+  owner?: "input" | "agent" | "human" | "output"
 }
 
 function TemplateFlowPreview({
@@ -30,17 +28,12 @@ function TemplateFlowPreview({
             className="relative min-w-0 py-3 first:pt-0 last:pb-0 lg:px-3 lg:py-0 lg:first:pl-0 lg:last:pr-0"
           >
             <div className="flex h-full min-w-0 flex-col">
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex size-8 items-center justify-center rounded-md bg-muted/40 text-muted-foreground">
-                  <HugeiconsIcon icon={step.icon} strokeWidth={1.5} />
-                </div>
-                {step.status && (
-                  <Badge variant="outline" className="capitalize">
-                    {step.status}
-                  </Badge>
-                )}
-              </div>
-              <p className="mt-3 text-sm font-medium text-foreground">
+              {step.owner && (
+                <p className="mb-1.5 text-[10px] font-medium tracking-wider text-muted-foreground uppercase">
+                  {step.owner}
+                </p>
+              )}
+              <p className="text-sm font-medium text-foreground">
                 {step.label}
               </p>
               <p className="mt-1 text-xs leading-5 text-muted-foreground">

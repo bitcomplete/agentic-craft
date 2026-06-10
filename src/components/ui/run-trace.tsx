@@ -45,14 +45,15 @@ const indicatorLabel = {
   error: "Error",
 } satisfies Record<RunTraceStatus, string>
 
+/* Matches the status-indicator vocabulary; queued reuses its dashed-circle
+   pending treatment so queued and blocked (clock) stay distinct. */
 const statusIcon = {
-  queued: Clock01Icon,
   running: Loading03Icon,
   complete: Tick01Icon,
-  blocked: Alert01Icon,
+  blocked: Clock01Icon,
   warning: Alert01Icon,
   error: Alert01Icon,
-} satisfies Record<RunTraceStatus, typeof Tick01Icon>
+} satisfies Record<Exclude<RunTraceStatus, "queued">, typeof Tick01Icon>
 
 function RunTrace({
   title,
@@ -87,7 +88,6 @@ function RunTrace({
       </div>
       <div className="divide-y divide-border/70">
         {events.map((event, index) => {
-          const Icon = statusIcon[event.status]
           const isLast = index === events.length - 1
 
           return (
@@ -108,17 +108,21 @@ function RunTrace({
                       className="absolute top-6 left-1/2 h-[calc(100%+12px)] w-px -translate-x-1/2 bg-border/70"
                     />
                   )}
-                  <HugeiconsIcon
-                    icon={Icon}
-                    size={13}
-                    strokeWidth={1.5}
-                    className={
-                      event.status === "running"
-                        ? "animate-spin motion-reduce:animate-none"
-                        : undefined
-                    }
-                    aria-hidden="true"
-                  />
+                  {event.status === "queued" ? (
+                    <span className="size-3 rounded-full border border-dashed border-muted-foreground/70" />
+                  ) : (
+                    <HugeiconsIcon
+                      icon={statusIcon[event.status]}
+                      size={13}
+                      strokeWidth={1.5}
+                      className={
+                        event.status === "running"
+                          ? "animate-spin motion-reduce:animate-none"
+                          : undefined
+                      }
+                      aria-hidden="true"
+                    />
+                  )}
                   <span className="sr-only">
                     {indicatorLabel[event.status]}
                   </span>

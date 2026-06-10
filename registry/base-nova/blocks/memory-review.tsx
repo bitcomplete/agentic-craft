@@ -28,7 +28,7 @@ function MemoryReviewBlock() {
         </div>
 
         <MemoryLedgerItem
-          title="Preferred release tier level"
+          title="Preferred release tier"
           value="enterprise release"
           source="Launch review session"
           lastUsed="proposed"
@@ -78,7 +78,7 @@ function MemoryReviewBlock() {
               </DecisionSurface.ImpactList>
             </DecisionSurface.Body>
             <DecisionSurface.Footer>
-              <DecisionSurface.Cancel>Reject</DecisionSurface.Cancel>
+              <DecisionSurface.Cancel>Deny</DecisionSurface.Cancel>
               <DecisionSurface.Confirm>Save memory</DecisionSurface.Confirm>
             </DecisionSurface.Footer>
           </DecisionSurface.Content>
@@ -89,7 +89,7 @@ function MemoryReviewBlock() {
         title="Launch review session"
         excerpt="Use enterprise release as the default review tier when checking launch readiness and support coverage."
         location="Message 18"
-        source="workspace.example.com/review/session"
+        source="workspace.internal/review/session"
         index={0}
         total={2}
       />

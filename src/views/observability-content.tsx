@@ -5,12 +5,12 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import {
   Activity01Icon,
   Alert01Icon,
+  ArrowDown01Icon,
   ArrowRight01Icon,
   Brain01Icon,
   Cancel01Icon,
-  Clock01Icon,
   File01Icon,
-  Shield01Icon,
+  Idea01Icon,
   Tick01Icon,
   Search01Icon,
 } from "@hugeicons/core-free-icons"
@@ -72,20 +72,20 @@ const ACTIVITY_LIVE = [
     time: "34s ago",
     action: "Identified 2 coverage gaps in Access rules requirements",
     type: "message" as const,
-    icon: Brain01Icon,
+    icon: Idea01Icon,
   },
   {
     time: "1m ago",
     action: "Started requirement gap analysis for ACME Customer Portal",
     type: "message" as const,
-    icon: Shield01Icon,
+    icon: Activity01Icon,
   },
 ]
 
 const ACTIVITY_HISTORY = [
   {
     time: "11:48 AM",
-    action: "Completed requirement gap analysis — 4 gaps identified",
+    action: "Completed requirement gap analysis — 2 gaps identified",
     type: "message" as const,
     icon: Tick01Icon,
   },
@@ -97,13 +97,13 @@ const ACTIVITY_HISTORY = [
   },
   {
     time: "11:40 AM",
-    action: "Parsed Launch checklist requirement catalogue — 47 requirements",
+    action: "Parsed Launch checklist requirement catalog — 23 requirements",
     type: "tool" as const,
     icon: Search01Icon,
   },
   {
     time: "11:32 AM",
-    action: "Source review complete for dedicated support plan",
+    action: "Source review complete for standard support plan",
     type: "message" as const,
     icon: Tick01Icon,
   },
@@ -130,7 +130,7 @@ const ACTIVITY_FILTERED = [
   },
   {
     time: "11:40 AM",
-    action: "Parsed Launch checklist requirement catalogue — 47 requirements",
+    action: "Parsed Launch checklist requirement catalog — 23 requirements",
     type: "tool" as const,
     icon: Search01Icon,
   },
@@ -189,8 +189,8 @@ const SESSION_MULTI = [
   {
     role: "agent" as const,
     content:
-      "Starting the analysis. I'll cross-reference all 47 requirements from Launch checklist against the current project brief.",
-    tool: "Loading requirement catalogue",
+      "Starting the analysis. I'll cross-reference all 23 requirements from Launch checklist against the current project brief.",
+    tool: "Loading requirement catalog",
   },
   {
     role: "user" as const,
@@ -217,19 +217,8 @@ const SESSION_MULTI = [
 
 const SESSION_AGENT_ROWS: AgentStatusRow[] = [
   {
-    id: "reviewer-agent",
-    name: "Review Agent",
-    role: "Coordinates the session",
-    status: "working",
-    task: "Comparing the active request against source coverage.",
-    progress: 72,
-    confidence: 86,
-    cost: "$0.16",
-    updated: "now",
-  },
-  {
-    id: "source-search",
-    name: "Source Search",
+    id: "source-collector",
+    name: "Source Collector",
     role: "Retrieves documents",
     status: "complete",
     task: "Found the source policy and project brief sections used in the answer.",
@@ -239,9 +228,20 @@ const SESSION_AGENT_ROWS: AgentStatusRow[] = [
     updated: "12s ago",
   },
   {
-    id: "timeline-logger",
-    name: "Timeline Logger",
-    role: "Records activity",
+    id: "requirements-mapper",
+    name: "Requirements Mapper",
+    role: "Maps requirements to controls",
+    status: "working",
+    task: "Comparing the active request against source coverage.",
+    progress: 72,
+    confidence: 86,
+    cost: "$0.16",
+    updated: "now",
+  },
+  {
+    id: "document-drafter",
+    name: "Document Drafter",
+    role: "Drafts project brief sections",
     status: "idle",
     task: "Waiting for the next user or agent event.",
     progress: 0,
@@ -605,10 +605,10 @@ export function ObservabilityContent() {
               <div className="flex flex-col gap-2">
                 <div className="flex items-baseline justify-between">
                   <span className="text-2xl font-semibold tracking-tight">
-                    {tokenCfg.used.toLocaleString()}
+                    {tokenCfg.used.toLocaleString("en-US")}
                   </span>
                   <span className="text-xs text-muted-foreground">
-                    of {tokenCfg.budget.toLocaleString()} tokens
+                    of {tokenCfg.budget.toLocaleString("en-US")} tokens
                   </span>
                 </div>
                 <Progress value={tokenPct} />
@@ -652,13 +652,13 @@ export function ObservabilityContent() {
                   <p className="mt-0.5 text-sm font-medium">
                     {Math.round(
                       tokenCfg.used / tokenCfg.sessions
-                    ).toLocaleString()}
+                    ).toLocaleString("en-US")}
                   </p>
                 </div>
                 <div className="pl-3">
                   <p className="text-xs text-muted-foreground">Remaining</p>
                   <p className="mt-0.5 text-sm font-medium">
-                    {(tokenCfg.budget - tokenCfg.used).toLocaleString()}
+                    {(tokenCfg.budget - tokenCfg.used).toLocaleString("en-US")}
                   </p>
                 </div>
               </div>
@@ -875,8 +875,8 @@ export function ObservabilityContent() {
           Session timelines provide the conversation-level audit trail that
           review team reviewers need when reviewing how an agent arrived at its
           conclusions. Multi-turn sessions show how iterative refinement (e.g.,
-          narrowing scope from all requirements to just FTP/FCS families) leads
-          to more targeted analysis.
+          narrowing scope from all requirements to just the integration and
+          export sections) leads to more targeted analysis.
         </div>
       </section>
 
@@ -931,6 +931,7 @@ export function ObservabilityContent() {
                     <button
                       type="button"
                       aria-label={`Toggle error details: ${err.title}`}
+                      aria-expanded={expandedErr === i}
                       onClick={() =>
                         setExpandedErr(expandedErr === i ? null : i)
                       }
@@ -958,10 +959,12 @@ export function ObservabilityContent() {
                         </p>
                       </div>
                       <HugeiconsIcon
-                        icon={Clock01Icon}
+                        icon={ArrowDown01Icon}
                         size={12}
                         strokeWidth={1.5}
-                        className="mt-1 shrink-0 text-muted-foreground"
+                        className={`mt-1 shrink-0 text-muted-foreground transition-transform duration-200 motion-reduce:transition-none ${
+                          expandedErr === i ? "rotate-180" : ""
+                        }`}
                       />
                     </button>
 
@@ -1030,10 +1033,10 @@ export function ObservabilityContent() {
         </Table>
 
         <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-          The error log provides the diagnostic transparency required by
-          activity review (Activity Review) — reviewers can inspect every
-          operational anomaly, understand its context, and verify that the
-          agent's error handling meets the product's claimed readiness level.
+          The error log provides the diagnostic transparency that activity
+          review requires — reviewers can inspect every operational anomaly,
+          understand its context, and verify that the agent's error handling
+          meets the product's claimed readiness level.
         </div>
       </section>
     </article>

@@ -110,13 +110,13 @@ export function ThemeProvider({
   storageKey = "agentic-craft-theme",
   disableTransitionOnChange = true,
 }: ThemeProviderProps) {
-  const [theme, setThemeState] = React.useState<Theme>(() =>
-    getStoredTheme(storageKey, defaultTheme)
-  )
-  const [systemTheme, setSystemTheme] =
-    React.useState<ResolvedTheme>(getSystemTheme)
-  const [resolvedTheme, setResolvedTheme] = React.useState<ResolvedTheme>(() =>
-    resolveTheme(getStoredTheme(storageKey, defaultTheme))
+  // Initial state must match the server render, which can't know the stored
+  // or system theme — start from the default and sync in effects. The inline
+  // script in app/layout.tsx applies the stored theme before first paint.
+  const [theme, setThemeState] = React.useState<Theme>(defaultTheme)
+  const [systemTheme, setSystemTheme] = React.useState<ResolvedTheme>("light")
+  const [resolvedTheme, setResolvedTheme] = React.useState<ResolvedTheme>(
+    defaultTheme === "system" ? "light" : defaultTheme
   )
 
   const setTheme = React.useCallback(

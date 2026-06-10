@@ -4,7 +4,7 @@ import { TrustContent } from "@/views/trust-content"
 export const metadata: Metadata = {
   title: "Trust & Control Plane | Agentic Craft",
   description:
-    "Reference patterns for autonomy, consent, confidence, provenance, and auditability",
+    "Controls that let users decide how much autonomy an agent gets before it acts on their behalf",
 }
 
 export default function TrustPage() {

@@ -176,12 +176,25 @@
       ]
     },
     {
+      "name": "status-indicator",
+      "type": "registry:ui",
+      "title": "Status Indicator",
+      "description": "The product-wide status vocabulary: one shape per state — check for complete, spinner for active, dashed circle for pending, clock for blocked, alert for warning and error — with sr-only labels.",
+      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "files": [
+        {
+          "path": "registry/base-nova/ui/status-indicator.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "observable-work",
       "type": "registry:ui",
       "title": "Observable Work",
       "description": "A step disclosure pattern for showing visible agent work, touched sources, state, and completion without exposing hidden reasoning traces.",
       "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
-      "registryDependencies": ["badge"],
+      "registryDependencies": ["arielconti10/agentic-craft/status-indicator"],
       "files": [
         {
           "path": "registry/base-nova/ui/observable-work.tsx",
@@ -221,7 +234,11 @@
       "type": "registry:ui",
       "title": "Agent Status Table",
       "description": "A rich operational table for multiple agents with status, active task, progress, confidence, cost, and last activity.",
-      "registryDependencies": ["badge", "progress", "table"],
+      "registryDependencies": [
+        "progress",
+        "arielconti10/agentic-craft/status-indicator",
+        "table"
+      ],
       "files": [
         {
           "path": "registry/base-nova/ui/agent-status-table.tsx",
@@ -253,7 +270,6 @@
       "title": "Action Preview",
       "description": "A locked consequence preview for approvals, external actions, document changes, and rollback-aware agent work.",
       "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
-      "registryDependencies": ["badge"],
       "files": [
         {
           "path": "registry/base-nova/ui/action-preview.tsx",
@@ -308,7 +324,7 @@
       "title": "Contextual Workbench",
       "description": "A responsive agent workbench that keeps chat visible while opening an inspectable browser, source, diff, or artifact surface beside it.",
       "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
-      "registryDependencies": ["badge", "button", "resizable", "toggle-group"],
+      "registryDependencies": ["button", "resizable", "tabs", "toggle-group"],
       "files": [
         {
           "path": "registry/base-nova/ui/contextual-workbench.tsx",
@@ -322,7 +338,7 @@
       "title": "Effective Policy Preview",
       "description": "A compact settings summary showing the agent policy currently produced by autonomy, approval, notification, and memory controls.",
       "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
-      "registryDependencies": ["badge"],
+      "registryDependencies": ["arielconti10/agentic-craft/status-indicator"],
       "files": [
         {
           "path": "registry/base-nova/ui/effective-policy-preview.tsx",
@@ -354,7 +370,6 @@
       "title": "Run Trace",
       "description": "A dense operational trace for background runs with source touches, status, warnings, timing metadata, and expandable recovery detail.",
       "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
-      "registryDependencies": ["badge"],
       "files": [
         {
           "path": "registry/base-nova/ui/run-trace.tsx",
@@ -368,7 +383,10 @@
       "title": "Handoff Packet",
       "description": "An ownership-transfer surface for multi-agent workflows with sender, receiver, payload, source basis, receiver action, and recovery path.",
       "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
-      "registryDependencies": ["badge", "button"],
+      "registryDependencies": [
+        "button",
+        "arielconti10/agentic-craft/status-indicator"
+      ],
       "files": [
         {
           "path": "registry/base-nova/ui/handoff-packet.tsx",
@@ -436,11 +454,11 @@
     {
       "name": "source-backed-artifact",
       "type": "registry:block",
-      "title": "Source Backed Artifact",
+      "title": "Source-Backed Artifact",
       "description": "A provenance workflow block that pairs a source-backed output document with source previews and usage budget.",
+      "dependencies": ["@hugeicons/core-free-icons"],
       "registryDependencies": [
         "arielconti10/agentic-craft/artifact-document",
-        "button",
         "arielconti10/agentic-craft/source-preview",
         "arielconti10/agentic-craft/usage-meter"
       ],
@@ -473,7 +491,7 @@
     {
       "name": "run-monitor",
       "type": "registry:block",
-      "title": "Run Monitor",
+      "title": "Background Run Monitor",
       "description": "A background run monitoring block with an operational trace, visible run budget, agent status table, warnings, and blocked recovery path.",
       "registryDependencies": [
         "arielconti10/agentic-craft/agent-status-table",
@@ -491,7 +509,7 @@
     {
       "name": "multi-agent-handoff",
       "type": "registry:block",
-      "title": "Multi Agent Handoff",
+      "title": "Multi-Agent Handoff",
       "description": "A multi-agent ownership transfer block with handoff packet, sender/receiver state, source basis, recovery path, trace, and agent status table.",
       "registryDependencies": [
         "arielconti10/agentic-craft/agent-status-table",

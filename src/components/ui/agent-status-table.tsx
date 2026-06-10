@@ -58,7 +58,7 @@ const indicatorStatus: Record<AgentStatus, StatusIndicatorStatus> = {
 
 function formatPercent(value?: number) {
   if (typeof value !== "number") return "n/a"
-  return new Intl.NumberFormat(undefined, {
+  return new Intl.NumberFormat("en-US", {
     style: "percent",
     maximumFractionDigits: 0,
   }).format(value / 100)

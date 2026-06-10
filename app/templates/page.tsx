@@ -5,7 +5,7 @@ import { TemplatesContent } from "@/views/templates-content"
 export const metadata: Metadata = {
   title: "Templates | Agentic Craft",
   description:
-    "End-to-end workflow templates for review, approval, clarifying questions, memory review, run monitoring, handoffs, and agent settings.",
+    "End-to-end agentic workflow templates built from registry primitives, documented down to their failure and recovery states",
 }
 
 export default function TemplatesPage() {

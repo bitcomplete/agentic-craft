@@ -1,8 +1,8 @@
 import {
-  Activity01Icon,
   Brain01Icon,
   BubbleChatIcon,
   CheckListIcon,
+  Comment01Icon,
   DashboardSpeed01Icon,
   File01Icon,
   GridIcon,
@@ -110,7 +110,7 @@ export const sections: NavigationSection[] = [
       { title: "Memory Panel", id: "memory-panel" },
       { title: "Memory Entry CRUD", id: "memory-crud" },
       { title: "Auto-Memory", id: "auto-memory" },
-      { title: "Context Ring", id: "memory-context-ring" },
+      { title: "Context Ring", id: "context-ring" },
       { title: "Privacy Controls", id: "privacy-controls" },
     ],
   },
@@ -129,7 +129,7 @@ export const sections: NavigationSection[] = [
   {
     title: "Feedback",
     path: "/feedback",
-    icon: Activity01Icon,
+    icon: Comment01Icon,
     subs: [
       { title: "Thumbs Feedback", id: "thumbs-feedback" },
       { title: "Inline Correction", id: "inline-correction" },

@@ -15,11 +15,11 @@ const sources = [
   {
     id: 1,
     title: "Launch Checklist: Support Readiness",
-    source: "docs.example.com/launch/support-readiness",
-    location: "Page 14",
+    source: "docs.internal/launch/support-readiness",
+    location: "Section 4",
     icon: File01Icon,
     excerpt:
-      "The dedicated support plan requires issue triage procedures, named owners, and response timelines before enterprise release.",
+      "The standard support plan requires issue triage procedures, named owners, and response timelines before enterprise release.",
   },
   {
     id: 2,
@@ -33,8 +33,8 @@ const sources = [
   {
     id: 3,
     title: "Launch Guidance: Source Scope",
-    source: "docs.example.com/launch-guidance/source-scope",
-    location: "Page 21",
+    source: "docs.internal/launch-guidance/source-scope",
+    location: "Section 2",
     icon: Globe02Icon,
     excerpt:
       "Every source document supporting a launch decision must be linked from the final review summary.",
@@ -43,7 +43,9 @@ const sources = [
 
 function SourceBackedArtifact() {
   const [activeSourceId, setActiveSourceId] = useState(1)
-  const activeIndex = sources.findIndex((source) => source.id === activeSourceId)
+  const activeIndex = sources.findIndex(
+    (source) => source.id === activeSourceId
+  )
   const activeSource = sources[activeIndex] ?? sources[0]
 
   return (
@@ -64,7 +66,7 @@ function SourceBackedArtifact() {
               id: "claim",
               title: "Claim",
               status: "cited",
-              source: "Launch Checklist, Page 14",
+              source: "Launch Checklist, Section 4",
               body: "Enterprise release is blocked until support owners and triage windows are named.",
             },
             {
@@ -103,7 +105,7 @@ function SourceBackedArtifact() {
             },
             {
               id: "coverage",
-              label: "Coverage",
+              label: "Source coverage",
               value: 74,
               valueLabel: "14 / 19",
               limitLabel: "5 still unverified",

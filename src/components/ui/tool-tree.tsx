@@ -134,7 +134,7 @@ function ToolTreeTrigger({
         />
       </button>
       {timestamp && (
-        <span className="ml-auto hidden shrink-0 truncate text-xs opacity-0 transition-opacity duration-300 select-none group-hover/tool-wrapper:opacity-100 md:block">
+        <span className="ml-auto shrink-0 truncate text-xs opacity-100 select-none sm:opacity-0 sm:transition-opacity sm:duration-300 sm:group-focus-within/tool-wrapper:opacity-100 sm:group-hover/tool-wrapper:opacity-100">
           {timestamp}
         </span>
       )}

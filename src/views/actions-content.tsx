@@ -70,8 +70,8 @@ const TOOL_CALLS_DATA = [
     duration: "0.4s",
     details: [
       { key: "File", value: "Project-Brief-v3.pdf" },
-      { key: "requirements parsed", value: "23 requirements" },
-      { key: "review criteria parsed", value: "14 review criteria" },
+      { key: "Requirements parsed", value: "23 requirements" },
+      { key: "Review criteria parsed", value: "14 review criteria" },
     ],
   },
   {
@@ -104,7 +104,7 @@ const ERROR_TOOL = {
 
 const SUBAGENT_TOOLS = [
   {
-    label: "Checking source control source material",
+    label: "Checking configuration management source material",
     duration: "1.8s",
     details: [
       { key: "Documents", value: "CM Plan v2.3, CM Records" },
@@ -155,7 +155,7 @@ const PARALLEL_TASKS = [
     details: [
       {
         key: "Remote",
-        value: "origin → git.example.com/product/customer-portal",
+        value: "origin → git.internal/product/customer-portal",
       },
       { key: "Branch", value: "main (up to date)" },
       { key: "Last push", value: "2026-03-14 09:41 UTC" },
@@ -165,16 +165,16 @@ const PARALLEL_TASKS = [
     label: "Reading requirement coverage definitions",
     details: [
       { key: "File", value: "requirement-map.json" },
-      { key: "requirements parsed", value: "23 requirements" },
-      { key: "Families", value: "FCS, FDP, FPT, FAU, FIA" },
+      { key: "Requirements parsed", value: "23 requirements" },
+      { key: "Classes", value: "Access, Export, Audit, Auth, Retention" },
     ],
   },
 ]
 
 const APPROVAL_EMAIL = {
-  recipient: "project-team@example.com",
+  recipient: "project-team@acme.internal",
   subject: "Launch Review — customer portal v3.1 (enterprise release)",
-  body: "Please find attached the Launch Review Summary for the customer portal v3.1 project brief. This submission covers all review checklist items for enterprise release with dedicated support coverage. The review was conducted using the current internal launch checklist.",
+  body: "Please find attached the Launch Review Summary for the customer portal v3.1 project brief. This submission covers all review checklist items for enterprise release with standard support coverage. The review was conducted using the current internal launch checklist.",
 }
 
 const APPROVAL_CHANGES = [
@@ -471,6 +471,7 @@ export function ActionsContent() {
     resolved: false,
   })
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
+  const resolvedSummaryRef = useRef<HTMLDivElement>(null)
 
   const toggleDecisionControl = useCallback((key: string) => {
     if (key === "pending") {
@@ -499,7 +500,7 @@ export function ActionsContent() {
     } else {
       setAskState({ open: false, answered: true })
       setSelectedClarifications(["support", "timeline"])
-      setAskOther("Enterprise release with dedicated support coverage")
+      setAskOther("Enterprise release with standard support coverage")
       setAskSubmitted(true)
     }
   }, [])
@@ -727,78 +728,74 @@ export function ActionsContent() {
           />
 
           <div className="rounded-lg border border-border/40 p-6">
-            <div className="border-l border-border/60">
-              <button
-                type="button"
-                aria-label="Toggle Source Review Agent details"
-                onClick={() => setSubagentOpen(!subagentOpen)}
-                className="flex w-full items-center gap-2.5 py-2.5 pl-3 text-left"
-              >
-                <HugeiconsIcon
-                  icon={Brain01Icon}
-                  size={14}
-                  strokeWidth={1.5}
-                  className="shrink-0 text-muted-foreground"
-                />
-                <span className="text-sm font-normal">Source Review Agent</span>
-                {subagentProgress < 8 && (
-                  <span className="text-xs text-muted-foreground tabular-nums">
-                    {subagentProgress} of 8 families
-                  </span>
-                )}
-                <StatusIndicator
-                  status={subagentProgress >= 8 ? "complete" : "active"}
-                />
-                <HugeiconsIcon
-                  icon={ArrowDown01Icon}
-                  size={12}
-                  strokeWidth={1.5}
-                  className={`ml-auto shrink-0 text-muted-foreground transition-transform duration-200 ${
-                    subagentOpen ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-
-              {subagentOpen && (
-                <div className="actions-expand flex flex-col gap-2 px-3 py-3">
-                  <Separator />
-                  <p className="text-xs text-muted-foreground">
-                    Validating completeness and traceability of review source
-                    material for each review area.
-                  </p>
-                  <Progress value={(subagentProgress / 8) * 100} />
-                  {/* Nested tool calls */}
-                  <div className="mt-2 flex flex-col gap-1.5 border-l border-border/60 pl-2">
-                    {SUBAGENT_TOOLS.map((tool) => (
-                      <ToolCall
-                        key={tool.label}
-                        icon={Wrench01Icon}
-                        status="completed"
-                        timestamp={tool.duration}
-                      >
-                        <ToolCallTrigger>
-                          <ToolCallLabel>{tool.label}</ToolCallLabel>
-                        </ToolCallTrigger>
-                        <ToolCallContent>
-                          <div className="flex flex-col gap-1 text-xs">
-                            {tool.details.map((d) => (
-                              <div key={d.key} className="flex gap-2">
-                                <span className="text-muted-foreground">
-                                  {d.key}:
-                                </span>
-                                <span className="text-foreground">
-                                  {d.value}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                        </ToolCallContent>
-                      </ToolCall>
-                    ))}
-                  </div>
-                </div>
+            <button
+              type="button"
+              aria-label="Toggle Source Collector details"
+              onClick={() => setSubagentOpen(!subagentOpen)}
+              className="flex w-full items-center gap-2.5 py-2.5 text-left"
+            >
+              <HugeiconsIcon
+                icon={Brain01Icon}
+                size={14}
+                strokeWidth={1.5}
+                className="shrink-0 text-muted-foreground"
+              />
+              <span className="text-sm font-normal">Source Collector</span>
+              {subagentProgress < 8 && (
+                <span className="text-xs text-muted-foreground tabular-nums">
+                  {subagentProgress} of 8 review areas
+                </span>
               )}
-            </div>
+              <StatusIndicator
+                status={subagentProgress >= 8 ? "complete" : "active"}
+              />
+              <HugeiconsIcon
+                icon={ArrowDown01Icon}
+                size={12}
+                strokeWidth={1.5}
+                className={`ml-auto shrink-0 text-muted-foreground transition-transform duration-200 ${
+                  subagentOpen ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+
+            {subagentOpen && (
+              <div className="actions-expand flex flex-col gap-2 py-3 pl-6">
+                <Separator />
+                <p className="text-xs text-muted-foreground">
+                  Validating completeness and traceability of review source
+                  material for each review area.
+                </p>
+                <Progress value={(subagentProgress / 8) * 100} />
+                {/* Nested tool calls */}
+                <div className="mt-2 flex flex-col gap-1.5">
+                  {SUBAGENT_TOOLS.map((tool) => (
+                    <ToolCall
+                      key={tool.label}
+                      icon={Wrench01Icon}
+                      status="completed"
+                      timestamp={tool.duration}
+                    >
+                      <ToolCallTrigger>
+                        <ToolCallLabel>{tool.label}</ToolCallLabel>
+                      </ToolCallTrigger>
+                      <ToolCallContent>
+                        <div className="flex flex-col gap-1 text-xs">
+                          {tool.details.map((d) => (
+                            <div key={d.key} className="flex gap-2">
+                              <span className="text-muted-foreground">
+                                {d.key}:
+                              </span>
+                              <span className="text-foreground">{d.value}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </ToolCallContent>
+                    </ToolCall>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -1261,6 +1258,9 @@ export function ActionsContent() {
                     onClick={() => {
                       setSelectedOption(i)
                       setDecisionState({ pending: false, resolved: true })
+                      requestAnimationFrame(() =>
+                        resolvedSummaryRef.current?.focus()
+                      )
                     }}
                     className={`w-full rounded-md px-3 py-2.5 text-left transition-colors focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none ${
                       selectedOption === i ? "bg-primary/5" : "hover:bg-accent"
@@ -1289,7 +1289,11 @@ export function ActionsContent() {
                 ))}
               </div>
             ) : (
-              <div className="actions-fade-in flex flex-col gap-3">
+              <div
+                ref={resolvedSummaryRef}
+                tabIndex={-1}
+                className="actions-fade-in flex flex-col gap-3"
+              >
                 {selectedOption !== null && (
                   <div className="border-l border-primary bg-primary/5 py-2 pl-3">
                     <div className="flex items-center gap-2">
@@ -1308,7 +1312,10 @@ export function ActionsContent() {
                     </p>
                   </div>
                 )}
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <div
+                  role="status"
+                  className="flex items-center gap-2 text-xs text-muted-foreground"
+                >
                   <HugeiconsIcon
                     icon={Tick01Icon}
                     size={12}
@@ -1677,7 +1684,10 @@ export function ActionsContent() {
 
                 {approvalStatus === "approved" && (
                   <div className="actions-fade-in flex flex-col gap-3">
-                    <div className="border-l border-primary bg-primary/5 py-2 pl-3">
+                    <div
+                      role="status"
+                      className="border-l border-primary bg-primary/5 py-2 pl-3"
+                    >
                       <div className="flex items-center gap-2">
                         <HugeiconsIcon
                           icon={Tick01Icon}
@@ -1770,7 +1780,7 @@ export function ActionsContent() {
                         },
                         {
                           label: "Affected object",
-                          value: "Project_Brief_v3.pdf",
+                          value: "Project-Brief-v3.pdf",
                         },
                         {
                           label: "Consequence",
@@ -1842,7 +1852,7 @@ export function ActionsContent() {
                                 references
                               </DecisionSurface.ImpactItem>
                               <DecisionSurface.ImpactItem label="Affected object">
-                                Project_Brief_v3.pdf
+                                Project-Brief-v3.pdf
                               </DecisionSurface.ImpactItem>
                               <DecisionSurface.ImpactItem label="Cost / time">
                                 $0.04 estimated / under 1 min

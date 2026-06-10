@@ -1,0 +1,1 @@
+../../../src/components/ui/status-indicator.tsx

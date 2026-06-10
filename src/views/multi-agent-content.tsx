@@ -21,6 +21,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { HandoffPacket } from "@/components/ui/handoff-packet"
 import { Progress } from "@/components/ui/progress"
+import { StatusIndicator } from "@/components/ui/status-indicator"
 import {
   Table,
   TableBody,
@@ -155,8 +156,8 @@ const PARALLEL_AGENTS = [
   },
   {
     name: "Policy Analyst",
-    task: "Analysing launch policy",
-    result: "47 requirements parsed — 4 deltas from previous version",
+    task: "Analyzing launch policy",
+    result: "23 requirements parsed — 4 deltas from previous version",
     progress: 88,
   },
 ]
@@ -444,7 +445,8 @@ export function MultiAgentContent() {
                 Idle state
               </TableCell>
               <TableCell className="py-3">
-                "Awaiting instructions" placeholder
+                Role-specific waiting note ("Waiting for a source packet to
+                map")
               </TableCell>
             </TableRow>
             <TableRow className="border-b border-border/50">
@@ -537,20 +539,16 @@ export function MultiAgentContent() {
                       }`}
                     >
                       <div className="flex items-center gap-2">
-                        {stepState === "complete" ? (
-                          <div className="flex size-5 items-center justify-center rounded-md bg-foreground/10">
-                            <HugeiconsIcon
-                              icon={Tick01Icon}
-                              size={12}
-                              strokeWidth={2}
-                              className="text-foreground/70"
-                            />
-                          </div>
-                        ) : stepState === "active" ? (
-                          <span className="ma-pulse h-2 w-2 rounded-full bg-foreground/70" />
-                        ) : (
-                          <span className="h-2 w-2 rounded-full bg-muted-foreground/50" />
-                        )}
+                        <StatusIndicator
+                          status={stepState}
+                          label={
+                            stepState === "complete"
+                              ? "Completed step"
+                              : stepState === "active"
+                                ? "Active step"
+                                : "Pending step"
+                          }
+                        />
                         <span className="text-[10px] text-muted-foreground">
                           Step {i + 1}
                         </span>
@@ -833,7 +831,7 @@ export function MultiAgentContent() {
                   Review Export workflow export requirements
                 </p>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Task type: requirement requirements review
+                  Task type: requirements review
                 </p>
               </div>
 

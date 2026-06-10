@@ -6,8 +6,6 @@ import {
   Shield01Icon,
   File01Icon,
   Globe02Icon,
-  ThumbsUpIcon,
-  ThumbsDownIcon,
 } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
 import {
@@ -42,8 +40,8 @@ type ProsePreferenceDetail = {
 }
 
 const PROSE_PREFERENCE_OPTIONS: { key: ProsePreference; label: string }[] = [
-  { key: "serif", label: "Serif prose" },
-  { key: "sans", label: "Sans prose" },
+  { key: "serif", label: "Serif Prose" },
+  { key: "sans", label: "Sans Prose" },
   { key: "compact", label: "Compact" },
 ]
 
@@ -60,7 +58,7 @@ function isProsePreference(key: string): key is ProsePreference {
 const PROSE_PREFERENCE_DETAILS: Record<ProsePreference, ProsePreferenceDetail> =
   {
     serif: {
-      label: "Serif prose",
+      label: "Serif Prose",
       className: "font-serif text-base",
       lineHeight: "26px",
       fontVariationSettings: '"opsz" 12',
@@ -69,7 +67,7 @@ const PROSE_PREFERENCE_DETAILS: Record<ProsePreference, ProsePreferenceDetail> =
         "A comfortable default for long analysis, explanations, and review-style answers.",
     },
     sans: {
-      label: "Sans prose",
+      label: "Sans Prose",
       className: "font-sans text-base",
       lineHeight: "24px",
       spec: "Albert Sans, 16px/24px",
@@ -202,11 +200,11 @@ const CITATION_REFERENCES = [
   {
     id: 1,
     title: "Launch Checklist: Support Readiness",
-    source: "docs.example.com/launch/support-readiness",
+    source: "docs.internal/launch/support-readiness",
     page: "Page 14",
     icon: File01Icon,
     excerpt:
-      "The dedicated support plan requires the product team to establish issue triage procedures, named owners, and response timelines before enterprise release.",
+      "The standard support plan requires the product team to establish issue triage procedures, named owners, and response timelines before enterprise release.",
   },
   {
     id: 2,
@@ -220,7 +218,7 @@ const CITATION_REFERENCES = [
   {
     id: 3,
     title: "Launch Guidance: Source Scope",
-    source: "docs.example.com/launch-guidance/source-scope",
+    source: "docs.internal/launch-guidance/source-scope",
     page: "Page 21",
     icon: Globe02Icon,
     excerpt:
@@ -263,7 +261,7 @@ function CitationToken({
       <HugeiconsIcon
         icon={citation.icon}
         size={12}
-        strokeWidth={1.7}
+        strokeWidth={1.5}
         aria-hidden="true"
       />
       <span className="tabular-nums">{citation.id}</span>
@@ -342,9 +340,6 @@ export function ConversationContent() {
   const selectCitation = (id: CitationReference["id"]) => {
     setActiveCitationId(id)
   }
-
-  /* Feedback state */
-  const [feedback, setFeedback] = useState<"none" | "up" | "down">("none")
 
   return (
     <article>
@@ -442,15 +437,17 @@ export function ConversationContent() {
                   style={agentProseStyle}
                 >
                   <p>
-                    The following requirements from Launch Policy v2 are not
-                    mapped in the appendix:
+                    Two of the brief's 23 requirements are not mapped back to a
+                    source in the appendix:
                   </p>
                   <ul className="mt-3 ml-5 flex list-disc flex-col gap-1">
-                    <li>Retention setting — Account data retention</li>
-                    <li>Cleanup rule — Stale export cleanup</li>
-                    <li>Access workflow — Role-based access behavior</li>
                     <li>
-                      Default role setup — Initial permissions for new teams
+                      Fallback behavior — Degraded handling when a source is
+                      unavailable
+                    </li>
+                    <li>
+                      Cleanup behavior — Stale export cleanup after a run
+                      completes
                     </li>
                   </ul>
                 </div>
@@ -732,41 +729,6 @@ export function ConversationContent() {
           )}
         </div>
 
-        {/* Progress steps feedback row */}
-        <div className="mt-4 flex items-center gap-3">
-          <span className="text-xs text-muted-foreground">
-            Was this helpful?
-          </span>
-          <button
-            type="button"
-            data-compact-touch
-            onClick={() => setFeedback(feedback === "up" ? "none" : "up")}
-            aria-label="Mark progress steps as helpful"
-            aria-pressed={feedback === "up"}
-            className={`flex size-8 items-center justify-center rounded-md transition-colors ${
-              feedback === "up"
-                ? "bg-foreground/[0.06] text-foreground"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <HugeiconsIcon icon={ThumbsUpIcon} size={14} strokeWidth={1.5} />
-          </button>
-          <button
-            type="button"
-            data-compact-touch
-            onClick={() => setFeedback(feedback === "down" ? "none" : "down")}
-            aria-label="Mark progress steps as not helpful"
-            aria-pressed={feedback === "down"}
-            className={`flex size-8 items-center justify-center rounded-md transition-colors ${
-              feedback === "down"
-                ? "bg-foreground/[0.06] text-foreground"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <HugeiconsIcon icon={ThumbsDownIcon} size={14} strokeWidth={1.5} />
-          </button>
-        </div>
-
         {/* Do / Don't table */}
         <Table className="mt-10 w-full text-sm">
           <TableHeader>
@@ -866,7 +828,7 @@ export function ConversationContent() {
                     }
                     onClearPreview={() => setPreviewCitationId(null)}
                   />
-                  and a dedicated support plan with documented issue triage
+                  and a standard support plan with documented issue triage
                   timelines
                   <CitationToken
                     citation={CITATION_REFERENCES[1]}

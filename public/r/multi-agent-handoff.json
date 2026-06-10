@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "multi-agent-handoff",
-  "title": "Multi Agent Handoff",
+  "title": "Multi-Agent Handoff",
   "description": "A multi-agent ownership transfer block with handoff packet, sender/receiver state, source basis, recovery path, trace, and agent status table.",
   "registryDependencies": [
     "arielconti10/agentic-craft/agent-status-table",

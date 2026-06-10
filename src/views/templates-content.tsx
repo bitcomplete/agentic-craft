@@ -3,21 +3,13 @@
 import { useState } from "react"
 import Link from "next/link"
 import { HugeiconsIcon } from "@hugeicons/react"
-import {
-  Alert01Icon,
-  Brain01Icon,
-  CheckListIcon,
-  GitBranchIcon,
-  HelpCircleIcon,
-  Settings01Icon,
-  Shield01Icon,
-  File01Icon,
-} from "@hugeicons/core-free-icons"
+import { Brain01Icon } from "@hugeicons/core-free-icons"
 
 import {
   AgentStatusTable,
   type AgentStatusRow,
 } from "@/components/ui/agent-status-table"
+import { ArtifactDocument } from "@/components/ui/artifact-document"
 import { TemplateFlowPreview } from "@/components/reference/template-flow-preview"
 import {
   ClarifyingQuestions,
@@ -28,7 +20,6 @@ import { DecisionSurface } from "@/components/ui/decision-surface"
 import { ObservableWork } from "@/components/ui/observable-work"
 import { ReferenceItem } from "@/components/ui/reference-item"
 import { StatusIndicator } from "@/components/ui/status-indicator"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   Field,
@@ -44,58 +35,58 @@ import { Switch } from "@/components/ui/switch"
 const templateIndex = [
   {
     id: "review-workflow",
-    title: "Review workflow",
-    description: "Collect sources, inspect gaps, and produce a cited result.",
-    icon: CheckListIcon,
+    title: "Review Workflow",
+    description:
+      "The agent reads sources in the open and ends with a result a reviewer can cite.",
     primitives: "Observable Work, Reference Item",
   },
   {
     id: "approval-workflow",
-    title: "Approval workflow",
-    description: "Preview impact, cost, rollback, then ask for approval.",
-    icon: Shield01Icon,
+    title: "Approval Workflow",
+    description:
+      "Impact, cost, and rollback are on the table before anything external happens.",
     primitives: "Decision Surface",
   },
   {
     id: "clarifying-workflow",
-    title: "Clarifying workflow",
-    description: "Ask only for missing decisions with visible defaults.",
-    icon: HelpCircleIcon,
+    title: "Clarifying Workflow",
+    description:
+      "Asks only the questions the agent would otherwise answer by guessing.",
     primitives: "Clarifying Questions",
   },
   {
     id: "source-backed-artifact",
-    title: "Source-backed artifact",
-    description: "Turn an answer into a cited, reviewable document.",
-    icon: File01Icon,
+    title: "Source-Backed Artifact",
+    description:
+      "Promotes an answer into a document whose citations outlive the conversation.",
     primitives: "Artifact Document, Source Preview",
   },
   {
     id: "memory-review",
-    title: "Memory review",
-    description: "Review proposed durable context before it is saved.",
-    icon: Brain01Icon,
+    title: "Memory Review",
+    description:
+      "Proposed memories wait in a review queue before they become durable context.",
     primitives: "Reference Item",
   },
   {
     id: "run-monitor",
-    title: "Run monitor",
-    description: "Track background work, budget, blockers, and agents.",
-    icon: Alert01Icon,
+    title: "Background Run Monitor",
+    description:
+      "A status table for runs that keep going after the user walks away.",
     primitives: "Run Trace, Usage Meter",
   },
   {
     id: "multi-agent-handoff",
-    title: "Multi-agent handoff",
-    description: "Show sender, receiver, payload, and current owner.",
-    icon: GitBranchIcon,
+    title: "Multi-Agent Handoff",
+    description:
+      "When one agent passes work to another, the packet and its new owner stay visible.",
     primitives: "Handoff Packet, Run Trace",
   },
   {
     id: "agent-settings",
-    title: "Agent settings",
-    description: "Set durable boundaries for autonomy, approvals, and memory.",
-    icon: Settings01Icon,
+    title: "Agent Settings",
+    description:
+      "Durable boundaries for autonomy and approvals, set once instead of per action.",
     primitives: "Field, Switch, Decision Surface",
   },
 ] as const
@@ -159,6 +150,28 @@ const clarifyingQuestions: ClarifyingQuestion[] = [
   },
 ]
 
+const artifactSections = [
+  {
+    id: "coverage",
+    title: "Coverage",
+    status: "cited" as const,
+    source: "Project-Brief-v3.pdf, §2",
+    body: "21 of the 23 requirements in the brief map to a named owner and review criterion.",
+  },
+  {
+    id: "gaps",
+    title: "Open gaps",
+    status: "needs-source" as const,
+    body: "Fallback behavior and cleanup behavior are not covered by any pinned source yet.",
+  },
+  {
+    id: "next",
+    title: "Next action",
+    status: "draft" as const,
+    body: "Confirm owners for both gaps with the project owner before the artifact is shared.",
+  },
+]
+
 const runAgents: AgentStatusRow[] = [
   {
     id: "collector",
@@ -199,35 +212,30 @@ const templateFlowSteps = [
     label: "Collect",
     description:
       "Gather selected files, policies, prior decisions, and user intent.",
-    icon: CheckListIcon,
-    status: "input" as const,
+    owner: "input" as const,
   },
   {
     label: "Inspect",
     description: "Show observable work, touched sources, gaps, and confidence.",
-    icon: Alert01Icon,
-    status: "agent" as const,
+    owner: "agent" as const,
   },
   {
     label: "Clarify",
     description:
       "Ask only for missing decisions that would otherwise be invented.",
-    icon: HelpCircleIcon,
-    status: "human" as const,
+    owner: "human" as const,
   },
   {
     label: "Approve",
     description:
       "Lock the consequence preview before external or costly actions.",
-    icon: Shield01Icon,
-    status: "human" as const,
+    owner: "human" as const,
   },
   {
     label: "Deliver",
     description:
       "Return cited output, durable memory updates, and recovery paths.",
-    icon: GitBranchIcon,
-    status: "output" as const,
+    owner: "output" as const,
   },
 ]
 
@@ -260,21 +268,16 @@ export function TemplatesContent() {
       </header>
 
       <section className="page-section">
-        <div className="mb-5 flex items-end justify-between gap-4">
-          <div>
-            <p className="section-label mb-3">Workflow map</p>
-            <h2 className="text-xl font-semibold tracking-tight">
-              Review to delivery
-            </h2>
-            <p className="mt-2 max-w-[640px] text-sm leading-relaxed text-muted-foreground">
-              Templates should describe the whole job, not a single widget. This
-              map is the reusable backbone across review, approval,
-              clarification, memory, and monitoring flows.
-            </p>
-          </div>
-          <Badge variant="outline" className="hidden sm:inline-flex">
-            5 stages
-          </Badge>
+        <div className="mb-5">
+          <p className="section-label mb-3">Workflow map</p>
+          <h2 className="text-xl font-semibold tracking-tight">
+            Review to delivery
+          </h2>
+          <p className="mt-2 max-w-[640px] text-sm leading-relaxed text-muted-foreground">
+            Templates should describe the whole job, not a single widget. This
+            map is the reusable backbone across review, approval, clarification,
+            memory, and monitoring flows.
+          </p>
         </div>
         <TemplateFlowPreview steps={templateFlowSteps} />
       </section>
@@ -289,18 +292,12 @@ export function TemplatesContent() {
               className="block"
             >
               <ReferenceItem.Root>
-                <ReferenceItem.Media>
-                  <HugeiconsIcon icon={template.icon} strokeWidth={1.5} />
-                </ReferenceItem.Media>
                 <ReferenceItem.Content>
-                  <ReferenceItem.Header>
-                    {/* text-clip drops the inherited truncate: titles wrap
-                        instead of ellipsizing mid-word in the 2-col grid */}
-                    <ReferenceItem.Title className="text-clip whitespace-normal">
-                      {template.title}
-                    </ReferenceItem.Title>
-                    <Badge variant="outline">Template</Badge>
-                  </ReferenceItem.Header>
+                  {/* text-clip drops the inherited truncate: titles wrap
+                      instead of ellipsizing mid-word in the 2-col grid */}
+                  <ReferenceItem.Title className="text-clip whitespace-normal">
+                    {template.title}
+                  </ReferenceItem.Title>
                   <ReferenceItem.Description>
                     {template.description}
                   </ReferenceItem.Description>
@@ -449,6 +446,31 @@ export function TemplatesContent() {
         </div>
       </section>
 
+      <section id="source-backed-artifact" className="page-section">
+        <p className="section-label mb-3">ARTIFACT</p>
+        <h2 className="text-xl font-semibold tracking-tight">
+          Source-Backed Artifact
+        </h2>
+        <p className="mt-3 max-w-[640px] text-sm leading-relaxed text-muted-foreground">
+          Turn an agent answer into a cited document that users can inspect
+          after the conversation ends.
+        </p>
+        <div className="mt-8">
+          <ArtifactDocument
+            title="Requirements Coverage Report"
+            description="Cited draft prepared from the brief and the support readiness checklist."
+            status="reviewing"
+            version="v1"
+            sourceCount={2}
+            meta={[
+              { label: "Owner", value: "Document Drafter" },
+              { label: "Updated", value: "34s ago" },
+            ]}
+            sections={artifactSections}
+          />
+        </div>
+      </section>
+
       <section id="memory-review" className="page-section">
         <p className="section-label mb-3">MEMORY</p>
         <h2 className="text-xl font-semibold tracking-tight">Memory Review</h2>
@@ -489,7 +511,9 @@ export function TemplatesContent() {
 
       <section id="run-monitor" className="page-section">
         <p className="section-label mb-3">MONITOR</p>
-        <h2 className="text-xl font-semibold tracking-tight">Run Monitor</h2>
+        <h2 className="text-xl font-semibold tracking-tight">
+          Background Run Monitor
+        </h2>
         <p className="mt-3 max-w-[640px] text-sm leading-relaxed text-muted-foreground">
           Use this template when agent work continues after the user leaves the
           composer.

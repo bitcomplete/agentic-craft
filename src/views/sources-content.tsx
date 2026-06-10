@@ -36,11 +36,11 @@ const sources = [
   {
     id: 1,
     title: "Launch Checklist: Support Readiness",
-    source: "docs.example.com/launch/support-readiness",
-    location: "Page 14",
+    source: "docs.internal/launch/support-readiness",
+    location: "§3 — Support readiness",
     icon: File01Icon,
     excerpt:
-      "The dedicated support plan requires issue triage procedures, named owners, and response timelines before enterprise release.",
+      "The standard support plan requires issue triage procedures, named owners, and response timelines before enterprise release.",
   },
   {
     id: 2,
@@ -54,8 +54,8 @@ const sources = [
   {
     id: 3,
     title: "Launch Guidance: Source Scope",
-    source: "docs.example.com/launch-guidance/source-scope",
-    location: "Page 21",
+    source: "docs.internal/launch-guidance/source-scope",
+    location: "§5 — Source scope",
     icon: Globe02Icon,
     excerpt:
       "Every source document supporting a launch decision must be linked from the final review summary.",
@@ -67,7 +67,7 @@ const artifactSections = [
     id: "claim",
     title: "Claim",
     status: "cited" as const,
-    source: "Launch Checklist, Page 14",
+    source: "Launch Checklist, §3",
     body: "Enterprise release is blocked until support owners and triage windows are named.",
   },
   {
@@ -136,7 +136,7 @@ export function SourcesContent() {
       <section id="citations" className="page-section">
         <p className="section-label mb-3">Citation system</p>
         <h2 className="text-xl font-semibold tracking-tight">
-          Inline marker to source preview
+          Inline Marker to Source Preview
         </h2>
         <p className="mt-3 max-w-[660px] text-sm leading-relaxed text-muted-foreground">
           Desktop can reveal the source on hover or focus. Mobile should use an
@@ -221,7 +221,7 @@ export function SourcesContent() {
       <section id="source-list" className="page-section">
         <p className="section-label mb-3">Source companion</p>
         <h2 className="text-xl font-semibold tracking-tight">
-          Sources remain inspectable after the answer
+          Sources Remain Inspectable After the Answer
         </h2>
         <div className="mt-8 divide-y divide-border/70 border-y border-border/70">
           {sources.map((source) => (
@@ -263,7 +263,7 @@ export function SourcesContent() {
 
       <section id="contextual-workbench" className="page-section">
         <h2 className="text-xl font-semibold tracking-tight">
-          Side panel work surface
+          Side Panel Work Surface
         </h2>
         <div className="mt-6 md:-mx-14 lg:-mx-28">
           <ContextualWorkbench />
@@ -273,7 +273,7 @@ export function SourcesContent() {
       <section id="artifact-document" className="page-section">
         <p className="section-label mb-3">Artifact output</p>
         <h2 className="text-xl font-semibold tracking-tight">
-          Document as the output surface
+          Document as the Output Surface
         </h2>
         <p className="mt-3 max-w-[660px] text-sm leading-relaxed text-muted-foreground">
           An agent output can be more than a message. A document surface shows
@@ -299,7 +299,7 @@ export function SourcesContent() {
       <section id="usage-meter" className="page-section">
         <p className="section-label mb-3">Usage</p>
         <h2 className="text-xl font-semibold tracking-tight">
-          Cost and limit surfaces
+          Cost and Limit Surfaces
         </h2>
         <div className="mt-8">
           <UsageMeter
@@ -335,7 +335,7 @@ export function SourcesContent() {
       <section id="implementation" className="page-section">
         <p className="section-label mb-3">Implementation</p>
         <h2 className="text-xl font-semibold tracking-tight">
-          Required states
+          Required States
         </h2>
         <div className="mt-8 hidden md:block">
           <Table>

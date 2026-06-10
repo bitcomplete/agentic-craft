@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "status-indicator",
+  "title": "Status Indicator",
+  "description": "The product-wide status vocabulary: one shape per state — check for complete, spinner for active, dashed circle for pending, clock for blocked, alert for warning and error — with sr-only labels.",
+  "dependencies": [
+    "@hugeicons/react",
+    "@hugeicons/core-free-icons"
+  ],
+  "files": [
+    {
+      "path": "registry/base-nova/ui/status-indicator.tsx",
+      "content": "\"use client\"\n\nimport {\n  Alert01Icon,\n  Clock01Icon,\n  Loading03Icon,\n  Tick01Icon,\n} from \"@hugeicons/core-free-icons\"\nimport { HugeiconsIcon } from \"@hugeicons/react\"\n\nimport { cn } from \"@/lib/utils\"\n\ntype StatusIndicatorStatus =\n  | \"pending\"\n  | \"idle\"\n  | \"active\"\n  | \"complete\"\n  | \"blocked\"\n  | \"warning\"\n  | \"error\"\n\nconst statusIndicatorLabels: Record<StatusIndicatorStatus, string> = {\n  pending: \"Pending\",\n  idle: \"Idle\",\n  active: \"Active\",\n  complete: \"Complete\",\n  blocked: \"Blocked\",\n  warning: \"Warning\",\n  error: \"Error\",\n}\n\n/* The product-wide status vocabulary: one shape per state so status never\n   relies on color alone — check in a soft square (complete), spinner\n   (active), dashed circle (pending/idle), clock (blocked), alert (warning /\n   error). Icon-only on screen; the label survives via sr-only text and a\n   title tooltip. */\nfunction StatusIndicator({\n  status,\n  label,\n  className,\n}: {\n  status: StatusIndicatorStatus\n  /** Override the visually hidden/tooltip text, e.g. \"Proposed\". */\n  label?: string\n  className?: string\n}) {\n  const text = label ?? statusIndicatorLabels[status]\n  return (\n    <span\n      data-slot=\"status-indicator\"\n      data-status={status}\n      title={text}\n      className={cn(\n        \"flex size-5 shrink-0 items-center justify-center\",\n        className\n      )}\n    >\n      {status === \"complete\" ? (\n        <span className=\"flex size-5 items-center justify-center rounded-md bg-foreground/10\">\n          <HugeiconsIcon\n            icon={Tick01Icon}\n            size={12}\n            strokeWidth={2}\n            className=\"text-foreground/70\"\n            aria-hidden=\"true\"\n          />\n        </span>\n      ) : status === \"active\" ? (\n        <HugeiconsIcon\n          icon={Loading03Icon}\n          size={14}\n          strokeWidth={1.5}\n          className=\"animate-spin text-foreground/70 motion-reduce:animate-none\"\n          aria-hidden=\"true\"\n        />\n      ) : status === \"pending\" || status === \"idle\" ? (\n        <span className=\"size-3 rounded-full border border-dashed border-muted-foreground/70\" />\n      ) : status === \"blocked\" ? (\n        <HugeiconsIcon\n          icon={Clock01Icon}\n          size={14}\n          strokeWidth={1.5}\n          className=\"text-muted-foreground\"\n          aria-hidden=\"true\"\n        />\n      ) : status === \"warning\" ? (\n        <HugeiconsIcon\n          icon={Alert01Icon}\n          size={14}\n          strokeWidth={1.5}\n          className=\"text-muted-foreground\"\n          aria-hidden=\"true\"\n        />\n      ) : (\n        <HugeiconsIcon\n          icon={Alert01Icon}\n          size={14}\n          strokeWidth={1.5}\n          className=\"text-destructive\"\n          aria-hidden=\"true\"\n        />\n      )}\n      <span className=\"sr-only\">{text}</span>\n    </span>\n  )\n}\n\nexport { StatusIndicator, statusIndicatorLabels, type StatusIndicatorStatus }\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

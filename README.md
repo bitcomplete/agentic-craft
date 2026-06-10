@@ -95,10 +95,12 @@ Current registry items:
 - `source-preview`
 - `artifact-document`
 - `usage-meter`
+- `contextual-workbench`
 - `effective-policy-preview`
 - `memory-ledger-item`
 - `run-trace`
 - `handoff-packet`
+- `status-indicator`
 - `review-workflow` as an evidence-review `registry:block`
 - `approval-workflow` as a human-in-the-loop `registry:block`
 - `clarifying-workflow` as a missing-decision `registry:block`

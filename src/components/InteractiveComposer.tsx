@@ -69,7 +69,7 @@ const PLACEHOLDER_MAP: Record<string, string> = {
 const INITIAL_LIFECYCLE_FILES: FileLifecycleFile[] = [
   {
     id: "brief",
-    name: "Project_Brief_v3.pdf",
+    name: "Project-Brief-v3.pdf",
     size: "2.4 MB",
     type: "file",
     status: "uploaded",
@@ -87,7 +87,7 @@ const INITIAL_LIFECYCLE_FILES: FileLifecycleFile[] = [
   },
   {
     id: "duplicate",
-    name: "Project_Brief_v2.pdf",
+    name: "Project-Brief-v2.pdf",
     size: "2.1 MB",
     type: "file",
     status: "rejected",
@@ -100,6 +100,21 @@ const INITIAL_SCOPE_ITEMS: ComposerScopeItem[] = [
   { id: "product", label: "Customer portal", icon: ComputerIcon },
   { id: "policy", label: "Launch guidelines", icon: Shield01Icon },
 ]
+
+const CONNECTOR_SCOPE_ITEM: ComposerScopeItem = {
+  id: "connector",
+  label: "Issue tracker",
+  icon: Plug01Icon,
+}
+
+const WEB_SEARCH_SCOPE_ITEM: ComposerScopeItem = {
+  id: "web-search",
+  label: "Web search",
+  icon: Globe02Icon,
+}
+
+const CLIPBOARD_FALLBACK =
+  "Review note: the enterprise release requires the standard support plan."
 
 const PLAN_TASKS = [
   {
@@ -162,6 +177,7 @@ function ComposerDemo({
   const [draft, setDraft] = useState("")
   const [fileSurface, setFileSurface] = useState<FileLifecycleSurface>("idle")
   const [files, setFiles] = useState<FileLifecycleFile[]>([])
+  const [justSent, setJustSent] = useState(false)
 
   const toggle = useCallback((key: keyof FeatureState) => {
     setFeatures((prev) => {
@@ -181,6 +197,24 @@ function ComposerDemo({
     setFeatures((prev) => ({ ...prev, attachments: true }))
     setFiles(INITIAL_LIFECYCLE_FILES)
     setFileSurface("idle")
+  }, [])
+
+  const addScopeItem = useCallback((item: ComposerScopeItem) => {
+    setFeatures((prev) => ({ ...prev, scopeBanner: true, replyTo: false }))
+    setScopeItems((prev) =>
+      prev.some((existing) => existing.id === item.id) ? prev : [...prev, item]
+    )
+  }, [])
+
+  const pasteFromClipboard = useCallback(async () => {
+    let text = ""
+    try {
+      text = (await navigator.clipboard.readText()).trim()
+    } catch {
+      // Clipboard access can be blocked — fall back to a sample snippet.
+    }
+    if (!text) text = CLIPBOARD_FALLBACK
+    setDraft((prev) => (prev ? `${prev} ${text}` : text))
   }, [])
 
   const removeFile = useCallback((file: FileLifecycleFile) => {
@@ -279,10 +313,11 @@ function ComposerDemo({
         value={draft}
         onValueChange={setDraft}
         canSend={draft.trim().length > 0 || files.length > 0}
-        onSend={(text) => {
-          console.log("send:", text)
+        onSend={() => {
           setFiles([])
           setFeatures((current) => ({ ...current, attachments: false }))
+          setJustSent(true)
+          setTimeout(() => setJustSent(false), 2500)
         }}
       >
         {hasIslands && (
@@ -327,7 +362,7 @@ function ComposerDemo({
                   <HugeiconsIcon icon={Image01Icon} strokeWidth={1.5} />
                   Upload image
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={pasteFromClipboard}>
                   <HugeiconsIcon icon={Attachment01Icon} strokeWidth={1.5} />
                   Paste from clipboard
                 </DropdownMenuItem>
@@ -335,11 +370,15 @@ function ComposerDemo({
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuLabel>Connect</DropdownMenuLabel>
-                <DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => addScopeItem(CONNECTOR_SCOPE_ITEM)}
+                >
                   <HugeiconsIcon icon={Plug01Icon} strokeWidth={1.5} />
                   Add connector
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => addScopeItem(WEB_SEARCH_SCOPE_ITEM)}
+                >
                   <HugeiconsIcon icon={Globe02Icon} strokeWidth={1.5} />
                   Web search
                 </DropdownMenuItem>
@@ -358,6 +397,15 @@ function ComposerDemo({
         </ComposerCard>
 
         {features.suggestions && <ComposerSuggestions items={SUGGESTIONS} />}
+
+        {justSent && (
+          <p
+            role="status"
+            className="animate-composer-slide mt-2 text-xs text-muted-foreground"
+          >
+            Message sent
+          </p>
+        )}
       </Composer>
     </div>
   )

@@ -4,7 +4,7 @@ import { ActionsContent } from "@/views/actions-content"
 export const metadata: Metadata = {
   title: "Agent Actions | Agentic Craft",
   description:
-    "Reference patterns for tool calls, plans, clarifying questions, decisions, approvals, and parallel execution",
+    "How an agent shows its work while it acts, from tool calls to the approval gate before anything irreversible happens",
 }
 
 export default function ActionsPage() {

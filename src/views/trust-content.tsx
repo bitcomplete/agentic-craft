@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   Alert01Icon,
@@ -10,6 +10,7 @@ import {
   Shield01Icon,
   Activity01Icon,
   Brain01Icon,
+  Coins01Icon,
   File01Icon,
   LinkSquare01Icon,
   Target01Icon,
@@ -51,7 +52,7 @@ const AUDIT_ENTRIES = [
     time: "14:02:11",
     action: "Opened Project brief v3",
     user: "Agent",
-    outcome: "Loaded 47 requirement definitions",
+    outcome: "Loaded 23 requirement definitions",
     source: "Project-Brief-v3.pdf",
   },
   {
@@ -80,7 +81,7 @@ const AUDIT_ENTRIES = [
 const PROVENANCE_SOURCES = [
   {
     document: "Project brief v3",
-    section: "§5.1 — requirement Definitions",
+    section: "§5.1 — Requirement Definitions",
     confidence: 0.94,
     type: "Primary",
   },
@@ -102,7 +103,7 @@ const PROVENANCE_CHAIN = [
   {
     step: "Source",
     label: "Brief v3, §5.1",
-    detail: "Export workflow specifies CSV and JSON export for data encryption",
+    detail: "Export workflow specifies CSV and JSON export",
   },
   {
     step: "Extracted",
@@ -114,23 +115,22 @@ const PROVENANCE_CHAIN = [
     step: "Inference",
     label: "Gap analysis",
     detail:
-      "Test case TC-047 covers CSV and JSON exports but not CBC mode specifically",
+      "Test case TC-047 covers CSV exports but not JSON pagination edge cases",
   },
   {
     step: "Conclusion",
     label: "Finding",
-    detail:
-      "Partial coverage — recommend additional test for CBC mode validation",
+    detail: "Partial coverage — recommend an additional large-export test",
   },
 ]
 
 const COST_BREAKDOWN = {
   model: "claude-opus-4-6",
   inputTokens: 12_847,
-  outputTokens: 3_291,
+  outputTokens: 287,
   inputCost: 0.19,
-  outputCost: 0.05,
-  totalCost: 0.24,
+  outputCost: 0.02,
+  totalCost: 0.21,
   elapsed: "4.2s",
 }
 
@@ -226,7 +226,7 @@ const MODE_CONFIGS = {
       "Ensuring all source material meets operating playbook requirements and policy alignment claims.",
     tools: [
       "Source completeness checker",
-      "requirement coverage matrix generator",
+      "Requirement coverage matrix generator",
       "Policy alignment validator",
       "Lifecycle document scanner",
     ],
@@ -248,7 +248,7 @@ const MODE_CONFIGS = {
       "Reviewing project deliverables, checking consistency across documents, and preparing for stakeholder reviews.",
     tools: [
       "Cross-document consistency checker",
-      "launch summary section reviewer",
+      "Launch summary section reviewer",
       "Finding classification advisor",
       "Audit preparation checklist",
     ],
@@ -256,21 +256,21 @@ const MODE_CONFIGS = {
 }
 
 const SCOPE_CONFIGS = {
-  device: {
-    label: "Device Only",
+  portal: {
+    label: "Portal Only",
     scope: "ACME Customer Portal v3.1",
     documents: [
       { name: "Project brief v3", section: "Full document" },
       { name: "QA Notes 2026-003", section: "Product-specific checks" },
     ],
   },
-  devicePP: {
-    label: "Product + Policy",
-    scope: "ACME SmartCard + Launch Policy v2",
+  portalPolicy: {
+    label: "Portal + Policy",
+    scope: "ACME Customer Portal v3.1 + Launch Policy v2",
     documents: [
       { name: "Project brief v3", section: "Full document" },
       { name: "QA Notes 2026-003", section: "All check results" },
-      { name: "Launch Policy v2", section: "requirement requirements" },
+      { name: "Launch Policy v2", section: "Requirement definitions" },
       { name: "Policy Review Report", section: "Alignment claims" },
     ],
   },
@@ -346,8 +346,8 @@ export function TrustContent() {
 
   /* — Context Scope — */
   const [scopeCtrl, setScopeCtrl] = useState<Record<string, boolean>>({
-    device: true,
-    devicePP: false,
+    portal: true,
+    portalPolicy: false,
     global: false,
   })
   const [scopeAnimKey, setScopeAnimKey] = useState(0)
@@ -359,6 +359,19 @@ export function TrustContent() {
     declined: false,
   })
   const [consentAnimKey, setConsentAnimKey] = useState(0)
+  const consentOutcomeRef = useRef<HTMLDivElement>(null)
+  const consentFocusPending = useRef(false)
+
+  /* Approve/Decline unmount the focused button — move focus to the outcome */
+  useEffect(() => {
+    if (
+      consentFocusPending.current &&
+      (consentCtrl.accepted || consentCtrl.declined)
+    ) {
+      consentFocusPending.current = false
+      consentOutcomeRef.current?.focus()
+    }
+  }, [consentCtrl])
 
   /* — Confidence Display — */
   const [confCtrl, setConfCtrl] = useState<Record<string, boolean>>({
@@ -428,10 +441,10 @@ export function TrustContent() {
       : MODE_CONFIGS.review
 
   /* Resolve active scope */
-  const activeScope = scopeCtrl.device
-    ? SCOPE_CONFIGS.device
-    : scopeCtrl.devicePP
-      ? SCOPE_CONFIGS.devicePP
+  const activeScope = scopeCtrl.portal
+    ? SCOPE_CONFIGS.portal
+    : scopeCtrl.portalPolicy
+      ? SCOPE_CONFIGS.portalPolicy
       : SCOPE_CONFIGS.global
 
   const effectivePolicies: EffectivePolicy[] = [
@@ -870,8 +883,8 @@ export function TrustContent() {
         <div className="mt-8">
           <Controls
             options={[
-              { key: "device", label: "Device Only" },
-              { key: "devicePP", label: "Product + Policy" },
+              { key: "portal", label: "Portal Only" },
+              { key: "portalPolicy", label: "Portal + Policy" },
               { key: "global", label: "Global" },
             ]}
             active={scopeCtrl}
@@ -942,13 +955,13 @@ export function TrustContent() {
                       {activeScope.documents.length !== 1 ? "s" : ""} in scope
                     </span>
                     <div className="ml-auto flex items-center gap-1">
-                      {["device", "devicePP", "global"].map((s) => (
+                      {["portal", "portalPolicy", "global"].map((s) => (
                         <div
                           key={s}
                           className={`h-1.5 w-4 rounded-md transition-colors ${
-                            s === "device" ||
-                            (s === "devicePP" &&
-                              (scopeCtrl.devicePP || scopeCtrl.global)) ||
+                            s === "portal" ||
+                            (s === "portalPolicy" &&
+                              (scopeCtrl.portalPolicy || scopeCtrl.global)) ||
                             (s === "global" && scopeCtrl.global)
                               ? "bg-foreground/20"
                               : "bg-muted"
@@ -982,7 +995,7 @@ export function TrustContent() {
             <TableBody className="text-muted-foreground">
               <TableRow className="border-b border-border/50">
                 <TableCell className="py-2.5 pr-4 font-medium text-foreground">
-                  Device Only
+                  Portal Only
                 </TableCell>
                 <TableCell className="py-2.5 pr-4">2 documents</TableCell>
                 <TableCell className="py-2.5">
@@ -991,7 +1004,7 @@ export function TrustContent() {
               </TableRow>
               <TableRow className="border-b border-border/50">
                 <TableCell className="py-2.5 pr-4 font-medium text-foreground">
-                  Product + Policy
+                  Portal + Policy
                 </TableCell>
                 <TableCell className="py-2.5 pr-4">4 documents</TableCell>
                 <TableCell className="py-2.5">
@@ -1065,7 +1078,7 @@ export function TrustContent() {
                       </p>
                       <p className="mt-1 text-xs text-muted-foreground">
                         The agent wants to send a project finding summary to the
-                        developer contact for product Portal-v3.
+                        developer contact for ACME Customer Portal v3.1.
                       </p>
                     </div>
                   </div>
@@ -1075,28 +1088,31 @@ export function TrustContent() {
                     </p>
                     <p className="text-sm">
                       Email 2 findings (Export workflow, Timestamp handling) to
-                      project-owner@example.com with a 10-day response deadline.
+                      project-owner@acme.internal with a 10-day response
+                      deadline.
                     </p>
                   </div>
                   <div className="ml-10 flex items-center gap-3">
                     <Button
-                      onClick={() =>
+                      onClick={() => {
+                        consentFocusPending.current = true
                         makeToggle(
                           setConsentCtrl,
                           setConsentAnimKey
                         )("accepted")
-                      }
+                      }}
                       size="xs"
                     >
                       Approve
                     </Button>
                     <Button
-                      onClick={() =>
+                      onClick={() => {
+                        consentFocusPending.current = true
                         makeToggle(
                           setConsentCtrl,
                           setConsentAnimKey
                         )("declined")
-                      }
+                      }}
                       variant="outline"
                       size="xs"
                     >
@@ -1115,7 +1131,11 @@ export function TrustContent() {
 
               {/* Accepted state */}
               {consentCtrl.accepted && (
-                <div className="flex flex-col gap-4">
+                <div
+                  ref={consentOutcomeRef}
+                  tabIndex={-1}
+                  className="flex flex-col gap-4"
+                >
                   <div className="flex items-start gap-3">
                     <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted">
                       <HugeiconsIcon
@@ -1125,11 +1145,11 @@ export function TrustContent() {
                         className="text-muted-foreground"
                       />
                     </div>
-                    <div>
+                    <div role="status">
                       <p className="text-sm font-medium">Action approved</p>
                       <p className="mt-1 text-xs text-muted-foreground">
-                        Email sent to project-owner@example.com with 2 findings.
-                        Response deadline: March 25, 2026.
+                        Email sent to project-owner@acme.internal with 2
+                        findings. Response deadline: March 25, 2026.
                       </p>
                     </div>
                   </div>
@@ -1149,7 +1169,11 @@ export function TrustContent() {
 
               {/* Declined state */}
               {consentCtrl.declined && (
-                <div className="flex flex-col gap-4">
+                <div
+                  ref={consentOutcomeRef}
+                  tabIndex={-1}
+                  className="flex flex-col gap-4"
+                >
                   <div className="flex items-start gap-3">
                     <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted">
                       <HugeiconsIcon
@@ -1159,7 +1183,7 @@ export function TrustContent() {
                         className="text-muted-foreground"
                       />
                     </div>
-                    <div>
+                    <div role="status">
                       <p className="text-sm font-medium">Action declined</p>
                       <p className="mt-1 text-xs text-muted-foreground">
                         The email was not sent. You can change this in settings
@@ -1384,9 +1408,13 @@ export function TrustContent() {
                     size="xs"
                     className="mt-2"
                   >
-                    {verifyClicked
-                      ? "Verification request sent to reviewer"
-                      : "Request reviewer verification"}
+                    {verifyClicked ? (
+                      <span role="status">
+                        Verification request sent to reviewer
+                      </span>
+                    ) : (
+                      "Request reviewer verification"
+                    )}
                   </Button>
                 </div>
               )}
@@ -1692,13 +1720,13 @@ export function TrustContent() {
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
                     <HugeiconsIcon
-                      icon={Activity01Icon}
+                      icon={Coins01Icon}
                       size={12}
                       strokeWidth={1.5}
                       className="text-muted-foreground"
                     />
                     <span className="text-xs text-muted-foreground">
-                      16,138 tokens
+                      13,134 tokens
                     </span>
                   </div>
                   <span className="text-xs text-muted-foreground">·</span>
@@ -1725,7 +1753,7 @@ export function TrustContent() {
                 <div className="flex flex-col gap-4">
                   <div className="mb-2 flex items-center gap-2">
                     <HugeiconsIcon
-                      icon={Activity01Icon}
+                      icon={Coins01Icon}
                       size={14}
                       strokeWidth={1.5}
                       className="text-muted-foreground"
@@ -1738,7 +1766,7 @@ export function TrustContent() {
                         Input tokens
                       </p>
                       <p className="text-sm font-medium tabular-nums">
-                        {COST_BREAKDOWN.inputTokens.toLocaleString()}
+                        {COST_BREAKDOWN.inputTokens.toLocaleString("en-US")}
                       </p>
                     </div>
                     <div>
@@ -1746,7 +1774,7 @@ export function TrustContent() {
                         Output tokens
                       </p>
                       <p className="text-sm font-medium tabular-nums">
-                        {COST_BREAKDOWN.outputTokens.toLocaleString()}
+                        {COST_BREAKDOWN.outputTokens.toLocaleString("en-US")}
                       </p>
                     </div>
                     <div>

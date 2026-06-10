@@ -91,6 +91,7 @@ function ToolCallTrigger({
   return (
     <div
       data-slot="tool-call-trigger-wrap"
+      aria-busy={status === "running" || undefined}
       className="group/tool-wrapper relative flex items-center gap-2"
     >
       <button
@@ -137,6 +138,8 @@ function ToolCallTrigger({
           />
         )}
       </button>
+      {status === "running" && <span className="sr-only">Running</span>}
+      {status === "failed" && <span className="sr-only">Failed</span>}
       {timestamp && (
         <span className="ml-auto shrink-0 truncate text-xs text-muted-foreground select-none">
           {timestamp}

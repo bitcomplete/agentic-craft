@@ -30,12 +30,23 @@ export const templateDetails: TemplateDetail[] = [
     slug: "review-workflow",
     title: "Review Workflow",
     eyebrow: "Template",
-    summary: "Collect evidence, inspect gaps, ask focused follow-ups, and produce a reviewable result.",
-    whenToUse: "Use when an agent reviews source material and the user must trust, cite, or approve the result.",
-    humanControl: "Users choose source scope, answer unresolved questions, and approve the final summary before distribution.",
-    failureMode: "Sources conflict, required scope is missing, or the agent cannot verify a claim.",
-    recovery: "Keep the draft blocked, show unresolved sources, and ask targeted clarifying questions.",
-    pieces: ["Observable Work", "Reference Item", "Clarifying Questions", "Decision Surface"],
+    summary:
+      "Collect evidence, inspect gaps, ask focused follow-ups, and produce a reviewable result.",
+    whenToUse:
+      "Use when an agent reviews source material and the user must trust, cite, or approve the result.",
+    humanControl:
+      "Users choose source scope, answer unresolved questions, and approve the final summary before distribution.",
+    failureMode:
+      "Sources conflict, required scope is missing, or the agent cannot verify a claim.",
+    recovery:
+      "Keep the draft blocked, show unresolved sources, and ask targeted clarifying questions.",
+    pieces: [
+      "Observable Work",
+      "Reference Item",
+      "Clarifying Questions",
+      "Action Preview",
+      "Decision Surface",
+    ],
     states: [
       {
         state: "Collecting",
@@ -58,12 +69,17 @@ export const templateDetails: TemplateDetail[] = [
     slug: "approval-workflow",
     title: "Approval Workflow",
     eyebrow: "Template",
-    summary: "Pause before irreversible, external, costly, or permissioned actions.",
-    whenToUse: "Use when an agent sends, publishes, spends, modifies records, or changes external state.",
-    humanControl: "Users see impact, affected objects, cost, provenance, and rollback before approving.",
-    failureMode: "The action scope changes after preview, rollback is unavailable, or permission is insufficient.",
-    recovery: "Invalidate the approval, refresh the preview, and require a new confirmation.",
-    pieces: ["Decision Surface", "Badge", "Alert", "Reference Item"],
+    summary:
+      "Pause before irreversible, external, costly, or permissioned actions.",
+    whenToUse:
+      "Use when an agent sends, publishes, spends, modifies records, or changes external state.",
+    humanControl:
+      "Users see impact, affected objects, cost, provenance, and rollback before approving.",
+    failureMode:
+      "The action scope changes after preview, rollback is unavailable, or permission is insufficient.",
+    recovery:
+      "Invalidate the approval, refresh the preview, and require a new confirmation.",
+    pieces: ["Observable Work", "Action Preview", "Decision Surface", "Badge"],
     states: [
       {
         state: "Preview",
@@ -86,12 +102,23 @@ export const templateDetails: TemplateDetail[] = [
     slug: "clarifying-workflow",
     title: "Clarifying Workflow",
     eyebrow: "Template",
-    summary: "Ask only for missing information using structured fields and visible defaults.",
-    whenToUse: "Use when proceeding would force the agent to invent a requirement or policy decision.",
-    humanControl: "Users can answer, skip, or keep defaults visible while the agent remains blocked.",
-    failureMode: "Too many open questions, vague answer requirements, or chatty follow-up loops.",
-    recovery: "Batch questions by decision type and preserve defaults for unanswered items.",
-    pieces: ["Clarifying Questions", "Field", "Input Group", "Toggle Group"],
+    summary:
+      "Ask only for missing information using structured fields and visible defaults.",
+    whenToUse:
+      "Use when proceeding would force the agent to invent a requirement or policy decision.",
+    humanControl:
+      "Users can answer, skip, or keep defaults visible while the agent remains blocked.",
+    failureMode:
+      "Too many open questions, vague answer requirements, or chatty follow-up loops.",
+    recovery:
+      "Batch questions by decision type and preserve defaults for unanswered items.",
+    pieces: [
+      "Clarifying Questions",
+      "Observable Work",
+      "Field",
+      "Input Group",
+      "Toggle Group",
+    ],
     states: [
       {
         state: "Needed",
@@ -114,26 +141,34 @@ export const templateDetails: TemplateDetail[] = [
     slug: "source-backed-artifact",
     title: "Source-Backed Artifact",
     eyebrow: "Template",
-    summary: "Turn an agent answer into a cited output document with source preview, missing-source state, and usage budget.",
-    whenToUse: "Use when the agent produces a durable answer, report, summary, document, or file that users need to inspect after the conversation.",
-    humanControl: "Users can inspect sources, see uncited sections, review usage, and decide whether the artifact is ready to share.",
-    failureMode: "The output mixes cited and uncited claims, hides missing sources, or separates cost from the generated artifact.",
-    recovery: "Keep the artifact in review, mark sections that need source material, and ask for scope clarification before publishing.",
-    pieces: ["Artifact Document", "Source Preview", "Usage Meter", "Reference Item"],
+    summary:
+      "Turn an agent answer into a cited output document with source preview, missing-source state, and usage budget.",
+    whenToUse:
+      "Use when the agent produces a durable answer, report, summary, document, or file that users need to inspect after the conversation.",
+    humanControl:
+      "Users can inspect sources, see uncited sections, review usage, and decide whether the artifact is ready to share.",
+    failureMode:
+      "The output mixes cited and uncited claims, hides missing sources, or separates cost from the generated artifact.",
+    recovery:
+      "Keep the artifact in review, mark sections that need source material, and ask for scope clarification before publishing.",
+    pieces: ["Artifact Document", "Source Preview", "Usage Meter"],
     states: [
       {
         state: "Draft",
-        userSees: "Document sections, linked sources, uncited gaps, and current budget.",
+        userSees:
+          "Document sections, linked sources, uncited gaps, and current budget.",
         systemDoes: "Keeps the output local and editable.",
       },
       {
         state: "Needs source",
         userSees: "The exact section that cannot be verified.",
-        systemDoes: "Blocks sharing until a source or human override is supplied.",
+        systemDoes:
+          "Blocks sharing until a source or human override is supplied.",
       },
       {
         state: "Ready",
-        userSees: "Cited sections, source list, version, owner, and final usage.",
+        userSees:
+          "Cited sections, source list, version, owner, and final usage.",
         systemDoes: "Prepares the artifact for approval or export.",
       },
     ],
@@ -143,11 +178,20 @@ export const templateDetails: TemplateDetail[] = [
     title: "Memory Review",
     eyebrow: "Template",
     summary: "Review proposed durable context before it is saved or reused.",
-    whenToUse: "Use when an agent wants to remember preferences, facts, project constraints, or user corrections.",
-    humanControl: "Users can edit, scope, expire, save, or reject each proposed memory.",
-    failureMode: "A memory lacks source provenance, scope, expiry, or user consent.",
-    recovery: "Keep the memory proposed, not saved, until provenance and scope are clear.",
-    pieces: ["Reference Item", "Field", "Switch", "Decision Surface"],
+    whenToUse:
+      "Use when an agent wants to remember preferences, facts, project constraints, or user corrections.",
+    humanControl:
+      "Users can edit, scope, expire, save, or reject each proposed memory.",
+    failureMode:
+      "A memory lacks source provenance, scope, expiry, or user consent.",
+    recovery:
+      "Keep the memory proposed, not saved, until provenance and scope are clear.",
+    pieces: [
+      "Memory Ledger Item",
+      "Source Preview",
+      "Reference Item",
+      "Decision Surface",
+    ],
     states: [
       {
         state: "Proposed",
@@ -170,11 +214,16 @@ export const templateDetails: TemplateDetail[] = [
     slug: "run-monitor",
     title: "Background Run Monitor",
     eyebrow: "Template",
-    summary: "Track background work after the user leaves the composer or page.",
-    whenToUse: "Use for long-running jobs, scheduled work, review tasks, and multi-source scans.",
-    humanControl: "Users can inspect progress, cost, confidence, blockers, and cancellation points.",
-    failureMode: "The run stalls silently, exceeds budget, or hides which source caused the block.",
-    recovery: "Expose blocked state, partial output, retry action, and cancellation affordance.",
+    summary:
+      "Track background work after the user leaves the composer or page.",
+    whenToUse:
+      "Use for long-running jobs, scheduled work, review tasks, and multi-source scans.",
+    humanControl:
+      "Users can inspect progress, cost, confidence, blockers, and cancellation points.",
+    failureMode:
+      "The run stalls silently, exceeds budget, or hides which source caused the block.",
+    recovery:
+      "Expose blocked state, partial output, retry action, and cancellation affordance.",
     pieces: ["Run Trace", "Usage Meter", "Agent Status Table", "Badge"],
     states: [
       {
@@ -198,11 +247,16 @@ export const templateDetails: TemplateDetail[] = [
     slug: "multi-agent-handoff",
     title: "Multi-Agent Handoff",
     eyebrow: "Template",
-    summary: "Show ownership transfer between agents with payload, status, and next action.",
-    whenToUse: "Use when work moves from one specialist agent to another or parallel agents converge.",
-    humanControl: "Users can see sender, receiver, carried context, omitted context, and current owner.",
-    failureMode: "The receiving agent lacks context, duplicates work, or users cannot tell who owns the task.",
-    recovery: "Keep the handoff packet inspectable and require acceptance before downstream work starts.",
+    summary:
+      "Show ownership transfer between agents with payload, status, and next action.",
+    whenToUse:
+      "Use when work moves from one specialist agent to another or parallel agents converge.",
+    humanControl:
+      "Users can see sender, receiver, carried context, omitted context, and current owner.",
+    failureMode:
+      "The receiving agent lacks context, duplicates work, or users cannot tell who owns the task.",
+    recovery:
+      "Keep the handoff packet inspectable and require acceptance before downstream work starts.",
     pieces: ["Handoff Packet", "Run Trace", "Agent Status Table"],
     states: [
       {
@@ -226,12 +280,17 @@ export const templateDetails: TemplateDetail[] = [
     slug: "agent-settings",
     title: "Agent Settings",
     eyebrow: "Template",
-    summary: "Durable controls for autonomy, approvals, notifications, and memory boundaries.",
-    whenToUse: "Use when behavior should persist across sessions instead of relying on one-off prompts.",
-    humanControl: "Users or admins set the boundaries once and review risky changes.",
-    failureMode: "Settings are hidden, labels are not clickable, or dangerous toggles apply instantly.",
-    recovery: "Use confirmation, undo, and audit trail for risky setting changes.",
-    pieces: ["Field", "Switch", "Decision Surface", "Reference Item"],
+    summary:
+      "Durable controls for autonomy, approvals, notifications, and memory boundaries.",
+    whenToUse:
+      "Use when behavior should persist across sessions instead of relying on one-off prompts.",
+    humanControl:
+      "Users or admins set the boundaries once and review risky changes.",
+    failureMode:
+      "Settings are hidden, labels are not clickable, or dangerous toggles apply instantly.",
+    recovery:
+      "Use confirmation, undo, and audit trail for risky setting changes.",
+    pieces: ["Field", "Switch", "Effective Policy Preview"],
     states: [
       {
         state: "Default",

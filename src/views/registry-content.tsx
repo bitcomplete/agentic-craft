@@ -107,13 +107,13 @@ export function RegistryContent() {
       <section id="install" className="page-section">
         <p className="section-label mb-3">Install</p>
         <h2 className="text-xl font-semibold tracking-tight">
-          Registry commands
+          Registry Commands
         </h2>
         <div className="mt-6 grid gap-3">
           {[
-            "npx shadcn@latest list http://localhost:3000/r/registry.json",
-            "npx shadcn@latest view http://localhost:3000/r/source-backed-artifact.json",
-            "npx shadcn@latest add http://localhost:3000/r/source-backed-artifact.json",
+            "npx shadcn@latest list https://raw.githubusercontent.com/arielconti10/agentic-craft/main/public/r/registry.json",
+            "npx shadcn@latest view https://raw.githubusercontent.com/arielconti10/agentic-craft/main/public/r/source-backed-artifact.json",
+            "npx shadcn@latest add https://raw.githubusercontent.com/arielconti10/agentic-craft/main/public/r/source-backed-artifact.json",
           ].map((command) => (
             <code
               key={command}
@@ -123,6 +123,9 @@ export function RegistryContent() {
             </code>
           ))}
         </div>
+        <p className="mt-3 text-xs text-muted-foreground">
+          A local dev server serves the same payloads at /r/ for previewing.
+        </p>
       </section>
 
       <section id="primitives" className="page-section">
@@ -142,7 +145,7 @@ export function RegistryContent() {
       <section id="blocks" className="page-section">
         <p className="section-label mb-3">registry:block</p>
         <h2 className="text-xl font-semibold tracking-tight">
-          Workflow blocks
+          Workflow Blocks
         </h2>
         <p className="mt-3 max-w-[640px] text-sm leading-relaxed text-muted-foreground">
           Blocks compose primitives into product-ready workflow specimens. They
@@ -157,7 +160,7 @@ export function RegistryContent() {
       <section id="quality-gates" className="page-section">
         <p className="section-label mb-3">Quality gates</p>
         <h2 className="text-xl font-semibold tracking-tight">
-          Before publishing an item
+          Before Publishing an Item
         </h2>
         <div className="mt-8 divide-y divide-border/70 border-y border-border/70">
           {[

@@ -2,14 +2,17 @@
 
 import * as React from "react"
 import {
-  AiBrowserIcon,
   ArrowDown01Icon,
+  ArrowLeft01Icon,
+  ArrowRight01Icon,
+  ArrowUp02Icon,
   BrowserIcon,
   File01Icon,
   GitCompareIcon,
+  Globe02Icon,
   PlusSignIcon,
+  RefreshIcon,
   Shield01Icon,
-  Tick01Icon,
   ViewSidebarRightIcon,
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react"
@@ -62,6 +65,7 @@ export type ContextualWorkbenchMessage = {
   label: string
   body: React.ReactNode
   timestamp?: string
+  duration?: string
   surfaceId?: string
 }
 
@@ -91,7 +95,6 @@ const defaultSurfaces: ContextualWorkbenchSurface[] = [
     description: "Inspecting launch readiness.",
     status: "active",
     kind: "browser",
-    icon: AiBrowserIcon,
   },
   {
     id: "source",
@@ -125,7 +128,7 @@ const defaultSurfaces: ContextualWorkbenchSurface[] = [
     items: [
       {
         label: "Support owner",
-        detail: "Project_Brief_v3.md",
+        detail: "Project-Brief-v3.md",
         status: "idle",
       },
       {
@@ -151,6 +154,7 @@ const defaultMessages: ContextualWorkbenchMessage[] = [
     label: "Agent",
     body: "I opened the page and selected the support readiness banner.",
     timestamp: "09:42",
+    duration: "27s",
     surfaceId: "browser",
   },
   {
@@ -159,6 +163,7 @@ const defaultMessages: ContextualWorkbenchMessage[] = [
     label: "Agent",
     body: "The checklist requires a named owner and triage window before release.",
     timestamp: "09:43",
+    duration: "41s",
     surfaceId: "source",
   },
 ]
@@ -187,7 +192,9 @@ function ContextualWorkbenchMessageRow({
         {!isUser && (
           <div className="mb-2 flex items-center gap-2 text-[11px] text-muted-foreground">
             <span>
-              {message.label === "Agent" ? "Worked for 27s" : message.label}
+              {message.duration
+                ? `Worked for ${message.duration}`
+                : message.label}
             </span>
             {message.timestamp && (
               <span className="tabular-nums">{message.timestamp}</span>
@@ -227,36 +234,35 @@ function ContextualWorkbenchChatPane({
             <span>37 previous messages</span>
             <HugeiconsIcon
               icon={ArrowDown01Icon}
-              strokeWidth={1.7}
+              strokeWidth={1.5}
               aria-hidden="true"
             />
           </button>
         </div>
         <div className="border-b border-border/70 px-3 py-2.5">
           <div className="mb-2 flex items-center justify-between gap-3 text-xs">
-            <span className="font-medium text-foreground">2 files changed</span>
+            <span className="font-medium text-foreground">1 file changed</span>
             <Button type="button" variant="ghost" size="xs">
               Undo
             </Button>
           </div>
           <div className="divide-y divide-border/70 rounded-md border border-border/70">
-            {[
-              ["src/app/page.tsx", "+28", "-2"],
-              ["src/styles.css", "+4", "-1"],
-            ].map(([file, added, removed]) => (
-              <div
-                key={file}
-                className="flex items-center justify-between gap-3 px-2 py-1.5 text-xs"
-              >
-                <span className="min-w-0 truncate text-muted-foreground">
-                  {file}
-                </span>
-                <span className="flex items-center gap-1 tabular-nums">
-                  <span className="text-foreground">{added}</span>
-                  <span className="text-muted-foreground">{removed}</span>
-                </span>
-              </div>
-            ))}
+            {[["Project-Brief-v3.md", "+3", "-0"]].map(
+              ([file, added, removed]) => (
+                <div
+                  key={file}
+                  className="flex items-center justify-between gap-3 px-2 py-1.5 text-xs"
+                >
+                  <span className="min-w-0 truncate text-muted-foreground">
+                    {file}
+                  </span>
+                  <span className="flex items-center gap-1 tabular-nums">
+                    <span className="text-foreground">{added}</span>
+                    <span className="text-muted-foreground">{removed}</span>
+                  </span>
+                </div>
+              )
+            )}
           </div>
         </div>
       </div>
@@ -271,7 +277,7 @@ function ContextualWorkbenchChatPane({
                 <HugeiconsIcon
                   icon={PlusSignIcon}
                   data-icon="inline-start"
-                  strokeWidth={1.7}
+                  strokeWidth={1.5}
                   aria-hidden="true"
                 />
                 <span className="sr-only">Add context</span>
@@ -280,9 +286,9 @@ function ContextualWorkbenchChatPane({
             </div>
             <Button type="button" variant="secondary" size="icon-xs">
               <HugeiconsIcon
-                icon={Tick01Icon}
+                icon={ArrowUp02Icon}
                 data-icon="inline-start"
-                strokeWidth={1.7}
+                strokeWidth={1.5}
                 aria-hidden="true"
               />
               <span className="sr-only">Send</span>
@@ -298,13 +304,28 @@ function BrowserPreview() {
   return (
     <div className="flex h-full min-h-[260px] flex-1 flex-col">
       <div className="flex items-center gap-2 border-b border-border/70 px-2 py-1.5 text-[11px] text-muted-foreground">
-        <span aria-hidden="true">‹</span>
-        <span aria-hidden="true">›</span>
-        <span aria-hidden="true">↻</span>
         <HugeiconsIcon
-          icon={BrowserIcon}
-          data-icon="inline-start"
-          strokeWidth={1.7}
+          icon={ArrowLeft01Icon}
+          size={13}
+          strokeWidth={1.5}
+          aria-hidden="true"
+        />
+        <HugeiconsIcon
+          icon={ArrowRight01Icon}
+          size={13}
+          strokeWidth={1.5}
+          aria-hidden="true"
+        />
+        <HugeiconsIcon
+          icon={RefreshIcon}
+          size={13}
+          strokeWidth={1.5}
+          aria-hidden="true"
+        />
+        <HugeiconsIcon
+          icon={Globe02Icon}
+          size={13}
+          strokeWidth={1.5}
           aria-hidden="true"
         />
         <span className="min-w-0 flex-1 truncate">127.0.0.1:4173</span>
@@ -402,7 +423,7 @@ function SourcePreviewBody({
 function DiffPreview({ surface }: { surface: ContextualWorkbenchSurface }) {
   return (
     <div className="divide-y divide-border/70 font-mono text-xs">
-      <div className="px-3 py-2 text-muted-foreground">Project_Brief_v3.md</div>
+      <div className="px-3 py-2 text-muted-foreground">Project-Brief-v3.md</div>
       <div className="px-3 py-2 text-muted-foreground">
         @@ launch-readiness/support @@
       </div>
@@ -477,7 +498,7 @@ function ContextualWorkbenchSurfacePane({
                 <HugeiconsIcon
                   icon={getSurfaceIcon(candidate)}
                   data-icon="inline-start"
-                  strokeWidth={1.7}
+                  strokeWidth={1.5}
                   aria-hidden="true"
                 />
                 {candidate.label}
@@ -489,7 +510,7 @@ function ContextualWorkbenchSurfacePane({
           <HugeiconsIcon
             icon={PlusSignIcon}
             data-icon="inline-start"
-            strokeWidth={1.7}
+            strokeWidth={1.5}
             aria-hidden="true"
           />
           <span className="sr-only">Add workbench surface</span>

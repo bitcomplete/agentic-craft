@@ -54,7 +54,7 @@ import {
 const MEMORY_ENTRIES = [
   {
     id: "m1",
-    key: "Preferred release tier level",
+    key: "Preferred release tier",
     value: "enterprise release",
     source: "Launch review session",
     page: "Message 18",
@@ -130,7 +130,7 @@ const PRIVACY_CATEGORIES = [
   {
     key: "preferences",
     label: "Preferences",
-    desc: "release tier level, report format, workflow choices",
+    desc: "release tier, report format, workflow choices",
   },
   {
     key: "docHistory",
@@ -195,6 +195,7 @@ export function MemoryContent() {
     edit: false,
     delete: false,
   })
+  const [savedValue, setSavedValue] = useState("enterprise release")
   const [editValue, setEditValue] = useState("enterprise release")
   const [crudAnimKey, setCrudAnimKey] = useState(0)
 
@@ -208,8 +209,14 @@ export function MemoryContent() {
       next[key] = true
       return next
     })
-    setEditValue("enterprise release")
+    setEditValue(savedValue)
     setCrudAnimKey((k) => k + 1)
+  }
+
+  const handleCrudSave = () => {
+    const trimmed = editValue.trim()
+    if (trimmed) setSavedValue(trimmed)
+    handleCrudToggle("view")
   }
 
   /* ── Section 3: Auto-Memory ── */
@@ -565,17 +572,15 @@ export function MemoryContent() {
                 <div className="flex items-center justify-between">
                   <div>
                     <span className="text-xs text-muted-foreground/60">
-                      Preferred release tier level
+                      Preferred release tier
                     </span>
-                    <p className="text-sm text-foreground/85">
-                      enterprise release
-                    </p>
+                    <p className="text-sm text-foreground/85">{savedValue}</p>
                   </div>
                   <div className="flex items-center gap-0.5">
                     <Button
                       type="button"
                       onClick={() => handleCrudToggle("edit")}
-                      aria-label="Edit memory: Preferred release tier level"
+                      aria-label="Edit memory: Preferred release tier"
                       variant="ghost"
                       size="icon-sm"
                       className="text-muted-foreground hover:text-foreground"
@@ -585,7 +590,7 @@ export function MemoryContent() {
                     <Button
                       type="button"
                       onClick={() => handleCrudToggle("delete")}
-                      aria-label="Delete memory: Preferred release tier level"
+                      aria-label="Delete memory: Preferred release tier"
                       variant="ghost"
                       size="icon-sm"
                       className="text-muted-foreground hover:text-foreground"
@@ -604,7 +609,7 @@ export function MemoryContent() {
                       htmlFor="memory-edit-value"
                       className="text-xs text-muted-foreground/60"
                     >
-                      Preferred release tier level
+                      Preferred release tier
                     </FieldLabel>
                     <Input
                       id="memory-edit-value"
@@ -613,12 +618,15 @@ export function MemoryContent() {
                       autoComplete="off"
                       value={editValue}
                       onChange={(e) => setEditValue(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Escape") handleCrudToggle("view")
+                      }}
                     />
                   </Field>
                   <div className="flex items-center gap-2">
                     <Button
                       type="button"
-                      onClick={() => handleCrudToggle("view")}
+                      onClick={handleCrudSave}
                       variant="outline"
                       size="xs"
                     >
@@ -646,11 +654,9 @@ export function MemoryContent() {
                 <div className="flex flex-col gap-3">
                   <div>
                     <span className="text-xs text-muted-foreground/60">
-                      Preferred release tier level
+                      Preferred release tier
                     </span>
-                    <p className="text-sm text-foreground/85">
-                      enterprise release
-                    </p>
+                    <p className="text-sm text-foreground/85">{savedValue}</p>
                   </div>
                   <div className="border-l border-foreground/15 bg-foreground/[0.02] py-2 pl-3">
                     <div className="flex items-start gap-2">

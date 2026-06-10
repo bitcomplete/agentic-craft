@@ -1,14 +1,17 @@
 "use client"
 
-import { AgentStatusTable, type AgentStatusRow } from "@/components/ui/agent-status-table"
+import {
+  AgentStatusTable,
+  type AgentStatusRow,
+} from "@/components/ui/agent-status-table"
 import { Badge } from "@/components/ui/badge"
 import { RunTrace, type RunTraceEvent } from "@/components/ui/run-trace"
 import { UsageMeter } from "@/components/ui/usage-meter"
 
 const agents: AgentStatusRow[] = [
   {
-    id: "source-search",
-    name: "Source Search",
+    id: "source-collector",
+    name: "Source Collector",
     role: "Retrieves launch documents",
     status: "complete",
     task: "Found the source policy and project brief sections used by the run.",
@@ -18,8 +21,8 @@ const agents: AgentStatusRow[] = [
     updated: "12s ago",
   },
   {
-    id: "coverage-mapper",
-    name: "Coverage Mapper",
+    id: "requirements-mapper",
+    name: "Requirements Mapper",
     role: "Checks requirement coverage",
     status: "working",
     task: "Comparing export requirements against current implementation notes.",
@@ -91,8 +94,8 @@ function RunMonitorBlock() {
             Background run monitor
           </p>
           <p className="mt-1 max-w-2xl text-sm leading-5 text-muted-foreground">
-            Track progress, source touches, budget, blockers, and partial
-            output after a run leaves the composer.
+            Track progress, source touches, budget, blockers, and partial output
+            after a run leaves the composer.
           </p>
         </div>
         <Badge variant="outline">Registry block</Badge>
@@ -124,7 +127,7 @@ function RunMonitorBlock() {
             },
             {
               id: "coverage",
-              label: "Coverage",
+              label: "Source coverage",
               value: 74,
               valueLabel: "14 / 19",
               limitLabel: "5 still unverified",

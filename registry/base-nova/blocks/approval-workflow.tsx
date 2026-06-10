@@ -33,7 +33,7 @@ function ApprovalWorkflowBlock() {
         <ObservableWork.Step
           status="active"
           title="Waiting for approval"
-          description="Execution is paused until the user approves, edits, or rejects the preview."
+          description="Execution is paused until the user approves, edits, or denies the preview."
           source="Review channel"
           meta="human gate"
           defaultOpen
@@ -86,7 +86,7 @@ function ApprovalWorkflowBlock() {
               </DecisionSurface.ImpactList>
             </DecisionSurface.Body>
             <DecisionSurface.Footer>
-              <DecisionSurface.Cancel>Reject</DecisionSurface.Cancel>
+              <DecisionSurface.Cancel>Deny</DecisionSurface.Cancel>
               <DecisionSurface.Confirm>Approve</DecisionSurface.Confirm>
             </DecisionSurface.Footer>
           </DecisionSurface.Content>
