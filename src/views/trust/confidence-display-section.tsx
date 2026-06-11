@@ -74,7 +74,10 @@ export function ConfidenceDisplaySection() {
                     High confidence
                   </span>
                 </div>
-                <div className="agent-prose" style={{ color: "var(--foreground)" }}>
+                <div
+                  className="agent-prose"
+                  style={{ color: "var(--foreground)" }}
+                >
                   Export workflow requires CSV and JSON export encryption for
                   all data-at-rest operations. The product implements this
                   through the approved export service referenced by the
@@ -106,7 +109,10 @@ export function ConfidenceDisplaySection() {
                     Medium confidence
                   </span>
                 </div>
-                <div className="agent-prose" style={{ color: "var(--foreground)" }}>
+                <div
+                  className="agent-prose"
+                  style={{ color: "var(--foreground)" }}
+                >
                   Based on the available documentation, Timestamp handling
                   appears to rely on NTP synchronization for timestamp
                   generation — however, the project brief does not explicitly
@@ -140,7 +146,10 @@ export function ConfidenceDisplaySection() {
                     Low confidence
                   </span>
                 </div>
-                <div className="agent-prose" style={{ color: "var(--foreground)" }}>
+                <div
+                  className="agent-prose"
+                  style={{ color: "var(--foreground)" }}
+                >
                   I'm unable to determine whether the current risk review was
                   performed against the latest product version. The referenced
                   report predates the latest configuration update, and I could

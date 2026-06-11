@@ -49,8 +49,11 @@ of InteractiveComposer.tsx. Here's what that means:
 - Demo containers: `<div className="border border-border/40 rounded-lg p-6">`
 - Page title: `<h1 className="font-serif text-4xl font-light tracking-tight leading-[1.15]">`
 - Description: `<p className="mt-4 max-w-[600px] text-sm leading-relaxed text-muted-foreground">`
-- Font for agent prose: `font-serif text-base` with inline style for
-  lineHeight: "26px", letterSpacing: "-0.4px", fontVariationSettings: '"opsz" 12'
+- Font for agent prose: apply the `.agent-prose` CSS class (defined in
+  `src/index.css`). It sets Source Serif 4, 16px/26px, letter-spacing -0.4px,
+  `font-variation-settings: "opsz" 12`, and antialiasing. Color is NOT part of
+  the class — set it per-context (e.g. `style={{ color: "var(--foreground)" }}`).
+  Combine with `font-serif text-base` for Tailwind font-stack/size utilities.
 - Tables: bare, no wrapper. `<th>` uses `text-xs font-medium text-muted-foreground`
 - Callouts: `border-l-2 border-muted-foreground/15 pl-4 text-sm italic text-muted-foreground`
 
