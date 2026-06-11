@@ -718,13 +718,6 @@ export function TemplatesContent() {
         </FieldGroup>
       </section>
 
-      <section className="page-section">
-        <p className="border-l-2 border-muted-foreground/15 pl-4 text-sm leading-relaxed text-muted-foreground italic">
-          Templates are intentionally site-level guidance. The registry exports
-          the smaller primitives underneath them so teams can adapt the workflow
-          to their own product surface.
-        </p>
-      </section>
     </article>
   )
 }
