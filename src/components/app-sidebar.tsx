@@ -1,13 +1,14 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
-import { useCallback, useSyncExternalStore } from "react"
+import { usePathname } from "next/navigation"
+import { useSyncExternalStore } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   ArrowDown01Icon,
   ComputerIcon,
   Moon02Icon,
+  Search01Icon,
   Sun02Icon,
 } from "@hugeicons/core-free-icons"
 import { Button } from "@/components/ui/button"
@@ -32,6 +33,8 @@ import {
 } from "@/components/ui/collapsible"
 import { useTheme } from "@/components/theme-provider"
 import { sections } from "@/content/navigation"
+import { CommandPalette, useCommandPalette } from "@/components/command-palette"
+import { useScrollToSection } from "@/hooks/use-scroll-to-section"
 
 const themeOptions = [
   // "Auto" instead of "System": the full word truncates at the default
@@ -90,93 +93,50 @@ function ThemeMenu() {
 
 export function AppSidebar() {
   const pathname = usePathname()
-  const router = useRouter()
   const { setOpenMobile } = useSidebar()
-
-  const scrollToSection = useCallback(
-    (sectionPath: string, elementId: string) => {
-      const scrollTo = (el: HTMLElement) => {
-        const prefersReducedMotion = window.matchMedia(
-          "(prefers-reduced-motion: reduce)"
-        ).matches
-        el.scrollIntoView({
-          behavior: prefersReducedMotion ? "auto" : "smooth",
-          block: "start",
-        })
-      }
-
-      if (pathname !== sectionPath) {
-        router.push(sectionPath)
-        // The target section mounts after navigation — retry each frame
-        // (up to ~2s) instead of racing a fixed timeout.
-        const deadline = Date.now() + 2000
-        const tryScroll = () => {
-          const el = document.getElementById(elementId)
-          if (el) {
-            scrollTo(el)
-          } else if (Date.now() < deadline) {
-            requestAnimationFrame(tryScroll)
-          }
-        }
-        requestAnimationFrame(tryScroll)
-      } else {
-        requestAnimationFrame(() => {
-          const el = document.getElementById(elementId)
-          if (el) scrollTo(el)
-        })
-      }
-    },
-    [pathname, router]
-  )
+  const scrollToSection = useScrollToSection()
+  const { open: paletteOpen, setOpen: setPaletteOpen } = useCommandPalette()
 
   return (
-    <Sidebar>
-      <SidebarHeader>
-        <div className="flex h-8 items-center px-2">
-          <span className="truncate text-sm font-semibold tracking-tight">
-            Agentic Craft
-          </span>
-        </div>
-      </SidebarHeader>
-      <SidebarContent>
-        {sections.map((section) => {
-          const isActive =
-            pathname === section.path || pathname.startsWith(`${section.path}/`)
+    <>
+      <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} />
+      <Sidebar>
+        <SidebarHeader>
+          <div className="flex h-8 items-center px-2">
+            <span className="truncate text-sm font-semibold tracking-tight">
+              Agentic Craft
+            </span>
+          </div>
+          <button
+            type="button"
+            aria-label="Search patterns"
+            onClick={() => setPaletteOpen(true)}
+            className="flex h-8 w-full items-center gap-2 rounded-lg border border-sidebar-border/70 bg-transparent px-2 text-sm text-muted-foreground transition-colors outline-none hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
+          >
+            <HugeiconsIcon
+              icon={Search01Icon}
+              size={14}
+              strokeWidth={1.5}
+              aria-hidden="true"
+            />
+            <span className="flex-1 text-left">Search</span>
+            <kbd className="shrink-0 rounded border border-border bg-muted/50 px-1 text-[11px] text-muted-foreground">
+              ⌘K
+            </kbd>
+          </button>
+        </SidebarHeader>
+        <SidebarContent>
+          {sections.map((section) => {
+            const isActive =
+              pathname === section.path ||
+              pathname.startsWith(`${section.path}/`)
 
-          // Demo page has no subs — just a link
-          if (section.subs.length === 0) {
-            return (
-              <SidebarGroup key={section.path}>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      render={
-                        <Link
-                          href={section.path}
-                          onClick={() => setOpenMobile(false)}
-                        />
-                      }
-                      isActive={isActive}
-                    >
-                      <HugeiconsIcon
-                        icon={section.icon}
-                        size={16}
-                        strokeWidth={1.5}
-                      />
-                      <span>{section.title}</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroup>
-            )
-          }
-
-          return (
-            <SidebarGroup key={section.path}>
-              <Collapsible open={isActive}>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <CollapsibleTrigger className="w-full [&[data-panel-open]>div>svg:last-child]:rotate-180">
+            // Demo page has no subs — just a link
+            if (section.subs.length === 0) {
+              return (
+                <SidebarGroup key={section.path}>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
                       <SidebarMenuButton
                         render={
                           <Link
@@ -192,47 +152,76 @@ export function AppSidebar() {
                           strokeWidth={1.5}
                         />
                         <span>{section.title}</span>
-                        <HugeiconsIcon
-                          icon={ArrowDown01Icon}
-                          size={14}
-                          strokeWidth={1.5}
-                          className="ml-auto transition-transform duration-200"
-                        />
                       </SidebarMenuButton>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent>
-                      <SidebarMenuSub>
-                        {section.subs.map((sub) => (
-                          <SidebarMenuSubItem key={sub.id}>
-                            <SidebarMenuSubButton
-                              render={
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.preventDefault()
-                                    setOpenMobile(false)
-                                    scrollToSection(section.path, sub.id)
-                                  }}
-                                />
-                              }
-                              size="sm"
-                            >
-                              <span>{sub.title}</span>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        ))}
-                      </SidebarMenuSub>
-                    </CollapsibleContent>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </Collapsible>
-            </SidebarGroup>
-          )
-        })}
-      </SidebarContent>
-      <SidebarFooter>
-        <ThemeMenu />
-      </SidebarFooter>
-    </Sidebar>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </SidebarGroup>
+              )
+            }
+
+            return (
+              <SidebarGroup key={section.path}>
+                <Collapsible open={isActive}>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <CollapsibleTrigger className="w-full [&[data-panel-open]>div>svg:last-child]:rotate-180">
+                        <SidebarMenuButton
+                          render={
+                            <Link
+                              href={section.path}
+                              onClick={() => setOpenMobile(false)}
+                            />
+                          }
+                          isActive={isActive}
+                        >
+                          <HugeiconsIcon
+                            icon={section.icon}
+                            size={16}
+                            strokeWidth={1.5}
+                          />
+                          <span>{section.title}</span>
+                          <HugeiconsIcon
+                            icon={ArrowDown01Icon}
+                            size={14}
+                            strokeWidth={1.5}
+                            className="ml-auto transition-transform duration-200"
+                          />
+                        </SidebarMenuButton>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent>
+                        <SidebarMenuSub>
+                          {section.subs.map((sub) => (
+                            <SidebarMenuSubItem key={sub.id}>
+                              <SidebarMenuSubButton
+                                render={
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      setOpenMobile(false)
+                                      scrollToSection(section.path, sub.id)
+                                    }}
+                                  />
+                                }
+                                size="sm"
+                              >
+                                <span>{sub.title}</span>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))}
+                        </SidebarMenuSub>
+                      </CollapsibleContent>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </Collapsible>
+              </SidebarGroup>
+            )
+          })}
+        </SidebarContent>
+        <SidebarFooter>
+          <ThemeMenu />
+        </SidebarFooter>
+      </Sidebar>
+    </>
   )
 }
