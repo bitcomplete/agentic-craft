@@ -11,14 +11,6 @@ import {
 } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
 import { Badge } from "@/components/ui/badge"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -215,40 +207,6 @@ export function AgentCommunicationSection() {
           )}
         </div>
       </div>
-
-      {/* Spec table */}
-      <Table className="mt-10 w-full text-sm">
-        <TableHeader>
-          <TableRow className="border-b border-border text-left">
-            <TableHead className="pr-6 pb-3 text-xs font-medium text-muted-foreground">
-              Element
-            </TableHead>
-            <TableHead className="pb-3 text-xs font-medium text-muted-foreground">
-              Details
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Shared context
-            </TableCell>
-            <TableCell className="py-3">
-              List of contributed items with agent attribution, type badge, and
-              timestamp
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Context types
-            </TableCell>
-            <TableCell className="py-3">
-              Artifact, Finding, Draft, Analysis, Assessment — shown as muted
-              badges
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
     </section>
   )
 }

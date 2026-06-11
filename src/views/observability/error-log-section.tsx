@@ -12,14 +12,6 @@ import {
 import { PatternControls as Controls } from "@/components/pattern-controls"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -158,54 +150,6 @@ export function ErrorLogSection() {
           )}
         </div>
       </div>
-
-      {/* Spec table */}
-      <Table className="mt-10 w-full text-sm">
-        <TableHeader>
-          <TableRow className="border-b border-border text-left">
-            <TableHead className="pr-6 pb-3 text-xs font-medium text-muted-foreground">
-              Element
-            </TableHead>
-            <TableHead className="pb-3 text-xs font-medium text-muted-foreground">
-              Details
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Empty state
-            </TableCell>
-            <TableCell className="py-3">
-              Centered check icon with "No errors" message and subtitle
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Error entries
-            </TableCell>
-            <TableCell className="py-3">
-              Clickable rows with severity badge, timestamp, and expand/collapse
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Severity levels
-            </TableCell>
-            <TableCell className="py-3">
-              Warning and Error — shown as muted chip badges, no colors
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Expanded detail
-            </TableCell>
-            <TableCell className="py-3">
-              Animated expand with full error description and context
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
     </section>
   )
 }

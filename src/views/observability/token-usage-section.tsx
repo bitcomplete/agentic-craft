@@ -177,14 +177,6 @@ export function TokenUsageSection() {
         <TableBody>
           <TableRow className="border-b border-border/50">
             <TableCell className="py-3 pr-6 text-muted-foreground">
-              Usage bar
-            </TableCell>
-            <TableCell className="py-3">
-              Height 12px, rounded-md, darkens above 80% threshold
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
               Warning state
             </TableCell>
             <TableCell className="py-3">
@@ -198,14 +190,6 @@ export function TokenUsageSection() {
             <TableCell className="py-3">
               Dollar amount shown alongside token count — primary metric for
               non-technical users
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Stats grid
-            </TableCell>
-            <TableCell className="py-3">
-              3-column layout: sessions, average per session, remaining tokens
             </TableCell>
           </TableRow>
         </TableBody>

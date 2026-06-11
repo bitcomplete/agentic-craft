@@ -194,9 +194,6 @@ export function ConfidenceDisplaySection() {
               <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
                 Level
               </TableHead>
-              <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
-                Indicator
-              </TableHead>
               <TableHead className="pb-2 text-left text-xs font-medium text-muted-foreground">
                 Language pattern
               </TableHead>
@@ -207,7 +204,6 @@ export function ConfidenceDisplaySection() {
               <TableCell className="py-2.5 pr-4 font-medium text-foreground">
                 High
               </TableCell>
-              <TableCell className="py-2.5 pr-4">Green dot</TableCell>
               <TableCell className="py-2.5">
                 Direct assertions with citations
               </TableCell>
@@ -216,7 +212,6 @@ export function ConfidenceDisplaySection() {
               <TableCell className="py-2.5 pr-4 font-medium text-foreground">
                 Medium
               </TableCell>
-              <TableCell className="py-2.5 pr-4">Amber dot</TableCell>
               <TableCell className="py-2.5">
                 Hedged language: "appears to," "based on"
               </TableCell>
@@ -225,7 +220,6 @@ export function ConfidenceDisplaySection() {
               <TableCell className="py-2.5 pr-4 font-medium text-foreground">
                 Low
               </TableCell>
-              <TableCell className="py-2.5 pr-4">Red dot</TableCell>
               <TableCell className="py-2.5">
                 Explicit uncertainty + verify action
               </TableCell>

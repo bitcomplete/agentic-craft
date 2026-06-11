@@ -8,14 +8,6 @@ import {
   Search01Icon,
 } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -167,30 +159,6 @@ export function SessionTimelineSection() {
           </div>
         </div>
       </div>
-
-      {/* Spec table */}
-      <Table className="mt-10 w-full text-sm">
-        <TableHeader>
-          <TableRow className="border-b border-border text-left">
-            <TableHead className="pr-6 pb-3 text-xs font-medium text-muted-foreground">
-              Element
-            </TableHead>
-            <TableHead className="pb-3 text-xs font-medium text-muted-foreground">
-              Details
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Agent prose
-            </TableCell>
-            <TableCell className="py-3">
-              Source Serif 4, 14px/20px, theme-aware foreground color
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
     </section>
   )
 }
