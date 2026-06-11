@@ -211,12 +211,6 @@ export function TokenUsageSection() {
         </TableBody>
       </Table>
 
-      <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Token meters translate raw API consumption into a budget metaphor that
-        product teams understand. The 80% warning threshold provides time to
-        prioritize remaining review tasks before throttling begins —
-        particularly important during time-bounded review team session sessions.
-      </div>
     </section>
   )
 }

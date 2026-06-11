@@ -207,12 +207,6 @@ export function ErrorLogSection() {
         </TableBody>
       </Table>
 
-      <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        The error log provides the diagnostic transparency that activity review
-        requires — reviewers can inspect every operational anomaly, understand
-        its context, and verify that the agent's error handling meets the
-        product's claimed readiness level.
-      </div>
     </section>
   )
 }

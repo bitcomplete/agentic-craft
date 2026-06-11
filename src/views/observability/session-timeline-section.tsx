@@ -183,46 +183,15 @@ export function SessionTimelineSection() {
         <TableBody>
           <TableRow className="border-b border-border/50">
             <TableCell className="py-3 pr-6 text-muted-foreground">
-              Connector
-            </TableCell>
-            <TableCell className="py-3">
-              1px vertical line between nodes, bg-border color
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Node icons
-            </TableCell>
-            <TableCell className="py-3">
-              Arrow for reviewer, robot for agent — rounded-md 24px containers
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
               Agent prose
             </TableCell>
             <TableCell className="py-3">
-              Source Serif 4, 14px/22px, theme-aware foreground color
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Tool annotations
-            </TableCell>
-            <TableCell className="py-3">
-              Shown above agent response as muted text with search icon
+              Source Serif 4, 14px/20px, theme-aware foreground color
             </TableCell>
           </TableRow>
         </TableBody>
       </Table>
 
-      <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Session timelines provide the conversation-level audit trail that review
-        team reviewers need when reviewing how an agent arrived at its
-        conclusions. Multi-turn sessions show how iterative refinement (e.g.,
-        narrowing scope from all requirements to just the integration and export
-        sections) leads to more targeted analysis.
-      </div>
     </section>
   )
 }

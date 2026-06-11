@@ -336,14 +336,6 @@ export function ActivityTimelineSection() {
           </TableRow>
           <TableRow className="border-b border-border/50">
             <TableCell className="py-3 pr-6 text-muted-foreground">
-              Live indicator
-            </TableCell>
-            <TableCell className="py-3">
-              Pulsing dot with "Streaming" label when in live mode
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
               Action types
             </TableCell>
             <TableCell className="py-3">
@@ -362,13 +354,6 @@ export function ActivityTimelineSection() {
         </TableBody>
       </Table>
 
-      <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        The activity timeline is the audit surface for agent activity — every
-        agent action is recorded with a timestamp, type classification, and
-        human-readable description. Live mode streams entries as they occur;
-        History and Filtered modes enable retrospective analysis during review
-        team sessions.
-      </div>
     </section>
   )
 }
