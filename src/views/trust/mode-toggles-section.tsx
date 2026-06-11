@@ -72,7 +72,7 @@ export function ModeTogglesSection() {
       <p className="section-label mb-3">Governance</p>
       <h2 className="text-xl font-semibold tracking-tight">Mode Toggles</h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-        Switch the agent's operational mode to focus on different aspects of the
+        Switch the agent’s operational mode to focus on different aspects of the
         review workflow. Each mode changes available tools and priorities.
       </p>
 

@@ -160,7 +160,7 @@ export function AgentCardsSection() {
       <h2 className="text-xl font-semibold tracking-tight">Agent Cards</h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
         Individual agent identity cards showing name, role, current status, and
-        active task. Cards reflect the agent's operational state in real time.
+        active task. Cards reflect the agent’s operational state in real time.
       </p>
 
       <div className="mt-10">
@@ -199,7 +199,7 @@ export function AgentCardsSection() {
                     <p className="text-sm leading-snug font-medium">
                       {agent.name}
                     </p>
-                    {/* Reserve two lines so a wrapping role doesn't break
+                    {/* Reserve two lines so a wrapping role doesn’t break
                         the rhythm across the three-card grid */}
                     <p className="min-h-[2lh] text-xs text-muted-foreground">
                       {agent.role}

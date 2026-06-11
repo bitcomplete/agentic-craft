@@ -269,7 +269,7 @@ export function ConsentFlowSection() {
 
       {/* Callout */}
       <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Consent flows should be lightweight enough that users don't develop
+        Consent flows should be lightweight enough that users don’t develop
         "approval fatigue." Reserve them for actions with real consequences —
         sending external communications, modifying project records, or deleting
         source material.

@@ -150,7 +150,7 @@ export function ConfidenceDisplaySection() {
                   className="agent-prose"
                   style={{ color: "var(--foreground)" }}
                 >
-                  I'm unable to determine whether the current risk review was
+                  I’m unable to determine whether the current risk review was
                   performed against the latest product version. The referenced
                   report predates the latest configuration update, and I could
                   not locate an updated risk analysis.

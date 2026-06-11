@@ -36,7 +36,7 @@ const SESSION_MULTI = [
   {
     role: "agent" as const,
     content:
-      "Starting the analysis. I'll cross-reference all 23 requirements from Launch checklist against the current project brief.",
+      "Starting the analysis. I’ll cross-reference all 23 requirements from Launch checklist against the current project brief.",
     tool: "Loading requirement catalog",
   },
   {

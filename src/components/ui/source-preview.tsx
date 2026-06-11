@@ -121,7 +121,7 @@ function SourcePreview({
       </div>
 
       <div className="px-3 py-2.5">
-        <p className="text-[13px] leading-5 text-white/88">"{excerpt}"</p>
+        <p className="text-[13px] leading-5 text-white/88">“{excerpt}”</p>
         <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
           <div className="inline-flex items-center gap-1.5 rounded-full bg-white/12 px-2 py-1 text-[11px] text-white/75">
             <HugeiconsIcon icon={File01Icon} size={12} strokeWidth={1.5} />

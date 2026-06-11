@@ -149,7 +149,7 @@ export function RegistryContent() {
         </h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
           Blocks compose primitives into product-ready workflow specimens. They
-          are the registry equivalent of the guide's Templates section.
+          are the registry equivalent of the guide’s Templates section.
         </p>
         <div className="mt-8">
           <RegistryItemTable items={blockItems} />

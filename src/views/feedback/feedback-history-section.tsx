@@ -49,7 +49,7 @@ const FEEDBACK_HISTORY = [
     id: "fb-3",
     timestamp: "2026-03-13 · 16:45",
     message:
-      "I've mapped each requirement to its corresponding test case in the review plan. Coverage is at 91.3%.",
+      "I’ve mapped each requirement to its corresponding test case in the review plan. Coverage is at 91.3%.",
     type: "negative" as const,
     detail:
       "Fallback behavior and Cleanup behavior were missing from the mapping. Coverage was overstated.",
@@ -259,7 +259,7 @@ export function FeedbackHistorySection() {
             ],
             [
               "Detail",
-              "Reviewer's note or correction text",
+              "Reviewer’s note or correction text",
               "Visible only when row is expanded",
             ],
           ].map(([col, content, notes], i) => (

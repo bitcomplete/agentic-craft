@@ -110,7 +110,7 @@ export function ApprovalGateSection() {
                   className="mt-0.5 shrink-0 text-muted-foreground"
                 />
                 <p className="text-sm">
-                  I'd like to send the launch summary submission email. Please
+                  I’d like to send the launch summary submission email. Please
                   review and approve.
                 </p>
               </div>
@@ -302,7 +302,7 @@ export function ApprovalGateSection() {
                   className="mt-0.5 shrink-0 text-muted-foreground"
                 />
                 <p className="text-sm">
-                  I'd like to apply these changes to the project brief. Please
+                  I’d like to apply these changes to the project brief. Please
                   review.
                 </p>
               </div>

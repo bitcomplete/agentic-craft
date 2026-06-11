@@ -36,7 +36,7 @@ export function KillSwitchSection() {
       <h2 className="text-xl font-semibold tracking-tight">Kill Switch</h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
         Always-available mechanism to immediately halt agent execution. The stop
-        control adapts its prominence to the agent's current state.
+        control adapts its prominence to the agent’s current state.
       </p>
 
       <div className="mt-10">

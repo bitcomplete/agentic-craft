@@ -191,7 +191,7 @@ export function MemoryPanelCrudSection() {
         <p className="section-label mb-3">Persistence</p>
         <h2 className="text-xl font-semibold tracking-tight">Memory Panel</h2>
         <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-          The reviewer&apos;s stored preferences and facts — key-value pairs the
+          The reviewer’s stored preferences and facts — key-value pairs the
           agent uses to personalize responses across sessions.
         </p>
 

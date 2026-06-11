@@ -97,7 +97,7 @@ export function RatingScaleSection() {
               Based on the launch policy, the product must implement Export
               workflow for CSV and JSON exports and Retention setting for
               account retention. Both are covered by the Meridian export
-              service&apos;s internal platform approval.
+              service’s internal platform approval.
             </p>
 
             {/* Rating row */}

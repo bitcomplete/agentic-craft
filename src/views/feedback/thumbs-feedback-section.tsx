@@ -163,8 +163,8 @@ export function ThumbsFeedbackSection() {
             >
               The project brief defines 23 requirements across 5 classes.
               implementation notes summarize the workflow behavior and open
-              dependencies. I&apos;ve mapped each requirement to its
-              corresponding test case in the review plan.
+              dependencies. I’ve mapped each requirement to its corresponding
+              test case in the review plan.
             </p>
 
             {/* Thumbs buttons */}

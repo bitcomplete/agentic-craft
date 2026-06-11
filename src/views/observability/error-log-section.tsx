@@ -7,7 +7,6 @@ import {
   Alert01Icon,
   ArrowDown01Icon,
   Cancel01Icon,
-  Tick01Icon,
 } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
 import { Badge } from "@/components/ui/badge"
@@ -76,20 +75,9 @@ export function ErrorLogSection() {
           key={errAnim}
         >
           {activeErr === "empty" ? (
-            <div className="mon-slide-in flex flex-col items-center justify-center py-12 text-center">
-              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
-                <HugeiconsIcon
-                  icon={Tick01Icon}
-                  size={18}
-                  strokeWidth={1.5}
-                  className="text-muted-foreground"
-                />
-              </div>
-              <p className="text-sm font-medium">
-                No errors in current session
-              </p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                All agent operations completed successfully since session start.
+            <div className="mon-slide-in py-3">
+              <p className="text-xs text-muted-foreground">
+                No anomalies since session start · 11:32 AM
               </p>
             </div>
           ) : (

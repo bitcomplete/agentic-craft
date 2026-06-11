@@ -31,7 +31,7 @@ export function BehavioralConsequenceSection() {
         Behavioral Consequence
       </h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-        How the agent&apos;s behavior visibly changes after receiving feedback.
+        How the agent’s behavior visibly changes after receiving feedback.
         Demonstrates the feedback loop closing — the reviewer sees the before
         and after side by side. The After state includes an annotation card that
         links back to the original feedback entry so the change is fully

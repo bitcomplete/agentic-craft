@@ -138,7 +138,7 @@ export function PlansSection() {
       <p className="section-label mb-3">Planning</p>
       <h2 className="text-xl font-semibold tracking-tight">Plan Cards</h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-        Step-progress cards that show the agent's execution plan. Completed
+        Step-progress cards that show the agent’s execution plan. Completed
         steps are muted with line-through; the current step pulses subtly;
         pending steps are dimmed.
       </p>

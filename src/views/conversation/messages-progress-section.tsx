@@ -217,13 +217,13 @@ export function MessagesProgressSection() {
                   style={agentProseStyle}
                 >
                   <p>
-                    I've reviewed the project brief against the roadmap and
+                    I’ve reviewed the project brief against the roadmap and
                     launch checklist. The document covers the main launch goals,
                     but I found three areas that need attention.
                   </p>
                   <p className="mt-4">
                     The rollout assumptions in Section 2 reference Launch Policy
-                    v2, but the appendix doesn't map all requirements back to a
+                    v2, but the appendix doesn’t map all requirements back to a
                     source. The export workflow also references an outdated
                     behavior — this will need updating before the review team
                     session.
@@ -248,7 +248,7 @@ export function MessagesProgressSection() {
                   style={agentProseStyle}
                 >
                   <p>
-                    Two of the brief's 23 requirements are not mapped back to a
+                    Two of the brief’s 23 requirements are not mapped back to a
                     source in the appendix:
                   </p>
                   <ul className="mt-3 ml-5 flex list-disc flex-col gap-1">
@@ -469,7 +469,7 @@ export function MessagesProgressSection() {
           )}
         </div>
 
-        {/* Do / Don't table */}
+        {/* Do / Don’t table */}
         <Table className="mt-10 w-full text-sm">
           <TableHeader>
             <TableRow className="border-b border-border">
@@ -477,7 +477,7 @@ export function MessagesProgressSection() {
                 Do
               </TableHead>
               <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
-                Don't
+                Don’t
               </TableHead>
             </TableRow>
           </TableHeader>

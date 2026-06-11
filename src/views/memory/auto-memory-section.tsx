@@ -65,7 +65,7 @@ export function AutoMemorySection() {
               className="agent-prose text-base"
               style={{ color: "var(--foreground)" }}
             >
-              I see you&apos;ve been consistently requesting enterprise release
+              I see you’ve been consistently requesting enterprise release
               reviews across the last three sessions. The reference document
               Launch Policy v2 appears to be your default reference.
             </p>

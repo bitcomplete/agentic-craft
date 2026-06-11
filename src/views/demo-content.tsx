@@ -177,7 +177,7 @@ export function DemoContent() {
         <div className="flex justify-start">
           <div className="agent-prose max-w-[85%] font-serif text-base">
             <p className="text-foreground">
-              I've completed the initial review. The brief covers the main
+              I’ve completed the initial review. The brief covers the main
               launch goals
               <SourcePreviewCitation sources={CITATIONS} sourceIndex={0} />
               , but I found three areas that need attention before the release
@@ -258,7 +258,7 @@ export function DemoContent() {
           <div className="w-full max-w-[85%]">
             <div className="agent-prose font-serif text-base text-foreground">
               <p>
-                I'd like to generate a findings summary and send it to the
+                I’d like to generate a findings summary and send it to the
                 project team.
               </p>
             </div>
