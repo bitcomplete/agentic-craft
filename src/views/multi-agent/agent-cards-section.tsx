@@ -49,7 +49,7 @@ const AGENT_CARDS = [
   },
 ]
 
-const AGENT_STATUS_ROWS: AgentStatusRow[] = [
+const AGENT_STATUS_ROWS_ACTIVE: AgentStatusRow[] = [
   {
     id: "source-collector",
     name: "Source Collector",
@@ -81,6 +81,72 @@ const AGENT_STATUS_ROWS: AgentStatusRow[] = [
     progress: 0,
     cost: "$0.00",
     updated: "2m ago",
+  },
+]
+
+const AGENT_STATUS_ROWS_IDLE: AgentStatusRow[] = [
+  {
+    id: "source-collector",
+    name: "Source Collector",
+    role: "Gather project artifacts",
+    status: "idle",
+    task: "No collection target — waiting for a review scope",
+    progress: 0,
+    cost: "$0.00",
+    updated: "5m ago",
+  },
+  {
+    id: "requirements-mapper",
+    name: "Requirements Mapper",
+    role: "Map requirements to controls",
+    status: "idle",
+    task: "Waiting for a source packet to map",
+    progress: 0,
+    cost: "$0.00",
+    updated: "5m ago",
+  },
+  {
+    id: "document-drafter",
+    name: "Document Drafter",
+    role: "Author project brief sections",
+    status: "idle",
+    task: "Waiting for mapped requirements to draft against",
+    progress: 0,
+    cost: "$0.00",
+    updated: "5m ago",
+  },
+]
+
+const AGENT_STATUS_ROWS_ERROR: AgentStatusRow[] = [
+  {
+    id: "source-collector",
+    name: "Source Collector",
+    role: "Gather project artifacts",
+    status: "error",
+    task: "Failed to connect to project source repository — timeout after 30s",
+    progress: 34,
+    cost: "$0.06",
+    updated: "just now",
+  },
+  {
+    id: "requirements-mapper",
+    name: "Requirements Mapper",
+    role: "Map requirements to controls",
+    status: "error",
+    task: "Mapping aborted — source collection did not complete",
+    progress: 12,
+    cost: "$0.02",
+    updated: "just now",
+  },
+  {
+    id: "document-drafter",
+    name: "Document Drafter",
+    role: "Author project brief sections",
+    status: "idle",
+    task: "Blocked — upstream error prevented requirements from arriving",
+    progress: 0,
+    cost: "$0.00",
+    updated: "just now",
   },
 ]
 
@@ -203,7 +269,15 @@ export function AgentCardsSection() {
 
       <div className="mt-8">
         <p className="section-label mb-3">Operational table</p>
-        <AgentStatusTable agents={AGENT_STATUS_ROWS} />
+        <AgentStatusTable
+          agents={
+            cardCtrl.active
+              ? AGENT_STATUS_ROWS_ACTIVE
+              : cardCtrl.idle
+                ? AGENT_STATUS_ROWS_IDLE
+                : AGENT_STATUS_ROWS_ERROR
+          }
+        />
       </div>
 
       {/* Spec table */}

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useRef, useEffect } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   Shield01Icon,
@@ -64,6 +64,15 @@ export function ApprovalGateSection() {
   const [approvalStatus, setApprovalStatus] = useState<
     "pending" | "approved" | "denied"
   >("pending")
+
+  const outcomeRef = useRef<HTMLDivElement>(null)
+
+  // Focus the outcome element whenever it mounts (approved or denied)
+  useEffect(() => {
+    if (approvalStatus !== "pending") {
+      outcomeRef.current?.focus()
+    }
+  }, [approvalStatus])
 
   const toggleApprovalControl = useCallback((key: string) => {
     setApprovalCtrl(() => {
@@ -221,6 +230,8 @@ export function ApprovalGateSection() {
               {approvalStatus === "approved" && (
                 <div className="actions-fade-in flex flex-col gap-3">
                   <div
+                    ref={outcomeRef}
+                    tabIndex={-1}
                     role="status"
                     className="border-l border-primary bg-primary/5 py-2 pl-3"
                   >
@@ -254,7 +265,12 @@ export function ApprovalGateSection() {
 
               {approvalStatus === "denied" && (
                 <div className="actions-fade-in flex flex-col gap-3">
-                  <div className="border-l border-destructive/50 bg-destructive/5 py-2 pl-3">
+                  <div
+                    ref={outcomeRef}
+                    tabIndex={-1}
+                    role="status"
+                    className="border-l border-destructive/50 bg-destructive/5 py-2 pl-3"
+                  >
                     <div className="flex items-center gap-2">
                       <HugeiconsIcon
                         icon={Cancel01Icon}
@@ -428,7 +444,12 @@ export function ApprovalGateSection() {
 
               {approvalStatus === "approved" && (
                 <div className="actions-fade-in flex flex-col gap-3">
-                  <div className="border-l border-primary bg-primary/5 py-2 pl-3">
+                  <div
+                    ref={outcomeRef}
+                    tabIndex={-1}
+                    role="status"
+                    className="border-l border-primary bg-primary/5 py-2 pl-3"
+                  >
                     <div className="flex items-center gap-2">
                       <HugeiconsIcon
                         icon={Tick01Icon}
@@ -469,7 +490,12 @@ export function ApprovalGateSection() {
 
               {approvalStatus === "denied" && (
                 <div className="actions-fade-in flex flex-col gap-3">
-                  <div className="border-l border-destructive/50 bg-destructive/5 py-2 pl-3">
+                  <div
+                    ref={outcomeRef}
+                    tabIndex={-1}
+                    role="status"
+                    className="border-l border-destructive/50 bg-destructive/5 py-2 pl-3"
+                  >
                     <div className="flex items-center gap-2">
                       <HugeiconsIcon
                         icon={Cancel01Icon}

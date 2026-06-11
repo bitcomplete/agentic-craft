@@ -1,9 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import Link from "next/link"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { Brain01Icon } from "@hugeicons/core-free-icons"
+import {
+  Brain01Icon,
+  Tick01Icon,
+  RefreshIcon,
+} from "@hugeicons/core-free-icons"
 
 import {
   AgentStatusTable,
@@ -253,6 +257,23 @@ export function TemplatesContent() {
   })
   const activeClarifyingQuestion = clarifyingQuestions[clarifyingIndex]
 
+  // Approval workflow demo state
+  const [approvalOpen, setApprovalOpen] = useState(false)
+  const [approvalDone, setApprovalDone] = useState<"approved" | null>(null)
+  const approvalOutcomeRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (approvalDone) approvalOutcomeRef.current?.focus()
+  }, [approvalDone])
+
+  // Memory Review demo state
+  const [memoryStatus, setMemoryStatus] = useState<
+    "pending" | "saved" | "dismissed"
+  >("pending")
+  const memoryOutcomeRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (memoryStatus !== "pending") memoryOutcomeRef.current?.focus()
+  }, [memoryStatus])
+
   return (
     <article>
       <header className="mb-12 sm:mb-20">
@@ -367,40 +388,86 @@ export function TemplatesContent() {
           Use this when the agent is about to change external state, spend
           budget, notify people, or publish an output.
         </p>
-        <div className="mt-8">
-          <DecisionSurface.Root>
-            <DecisionSurface.Trigger render={<Button variant="outline" />}>
-              Review proposed action
-            </DecisionSurface.Trigger>
-            <DecisionSurface.Content>
-              <DecisionSurface.Header>
-                <DecisionSurface.Title>
-                  Send the review summary?
-                </DecisionSurface.Title>
-                <DecisionSurface.Description>
-                  The agent will send a generated summary to the selected
-                  project channel and attach the current evidence list.
-                </DecisionSurface.Description>
-              </DecisionSurface.Header>
-              <DecisionSurface.Body>
-                <DecisionSurface.ImpactList>
-                  <DecisionSurface.ImpactItem label="Audience">
-                    Project reviewers
-                  </DecisionSurface.ImpactItem>
-                  <DecisionSurface.ImpactItem label="Cost">
-                    $0.09 estimated
-                  </DecisionSurface.ImpactItem>
-                  <DecisionSurface.ImpactItem label="Rollback">
-                    Follow-up correction can be posted
-                  </DecisionSurface.ImpactItem>
-                </DecisionSurface.ImpactList>
-              </DecisionSurface.Body>
-              <DecisionSurface.Footer>
-                <DecisionSurface.Cancel />
-                <DecisionSurface.Confirm>Approve</DecisionSurface.Confirm>
-              </DecisionSurface.Footer>
-            </DecisionSurface.Content>
-          </DecisionSurface.Root>
+        <div className="mt-8 flex flex-col gap-4">
+          {approvalDone === null ? (
+            <DecisionSurface.Root
+              open={approvalOpen}
+              onOpenChange={setApprovalOpen}
+            >
+              <DecisionSurface.Trigger render={<Button variant="outline" />}>
+                Review proposed action
+              </DecisionSurface.Trigger>
+              <DecisionSurface.Content>
+                <DecisionSurface.Header>
+                  <DecisionSurface.Title>
+                    Send the review summary?
+                  </DecisionSurface.Title>
+                  <DecisionSurface.Description>
+                    The agent will send a generated summary to the selected
+                    project channel and attach the current evidence list.
+                  </DecisionSurface.Description>
+                </DecisionSurface.Header>
+                <DecisionSurface.Body>
+                  <DecisionSurface.ImpactList>
+                    <DecisionSurface.ImpactItem label="Audience">
+                      Project reviewers
+                    </DecisionSurface.ImpactItem>
+                    <DecisionSurface.ImpactItem label="Cost">
+                      $0.09 estimated
+                    </DecisionSurface.ImpactItem>
+                    <DecisionSurface.ImpactItem label="Rollback">
+                      Follow-up correction can be posted
+                    </DecisionSurface.ImpactItem>
+                  </DecisionSurface.ImpactList>
+                </DecisionSurface.Body>
+                <DecisionSurface.Footer>
+                  <DecisionSurface.Cancel />
+                  <DecisionSurface.Confirm
+                    onClick={() => {
+                      setApprovalOpen(false)
+                      setApprovalDone("approved")
+                    }}
+                  >
+                    Approve
+                  </DecisionSurface.Confirm>
+                </DecisionSurface.Footer>
+              </DecisionSurface.Content>
+            </DecisionSurface.Root>
+          ) : (
+            <div className="flex flex-col gap-3">
+              <div
+                ref={approvalOutcomeRef}
+                tabIndex={-1}
+                role="status"
+                className="border-l border-primary bg-primary/5 py-2 pl-3"
+              >
+                <div className="flex items-center gap-2">
+                  <HugeiconsIcon
+                    icon={Tick01Icon}
+                    size={14}
+                    strokeWidth={1.5}
+                    className="shrink-0 text-muted-foreground"
+                  />
+                  <span className="text-sm">
+                    Approved — sending review summary to project channel
+                  </span>
+                </div>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="xs"
+                onClick={() => setApprovalDone(null)}
+              >
+                <HugeiconsIcon
+                  icon={RefreshIcon}
+                  strokeWidth={1.5}
+                  data-icon="inline-start"
+                />
+                Reset
+              </Button>
+            </div>
+          )}
         </div>
       </section>
 
@@ -478,34 +545,84 @@ export function TemplatesContent() {
           Show proposed memory before it becomes durable product context.
         </p>
         <div className="mt-8 flex flex-col gap-3">
-          <ReferenceItem.Root>
-            <ReferenceItem.Media>
-              <HugeiconsIcon icon={Brain01Icon} strokeWidth={1.5} />
-            </ReferenceItem.Media>
-            <ReferenceItem.Content>
-              <ReferenceItem.Header>
-                <ReferenceItem.Title>
-                  Preferred review format
-                </ReferenceItem.Title>
-                <StatusIndicator status="pending" label="Proposed" />
-              </ReferenceItem.Header>
-              <ReferenceItem.Description>
-                Use concise source-backed summaries for future review tasks.
-              </ReferenceItem.Description>
-              <ReferenceItem.Meta>
-                Source: current session / Scope: this workspace / Expiry: 90
-                days
-              </ReferenceItem.Meta>
-            </ReferenceItem.Content>
-            <ReferenceItem.Actions>
-              <Button size="sm" variant="outline">
-                Save
+          {memoryStatus === "pending" ? (
+            <ReferenceItem.Root>
+              <ReferenceItem.Media>
+                <HugeiconsIcon icon={Brain01Icon} strokeWidth={1.5} />
+              </ReferenceItem.Media>
+              <ReferenceItem.Content>
+                <ReferenceItem.Header>
+                  <ReferenceItem.Title>
+                    Preferred review format
+                  </ReferenceItem.Title>
+                  <StatusIndicator status="pending" label="Proposed" />
+                </ReferenceItem.Header>
+                <ReferenceItem.Description>
+                  Use concise source-backed summaries for future review tasks.
+                </ReferenceItem.Description>
+                <ReferenceItem.Meta>
+                  Source: current session / Scope: this workspace / Expiry: 90
+                  days
+                </ReferenceItem.Meta>
+              </ReferenceItem.Content>
+              <ReferenceItem.Actions>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setMemoryStatus("saved")}
+                >
+                  Save
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setMemoryStatus("dismissed")}
+                >
+                  Dismiss
+                </Button>
+              </ReferenceItem.Actions>
+            </ReferenceItem.Root>
+          ) : (
+            <div className="flex flex-col gap-3">
+              <div
+                ref={memoryOutcomeRef}
+                tabIndex={-1}
+                role="status"
+                className={
+                  memoryStatus === "saved"
+                    ? "border-l border-primary bg-primary/5 py-2 pl-3"
+                    : "border-l border-muted-foreground/30 bg-muted/30 py-2 pl-3"
+                }
+              >
+                <div className="flex items-center gap-2">
+                  <HugeiconsIcon
+                    icon={Tick01Icon}
+                    size={14}
+                    strokeWidth={1.5}
+                    className="shrink-0 text-muted-foreground"
+                  />
+                  <span className="text-sm">
+                    {memoryStatus === "saved"
+                      ? "Saved — preferred review format added to workspace memory"
+                      : "Dismissed — memory proposal will not be stored"}
+                  </span>
+                </div>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="xs"
+                onClick={() => setMemoryStatus("pending")}
+              >
+                <HugeiconsIcon
+                  icon={RefreshIcon}
+                  strokeWidth={1.5}
+                  data-icon="inline-start"
+                />
+                Reset
               </Button>
-              <Button size="sm" variant="ghost">
-                Dismiss
-              </Button>
-            </ReferenceItem.Actions>
-          </ReferenceItem.Root>
+            </div>
+          )}
         </div>
       </section>
 

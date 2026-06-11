@@ -140,7 +140,7 @@ function SubagentSection() {
           type="button"
           aria-label="Toggle Source Collector details"
           onClick={() => setSubagentOpen(!subagentOpen)}
-          className="flex w-full items-center gap-2.5 py-2.5 text-left"
+          className="flex w-full items-center gap-2.5 py-2.5 text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
         >
           <HugeiconsIcon
             icon={Brain01Icon}
@@ -255,7 +255,7 @@ export function SubagentsSection() {
             ["Nesting", "Nested tool calls inherit the same collapsed style"],
             [
               "Progress bar",
-              "1px foreground/40 bar with transition-transform duration-500",
+              "h-1 (4px) bg-primary indicator with transition-transform duration-200",
             ],
           ].map(([prop, spec], i, arr) => (
             <TableRow
