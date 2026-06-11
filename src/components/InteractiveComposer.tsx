@@ -330,6 +330,24 @@ function ComposerDemo({
 
       {controls === "full" && <div className="flex-1" />}
 
+      {/* Post-send exchange — rendered ABOVE the composer */}
+      {lastExchange && (
+        <div className="mb-4 flex flex-col gap-3">
+          <div className="flex justify-end">
+            <div className="max-w-[75%] rounded-lg bg-primary px-4 py-2.5 text-sm text-primary-foreground">
+              {lastExchange.userMessage}
+            </div>
+          </div>
+          <div aria-live="polite" className="flex justify-start">
+            {lastExchange.agentReply && (
+              <div className="agent-prose demo-slide-in max-w-[85%] font-serif text-base text-foreground">
+                {lastExchange.agentReply}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       <Composer
         value={draft}
         onValueChange={setDraft}
@@ -414,34 +432,19 @@ function ComposerDemo({
 
             <div className="flex-1" />
 
-            <ComposerContextRing
-              used={21}
-              total={75}
-              label="21k / 75k tokens"
-            />
+            {controls !== "none" && (
+              <ComposerContextRing
+                used={21}
+                total={75}
+                label="21k / 75k tokens"
+              />
+            )}
             <ComposerSend />
           </ComposerToolbar>
         </ComposerCard>
 
         {features.suggestions && <ComposerSuggestions items={SUGGESTIONS} />}
       </Composer>
-
-      {lastExchange && (
-        <div className="mt-4 flex flex-col gap-3">
-          <div className="flex justify-end">
-            <div className="max-w-[75%] rounded-lg bg-primary px-4 py-2.5 text-sm text-primary-foreground">
-              {lastExchange.userMessage}
-            </div>
-          </div>
-          <div aria-live="polite" className="flex justify-start">
-            {lastExchange.agentReply && (
-              <div className="agent-prose demo-slide-in max-w-[85%] font-serif text-base text-foreground">
-                {lastExchange.agentReply}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   )
 }

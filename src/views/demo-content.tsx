@@ -1,6 +1,8 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   GitBranchIcon,
@@ -76,6 +78,27 @@ const FINDINGS = [
 ]
 
 /* ------------------------------------------------------------------ */
+/*  Quiet caption link                                                 */
+/* ------------------------------------------------------------------ */
+
+function DemoCaption({
+  href,
+  children,
+}: {
+  href: string
+  children: React.ReactNode
+}) {
+  return (
+    <Link
+      href={href}
+      className="rounded-sm text-xs text-muted-foreground transition-colors duration-150 outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
+    >
+      {children} →
+    </Link>
+  )
+}
+
+/* ------------------------------------------------------------------ */
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
@@ -95,7 +118,11 @@ export function DemoContent() {
     if (approvalState !== "pending") approvalOutcomeRef.current?.focus()
   }, [approvalState])
 
-  /* Context ring hover */
+  /* Citation source navigation */
+  const router = useRouter()
+  const handleOpenSource = () => {
+    router.push("/conversation#citations")
+  }
 
   return (
     <article>
@@ -124,24 +151,29 @@ export function DemoContent() {
         {/*  Message 2: Observable work disclosure                     */}
         {/* -------------------------------------------------------- */}
         <div className="flex justify-start">
-          <div className="max-w-[85%]">
-            <button
-              type="button"
-              aria-expanded={workExpanded}
-              aria-label="Toggle observable work details"
-              onClick={() => setWorkExpanded((prev) => !prev)}
-              className="flex w-full cursor-pointer items-center gap-1.5 px-1 py-2 text-left"
-            >
-              <span className="text-xs text-muted-foreground">
-                Reviewed 6 sources · 3.2s
-              </span>
-              <HugeiconsIcon
-                icon={ArrowDown01Icon}
-                size={14}
-                strokeWidth={1.5}
-                className={`shrink-0 text-muted-foreground transition-transform duration-150 ${workExpanded ? "rotate-180" : ""}`}
-              />
-            </button>
+          <div className="w-full max-w-[85%]">
+            <div className="flex items-center justify-between">
+              <button
+                type="button"
+                aria-expanded={workExpanded}
+                aria-label="Toggle observable work details"
+                onClick={() => setWorkExpanded((prev) => !prev)}
+                className="flex cursor-pointer items-center gap-1.5 px-1 py-2 text-left"
+              >
+                <span className="text-xs text-muted-foreground">
+                  Reviewed 6 sources · 3.2s
+                </span>
+                <HugeiconsIcon
+                  icon={ArrowDown01Icon}
+                  size={14}
+                  strokeWidth={1.5}
+                  className={`shrink-0 text-muted-foreground transition-transform duration-150 ${workExpanded ? "rotate-180" : ""}`}
+                />
+              </button>
+              <DemoCaption href="/conversation#progress-steps">
+                Progress Steps
+              </DemoCaption>
+            </div>
             {workExpanded && (
               <div className="demo-slide-in px-1 pb-2">
                 <p
@@ -159,15 +191,31 @@ export function DemoContent() {
         {/*  Message 3: Agent response with citations                 */}
         {/* -------------------------------------------------------- */}
         <div className="flex justify-start">
-          <div className="agent-prose max-w-[85%] font-serif text-base">
-            <p className="text-foreground">
-              I’ve completed the initial review. The brief covers the main
-              launch goals
-              <SourcePreviewCitation sources={CITATIONS} sourceIndex={0} />
-              , but I found three areas that need attention before the release
-              planning meeting
-              <SourcePreviewCitation sources={CITATIONS} sourceIndex={1} />.
-            </p>
+          <div className="max-w-[85%]">
+            <div className="agent-prose font-serif text-base">
+              <p className="text-foreground">
+                I've completed the initial review. The brief covers the main
+                launch goals
+                <SourcePreviewCitation
+                  sources={CITATIONS}
+                  sourceIndex={0}
+                  onOpenSource={handleOpenSource}
+                />
+                , but I found three areas that need attention before the release
+                planning meeting
+                <SourcePreviewCitation
+                  sources={CITATIONS}
+                  sourceIndex={1}
+                  onOpenSource={handleOpenSource}
+                />
+                .
+              </p>
+            </div>
+            <div className="mt-1.5 flex justify-end">
+              <DemoCaption href="/conversation#citations">
+                Citations
+              </DemoCaption>
+            </div>
           </div>
         </div>
 
@@ -176,33 +224,45 @@ export function DemoContent() {
         {/* -------------------------------------------------------- */}
         <div className="flex justify-start">
           <div className="w-full max-w-[85%]">
-            <ToolTree open={toolTreeOpen} onOpenChange={setToolTreeOpen}>
-              <ToolTreeTrigger icon={GitBranchIcon} timestamp="10:44 AM · 3.6s">
-                Running 3 tasks in parallel
-              </ToolTreeTrigger>
-              <ToolTreeContent>
-                {PARALLEL_TASKS.map((task, i) => (
-                  <ToolCall
-                    key={task.label}
-                    icon={CodeIcon}
-                    status="completed"
-                    timestamp={task.duration}
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0 flex-1">
+                <ToolTree open={toolTreeOpen} onOpenChange={setToolTreeOpen}>
+                  <ToolTreeTrigger
+                    icon={GitBranchIcon}
+                    timestamp="10:44 AM · 3.6s"
                   >
-                    <ToolCallTrigger>
-                      <ToolCallLabel>{task.label}</ToolCallLabel>
-                    </ToolCallTrigger>
-                    <ToolCallContent>
-                      <p
-                        className="text-xs text-muted-foreground"
-                        style={{ lineHeight: "18px" }}
+                    Running 3 tasks in parallel
+                  </ToolTreeTrigger>
+                  <ToolTreeContent>
+                    {PARALLEL_TASKS.map((task, i) => (
+                      <ToolCall
+                        key={task.label}
+                        icon={CodeIcon}
+                        status="completed"
+                        timestamp={task.duration}
                       >
-                        {TASK_DETAILS[i]}
-                      </p>
-                    </ToolCallContent>
-                  </ToolCall>
-                ))}
-              </ToolTreeContent>
-            </ToolTree>
+                        <ToolCallTrigger>
+                          <ToolCallLabel>{task.label}</ToolCallLabel>
+                        </ToolCallTrigger>
+                        <ToolCallContent>
+                          <p
+                            className="text-xs text-muted-foreground"
+                            style={{ lineHeight: "18px" }}
+                          >
+                            {TASK_DETAILS[i]}
+                          </p>
+                        </ToolCallContent>
+                      </ToolCall>
+                    ))}
+                  </ToolTreeContent>
+                </ToolTree>
+              </div>
+              <div className="mt-2 shrink-0">
+                <DemoCaption href="/actions#parallel">
+                  Parallel Execution
+                </DemoCaption>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -239,7 +299,7 @@ export function DemoContent() {
           <div className="w-full max-w-[85%]">
             <div className="agent-prose font-serif text-base text-foreground">
               <p>
-                I’d like to generate a findings summary and send it to the
+                I'd like to generate a findings summary and send it to the
                 project team.
               </p>
             </div>
@@ -331,6 +391,12 @@ export function DemoContent() {
                 </div>
               )}
             </div>
+
+            <div className="mt-1.5 flex justify-end">
+              <DemoCaption href="/actions#approval-gate">
+                Approval Gate
+              </DemoCaption>
+            </div>
           </div>
         </div>
 
@@ -338,6 +404,9 @@ export function DemoContent() {
         {/*  Composer                                                  */}
         {/* -------------------------------------------------------- */}
         <div className="mt-8">
+          <div className="mb-1.5 flex justify-end">
+            <DemoCaption href="/conversation#composer">Composer</DemoCaption>
+          </div>
           <EmbeddedComposerDemo />
         </div>
       </div>
