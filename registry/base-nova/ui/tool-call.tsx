@@ -101,7 +101,7 @@ function ToolCallTrigger({
         aria-expanded={canExpand ? expanded : undefined}
         aria-label={canExpand ? "Toggle tool call details" : "Tool call"}
         className={cn(
-          "flex min-h-8 w-fit max-w-full min-w-0 items-center gap-2 py-1",
+          "flex min-h-8 w-fit max-w-full min-w-0 items-center gap-2 py-1 outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
           canExpand ? "cursor-pointer" : "cursor-default",
           className
         )}

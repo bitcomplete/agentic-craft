@@ -113,7 +113,7 @@ export function RatingScaleSection() {
                     onClick={() => handleRatingClick(n)}
                     aria-label={`Rate response ${n} out of 5`}
                     aria-pressed={selectedRating === n}
-                    className={`flex h-7 w-7 items-center justify-center rounded-md text-xs transition-colors duration-150 ${ratingPressed === n ? "feedback-press" : ""} ${
+                    className={`flex h-7 w-7 items-center justify-center rounded-md text-xs transition-colors duration-150 outline-none focus-visible:ring-3 focus-visible:ring-ring/50 ${ratingPressed === n ? "feedback-press" : ""} ${
                       selectedRating === n
                         ? "border border-foreground/20 bg-foreground/[0.06] font-medium text-foreground"
                         : "border border-transparent text-muted-foreground/50 hover:bg-muted/50 hover:text-muted-foreground"

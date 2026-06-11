@@ -417,7 +417,7 @@ export function MessagesProgressSection() {
         </Table>
 
         {/* Prose preference explanation */}
-        <div className="hidden">
+        <div className="mt-8">
           <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
             <li>
               <span className="font-medium text-foreground">

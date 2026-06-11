@@ -130,7 +130,7 @@ export function FeedbackHistorySection() {
                     type="button"
                     aria-label={`Toggle feedback history entry: ${entry.message}`}
                     onClick={() => setExpandedRow(isExpanded ? null : entry.id)}
-                    className="flex w-full items-start gap-3 rounded-md px-2 py-3 text-left transition-colors hover:bg-muted/30"
+                    className="flex w-full items-start gap-3 rounded-md px-2 py-3 text-left transition-colors outline-none hover:bg-muted/30 focus-visible:ring-3 focus-visible:ring-ring/50"
                   >
                     {/* Type indicator */}
                     <span

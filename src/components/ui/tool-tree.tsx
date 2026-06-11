@@ -104,7 +104,7 @@ function ToolTreeTrigger({
         aria-expanded={open}
         aria-label={open ? "Collapse tool group" : "Expand tool group"}
         className={cn(
-          "flex min-h-8 w-fit max-w-full min-w-0 cursor-pointer items-center gap-2 py-1",
+          "flex min-h-8 w-fit max-w-full min-w-0 cursor-pointer items-center gap-2 py-1 outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
           className
         )}
         {...props}

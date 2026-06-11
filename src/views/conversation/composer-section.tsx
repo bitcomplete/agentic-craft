@@ -116,7 +116,7 @@ export function ComposerSection() {
         <CompactComposerPlayground />
       </div>
 
-      <div className="hidden">
+      <div className="mt-8">
         <div className="grid gap-2 border-b border-border/50 py-3 text-xs md:grid-cols-[180px_minmax(0,1fr)]">
           <p className="section-label">Inspect for</p>
           <p className="text-muted-foreground">
@@ -138,7 +138,7 @@ export function ComposerSection() {
         </div>
       </div>
 
-      <div className="hidden">
+      <div className="mt-8">
         <div>
           <div className="flex items-end justify-between gap-4 border-b border-border pb-3">
             <p className="section-label">Anatomy</p>
@@ -176,7 +176,7 @@ export function ComposerSection() {
         </aside>
       </div>
 
-      <div className="hidden">
+      <div className="mt-8">
         <div className="grid border-b border-border pb-3 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
           <p className="section-label">Rule</p>
           <p className="section-label hidden md:block">Failure to avoid</p>
