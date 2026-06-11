@@ -165,7 +165,7 @@ export function ThumbsFeedbackSection() {
             </p>
 
             {/* Thumbs buttons */}
-            <div className="mt-3 flex items-center gap-1">
+            <div className="mt-3 flex items-center gap-1 [@media(pointer:coarse)]:gap-3">
               <Button
                 type="button"
                 onClick={() => handleThumbClick("up")}
