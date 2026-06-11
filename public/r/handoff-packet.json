@@ -9,7 +9,7 @@
   ],
   "registryDependencies": [
     "button",
-    "arielconti10/agentic-craft/status-indicator"
+    "bitcomplete/agentic-craft/status-indicator"
   ],
   "files": [
     {

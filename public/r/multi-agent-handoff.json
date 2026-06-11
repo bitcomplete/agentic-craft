@@ -4,10 +4,10 @@
   "title": "Multi-Agent Handoff",
   "description": "A multi-agent ownership transfer block with handoff packet, sender/receiver state, source basis, recovery path, trace, and agent status table.",
   "registryDependencies": [
-    "arielconti10/agentic-craft/agent-status-table",
+    "bitcomplete/agentic-craft/agent-status-table",
     "badge",
-    "arielconti10/agentic-craft/handoff-packet",
-    "arielconti10/agentic-craft/run-trace"
+    "bitcomplete/agentic-craft/handoff-packet",
+    "bitcomplete/agentic-craft/run-trace"
   ],
   "files": [
     {

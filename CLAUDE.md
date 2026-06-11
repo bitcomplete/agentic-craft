@@ -1,6 +1,6 @@
 # CLAUDE.md — Agentic Craft
 
-Agentic Craft is a reference site for agentic UI patterns: it documents interaction design for agent orchestration, tool use, approvals, memory, multi-agent coordination, and observability. The shadcn-compatible registry is the distribution channel — consumers run `npx shadcn@latest add arielconti10/agentic-craft/<item>` to install primitives into their own projects. Every demo is a teaching artifact, so interaction quality (real state, real animation, accessible controls) is a first-class feature, not an afterthought.
+Agentic Craft is a reference site for agentic UI patterns: it documents interaction design for agent orchestration, tool use, approvals, memory, multi-agent coordination, and observability. The shadcn-compatible registry is the distribution channel — consumers run `npx shadcn@latest add bitcomplete/agentic-craft/<item>` to install primitives into their own projects. Every demo is a teaching artifact, so interaction quality (real state, real animation, accessible controls) is a first-class feature, not an afterthought.
 
 ## Stack
 

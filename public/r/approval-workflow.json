@@ -4,11 +4,11 @@
   "title": "Approval Workflow",
   "description": "A human-in-the-loop approval block with observable preparation, locked action preview, policy reason, expiry, and decision surface.",
   "registryDependencies": [
-    "arielconti10/agentic-craft/action-preview",
+    "bitcomplete/agentic-craft/action-preview",
     "badge",
     "button",
-    "arielconti10/agentic-craft/decision-surface",
-    "arielconti10/agentic-craft/observable-work"
+    "bitcomplete/agentic-craft/decision-surface",
+    "bitcomplete/agentic-craft/observable-work"
   ],
   "files": [
     {

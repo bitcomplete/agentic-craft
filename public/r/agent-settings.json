@@ -5,7 +5,7 @@
   "description": "A durable agent policy settings block with clickable switch labels and effective policy preview.",
   "registryDependencies": [
     "badge",
-    "arielconti10/agentic-craft/effective-policy-preview",
+    "bitcomplete/agentic-craft/effective-policy-preview",
     "field",
     "switch"
   ],

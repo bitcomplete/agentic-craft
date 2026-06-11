@@ -4,10 +4,10 @@
   "title": "Background Run Monitor",
   "description": "A background run monitoring block with an operational trace, visible run budget, agent status table, warnings, and blocked recovery path.",
   "registryDependencies": [
-    "arielconti10/agentic-craft/agent-status-table",
+    "bitcomplete/agentic-craft/agent-status-table",
     "badge",
-    "arielconti10/agentic-craft/run-trace",
-    "arielconti10/agentic-craft/usage-meter"
+    "bitcomplete/agentic-craft/run-trace",
+    "bitcomplete/agentic-craft/usage-meter"
   ],
   "files": [
     {

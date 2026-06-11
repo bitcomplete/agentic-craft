@@ -5,7 +5,7 @@
   "description": "A rich operational table for multiple agents with status, active task, progress, confidence, cost, and last activity.",
   "registryDependencies": [
     "progress",
-    "arielconti10/agentic-craft/status-indicator",
+    "bitcomplete/agentic-craft/status-indicator",
     "table"
   ],
   "files": [

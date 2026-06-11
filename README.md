@@ -74,8 +74,8 @@ The source registry lives in `registry.json` and is designed for GitHub
 distribution:
 
 ```bash
-npx shadcn@latest list arielconti10/agentic-craft
-npx shadcn@latest add arielconti10/agentic-craft/review-workflow
+npx shadcn@latest list bitcomplete/agentic-craft
+npx shadcn@latest add bitcomplete/agentic-craft/review-workflow
 ```
 
 The generated JSON registry is served locally from:

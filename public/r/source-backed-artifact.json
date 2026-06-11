@@ -7,9 +7,9 @@
     "@hugeicons/core-free-icons"
   ],
   "registryDependencies": [
-    "arielconti10/agentic-craft/artifact-document",
-    "arielconti10/agentic-craft/source-preview",
-    "arielconti10/agentic-craft/usage-meter"
+    "bitcomplete/agentic-craft/artifact-document",
+    "bitcomplete/agentic-craft/source-preview",
+    "bitcomplete/agentic-craft/usage-meter"
   ],
   "files": [
     {

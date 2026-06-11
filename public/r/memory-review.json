@@ -6,9 +6,9 @@
   "registryDependencies": [
     "badge",
     "button",
-    "arielconti10/agentic-craft/decision-surface",
-    "arielconti10/agentic-craft/memory-ledger-item",
-    "arielconti10/agentic-craft/source-preview"
+    "bitcomplete/agentic-craft/decision-surface",
+    "bitcomplete/agentic-craft/memory-ledger-item",
+    "bitcomplete/agentic-craft/source-preview"
   ],
   "files": [
     {
