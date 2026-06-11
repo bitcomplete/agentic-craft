@@ -125,7 +125,7 @@ export function BehavioralConsequenceSection() {
                     </span>{" "}
                     — dedicated support plan → standard support plan
                   </p>
-                  <p className="text-xs text-muted-foreground/70">
+                  <p className="text-xs text-muted-foreground">
                     Linked to feedback from 2026-03-14 · 11:07. The agent now
                     correctly references the base issue triage component for
                     enterprise release reviews.

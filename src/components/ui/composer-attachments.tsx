@@ -139,7 +139,7 @@ export function ComposerAttachments({
               data-compact-touch
               onClick={() => onRemove(file)}
               aria-label={`Remove ${file.name}`}
-              className="shrink-0 text-muted-foreground/50 transition-colors hover:text-foreground"
+              className="shrink-0 text-muted-foreground transition-colors hover:text-foreground"
             >
               <HugeiconsIcon icon={Cancel01Icon} size={12} strokeWidth={1.5} />
             </button>

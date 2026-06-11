@@ -221,7 +221,7 @@ export function AgentCardsSection() {
                     <p className="text-xs text-muted-foreground">
                       {agent.task}
                     </p>
-                    <p className="text-[10px] text-muted-foreground/70">
+                    <p className="text-[10px] text-muted-foreground">
                       {agent.progress}
                     </p>
                   </div>

@@ -56,7 +56,7 @@ export function ComposerInput({
         spellCheck={spellCheck}
         disabled={state.disabled}
         rows={1}
-        className="max-h-[160px] min-h-8 resize-none rounded-none border-0 bg-transparent px-0 py-0 text-base leading-6 shadow-none placeholder:text-[13px] placeholder:leading-5 placeholder:text-muted-foreground/60 focus-visible:ring-0 md:text-sm md:leading-5 dark:bg-transparent"
+        className="max-h-[160px] min-h-8 resize-none rounded-none border-0 bg-transparent px-0 py-0 text-base leading-6 shadow-none placeholder:text-[13px] placeholder:leading-5 placeholder:text-muted-foreground focus-visible:ring-0 md:text-sm md:leading-5 dark:bg-transparent"
         style={{ maxHeight }}
         {...props}
       />

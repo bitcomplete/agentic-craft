@@ -72,7 +72,7 @@ function PlanStep({
             ? "text-muted-foreground line-through"
             : state === "active"
               ? "text-foreground"
-              : "text-muted-foreground/60"
+              : "text-muted-foreground"
         }`}
       >
         {label}
@@ -84,7 +84,7 @@ function PlanStep({
           onClick={onRemove}
           variant="ghost"
           size="icon-xs"
-          className="shrink-0 text-muted-foreground/60 hover:text-foreground"
+          className="shrink-0 text-muted-foreground hover:text-foreground"
         >
           <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.5} />
         </Button>

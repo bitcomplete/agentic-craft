@@ -199,7 +199,7 @@ export function ParallelSection() {
                         icon={ArrowRight01Icon}
                         size={11}
                         strokeWidth={1.5}
-                        className={`ml-auto shrink-0 text-muted-foreground/70 transition-transform duration-200 ${
+                        className={`ml-auto shrink-0 text-muted-foreground transition-transform duration-200 ${
                           childExpanded[i] ? "rotate-90" : ""
                         }`}
                       />

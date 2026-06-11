@@ -448,7 +448,7 @@ export function MessagesProgressSection() {
           {workMode === "completed" && (
             <div className="conv-slide-in">
               <div className="px-1 py-2">
-                <span className="text-xs text-muted-foreground/70">
+                <span className="text-xs text-muted-foreground">
                   Completed 4 source checks in 4.2s
                 </span>
               </div>

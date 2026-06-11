@@ -101,7 +101,7 @@ export function ComposerContextRing({
             data-slot="composer-context-ring"
             aria-label={`${displayLabel}, ${pctLabel} used`}
             className={cn(
-              "mr-1 flex size-8 items-center justify-center rounded-lg text-muted-foreground/70 transition-colors hover:bg-muted/70 hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none [@media(pointer:coarse)]:mr-3",
+              "mr-1 flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted/70 hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none [@media(pointer:coarse)]:mr-3",
               className
             )}
             {...props}

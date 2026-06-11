@@ -71,7 +71,7 @@ export function ComposerScope({
                   type="button"
                   onClick={() => onRemove(item.id)}
                   aria-label={`Remove ${item.label}`}
-                  className="text-muted-foreground/50 transition-colors hover:text-foreground sm:opacity-0 sm:group-focus-within/scope:opacity-100 sm:group-hover/scope:opacity-100"
+                  className="text-muted-foreground transition-colors hover:text-foreground sm:opacity-0 sm:group-focus-within/scope:opacity-100 sm:group-hover/scope:opacity-100"
                 >
                   <HugeiconsIcon
                     icon={Cancel01Icon}
@@ -88,7 +88,7 @@ export function ComposerScope({
             type="button"
             onClick={onDismiss}
             aria-label="Dismiss scope"
-            className="shrink-0 text-muted-foreground/60 transition-colors hover:text-foreground"
+            className="shrink-0 text-muted-foreground transition-colors hover:text-foreground"
           >
             <HugeiconsIcon icon={Cancel01Icon} size={14} strokeWidth={1.5} />
           </button>
@@ -125,7 +125,7 @@ export function ComposerReply({
             type="button"
             onClick={onDismiss}
             aria-label="Dismiss reply context"
-            className="shrink-0 text-muted-foreground/60 transition-colors hover:text-foreground"
+            className="shrink-0 text-muted-foreground transition-colors hover:text-foreground"
           >
             <HugeiconsIcon icon={Cancel01Icon} size={14} strokeWidth={1.5} />
           </button>
@@ -166,7 +166,7 @@ export function ComposerPlan({
             onClick={() => setExpanded(!expanded)}
             aria-label={expanded ? "Collapse plan" : "Expand plan"}
             aria-expanded={expanded}
-            className="flex size-8 items-center justify-center rounded-md text-muted-foreground/60 transition-colors hover:bg-muted/50 hover:text-foreground"
+            className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
           >
             <HugeiconsIcon
               icon={expanded ? ArrowShrink01Icon : ArrowExpand01Icon}

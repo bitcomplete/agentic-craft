@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-11T19:30:00Z",
+  "title": "Design System: Agentic Craft",
+  "extensions": {
+    "colorMeta": {
+      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "oklch(0.145 0 0)", "tonalRamp": ["oklch(0.15 0 0)", "oklch(0.25 0 0)", "oklch(0.35 0 0)", "oklch(0.45 0 0)", "oklch(0.6 0 0)", "oklch(0.75 0 0)", "oklch(0.85 0 0)", "oklch(0.95 0 0)"] },
+      "carbon": { "role": "primary", "displayName": "Carbon", "canonical": "oklch(0.205 0 0)", "tonalRamp": ["oklch(0.15 0 0)", "oklch(0.205 0 0)", "oklch(0.3 0 0)", "oklch(0.45 0 0)", "oklch(0.6 0 0)", "oklch(0.75 0 0)", "oklch(0.85 0 0)", "oklch(0.95 0 0)"] },
+      "graphite": { "role": "neutral", "displayName": "Graphite", "canonical": "oklch(0.556 0 0)", "tonalRamp": ["oklch(0.15 0 0)", "oklch(0.28 0 0)", "oklch(0.4 0 0)", "oklch(0.556 0 0)", "oklch(0.65 0 0)", "oklch(0.75 0 0)", "oklch(0.85 0 0)", "oklch(0.95 0 0)"] },
+      "ash": { "role": "neutral", "displayName": "Ash", "canonical": "oklch(0.708 0 0)", "tonalRamp": ["oklch(0.15 0 0)", "oklch(0.3 0 0)", "oklch(0.45 0 0)", "oklch(0.6 0 0)", "oklch(0.708 0 0)", "oklch(0.8 0 0)", "oklch(0.88 0 0)", "oklch(0.95 0 0)"] },
+      "hairline": { "role": "neutral", "displayName": "Hairline", "canonical": "oklch(0.922 0 0)", "tonalRamp": ["oklch(0.2 0 0)", "oklch(0.35 0 0)", "oklch(0.5 0 0)", "oklch(0.65 0 0)", "oklch(0.78 0 0)", "oklch(0.86 0 0)", "oklch(0.922 0 0)", "oklch(0.97 0 0)"] },
+      "fog": { "role": "neutral", "displayName": "Fog", "canonical": "oklch(0.97 0 0)", "tonalRamp": ["oklch(0.269 0 0)", "oklch(0.4 0 0)", "oklch(0.55 0 0)", "oklch(0.7 0 0)", "oklch(0.8 0 0)", "oklch(0.9 0 0)", "oklch(0.97 0 0)", "oklch(1 0 0)"] },
+      "off-white": { "role": "neutral", "displayName": "Off-white", "canonical": "oklch(0.985 0 0)", "tonalRamp": ["oklch(0.15 0 0)", "oklch(0.35 0 0)", "oklch(0.55 0 0)", "oklch(0.7 0 0)", "oklch(0.82 0 0)", "oklch(0.9 0 0)", "oklch(0.96 0 0)", "oklch(0.985 0 0)"] },
+      "white": { "role": "neutral", "displayName": "White", "canonical": "oklch(1 0 0)", "tonalRamp": ["oklch(0.145 0 0)", "oklch(0.35 0 0)", "oklch(0.55 0 0)", "oklch(0.7 0 0)", "oklch(0.82 0 0)", "oklch(0.92 0 0)", "oklch(0.97 0 0)", "oklch(1 0 0)"] },
+      "verified-green": { "role": "tertiary", "displayName": "Verified Green", "canonical": "oklch(0.54 0.14 155)", "darkVariant": "oklch(0.72 0.15 155)", "tonalRamp": ["oklch(0.2 0.14 155)", "oklch(0.3 0.14 155)", "oklch(0.42 0.14 155)", "oklch(0.54 0.14 155)", "oklch(0.64 0.14 155)", "oklch(0.72 0.15 155)", "oklch(0.84 0.1 155)", "oklch(0.94 0.05 155)"] },
+      "caution-amber": { "role": "tertiary", "displayName": "Caution Amber", "canonical": "oklch(0.72 0.14 85)", "darkVariant": "oklch(0.82 0.14 85)", "tonalRamp": ["oklch(0.25 0.14 85)", "oklch(0.38 0.14 85)", "oklch(0.5 0.14 85)", "oklch(0.62 0.14 85)", "oklch(0.72 0.14 85)", "oklch(0.82 0.14 85)", "oklch(0.9 0.1 85)", "oklch(0.96 0.05 85)"] },
+      "signal-red": { "role": "tertiary", "displayName": "Signal Red", "canonical": "oklch(0.577 0.245 27.325)", "darkVariant": "oklch(0.704 0.191 22.216)", "tonalRamp": ["oklch(0.2 0.2 27)", "oklch(0.32 0.22 27)", "oklch(0.45 0.24 27)", "oklch(0.577 0.245 27.325)", "oklch(0.65 0.22 25)", "oklch(0.704 0.191 22.216)", "oklch(0.84 0.12 25)", "oklch(0.94 0.05 25)"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Page titles only (h1). Light-weight serif, balanced wrapping." },
+      "headline": { "displayName": "Headline", "purpose": "Section headings (h2), tight-tracked sans." },
+      "body": { "displayName": "Body", "purpose": "All interface prose; section intros measure-capped at 600px." },
+      "agent-prose": { "displayName": "Agent Prose", "purpose": "The agent's voice. Single source of truth: the .agent-prose class (@layer components). Never sans." },
+      "label": { "displayName": "Section Label", "purpose": "The system's single eyebrow device; uppercase 11px category kickers that double as navigation anchors." }
+    },
+    "shadows": [
+      { "name": "overlay", "value": "0 4px 12px rgba(0,0,0,0.1)", "purpose": "True overlays only (menus, dialogs, popovers). All at-rest surfaces are shadowless — depth is drawn with 1px lines and tone (The Hairline Rule)." }
+    ],
+    "motion": [
+      { "name": "ease-signature", "value": "cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "Reveals, entrances, expanding panels (180-300ms)." },
+      { "name": "duration-state", "value": "150ms", "purpose": "Color/background/border/opacity state transitions on interactive elements." },
+      { "name": "duration-reveal", "value": "180ms-300ms", "purpose": "Disclosure and entrance animations (e.g. observable-work reveal at 180ms ease-out)." },
+      { "name": "press-floor", "value": "scale(0.95)", "purpose": "Press feedback never scales below 0.95; buttons use active:translate-y-px." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Carbon-filled action button; the only filled control on a screen.",
+      "html": "<button class=\"ds-btn-primary\">Approve</button>",
+      "css": ".ds-btn-primary { background: var(--primary, oklch(0.205 0 0)); color: var(--primary-foreground, oklch(0.985 0 0)); height: 32px; padding: 0 10px; border: 1px solid transparent; border-radius: 10px; font-family: 'Albert Sans', sans-serif; font-size: 0.875rem; font-weight: 500; transition: color 0.15s ease, background-color 0.15s ease, transform 0.15s ease; } .ds-btn-primary:hover { background: oklch(0.205 0 0 / 0.9); } .ds-btn-primary:focus-visible { outline: none; border-color: var(--ring, oklch(0.708 0 0)); box-shadow: 0 0 0 3px oklch(0.708 0 0 / 0.5); } .ds-btn-primary:active { transform: translateY(1px); }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Hairline-bordered secondary action.",
+      "html": "<button class=\"ds-btn-outline\">Deny</button>",
+      "css": ".ds-btn-outline { background: var(--background, oklch(1 0 0)); color: var(--foreground, oklch(0.145 0 0)); height: 32px; padding: 0 10px; border: 1px solid var(--border, oklch(0.922 0 0)); border-radius: 10px; font-family: 'Albert Sans', sans-serif; font-size: 0.875rem; font-weight: 500; transition: background-color 0.15s ease; } .ds-btn-outline:hover { background: var(--muted, oklch(0.97 0 0)); } .ds-btn-outline:focus-visible { outline: none; border-color: var(--ring, oklch(0.708 0 0)); box-shadow: 0 0 0 3px oklch(0.708 0 0 / 0.5); } .ds-btn-outline:active { transform: translateY(1px); }"
+    },
+    {
+      "name": "Pattern Control Chip",
+      "kind": "chip",
+      "refersTo": "button-ghost",
+      "description": "Exclusive demo-state toggle; active = 4% ink wash, aria-pressed.",
+      "html": "<div class=\"ds-chip-row\"><span class=\"ds-chip-label\">Controls</span><button class=\"ds-chip\" aria-pressed=\"true\">Running</button><button class=\"ds-chip\" aria-pressed=\"false\">Complete</button></div>",
+      "css": ".ds-chip-row { display: flex; align-items: center; gap: 8px; font-family: 'Albert Sans', sans-serif; } .ds-chip-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted-foreground, oklch(0.556 0 0)); margin-right: 4px; } .ds-chip { min-height: 28px; padding: 4px 10px; border: none; border-radius: 8px; background: transparent; color: var(--muted-foreground, oklch(0.556 0 0)); font-size: 0.75rem; font-weight: 500; transition: color 0.15s ease, background-color 0.15s ease; } .ds-chip:hover { color: var(--foreground, oklch(0.145 0 0)); background: oklch(0.97 0 0 / 0.5); } .ds-chip[aria-pressed=\"true\"] { background: oklch(0.145 0 0 / 0.04); color: var(--foreground, oklch(0.145 0 0)); } .ds-chip:focus-visible { outline: none; box-shadow: 0 0 0 3px oklch(0.708 0 0 / 0.5); }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "demo-frame",
+      "description": "Hairline-stroked field; 16px on mobile (iOS zoom guard), house focus ring.",
+      "html": "<input class=\"ds-input\" placeholder=\"Ask about this project…\" />",
+      "css": ".ds-input { width: 100%; min-height: 36px; padding: 8px 10px; background: transparent; border: 1px solid var(--input, oklch(0.922 0 0)); border-radius: 10px; font-family: 'Albert Sans', sans-serif; font-size: 16px; color: var(--foreground, oklch(0.145 0 0)); transition: border-color 0.15s ease, box-shadow 0.15s ease; } @media (min-width: 768px) { .ds-input { font-size: 0.875rem; } } .ds-input::placeholder { color: oklch(0.556 0 0); } .ds-input:focus-visible { outline: none; border-color: var(--ring, oklch(0.708 0 0)); box-shadow: 0 0 0 3px oklch(0.708 0 0 / 0.5); }"
+    },
+    {
+      "name": "Demo Frame",
+      "kind": "card",
+      "refersTo": "demo-frame",
+      "description": "The sitewide interactive-specimen container: hairline at 40%, shadowless.",
+      "html": "<div class=\"ds-frame\"><p class=\"ds-frame-note\">Interactive specimen</p></div>",
+      "css": ".ds-frame { border: 1px solid oklch(0.922 0 0 / 0.4); border-radius: 10px; padding: 16px; background: var(--background, oklch(1 0 0)); } @media (min-width: 640px) { .ds-frame { padding: 24px; } } .ds-frame-note { margin: 0; font-family: 'Albert Sans', sans-serif; font-size: 0.875rem; color: var(--muted-foreground, oklch(0.556 0 0)); }"
+    },
+    {
+      "name": "Agent Prose",
+      "kind": "custom",
+      "refersTo": "agent-prose",
+      "description": "The agent's serif voice — the system's signature text style.",
+      "html": "<p class=\"ds-agent-prose\">I’ve completed the initial review. The brief covers the main launch goals, but I found three areas that need attention before the release planning meeting.</p>",
+      "css": ".ds-agent-prose { font-family: 'Source Serif 4', serif; font-size: 16px; line-height: 26px; letter-spacing: -0.4px; font-variation-settings: 'opsz' 12; -webkit-font-smoothing: antialiased; color: var(--foreground, oklch(0.145 0 0)); margin: 0; max-width: 65ch; }"
+    },
+    {
+      "name": "Tool Call Row",
+      "kind": "custom",
+      "refersTo": "demo-frame",
+      "description": "Signature observable-work row: monochrome glyph, quiet label, tabular duration revealed on hover.",
+      "html": "<div class=\"ds-tool-row\"><svg class=\"ds-tool-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><circle cx=\"12\" cy=\"12\" r=\"4\" stroke-dasharray=\"2 2\"/></svg><span class=\"ds-tool-label\">Checking roadmap alignment</span><span class=\"ds-tool-time\">2.1s</span></div>",
+      "css": ".ds-tool-row { display: flex; align-items: center; gap: 10px; padding: 10px 4px; font-family: 'Albert Sans', sans-serif; font-size: 0.875rem; color: var(--foreground, oklch(0.145 0 0)); } .ds-tool-icon { width: 16px; height: 16px; color: var(--muted-foreground, oklch(0.556 0 0)); flex-shrink: 0; } .ds-tool-label { font-weight: 400; flex: 1; min-width: 0; } .ds-tool-time { font-size: 0.75rem; color: var(--muted-foreground, oklch(0.556 0 0)); font-variant-numeric: tabular-nums; opacity: 0; transition: opacity 0.15s ease; } .ds-tool-row:hover .ds-tool-time { opacity: 1; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Galley Proof",
+    "overview": "A publication at final proofing: monochrome ink on white, every claim checked, every numeral tabular, the author's voice set in serif against the apparatus of sans-serif instrumentation. The interface is the proofing table — quiet, flat, ruled with hairlines and dashed section breaks — and the agent's words are the manuscript on it. Two voices, one page: the product speaks Albert Sans; the agent speaks Source Serif 4. Nothing glows, nothing bounces, nothing pretends.",
+    "keyCharacteristics": [
+      "Achromatic surface; color exists only as state semantics",
+      "Two-voice typography: sans for the interface, serif for the agent",
+      "Flat depth — drawn with 1px lines and tone, never cast with shadows",
+      "Calibrated motion: 150–250ms, exponential ease-outs, press floor at 0.95",
+      "Honest affordances: every control works; nothing looks expandable that isn't"
+    ],
+    "rules": [
+      { "name": "The Ink Rule", "body": "The interface is achromatic. Chroma is semantics: if an element is colored, it is making a claim about state (ok / caution / destructive). Decorative color is prohibited — including on icons, which are always monochrome line icons at strokeWidth 1.5.", "section": "colors" },
+      { "name": "The Tokens-Only Rule", "body": "No raw hex or oklch literal ever appears in a component. Status colors come from --status-ok, --status-warn, --destructive; everything else from the semantic ramp.", "section": "colors" },
+      { "name": "The Two Voices Rule", "body": "Sans is the product speaking; serif is the agent speaking. Never set UI chrome in serif, never set agent responses in sans, and never introduce a third family.", "section": "typography" },
+      { "name": "The One Kicker Rule", "body": "The uppercase section-label is the system's single eyebrow device, tied to the section-rhythm system. Do not add second-tier eyebrows, numbered markers, or badge-kickers above headings.", "section": "typography" },
+      { "name": "The Hairline Rule", "body": "If a boundary needs marking, draw a 1px line or step the background one tone; never cast a shadow to separate two flat surfaces.", "section": "elevation" },
+      { "name": "The Honest Affordance Rule", "body": "Nothing may look interactive that isn't: no cursor-pointer on dead rows, no hover treatment on non-links, no expandable chrome on empty disclosures, and every demo control visibly changes the demo it claims to control.", "section": "elevation" },
+      { "name": "The Calibrated Motion Rule", "body": "State transitions run 150ms; reveals 180–300ms on cubic-bezier(0.22, 1, 0.36, 1); press feedback never scales below 0.95; ambient loops are rare and finite. Every animation has a prefers-reduced-motion alternative. The highest-frequency action gets no flourish at all.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep icons monochrome, line-style, strokeWidth 1.5, one meaning per glyph (robot = agent, brain = memory, waveform = activity feed).",
+      "Do use plain text-muted-foreground (no opacity modifier) for all informational text and interactive glyphs; 4.5:1 body contrast is non-negotiable (WCAG 2.1 AA). Opacity-reduced muted-foreground is permitted only on decorative, aria-hidden, or disabled elements.",
+      "Do write demo data as plausible telemetry: staggered durations, odd numbers, believable product names, section-style locations for path sources, Page N only for PDFs.",
+      "Do use typographic quotes in all rendered copy.",
+      "Do give every outcome a role=status and move focus to it when the triggering control unmounts.",
+      "Do end sections with a spec table only when it encodes non-visible contract, and an italic callout only when it states a rule the demo cannot show (≤2 callouts per page)."
+    ],
+    "donts": [
+      "Don't ship AI-demo chrome: glowing gradients, sparkle icons, chat-bubble theater, spinners on tool calls, success/failure icons on tool calls, oversized rounded everything.",
+      "Don't use pill shapes — rounded-md/rounded-lg consistently, never full-radius capsules.",
+      "Don't inject style tags, use transition-all, space-x/y-* utilities, clickable divs, or raw status colors — all hard-failed by scripts/audit-ui.mjs in CI.",
+      "Don't use border-left > 1px as a colored accent, gradient text, or decorative glassmorphism, ever.",
+      "Don't add per-component dark: color overrides for new work; both themes live at the token layer.",
+      "Don't animate layout properties, bounce, or scale presses below 0.95; don't gate content visibility on a reveal animation.",
+      "Don't let any text clip or overflow: table prose cells wrap, headings balance, long prose sets text-wrap: pretty."
+    ]
+  }
+}
