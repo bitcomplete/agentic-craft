@@ -298,59 +298,6 @@ export function MessagesProgressSection() {
           </div>
         </div>
 
-        {/* Message spec table */}
-        <Table className="mt-10 w-full text-sm">
-          <TableHeader>
-            <TableRow className="border-b border-border">
-              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
-                Type
-              </TableHead>
-              <TableHead className="pr-6 pb-3 text-left text-xs font-medium text-muted-foreground">
-                Style
-              </TableHead>
-              <TableHead className="pb-3 text-left text-xs font-medium text-muted-foreground">
-                Details
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody className="text-sm text-muted-foreground">
-            <TableRow className="border-b border-border/50">
-              <TableCell className="py-3 pr-6 font-medium text-foreground">
-                User
-              </TableCell>
-              <TableCell className="py-3 pr-6">
-                bg-primary, text-primary-foreground
-              </TableCell>
-              <TableCell className="py-3">
-                max-width 75%, rounded-lg, right-aligned, app body font, 14px
-              </TableCell>
-            </TableRow>
-            <TableRow className="border-b border-border/50">
-              <TableCell className="py-3 pr-6 font-medium text-foreground">
-                Agent
-              </TableCell>
-              <TableCell className="py-3 pr-6">
-                border border-border bg-muted
-              </TableCell>
-              <TableCell className="py-3">
-                max-width 75%, rounded-lg, left-aligned, user-configurable prose
-                style
-              </TableCell>
-            </TableRow>
-            <TableRow className="border-b border-border/50">
-              <TableCell className="py-3 pr-6 font-medium text-foreground">
-                System
-              </TableCell>
-              <TableCell className="py-3 pr-6">
-                bg-muted, text-muted-foreground
-              </TableCell>
-              <TableCell className="py-3">
-                centered, text-xs, rounded-md
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-
         {/* Prose typography spec table */}
         <Table className="mt-10 w-full text-sm">
           <TableHeader>
@@ -440,17 +387,6 @@ export function MessagesProgressSection() {
           </ul>
         </div>
 
-        <div className="mt-10 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-          <p>
-            User messages are right-aligned to create visual separation of "who
-            said what". Agent messages use a distinct surface and optional prose
-            preference instead of depending on a fixed font. System messages are
-            unobtrusive — they provide context without demanding attention.
-            Max-width 75% prevents messages from spanning the full content
-            width, improving readability. The streaming cursor stays static and
-            auto-hides after a few seconds.
-          </p>
-        </div>
       </section>
 
       {/* ─── Progress Steps ─── */}

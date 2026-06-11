@@ -211,15 +211,6 @@ export function ComposerSection() {
         <TableBody className="text-sm text-muted-foreground">
           <TableRow className="border-b border-border/50">
             <TableCell className="py-3 pr-6 font-medium text-foreground">
-              Container
-            </TableCell>
-            <TableCell className="py-3">
-              max-w-[720px], rounded-xl on mobile, rounded-2xl on desktop,
-              border border-border
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 font-medium text-foreground">
               Textarea
             </TableCell>
             <TableCell className="py-3">
@@ -233,14 +224,6 @@ export function ComposerSection() {
             <TableCell className="py-3">
               32×32px hit area, 24px inner icon button, foreground when active,
               muted when empty, spring press animation
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 font-medium text-foreground">
-              Focus state
-            </TableCell>
-            <TableCell className="py-3">
-              Border transitions to foreground/20, subtle outer shadow
             </TableCell>
           </TableRow>
           <TableRow className="border-b border-border/50">

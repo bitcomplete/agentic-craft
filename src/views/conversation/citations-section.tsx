@@ -184,14 +184,6 @@ export function CitationsSection() {
         </TableBody>
       </Table>
 
-      <div className="mt-10 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        <p>
-          The citation preview should answer "why should I trust this sentence?"
-          without forcing the user away from the current answer. Keep the quote
-          short, show the exact source location, and make the full document one
-          click away.
-        </p>
-      </div>
     </section>
   )
 }
