@@ -26,10 +26,16 @@ of InteractiveComposer.tsx. Here's what that means:
 5. **Everything clickable** — chips, buttons, dismiss ×, expand/collapse,
    tabs. Every interactive element works.
 
-6. **Spec table follows the demo** — bare table, no wrapper card.
+6. **Spec table follows the demo** — bare table, no wrapper card. Only include
+   where ≥ half the rows encode non-visible contract (timings, keyboard
+   behavior, state-transition rules, failure modes, required formats). Mostly-
+   pixel tables should be omitted; any 1-2 genuine contract rows can be folded
+   into the section intro instead. Most sections need no table.
 
-7. **Callout at the end** — border-l-2 italic muted text explaining design
-   rationale.
+7. **Callout at the end** — border-l-2 italic muted text explaining a
+   non-inferable design rule. Only include when the rule is (a) actionable,
+   (b) not already captured in the spec table or intro, and (c) not inferable
+   from looking at the demo. Most sections need no callout.
 
 ## Tech constraints
 
