@@ -87,7 +87,7 @@ export function DecisionsSection() {
           onToggle={toggleDecisionControl}
         />
 
-        <div className="flex flex-col gap-3 rounded-lg border border-border/40 p-6">
+        <div className="flex flex-col gap-3 rounded-lg border border-border/40 p-4 sm:p-6">
           <div className="flex items-start gap-2">
             <HugeiconsIcon
               icon={Alert01Icon}

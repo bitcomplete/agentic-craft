@@ -66,7 +66,7 @@ export function ParallelAgentsSection() {
         />
 
         <div
-          className="rounded-lg border border-border/40 p-6"
+          className="rounded-lg border border-border/40 p-4 sm:p-6"
           key={parallelAnim}
         >
           <div className="divide-y divide-border/40">

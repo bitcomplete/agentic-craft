@@ -79,7 +79,10 @@ export function ErrorLogSection() {
           onToggle={toggleErr}
         />
 
-        <div className="rounded-lg border border-border/40 p-6" key={errAnim}>
+        <div
+          className="rounded-lg border border-border/40 p-4 sm:p-6"
+          key={errAnim}
+        >
           {activeErr === "empty" ? (
             <div className="mon-slide-in flex flex-col items-center justify-center py-12 text-center">
               <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-muted">

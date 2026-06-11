@@ -245,7 +245,10 @@ export function ActivityTimelineSection() {
           onToggle={toggleAct}
         />
 
-        <div className="rounded-lg border border-border/40 p-6" key={actAnim}>
+        <div
+          className="rounded-lg border border-border/40 p-4 sm:p-6"
+          key={actAnim}
+        >
           {/* Header */}
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">

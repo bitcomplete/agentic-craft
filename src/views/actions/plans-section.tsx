@@ -153,7 +153,7 @@ export function PlansSection() {
           onToggle={togglePlanControl}
         />
 
-        <div className="rounded-lg border border-border/40 p-6">
+        <div className="rounded-lg border border-border/40 p-4 sm:p-6">
           <div className="mb-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <HugeiconsIcon

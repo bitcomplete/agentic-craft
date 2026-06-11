@@ -79,7 +79,7 @@ export function ContextRingSection() {
         />
 
         <div
-          className="rounded-lg border border-border/40 p-6"
+          className="rounded-lg border border-border/40 p-4 sm:p-6"
           key={ringAnimKey}
         >
           <div className="flex items-center gap-8">

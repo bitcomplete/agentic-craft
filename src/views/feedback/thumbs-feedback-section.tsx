@@ -147,10 +147,13 @@ export function ThumbsFeedbackSection() {
           onToggle={handleThumbsToggle}
         />
 
-        <div className="rounded-lg border border-border/40 p-6" ref={thumbsRef}>
+        <div
+          className="rounded-lg border border-border/40 p-4 sm:p-6"
+          ref={thumbsRef}
+        >
           {/* Agent message */}
           <div
-            className={`transition-colors duration-300 ${
+            className={`transition-colors duration-150 ${
               thumbsFlash ? "feedback-flash-green" : ""
             }`}
           >

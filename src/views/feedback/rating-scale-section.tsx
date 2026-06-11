@@ -88,7 +88,7 @@ export function RatingScaleSection() {
           onToggle={handleRatingToggle}
         />
 
-        <div className="rounded-lg border border-border/40 p-6">
+        <div className="rounded-lg border border-border/40 p-4 sm:p-6">
           <div>
             <p
               className="agent-prose text-base"

@@ -146,30 +146,12 @@ export function ComposerSend({
   ...props
 }: React.ComponentProps<"button">) {
   const { state } = useComposer()
-  const [arrowAnim, setArrowAnim] = React.useState(false)
-  const arrowTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  React.useEffect(() => {
-    return () => {
-      if (arrowTimerRef.current !== null) clearTimeout(arrowTimerRef.current)
-    }
-  }, [])
-
-  const handleClick = React.useCallback(() => {
-    if (arrowTimerRef.current !== null) clearTimeout(arrowTimerRef.current)
-    setArrowAnim(true)
-    arrowTimerRef.current = setTimeout(() => {
-      arrowTimerRef.current = null
-      setArrowAnim(false)
-    }, 500)
-  }, [])
 
   return (
     <button
       data-compact-touch
       data-slot="composer-send"
       type="submit"
-      onClick={handleClick}
       disabled={!state.canSend}
       aria-label={state.canSend ? "Send message" : "Send message unavailable"}
       className={cn(
@@ -185,8 +167,7 @@ export function ComposerSend({
           "flex size-6 items-center justify-center rounded-full transition-[color,background-color]",
           state.canSend
             ? "bg-foreground text-background"
-            : "bg-muted/60 text-muted-foreground/40",
-          arrowAnim ? "animate-composer-arrow" : ""
+            : "bg-muted/60 text-muted-foreground/40"
         )}
       >
         <HugeiconsIcon icon={ArrowUp02Icon} size={13} strokeWidth={2} />

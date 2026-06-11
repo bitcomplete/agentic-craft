@@ -124,7 +124,7 @@ export function PrivacyControlsSection() {
           onToggle={handlePrivacyToggle}
         />
 
-        <FieldSet className="rounded-lg border border-border/40 p-6">
+        <FieldSet className="rounded-lg border border-border/40 p-4 sm:p-6">
           <FieldGroup className="gap-1">
             {PRIVACY_CATEGORIES.map((cat) => (
               <Field

@@ -54,7 +54,7 @@ export function BehavioralConsequenceSection() {
           onToggle={handleBehaviorToggle}
         />
 
-        <div className="rounded-lg border border-border/40 p-6">
+        <div className="rounded-lg border border-border/40 p-4 sm:p-6">
           {behaviorState.before ? (
             <div>
               <p

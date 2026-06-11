@@ -51,7 +51,7 @@ export function KillSwitchSection() {
         />
 
         <div
-          className="rounded-lg border border-border/40 p-6"
+          className="rounded-lg border border-border/40 p-4 sm:p-6"
           key={killAnimKey}
         >
           <div className="trust-slide-in">

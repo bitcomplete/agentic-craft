@@ -76,7 +76,10 @@ export function TokenUsageSection() {
           onToggle={toggleToken}
         />
 
-        <div className="rounded-lg border border-border/40 p-6" key={tokenAnim}>
+        <div
+          className="rounded-lg border border-border/40 p-4 sm:p-6"
+          key={tokenAnim}
+        >
           <div className="mon-slide-in">
             {/* Usage header */}
             <div className="mb-4 flex items-center justify-between">

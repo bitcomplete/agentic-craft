@@ -109,7 +109,7 @@ export function ToolCallsSection() {
           onToggle={toggleToolControl}
         />
 
-        <div className="rounded-lg border border-border/40 p-6">
+        <div className="rounded-lg border border-border/40 p-4 sm:p-6">
           <div
             className={`flex flex-col gap-1.5 ${toolState.grouped ? "border-l-2 border-border pl-3" : ""}`}
           >

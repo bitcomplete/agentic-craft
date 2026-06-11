@@ -106,7 +106,10 @@ export function AgentCommunicationSection() {
           onToggle={toggleComm}
         />
 
-        <div className="rounded-lg border border-border/40 p-6" key={commAnim}>
+        <div
+          className="rounded-lg border border-border/40 p-4 sm:p-6"
+          key={commAnim}
+        >
           {activeComm === "direct" ? (
             <div className="ma-slide-in flex flex-col gap-3">
               <div className="mb-4 flex items-center gap-2">

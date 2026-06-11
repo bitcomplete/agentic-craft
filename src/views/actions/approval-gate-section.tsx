@@ -105,7 +105,7 @@ export function ApprovalGateSection() {
 
         <div
           key={approvalAnim}
-          className="rounded-lg border border-border/40 p-6"
+          className="rounded-lg border border-border/40 p-4 sm:p-6"
         >
           {approvalCtrl.email ? (
             /* Email approval variant */

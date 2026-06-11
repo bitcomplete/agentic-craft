@@ -207,7 +207,7 @@ export function SettingsAutonomySection() {
           boundaries across sessions, not one-off prompt instructions.
         </p>
 
-        <FieldGroup className="mt-10 rounded-lg border border-border/40 p-6">
+        <FieldGroup className="mt-10 rounded-lg border border-border/40 p-4 sm:p-6">
           <FieldSet>
             <FieldLegend>Reusable Settings Groups</FieldLegend>
             {SETTINGS_TEMPLATES.map((template) => (
@@ -261,7 +261,7 @@ export function SettingsAutonomySection() {
           />
 
           <div
-            className="rounded-lg border border-border/40 p-6"
+            className="rounded-lg border border-border/40 p-4 sm:p-6"
             key={autoAnimKey}
           >
             <div className="trust-slide-in">

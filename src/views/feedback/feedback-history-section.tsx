@@ -113,7 +113,7 @@ export function FeedbackHistorySection() {
           onToggle={handleHistoryToggle}
         />
 
-        <div className="rounded-lg border border-border/40 p-6">
+        <div className="rounded-lg border border-border/40 p-4 sm:p-6">
           <div className="flex flex-col gap-0">
             {visibleHistory.map((entry, i) => {
               const isExpanded = expandedRow === entry.id

@@ -263,7 +263,7 @@ export function DemoContent() {
               </p>
             </div>
 
-            <div className="mt-3 rounded-lg border border-border/40 p-4">
+            <div className="mt-3 rounded-lg border border-border/40 p-4 sm:p-6">
               {approvalState === "pending" && (
                 <>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
