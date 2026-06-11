@@ -61,10 +61,13 @@ const REPLY_QUOTE =
   "The onboarding section references the previous rollout plan — this should be updated before the launch review."
 
 const PLACEHOLDER_MAP: Record<string, string> = {
-  default: "Ask about this project…",
+  default: "Draft a message…",
   reply: "Reply to this message…",
   scope: "Ask about the selected sources…",
 }
+
+const CANNED_AGENT_REPLY =
+  "Message received — this composer is a demo, so no agent is listening. In a real product the reply would stream in here; try the attachments menu and suggestion chips to see the composer's other states."
 
 const INITIAL_LIFECYCLE_FILES: FileLifecycleFile[] = [
   {
@@ -177,14 +180,17 @@ function ComposerDemo({
   const [draft, setDraft] = useState("")
   const [fileSurface, setFileSurface] = useState<FileLifecycleSurface>("idle")
   const [files, setFiles] = useState<FileLifecycleFile[]>([])
-  const [justSent, setJustSent] = useState(false)
-  const justSentTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [lastExchange, setLastExchange] = useState<{
+    userMessage: string
+    agentReply: string | null
+  } | null>(null)
+  const agentReplyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Cleanup timers on unmount
   useEffect(() => {
-    const justSentTimer = justSentTimerRef
+    const agentTimer = agentReplyTimerRef
     return () => {
-      clearTimeout(justSentTimer.current ?? undefined)
+      clearTimeout(agentTimer.current ?? undefined)
     }
   }, [])
 
@@ -328,12 +334,17 @@ function ComposerDemo({
         value={draft}
         onValueChange={setDraft}
         canSend={draft.trim().length > 0 || files.length > 0}
-        onSend={() => {
+        onSend={(sentValue) => {
+          const sentText = sentValue.trim()
           setFiles([])
           setFeatures((current) => ({ ...current, attachments: false }))
-          setJustSent(true)
-          clearTimeout(justSentTimerRef.current ?? undefined)
-          justSentTimerRef.current = setTimeout(() => setJustSent(false), 2500)
+          setLastExchange({ userMessage: sentText, agentReply: null })
+          clearTimeout(agentReplyTimerRef.current ?? undefined)
+          agentReplyTimerRef.current = setTimeout(() => {
+            setLastExchange((prev) =>
+              prev ? { ...prev, agentReply: CANNED_AGENT_REPLY } : prev
+            )
+          }, 600)
         }}
       >
         {hasIslands && (
@@ -404,25 +415,33 @@ function ComposerDemo({
             <div className="flex-1" />
 
             <ComposerContextRing
-              used={66}
+              used={21}
               total={75}
-              label="66k / 75k tokens"
+              label="21k / 75k tokens"
             />
             <ComposerSend />
           </ComposerToolbar>
         </ComposerCard>
 
         {features.suggestions && <ComposerSuggestions items={SUGGESTIONS} />}
-
-        {justSent && (
-          <p
-            role="status"
-            className="animate-composer-slide mt-2 text-xs text-muted-foreground"
-          >
-            Message sent
-          </p>
-        )}
       </Composer>
+
+      {lastExchange && (
+        <div className="mt-4 flex flex-col gap-3">
+          <div className="flex justify-end">
+            <div className="max-w-[75%] rounded-lg bg-primary px-4 py-2.5 text-sm text-primary-foreground">
+              {lastExchange.userMessage}
+            </div>
+          </div>
+          <div aria-live="polite" className="flex justify-start">
+            {lastExchange.agentReply && (
+              <div className="agent-prose demo-slide-in max-w-[85%] font-serif text-base text-foreground">
+                {lastExchange.agentReply}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -8,7 +8,9 @@ import {
   Cancel01Icon,
   File01Icon,
   SentIcon,
+  ArrowDown01Icon,
 } from "@hugeicons/core-free-icons"
+import { Button } from "@/components/ui/button"
 import { EmbeddedComposerDemo } from "../components/InteractiveComposer"
 import {
   ToolTree,
@@ -79,16 +81,7 @@ const FINDINGS = [
 
 export function DemoContent() {
   /* Observable work disclosure state */
-  const [workState, setWorkState] = useState<
-    "collapsed" | "expanded" | "completed"
-  >("collapsed")
-
-  /* Streaming cursor */
-  const [showCursor, setShowCursor] = useState(true)
-  useEffect(() => {
-    const timer = setTimeout(() => setShowCursor(false), 2000)
-    return () => clearTimeout(timer)
-  }, [])
+  const [workExpanded, setWorkExpanded] = useState(false)
 
   /* Tool call expansion */
   const [toolTreeOpen, setToolTreeOpen] = useState(true)
@@ -121,7 +114,7 @@ export function DemoContent() {
         {/*  Message 1: User message                                  */}
         {/* -------------------------------------------------------- */}
         <div className="flex justify-end">
-          <div className="max-w-[75%] rounded-lg bg-primary px-4 py-3 text-sm text-primary-foreground">
+          <div className="max-w-[75%] rounded-lg bg-primary px-4 py-2.5 text-sm text-primary-foreground">
             Can you review the latest project brief and check it against the
             roadmap, customer notes, and launch checklist?
           </div>
@@ -134,40 +127,31 @@ export function DemoContent() {
           <div className="max-w-[85%]">
             <button
               type="button"
+              aria-expanded={workExpanded}
               aria-label="Toggle observable work details"
-              onClick={() => {
-                setWorkState((prev) =>
-                  prev === "collapsed" ? "expanded" : "completed"
-                )
-              }}
-              className="w-full cursor-pointer px-1 py-2 text-left"
+              onClick={() => setWorkExpanded((prev) => !prev)}
+              className="flex w-full cursor-pointer items-center gap-1.5 px-1 py-2 text-left"
             >
-              {workState === "collapsed" && (
-                <span className="demo-shimmer-text text-sm">
-                  Reviewing sources
-                </span>
-              )}
-
-              {workState === "expanded" && (
-                <div className="demo-slide-in">
-                  <p
-                    className="text-sm text-muted-foreground italic"
-                    style={{ lineHeight: "22px" }}
-                  >
-                    {OBSERVABLE_WORK_TEXT}
-                  </p>
-                  <p className="mt-2 text-xs text-muted-foreground/70">
-                    Click to collapse
-                  </p>
-                </div>
-              )}
-
-              {workState === "completed" && (
-                <span className="text-xs text-muted-foreground/70">
-                  Source review completed in 3.2s
-                </span>
-              )}
+              <span className="text-xs text-muted-foreground">
+                Reviewed 6 sources · 3.2s
+              </span>
+              <HugeiconsIcon
+                icon={ArrowDown01Icon}
+                size={14}
+                strokeWidth={1.5}
+                className={`shrink-0 text-muted-foreground transition-transform duration-150 ${workExpanded ? "rotate-180" : ""}`}
+              />
             </button>
+            {workExpanded && (
+              <div className="demo-slide-in px-1 pb-2">
+                <p
+                  className="text-sm text-muted-foreground italic"
+                  style={{ lineHeight: "22px" }}
+                >
+                  {OBSERVABLE_WORK_TEXT}
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -183,9 +167,6 @@ export function DemoContent() {
               , but I found three areas that need attention before the release
               planning meeting
               <SourcePreviewCitation sources={CITATIONS} sourceIndex={1} />.
-              {showCursor && (
-                <span className="ml-0.5 inline-block h-4 w-0.5 bg-foreground/70 align-middle" />
-              )}
             </p>
           </div>
         </div>
@@ -278,22 +259,22 @@ export function DemoContent() {
                     </span>
                   </div>
                   <div className="mt-3 flex items-center gap-2">
-                    <button
-                      type="button"
+                    <Button
+                      variant="default"
+                      size="sm"
                       aria-label="Approve findings summary"
                       onClick={() => setApprovalState("approved")}
-                      className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                     >
                       Approve
-                    </button>
-                    <button
-                      type="button"
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
                       aria-label="Deny findings summary"
                       onClick={() => setApprovalState("denied")}
-                      className="rounded-md border border-border px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-muted/50"
                     >
                       Deny
-                    </button>
+                    </Button>
                   </div>
                 </>
               )}
@@ -313,14 +294,14 @@ export function DemoContent() {
                     />
                     <span>Summary sent to project-team@meridian.internal</span>
                   </div>
-                  <button
-                    type="button"
+                  <Button
+                    variant="ghost"
+                    size="xs"
                     aria-label="Reset approved action"
                     onClick={() => setApprovalState("pending")}
-                    className="text-xs text-muted-foreground/70 transition-colors hover:text-muted-foreground"
                   >
                     Reset
-                  </button>
+                  </Button>
                 </div>
               )}
 
@@ -339,14 +320,14 @@ export function DemoContent() {
                     />
                     <span>Action canceled</span>
                   </div>
-                  <button
-                    type="button"
+                  <Button
+                    variant="ghost"
+                    size="xs"
                     aria-label="Reset denied action"
                     onClick={() => setApprovalState("pending")}
-                    className="text-xs text-muted-foreground/70 transition-colors hover:text-muted-foreground"
                   >
                     Reset
-                  </button>
+                  </Button>
                 </div>
               )}
             </div>
