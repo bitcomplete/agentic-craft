@@ -18,7 +18,7 @@ import { DecisionSurface } from "@/components/ui/decision-surface"
 /* ------------------------------------------------------------------ */
 
 const APPROVAL_EMAIL = {
-  recipient: "project-team@acme.internal",
+  recipient: "project-team@meridian.internal",
   subject: "Launch Review — customer portal v3.1 (enterprise release)",
   body: "Please find attached the Launch Review Summary for the customer portal v3.1 project brief. This submission covers all review checklist items for enterprise release with standard support coverage. The review was conducted using the current internal launch checklist.",
 }

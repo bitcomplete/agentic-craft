@@ -86,7 +86,7 @@ export function ConsentFlowSection() {
                     </p>
                     <p className="mt-1 text-xs text-muted-foreground">
                       The agent wants to send a project finding summary to the
-                      developer contact for ACME Customer Portal v3.1.
+                      developer contact for Meridian Customer Portal v3.1.
                     </p>
                   </div>
                 </div>
@@ -96,7 +96,8 @@ export function ConsentFlowSection() {
                   </p>
                   <p className="text-sm">
                     Email 2 findings (Export workflow, Timestamp handling) to
-                    project-owner@acme.internal with a 10-day response deadline.
+                    project-owner@meridian.internal with a 10-day response
+                    deadline.
                   </p>
                 </div>
                 <div className="ml-10 flex items-center gap-3">
@@ -149,8 +150,8 @@ export function ConsentFlowSection() {
                   <div role="status">
                     <p className="text-sm font-medium">Action approved</p>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      Email sent to project-owner@acme.internal with 2 findings.
-                      Response deadline: March 25, 2026.
+                      Email sent to project-owner@meridian.internal with 2
+                      findings. Response deadline: March 25, 2026.
                     </p>
                   </div>
                 </div>

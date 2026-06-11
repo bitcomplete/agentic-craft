@@ -133,7 +133,7 @@ const defaultSurfaces: ContextualWorkbenchSurface[] = [
       },
       {
         label: "Source citation",
-        detail: "Launch Checklist, Page 14",
+        detail: "Launch Checklist, Section 4.2",
         status: "idle",
       },
     ],
@@ -462,7 +462,7 @@ function DiffPreview({ surface }: { surface: ContextualWorkbenchSurface }) {
         + Triage window: 72-hour acknowledgment, 30-day target
       </div>
       <div className="px-3 py-2 text-foreground">
-        + Source: Launch Checklist, Page 14
+        + Source: Launch Checklist, Section 4.2
       </div>
       <div className="font-sans">
         <SurfaceRows surface={surface} />

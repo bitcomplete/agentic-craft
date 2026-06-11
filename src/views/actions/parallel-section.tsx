@@ -37,6 +37,7 @@ import {
 const PARALLEL_TASKS = [
   {
     label: "Checking current git status in the project",
+    timestamp: "10:44 AM · 0.8s",
     details: [
       { key: "Working dir", value: "/workspace/customer-portal" },
       {
@@ -48,6 +49,7 @@ const PARALLEL_TASKS = [
   },
   {
     label: "Checking remote configuration",
+    timestamp: "10:44 AM · 1.4s",
     details: [
       {
         key: "Remote",
@@ -59,6 +61,7 @@ const PARALLEL_TASKS = [
   },
   {
     label: "Reading requirement coverage definitions",
+    timestamp: "10:44 AM · 2.2s",
     details: [
       { key: "File", value: "requirement-map.json" },
       { key: "Requirements parsed", value: "23 requirements" },
@@ -125,7 +128,10 @@ export function ParallelSection() {
           {parallelState.parallel ? (
             <div className="actions-slide-in">
               <ToolTree open={treeOpen} onOpenChange={setTreeOpen}>
-                <ToolTreeTrigger icon={GitBranchIcon} timestamp="10:44 AM · 1s">
+                <ToolTreeTrigger
+                  icon={GitBranchIcon}
+                  timestamp="10:44 AM · 2.6s"
+                >
                   Running tasks in parallel
                 </ToolTreeTrigger>
                 <ToolTreeContent>
@@ -134,7 +140,7 @@ export function ParallelSection() {
                       key={task.label}
                       icon={TextIcon}
                       status="completed"
-                      timestamp="10:44 AM · 1s"
+                      timestamp={task.timestamp}
                     >
                       <ToolCallTrigger>
                         <ToolCallLabel>{task.label}</ToolCallLabel>

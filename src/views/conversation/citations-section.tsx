@@ -31,7 +31,7 @@ const CITATION_REFERENCES = [
     id: 1,
     title: "Launch Checklist: Support Readiness",
     source: "docs.internal/launch/support-readiness",
-    location: "Page 14",
+    location: "Section 4.2",
     icon: File01Icon,
     excerpt:
       "The standard support plan requires the product team to establish issue triage procedures, named owners, and response timelines before enterprise release.",
@@ -49,7 +49,7 @@ const CITATION_REFERENCES = [
     id: 3,
     title: "Launch Guidance: Source Scope",
     source: "docs.internal/launch-guidance/source-scope",
-    location: "Page 21",
+    location: "Section 2.1",
     icon: Globe02Icon,
     excerpt:
       "All source documents that support a launch decision must be linked from the final review summary, including any modules excluded from the initial boundary.",

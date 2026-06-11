@@ -13,7 +13,7 @@ import { useExclusiveToggle } from "@/hooks/use-exclusive-toggle"
 const SCOPE_CONFIGS = {
   portal: {
     label: "Portal Only",
-    scope: "ACME Customer Portal v3.1",
+    scope: "Meridian Customer Portal v3.1",
     documents: [
       { name: "Project brief v3", section: "Full document" },
       { name: "QA Notes 2026-003", section: "Product-specific checks" },
@@ -21,7 +21,7 @@ const SCOPE_CONFIGS = {
   },
   portalPolicy: {
     label: "Portal + Policy",
-    scope: "ACME Customer Portal v3.1 + Launch Policy v2",
+    scope: "Meridian Customer Portal v3.1 + Launch Policy v2",
     documents: [
       { name: "Project brief v3", section: "Full document" },
       { name: "QA Notes 2026-003", section: "All check results" },

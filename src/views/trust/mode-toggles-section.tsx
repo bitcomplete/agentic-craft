@@ -23,7 +23,6 @@ const MODE_CONFIGS = {
       "Source completeness checker",
       "Requirement coverage matrix generator",
       "Policy alignment validator",
-      "Lifecycle document scanner",
     ],
   },
   research: {
@@ -35,6 +34,7 @@ const MODE_CONFIGS = {
       "Export behavior verifier",
       "Technical document analyzer",
       "Platform capability lookup",
+      "Dependency graph explorer",
     ],
   },
   review: {

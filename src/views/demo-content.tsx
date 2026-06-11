@@ -274,7 +274,7 @@ export function DemoContent() {
                     />
                     <span>
                       Generate findings summary and email to
-                      project-team@acme.internal
+                      project-team@meridian.internal
                     </span>
                   </div>
                   <div className="mt-3 flex items-center gap-2">
@@ -311,7 +311,7 @@ export function DemoContent() {
                       size={14}
                       strokeWidth={1.5}
                     />
-                    <span>Summary sent to project-team@acme.internal</span>
+                    <span>Summary sent to project-team@meridian.internal</span>
                   </div>
                   <button
                     type="button"

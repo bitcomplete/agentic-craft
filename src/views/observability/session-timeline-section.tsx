@@ -17,7 +17,7 @@ const SESSION_SINGLE = [
   {
     role: "user" as const,
     content:
-      "Check if the project brief covers all Export workflow requirements for the ACME Customer Portal.",
+      "Check if the project brief covers all Export workflow requirements for the Meridian Customer Portal.",
   },
   {
     role: "agent" as const,

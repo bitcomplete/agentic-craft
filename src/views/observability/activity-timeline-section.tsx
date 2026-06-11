@@ -50,7 +50,7 @@ const ACTIVITY_LIVE = [
   },
   {
     time: "1m ago",
-    action: "Started requirement gap analysis for ACME Customer Portal",
+    action: "Started requirement gap analysis for Meridian Customer Portal",
     type: "message" as const,
     icon: Activity01Icon,
   },

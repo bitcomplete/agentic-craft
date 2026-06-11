@@ -20,25 +20,25 @@ import {
 
 const TOKEN_CONFIGS = {
   low: {
-    used: 12400,
-    budget: 100000,
+    used: 11750,
+    budget: 92500,
     label: "Well within budget",
     sessions: 3,
-    costEstimate: "$0.86",
+    costEstimate: "$0.82",
   },
   medium: {
-    used: 68000,
-    budget: 100000,
+    used: 63800,
+    budget: 92500,
     label: "Approaching limit",
     sessions: 14,
-    costEstimate: "$4.72",
+    costEstimate: "$4.43",
   },
   high: {
-    used: 97200,
-    budget: 100000,
+    used: 88700,
+    budget: 92500,
     label: "Near budget limit",
     sessions: 28,
-    costEstimate: "$6.74",
+    costEstimate: "$6.16",
   },
 }
 
