@@ -297,7 +297,7 @@ export function ThumbsFeedbackSection() {
             [
               "Neutral",
               "Default",
-              "Thumbs visible at half opacity, no selection",
+              "Thumbs visible at opacity /70, no selection",
             ],
             [
               "Positive",
@@ -331,12 +331,6 @@ export function ThumbsFeedbackSection() {
         </TableBody>
       </Table>
 
-      <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Thumbs appear at reduced opacity until hover, keeping the reading
-        experience clean. A thumbs-down always opens the correction flow —
-        negative signal without context is less useful than a directed
-        correction.
-      </div>
     </section>
   )
 }

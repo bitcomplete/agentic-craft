@@ -197,12 +197,6 @@ export function RatingScaleSection() {
         </TableBody>
       </Table>
 
-      <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Numbered buttons rather than stars — the scale is intentionally
-        utilitarian. Reviewers are accustomed to readiness labels and respond
-        well to explicit ordinal scales. The brief confirmation message
-        auto-dismisses to avoid interrupting workflow.
-      </div>
     </section>
   )
 }

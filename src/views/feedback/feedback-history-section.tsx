@@ -279,11 +279,6 @@ export function FeedbackHistorySection() {
         </TableBody>
       </Table>
 
-      <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        The feedback history doubles as an audit trail — useful for compliance
-        reviews where traceability of reviewer decisions matters. Expandable
-        rows keep the list scannable while preserving full detail on demand.
-      </div>
     </section>
   )
 }

@@ -162,12 +162,6 @@ export function InlineCorrectionSection() {
         </TableBody>
       </Table>
 
-      <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Inline corrections are scoped to specific factual errors — typically
-        launch plan misreferences or incorrect readiness level claims. The
-        correction is applied in-place so the reviewer sees the fix in context
-        rather than receiving a full regeneration.
-      </div>
     </section>
   )
 }
