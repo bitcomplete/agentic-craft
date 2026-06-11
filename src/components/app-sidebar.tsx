@@ -26,11 +26,8 @@ import {
   SidebarMenuSubItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible"
+import { cn } from "@/lib/utils"
 import { useTheme } from "@/components/theme-provider"
 import { sections } from "@/content/navigation"
 import { CommandPalette, useCommandPalette } from "@/components/command-palette"
@@ -164,30 +161,32 @@ export function AppSidebar() {
                 <Collapsible open={isActive}>
                   <SidebarMenu>
                     <SidebarMenuItem>
-                      <CollapsibleTrigger className="w-full [&[data-panel-open]>div>svg:last-child]:rotate-180">
-                        <SidebarMenuButton
-                          render={
-                            <Link
-                              href={section.path}
-                              onClick={() => setOpenMobile(false)}
-                            />
-                          }
-                          isActive={isActive}
-                        >
-                          <HugeiconsIcon
-                            icon={section.icon}
-                            size={16}
-                            strokeWidth={1.5}
+                      <SidebarMenuButton
+                        render={
+                          <Link
+                            href={section.path}
+                            onClick={() => setOpenMobile(false)}
                           />
-                          <span>{section.title}</span>
-                          <HugeiconsIcon
-                            icon={ArrowDown01Icon}
-                            size={14}
-                            strokeWidth={1.5}
-                            className="ml-auto transition-transform duration-200"
-                          />
-                        </SidebarMenuButton>
-                      </CollapsibleTrigger>
+                        }
+                        isActive={isActive}
+                      >
+                        <HugeiconsIcon
+                          icon={section.icon}
+                          size={16}
+                          strokeWidth={1.5}
+                        />
+                        <span>{section.title}</span>
+                        <HugeiconsIcon
+                          icon={ArrowDown01Icon}
+                          size={14}
+                          strokeWidth={1.5}
+                          aria-hidden="true"
+                          className={cn(
+                            "ml-auto transition-transform duration-200",
+                            isActive && "rotate-180"
+                          )}
+                        />
+                      </SidebarMenuButton>
                       <CollapsibleContent>
                         <SidebarMenuSub>
                           {section.subs.map((sub) => (
