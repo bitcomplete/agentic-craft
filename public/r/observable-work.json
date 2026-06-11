@@ -8,7 +8,7 @@
     "@hugeicons/core-free-icons"
   ],
   "registryDependencies": [
-    "arielconti10/agentic-craft/status-indicator"
+    "bitcomplete/agentic-craft/status-indicator"
   ],
   "files": [
     {

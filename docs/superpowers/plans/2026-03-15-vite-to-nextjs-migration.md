@@ -357,7 +357,7 @@ export default function RootLayout({
                 </main>
                 <footer className="border-t border-dashed border-border/40 px-8 py-8 text-center text-xs text-muted-foreground/60">
                   <a
-                    href="https://github.com/arielconti10/agentic-craft"
+                    href="https://github.com/bitcomplete/agentic-craft"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:text-muted-foreground transition-colors"

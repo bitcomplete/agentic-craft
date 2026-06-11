@@ -10,7 +10,7 @@ const registry = JSON.parse(
 
 const itemNames = new Set(registry.items.map((item) => item.name))
 
-const prefix = "arielconti10/agentic-craft/"
+const prefix = "bitcomplete/agentic-craft/"
 const missing = []
 
 for (const item of registry.items) {

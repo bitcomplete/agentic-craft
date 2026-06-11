@@ -10,7 +10,7 @@
   "registryDependencies": [
     "badge",
     "button",
-    "arielconti10/agentic-craft/reference-item"
+    "bitcomplete/agentic-craft/reference-item"
   ],
   "files": [
     {

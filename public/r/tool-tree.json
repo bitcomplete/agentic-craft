@@ -8,7 +8,7 @@
     "@hugeicons/core-free-icons"
   ],
   "registryDependencies": [
-    "arielconti10/agentic-craft/tool-call"
+    "bitcomplete/agentic-craft/tool-call"
   ],
   "files": [
     {

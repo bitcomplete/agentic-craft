@@ -4,13 +4,13 @@
   "title": "Review Workflow",
   "description": "An end-to-end agentic review workflow block with observable work, source-scope clarification, locked action preview, and approval.",
   "registryDependencies": [
-    "arielconti10/agentic-craft/action-preview",
+    "bitcomplete/agentic-craft/action-preview",
     "badge",
     "button",
-    "arielconti10/agentic-craft/clarifying-questions",
-    "arielconti10/agentic-craft/decision-surface",
-    "arielconti10/agentic-craft/observable-work",
-    "arielconti10/agentic-craft/reference-item"
+    "bitcomplete/agentic-craft/clarifying-questions",
+    "bitcomplete/agentic-craft/decision-surface",
+    "bitcomplete/agentic-craft/observable-work",
+    "bitcomplete/agentic-craft/reference-item"
   ],
   "files": [
     {

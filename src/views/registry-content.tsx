@@ -111,9 +111,9 @@ export function RegistryContent() {
         </h2>
         <div className="mt-6 grid gap-3">
           {[
-            "npx shadcn@latest list https://raw.githubusercontent.com/arielconti10/agentic-craft/main/public/r/registry.json",
-            "npx shadcn@latest view https://raw.githubusercontent.com/arielconti10/agentic-craft/main/public/r/source-backed-artifact.json",
-            "npx shadcn@latest add https://raw.githubusercontent.com/arielconti10/agentic-craft/main/public/r/source-backed-artifact.json",
+            "npx shadcn@latest list https://raw.githubusercontent.com/bitcomplete/agentic-craft/main/public/r/registry.json",
+            "npx shadcn@latest view https://raw.githubusercontent.com/bitcomplete/agentic-craft/main/public/r/source-backed-artifact.json",
+            "npx shadcn@latest add https://raw.githubusercontent.com/bitcomplete/agentic-craft/main/public/r/source-backed-artifact.json",
           ].map((command) => (
             <code
               key={command}
