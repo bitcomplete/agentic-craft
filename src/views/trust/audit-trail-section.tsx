@@ -3,14 +3,6 @@
 import { HugeiconsIcon } from "@hugeicons/react"
 import { File01Icon } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 import { useExclusiveToggle } from "@/hooks/use-exclusive-toggle"
 
 /* ------------------------------------------------------------------ */
@@ -145,55 +137,6 @@ export function AuditTrailSection() {
         </div>
       </div>
 
-      {/* Spec table */}
-      <div className="mt-8">
-        <Table className="w-full text-sm">
-          <TableHeader>
-            <TableRow className="border-b border-border">
-              <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
-                Mode
-              </TableHead>
-              <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
-                Shows
-              </TableHead>
-              <TableHead className="pb-2 text-left text-xs font-medium text-muted-foreground">
-                Audience
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody className="text-muted-foreground">
-            <TableRow className="border-b border-border/50">
-              <TableCell className="py-2.5 pr-4 font-medium text-foreground">
-                Summary
-              </TableCell>
-              <TableCell className="py-2.5 pr-4">
-                Timestamp + action description
-              </TableCell>
-              <TableCell className="py-2.5">Quick scan during review</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="py-2.5 pr-4 font-medium text-foreground">
-                Detailed
-              </TableCell>
-              <TableCell className="py-2.5 pr-4">
-                User, outcome, source links
-              </TableCell>
-              <TableCell className="py-2.5">
-                Formal audit and requirements review
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </div>
-
-      {/* Callout */}
-      <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Audit trails are a regulatory requirement in compliance and
-        release-governance contexts. Every agent action must be logged with
-        enough detail for an review team sessioner to reconstruct exactly what
-        happened. The summary view keeps daily work manageable while the
-        detailed view satisfies formal review needs.
-      </div>
     </section>
   )
 }

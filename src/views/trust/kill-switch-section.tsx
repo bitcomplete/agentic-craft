@@ -172,9 +172,6 @@ export function KillSwitchSection() {
               <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
                 State
               </TableHead>
-              <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
-                Button style
-              </TableHead>
               <TableHead className="pb-2 text-left text-xs font-medium text-muted-foreground">
                 Behavior
               </TableHead>
@@ -185,7 +182,6 @@ export function KillSwitchSection() {
               <TableCell className="py-2.5 pr-4 font-medium text-foreground">
                 Idle
               </TableCell>
-              <TableCell className="py-2.5 pr-4">Subtle border</TableCell>
               <TableCell className="py-2.5">
                 Present but low prominence
               </TableCell>
@@ -194,9 +190,6 @@ export function KillSwitchSection() {
               <TableCell className="py-2.5 pr-4 font-medium text-foreground">
                 Running
               </TableCell>
-              <TableCell className="py-2.5 pr-4">
-                Red-tinted background
-              </TableCell>
               <TableCell className="py-2.5">
                 Prominent, immediately accessible
               </TableCell>
@@ -204,9 +197,6 @@ export function KillSwitchSection() {
             <TableRow>
               <TableCell className="py-2.5 pr-4 font-medium text-foreground">
                 Stopped
-              </TableCell>
-              <TableCell className="py-2.5 pr-4">
-                Resume + Discard options
               </TableCell>
               <TableCell className="py-2.5">
                 Partial results preserved, user chooses next step

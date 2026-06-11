@@ -230,11 +230,6 @@ export function SettingsAutonomySection() {
 
         <EffectivePolicyPreview className="mt-4" policies={effectivePolicies} />
 
-        <p className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm leading-relaxed text-muted-foreground italic">
-          Settings templates should use confirmation or undo for risky changes
-          such as disabling approval gates, lowering escalation thresholds, or
-          expanding memory scope.
-        </p>
       </section>
 
       {/* ============================================================ */}
@@ -384,22 +379,13 @@ export function SettingsAutonomySection() {
                   From Human-Augmented to Human-Out-of-the-Loop
                 </TableCell>
               </TableRow>
-              <TableRow className="border-b border-border/50">
+              <TableRow>
                 <TableCell className="py-2.5 pr-4 font-medium text-foreground">
                   Default
                 </TableCell>
                 <TableCell className="py-2.5 pr-4">Level 2</TableCell>
                 <TableCell className="py-2.5">
                   Start conservative, unlock higher levels over time
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="py-2.5 pr-4 font-medium text-foreground">
-                  Indicator
-                </TableCell>
-                <TableCell className="py-2.5 pr-4">Stepped bar</TableCell>
-                <TableCell className="py-2.5">
-                  Discrete steps, not a continuous slider
                 </TableCell>
               </TableRow>
             </TableBody>

@@ -4,14 +4,6 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { Clock01Icon, Coins01Icon } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
 import { Separator } from "@/components/ui/separator"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 import { useExclusiveToggle } from "@/hooks/use-exclusive-toggle"
 
 /* ------------------------------------------------------------------ */
@@ -171,56 +163,6 @@ export function CostTransparencySection() {
         </div>
       </div>
 
-      {/* Spec table */}
-      <div className="mt-8">
-        <Table className="w-full text-sm">
-          <TableHeader>
-            <TableRow className="border-b border-border">
-              <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
-                Mode
-              </TableHead>
-              <TableHead className="pr-4 pb-2 text-left text-xs font-medium text-muted-foreground">
-                Shows
-              </TableHead>
-              <TableHead className="pb-2 text-left text-xs font-medium text-muted-foreground">
-                Use case
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody className="text-muted-foreground">
-            <TableRow className="border-b border-border/50">
-              <TableCell className="py-2.5 pr-4 font-medium text-foreground">
-                Compact
-              </TableCell>
-              <TableCell className="py-2.5 pr-4">
-                Total tokens, cost, elapsed time
-              </TableCell>
-              <TableCell className="py-2.5">
-                Inline display after each response
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="py-2.5 pr-4 font-medium text-foreground">
-                Detailed
-              </TableCell>
-              <TableCell className="py-2.5 pr-4">
-                Input/output split, model, pricing
-              </TableCell>
-              <TableCell className="py-2.5">
-                Budget review and cost optimization
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </div>
-
-      {/* Callout */}
-      <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Cost transparency builds trust with procurement teams and lab managers
-        who need to justify AI spending. The compact format should be
-        unobtrusive; detailed mode is for when users actively want to understand
-        costs.
-      </div>
     </section>
   )
 }
