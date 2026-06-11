@@ -47,7 +47,7 @@ export function ComposerSuggestions({
     <div
       data-slot="composer-suggestions"
       className={cn(
-        "animate-composer-slide mt-2 flex w-full gap-1 overflow-x-auto px-0.5 pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] sm:mt-2 sm:flex-wrap sm:justify-center sm:gap-1.5 sm:overflow-visible sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden",
+        "animate-composer-slide mt-2 flex w-full gap-1 overflow-x-auto [mask-image:linear-gradient(to_right,black_calc(100%_-_24px),transparent)] px-0.5 pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] sm:mt-2 sm:flex-wrap sm:justify-center sm:gap-1.5 sm:overflow-visible sm:[mask-image:none] sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden",
         className
       )}
       {...props}

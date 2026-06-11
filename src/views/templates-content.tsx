@@ -307,25 +307,24 @@ export function TemplatesContent() {
         <p className="section-label mb-3">Template index</p>
         <div className="grid gap-3 md:grid-cols-2">
           {templateIndex.map((template) => (
-            <Link
-              key={template.id}
-              href={`/templates/${template.id}`}
-              className="block"
-            >
-              <ReferenceItem.Root>
-                <ReferenceItem.Content>
-                  {/* text-clip drops the inherited truncate: titles wrap
-                      instead of ellipsizing mid-word in the 2-col grid */}
-                  <ReferenceItem.Title className="text-clip whitespace-normal">
+            <ReferenceItem.Root key={template.id} className="group">
+              <ReferenceItem.Content>
+                {/* text-clip drops the inherited truncate: titles wrap
+                    instead of ellipsizing mid-word in the 2-col grid */}
+                <ReferenceItem.Title className="text-clip whitespace-normal">
+                  <Link
+                    href={`/templates/${template.id}`}
+                    className="rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+                  >
                     {template.title}
-                  </ReferenceItem.Title>
-                  <ReferenceItem.Description>
-                    {template.description}
-                  </ReferenceItem.Description>
-                  <ReferenceItem.Meta>{template.primitives}</ReferenceItem.Meta>
-                </ReferenceItem.Content>
-              </ReferenceItem.Root>
-            </Link>
+                  </Link>
+                </ReferenceItem.Title>
+                <ReferenceItem.Description>
+                  {template.description}
+                </ReferenceItem.Description>
+                <ReferenceItem.Meta>{template.primitives}</ReferenceItem.Meta>
+              </ReferenceItem.Content>
+            </ReferenceItem.Root>
           ))}
         </div>
       </section>

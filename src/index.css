@@ -672,3 +672,32 @@ details[data-slot="observable-work-step"][open]
     stroke-dashoffset: 0;
   }
 }
+
+/* ── Print ── */
+@media print {
+  /* Hide nav chrome */
+  [data-slot="sidebar"],
+  [data-slot="sidebar-gap"],
+  [data-slot="sidebar-container"],
+  [data-slot="sidebar-trigger"],
+  /* mobile header bar that holds the sidebar trigger */
+  .sticky.top-0 {
+    display: none !important;
+  }
+
+  /* Skip-to-content link */
+  a[href="#main-content"] {
+    display: none !important;
+  }
+
+  /* Main content fills the page */
+  [data-slot="sidebar-wrapper"] {
+    display: block !important;
+  }
+
+  main#main-content {
+    margin: 0 !important;
+    width: 100% !important;
+    overflow: visible !important;
+  }
+}
