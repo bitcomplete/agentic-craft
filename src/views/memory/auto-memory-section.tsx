@@ -62,16 +62,8 @@ export function AutoMemorySection() {
           {/* Agent message context */}
           <div className="mb-3">
             <p
-              className="text-base"
-              style={{
-                fontFamily: "'Source Serif 4', serif",
-                fontSize: "16px",
-                lineHeight: "26px",
-                letterSpacing: "-0.4px",
-                fontVariationSettings: '"opsz" 12',
-                WebkitFontSmoothing: "antialiased",
-                color: "var(--foreground)",
-              }}
+              className="agent-prose text-base"
+              style={{ color: "var(--foreground)" }}
             >
               I see you&apos;ve been consistently requesting enterprise release
               reviews across the last three sessions. The reference document

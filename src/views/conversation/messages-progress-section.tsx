@@ -51,9 +51,8 @@ const PROSE_PREFERENCE_DETAILS: Record<ProsePreference, ProsePreferenceDetail> =
   {
     serif: {
       label: "Serif Prose",
-      className: "font-serif text-base",
+      className: "agent-prose font-serif text-base",
       lineHeight: "26px",
-      fontVariationSettings: '"opsz" 12',
       spec: "Source Serif 4, 16px/26px",
       description:
         "A comfortable default for long analysis, explanations, and review-style answers.",
@@ -77,7 +76,7 @@ const PROSE_PREFERENCE_DETAILS: Record<ProsePreference, ProsePreferenceDetail> =
   }
 
 const agentProseBaseStyle: React.CSSProperties = {
-  letterSpacing: "0px",
+  letterSpacing: "-0.4px",
   WebkitFontSmoothing: "antialiased",
 }
 

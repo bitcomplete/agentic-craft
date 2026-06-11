@@ -202,16 +202,17 @@
   }
 }
 
-/* Editorial page rhythm */
-article > header {
-  margin-bottom: 3rem !important;
+/* Agent prose — single source of truth for serif agent text */
+.agent-prose {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  line-height: 26px;
+  letter-spacing: -0.4px;
+  font-variation-settings: "opsz" 12;
+  -webkit-font-smoothing: antialiased;
 }
 
-@media (min-width: 640px) {
-  article > header {
-    margin-bottom: 4rem !important;
-  }
-}
+/* Editorial page rhythm */
 
 .page-section {
   scroll-margin-top: 4rem;

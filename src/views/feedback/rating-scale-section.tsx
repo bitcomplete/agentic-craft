@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { AGENT_PROSE_STYLE, AGENT_PROSE_COLOR } from "./data"
+import { AGENT_PROSE_COLOR } from "./data"
 
 export function RatingScaleSection() {
   const [ratingState, setRatingState] = useState<Record<string, boolean>>({
@@ -91,8 +91,8 @@ export function RatingScaleSection() {
         <div className="rounded-lg border border-border/40 p-6">
           <div>
             <p
-              className="text-base"
-              style={{ ...AGENT_PROSE_STYLE, color: AGENT_PROSE_COLOR }}
+              className="agent-prose text-base"
+              style={{ color: AGENT_PROSE_COLOR }}
             >
               Based on the launch policy, the product must implement Export
               workflow for CSV and JSON exports and Retention setting for

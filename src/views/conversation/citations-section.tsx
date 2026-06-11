@@ -61,15 +61,6 @@ const CITATION_REFERENCES = [
 /* ------------------------------------------------------------------ */
 
 export function CitationsSection() {
-  /* prose style for the citation display — matches agentProseBaseStyle +
-     serif defaults (letter-spacing, smoothing, lineHeight, fontVariationSettings) */
-  const agentProseStyle: React.CSSProperties = {
-    letterSpacing: "0px",
-    WebkitFontSmoothing: "antialiased",
-    lineHeight: "26px",
-    fontVariationSettings: '"opsz" 12',
-  }
-
   return (
     <section id="citations" className="page-section">
       <p className="section-label mb-3">Sourcing</p>
@@ -84,7 +75,7 @@ export function CitationsSection() {
       <div className="mt-7 border-y border-border/50 py-3">
         <div className="mx-auto max-w-[720px]">
           <div className="bg-muted/20 px-3 py-4 sm:px-4 sm:py-5">
-            <div className="font-serif text-base" style={agentProseStyle}>
+            <div className="agent-prose font-serif text-base">
               <p>
                 The launch readiness plan has been set to enterprise release,
                 which requires independent risk analysis by the review team

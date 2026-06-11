@@ -176,12 +176,7 @@ export function DemoContent() {
         {/* -------------------------------------------------------- */}
         <div className="flex justify-start">
           <div
-            className="max-w-[85%] font-serif text-base"
-            style={{
-              lineHeight: "26px",
-              letterSpacing: "-0.4px",
-              fontVariationSettings: '"opsz" 12',
-            }}
+            className="agent-prose max-w-[85%] font-serif text-base"
           >
             <p className="text-foreground">
               I've completed the initial review. The brief covers the main
@@ -237,12 +232,7 @@ export function DemoContent() {
         {/* -------------------------------------------------------- */}
         <div className="flex justify-start">
           <div
-            className="max-w-[85%] font-serif text-base text-foreground"
-            style={{
-              lineHeight: "26px",
-              letterSpacing: "-0.4px",
-              fontVariationSettings: '"opsz" 12',
-            }}
+            className="agent-prose max-w-[85%] font-serif text-base text-foreground"
           >
             <p>Based on the analysis, here are the findings:</p>
             <ul className="mt-3 flex flex-col gap-2">
@@ -271,12 +261,7 @@ export function DemoContent() {
         <div className="flex justify-start">
           <div className="w-full max-w-[85%]">
             <div
-              className="font-serif text-base text-foreground"
-              style={{
-                lineHeight: "26px",
-                letterSpacing: "-0.4px",
-                fontVariationSettings: '"opsz" 12',
-              }}
+              className="agent-prose font-serif text-base text-foreground"
             >
               <p>
                 I'd like to generate a findings summary and send it to the

@@ -21,7 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Textarea } from "@/components/ui/textarea"
-import { AGENT_PROSE_STYLE, AGENT_PROSE_COLOR } from "./data"
+import { AGENT_PROSE_COLOR } from "./data"
 
 export function ThumbsFeedbackSection() {
   const [thumbsState, setThumbsState] = useState<Record<string, boolean>>({
@@ -155,8 +155,8 @@ export function ThumbsFeedbackSection() {
             }`}
           >
             <p
-              className="text-base"
-              style={{ ...AGENT_PROSE_STYLE, color: AGENT_PROSE_COLOR }}
+              className="agent-prose text-base"
+              style={{ color: AGENT_PROSE_COLOR }}
             >
               The project brief defines 23 requirements across 5 classes.
               implementation notes summarize the workflow behavior and open

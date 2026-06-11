@@ -153,15 +153,8 @@ export function SessionTimelineSection() {
                           </div>
                         )}
                         <p
-                          className="text-sm"
-                          style={{
-                            fontFamily: "'Source Serif 4', serif",
-                            fontSize: "14px",
-                            lineHeight: "22px",
-                            letterSpacing: "0px",
-                            fontVariationSettings: '"opsz" 12',
-                            color: "var(--foreground)",
-                          }}
+                          className="agent-prose text-sm"
+                          style={{ color: "var(--foreground)" }}
                         >
                           {item.content}
                         </p>

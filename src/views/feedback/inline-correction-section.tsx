@@ -14,7 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { AGENT_PROSE_STYLE, AGENT_PROSE_COLOR } from "./data"
+import { AGENT_PROSE_COLOR } from "./data"
 
 export function InlineCorrectionSection() {
   const [corrState, setCorrState] = useState<Record<string, boolean>>({
@@ -59,8 +59,8 @@ export function InlineCorrectionSection() {
           <div>
             {corrState.original ? (
               <p
-                className="text-base"
-                style={{ ...AGENT_PROSE_STYLE, color: AGENT_PROSE_COLOR }}
+                className="agent-prose text-base"
+                style={{ color: AGENT_PROSE_COLOR }}
               >
                 The launch readiness plan requires{" "}
                 <span className="relative inline-flex items-baseline gap-1.5">
@@ -88,8 +88,8 @@ export function InlineCorrectionSection() {
             ) : (
               <div className="feedback-fade-in">
                 <p
-                  className="text-base"
-                  style={{ ...AGENT_PROSE_STYLE, color: AGENT_PROSE_COLOR }}
+                  className="agent-prose text-base"
+                  style={{ color: AGENT_PROSE_COLOR }}
                 >
                   The launch readiness plan requires{" "}
                   <span className="feedback-highlight-in rounded-md px-1">

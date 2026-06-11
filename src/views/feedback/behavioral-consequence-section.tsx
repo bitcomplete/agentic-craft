@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { AGENT_PROSE_STYLE, AGENT_PROSE_COLOR } from "./data"
+import { AGENT_PROSE_COLOR } from "./data"
 
 export function BehavioralConsequenceSection() {
   const [behaviorState, setBehaviorState] = useState<Record<string, boolean>>({
@@ -58,8 +58,8 @@ export function BehavioralConsequenceSection() {
           {behaviorState.before ? (
             <div>
               <p
-                className="text-base"
-                style={{ ...AGENT_PROSE_STYLE, color: AGENT_PROSE_COLOR }}
+                className="agent-prose text-base"
+                style={{ color: AGENT_PROSE_COLOR }}
               >
                 The launch readiness plan requires dedicated support plan for
                 issue triage procedures. This pattern ensures that the team has
@@ -87,8 +87,8 @@ export function BehavioralConsequenceSection() {
             <div className="feedback-fade-in flex flex-col gap-3">
               <div>
                 <p
-                  className="text-base"
-                  style={{ ...AGENT_PROSE_STYLE, color: AGENT_PROSE_COLOR }}
+                  className="agent-prose text-base"
+                  style={{ color: AGENT_PROSE_COLOR }}
                 >
                   The launch readiness plan requires{" "}
                   <span className="feedback-highlight-in rounded-md px-1">
