@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { Search01Icon } from "@hugeicons/core-free-icons"
+import { ArrowRight01Icon, Search01Icon } from "@hugeicons/core-free-icons"
 import { useRouter } from "next/navigation"
 import { Dialog, DialogPortal, DialogOverlay } from "@/components/ui/dialog"
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog"
@@ -46,22 +46,28 @@ type PaletteItem =
     }
 
 // ---------------------------------------------------------------------------
-// Build the full index once (outside component — stable ref)
+// Build the full index, deduplicated by destination href
 // ---------------------------------------------------------------------------
 
 function buildIndex(toggleTheme: () => void): PaletteItem[] {
   const items: PaletteItem[] = []
+  const seenHrefs = new Set<string>()
+  const push = (href: string, item: PaletteItem) => {
+    if (seenHrefs.has(href)) return
+    seenHrefs.add(href)
+    items.push(item)
+  }
 
-  // Navigation sections and their subsections
+  // Navigation sections and their subsections (nav order)
   for (const section of sections) {
-    items.push({
+    push(section.path, {
       kind: "nav-section",
-      groupLabel: section.title,
+      groupLabel: "Sections",
       title: section.title,
       sectionPath: section.path,
     })
     for (const sub of section.subs) {
-      items.push({
+      push(`${section.path}#${sub.id}`, {
         kind: "nav-sub",
         groupLabel: section.title,
         title: sub.title,
@@ -71,9 +77,11 @@ function buildIndex(toggleTheme: () => void): PaletteItem[] {
     }
   }
 
-  // Template detail pages
+  // Template detail pages. Each template slug matches a Templates-section
+  // sub id above — same destination, so the seen-set drops the duplicate
+  // and only templates without a nav subsection get their own row.
   for (const tpl of templateDetails) {
-    items.push({
+    push(`/templates#${tpl.slug}`, {
       kind: "template",
       groupLabel: "Templates",
       title: tpl.title,
@@ -99,18 +107,35 @@ function buildIndex(toggleTheme: () => void): PaletteItem[] {
 
 const MAX_RESULTS = 12
 
-function filterItems(items: PaletteItem[], query: string): PaletteItem[] {
-  if (!query.trim()) {
-    // Show the first MAX_RESULTS items from the index
-    return items.slice(0, MAX_RESULTS)
+/** True when every query character appears in `haystack` in order. */
+function isSubsequence(haystack: string, query: string): boolean {
+  let qi = 0
+  for (let i = 0; i < haystack.length && qi < query.length; i++) {
+    if (haystack[i] === query[qi]) qi++
   }
-  const q = query.toLowerCase()
-  return items
-    .filter((item) => {
-      const haystack = (item.groupLabel + " " + item.title).toLowerCase()
-      return haystack.includes(q)
-    })
-    .slice(0, MAX_RESULTS)
+  return qi === query.length
+}
+
+function filterItems(items: PaletteItem[], query: string): PaletteItem[] {
+  const q = query.trim().toLowerCase()
+  if (!q) {
+    // Default view: one row per top-level section, in navigation order.
+    // Subsections and templates appear only once the user types.
+    return items.filter((item) => item.kind === "nav-section")
+  }
+  // Substring matches rank first; a subsequence fallback (characters in
+  // order, case-insensitive) catches near-miss typing like "aproval".
+  const substringMatches: PaletteItem[] = []
+  const subsequenceMatches: PaletteItem[] = []
+  for (const item of items) {
+    const haystack = item.title.toLowerCase()
+    if (haystack.includes(q)) {
+      substringMatches.push(item)
+    } else if (isSubsequence(haystack, q)) {
+      subsequenceMatches.push(item)
+    }
+  }
+  return [...substringMatches, ...subsequenceMatches].slice(0, MAX_RESULTS)
 }
 
 // ---------------------------------------------------------------------------
@@ -179,8 +204,11 @@ function CommandPaletteContent({ onClose }: CommandPaletteContentProps) {
     setActiveIndex(0)
   }, [query])
 
+  // When nothing matches, the "Browse templates" row is the active option.
   const activeItemId =
-    results.length > 0 ? itemId(results[activeIndex], activeIndex) : undefined
+    results.length > 0
+      ? itemId(results[activeIndex], activeIndex)
+      : "cmd-item-browse"
 
   const activate = React.useCallback(
     (item: PaletteItem) => {
@@ -199,6 +227,12 @@ function CommandPaletteContent({ onClose }: CommandPaletteContentProps) {
     [onClose, router, scrollToSection, setOpenMobile]
   )
 
+  const browseTemplates = React.useCallback(() => {
+    setOpenMobile(false)
+    onClose()
+    router.push("/templates")
+  }, [onClose, router, setOpenMobile])
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowDown") {
       e.preventDefault()
@@ -210,7 +244,9 @@ function CommandPaletteContent({ onClose }: CommandPaletteContentProps) {
       )
     } else if (e.key === "Enter") {
       e.preventDefault()
-      if (results[activeIndex]) {
+      if (results.length === 0) {
+        browseTemplates()
+      } else if (results[activeIndex]) {
         activate(results[activeIndex])
       }
     }
@@ -263,9 +299,31 @@ function CommandPaletteContent({ onClose }: CommandPaletteContentProps) {
         className="max-h-72 overflow-y-auto overscroll-contain p-1.5"
       >
         {results.length === 0 ? (
-          <li className="px-3 py-6 text-center text-sm text-muted-foreground">
-            No matches
-          </li>
+          <>
+            <li
+              role="presentation"
+              className="px-3 py-2 text-sm text-muted-foreground"
+            >
+              No matches
+            </li>
+            <li
+              id="cmd-item-browse"
+              role="option"
+              aria-selected={true}
+              data-active={true}
+              onClick={browseTemplates}
+              className="flex cursor-pointer items-center justify-between rounded-md bg-muted px-3 py-1.5 text-sm text-foreground"
+            >
+              <span className="truncate">Browse templates</span>
+              <HugeiconsIcon
+                icon={ArrowRight01Icon}
+                size={14}
+                strokeWidth={1.5}
+                className="ml-2 shrink-0 text-muted-foreground"
+                aria-hidden="true"
+              />
+            </li>
+          </>
         ) : (
           groups.map((group) => (
             <li key={group.label} role="presentation">
@@ -349,22 +407,19 @@ export function useCommandPalette() {
 
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Ignore when target is editable (unless it's the palette's own input)
-      const target = e.target as HTMLElement
-      const isEditable =
-        target.isContentEditable ||
-        (target instanceof HTMLInputElement && target.role !== "combobox") ||
-        target instanceof HTMLTextAreaElement
-
-      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-        if (isEditable) return
+      // The ⌘K / Ctrl+K chord works from anywhere, including inputs,
+      // textareas, and contenteditable surfaces — capture phase so a
+      // focused editor cannot swallow it. Plain (unmodified) keys are
+      // never intercepted.
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault()
         setOpen((prev) => !prev)
       }
     }
 
-    window.addEventListener("keydown", handleKeyDown)
-    return () => window.removeEventListener("keydown", handleKeyDown)
+    window.addEventListener("keydown", handleKeyDown, { capture: true })
+    return () =>
+      window.removeEventListener("keydown", handleKeyDown, { capture: true })
   }, [])
 
   return { open, setOpen }
