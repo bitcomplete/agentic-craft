@@ -300,6 +300,41 @@ function ContextualWorkbenchChatPane({
   )
 }
 
+const checklistRows: {
+  label: string
+  detail: string
+  status: "complete" | "pending" | "blocked" | "active"
+}[] = [
+  {
+    label: "Named support owner",
+    detail: "Enterprise Release Desk assigned",
+    status: "complete",
+  },
+  {
+    label: "Triage window defined",
+    detail: "72-hour acknowledgment, 30-day target",
+    status: "complete",
+  },
+  {
+    label: "Escalation path documented",
+    detail: "Checking against policy requirements",
+    status: "active",
+  },
+  {
+    label: "Customer-facing runbook",
+    detail: "Not yet published",
+    status: "pending",
+  },
+]
+
+const statusDotClass: Record<(typeof checklistRows)[number]["status"], string> =
+  {
+    complete: "bg-primary",
+    active: "bg-primary/40",
+    pending: "bg-muted-foreground/40",
+    blocked: "bg-destructive",
+  }
+
 function BrowserPreview() {
   return (
     <div className="flex h-full min-h-[260px] flex-1 flex-col">
@@ -330,46 +365,39 @@ function BrowserPreview() {
         />
         <span className="min-w-0 flex-1 truncate">127.0.0.1:4173</span>
       </div>
-      <div className="min-h-0 flex-1 bg-[#f5f3ea] p-8 text-[#222222]">
-        <div className="mx-auto flex h-full max-w-[520px] items-center justify-center gap-5">
-          <div className="w-[42%] rounded-md bg-[#fffdf7] p-4 shadow-sm ring-1 ring-black/5">
-            <p className="text-[10px] font-medium tracking-wide uppercase opacity-60">
-              Team plan
+      <div className="min-h-0 flex-1 bg-background p-8 text-foreground">
+        <div className="mx-auto max-w-[520px]">
+          <div className="rounded-md border border-border bg-muted/30 p-5">
+            <p className="text-sm leading-5 font-semibold text-foreground">
+              Launch Checklist: Support Readiness
             </p>
-            <div className="mt-2 flex items-baseline justify-between gap-3">
-              <p className="text-2xl font-semibold tracking-tight">Growth</p>
-              <p className="text-lg font-semibold">$29</p>
-            </div>
-            <div className="mt-4 flex flex-col gap-2 text-xs opacity-70">
-              <span>10 seats included</span>
-              <span>Usage dashboard</span>
-              <span>Email support</span>
-            </div>
-          </div>
-          <div className="w-[52%] rounded-md bg-[#fffdf7] p-4 shadow-sm ring-1 ring-black/5">
-            <p className="text-[10px] font-medium tracking-wide uppercase opacity-60">
-              Usage preview
+            <p className="mt-0.5 text-[11px] text-muted-foreground">
+              docs.internal/launch/support-readiness
             </p>
-            <p className="text-lg font-semibold tracking-tight">
-              Monthly units
-            </p>
-            <div className="mt-4 flex h-36 items-end gap-3 rounded-md border border-black/10 bg-[#fbf8ef] p-3">
-              {[42, 76, 64, 58].map((height, index) => (
+            <div className="mt-4 divide-y divide-border/70">
+              {checklistRows.map((row) => (
                 <div
-                  key={height}
-                  className="flex h-full flex-1 flex-col items-center justify-end gap-2"
+                  key={row.label}
+                  className={cn(
+                    "flex items-center justify-between gap-3 px-2 py-2.5",
+                    row.status === "active" && "rounded-sm bg-muted"
+                  )}
                 >
+                  <div className="min-w-0">
+                    <p className="truncate text-xs font-medium text-foreground">
+                      {row.label}
+                    </p>
+                    <p className="truncate text-[11px] text-muted-foreground">
+                      {row.detail}
+                    </p>
+                  </div>
                   <div
                     className={cn(
-                      "w-full rounded-sm bg-[#2f7d72]",
-                      index === 1 && "bg-[#cf6956]",
-                      index === 2 && "bg-[#e4b43f]"
+                      "size-2 shrink-0 rounded-full",
+                      statusDotClass[row.status]
                     )}
-                    style={{ height: `${height}%` }}
+                    aria-label={row.status}
                   />
-                  <span className="text-[10px] opacity-60">
-                    {["Jan", "Feb", "Mar", "Apr"][index]}
-                  </span>
                 </div>
               ))}
             </div>
