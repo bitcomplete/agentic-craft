@@ -390,14 +390,6 @@ export function SettingsAutonomySection() {
             </TableBody>
           </Table>
         </div>
-
-        {/* Callout */}
-        <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-          Autonomy levels should be progressive — start at Level 2 for new
-          workflows and unlock higher levels only after the agent has
-          demonstrated reliability. Never default to full autonomy for review
-          tasks that affect approval outcomes.
-        </div>
       </section>
     </>
   )

@@ -27,7 +27,6 @@ type ProsePreferenceDetail = {
   className: string
   lineHeight: string
   fontVariationSettings?: string
-  spec: string
   description: string
 }
 
@@ -53,7 +52,6 @@ const PROSE_PREFERENCE_DETAILS: Record<ProsePreference, ProsePreferenceDetail> =
       label: "Serif Prose",
       className: "agent-prose font-serif text-base",
       lineHeight: "26px",
-      spec: "Source Serif 4, 16px/26px",
       description:
         "A comfortable default for long analysis, explanations, and review-style answers.",
     },
@@ -61,7 +59,6 @@ const PROSE_PREFERENCE_DETAILS: Record<ProsePreference, ProsePreferenceDetail> =
       label: "Sans Prose",
       className: "font-sans text-base",
       lineHeight: "24px",
-      spec: "Albert Sans, 16px/24px",
       description:
         "Better when the agent output needs to feel native to dense product chrome.",
     },
@@ -69,7 +66,6 @@ const PROSE_PREFERENCE_DETAILS: Record<ProsePreference, ProsePreferenceDetail> =
       label: "Compact",
       className: "font-sans text-sm",
       lineHeight: "22px",
-      spec: "Albert Sans, 14px/22px",
       description:
         "Useful for operational tools where users scan many short agent updates.",
     },
@@ -315,12 +311,6 @@ export function MessagesProgressSection() {
               <TableCell className="py-3 pr-6">Font preference</TableCell>
               <TableCell className="py-3 font-medium text-foreground">
                 User or workspace setting; current {prosePreferenceDetail.label}
-              </TableCell>
-            </TableRow>
-            <TableRow className="border-b border-border/50">
-              <TableCell className="py-3 pr-6">Active specimen</TableCell>
-              <TableCell className="py-3 font-medium text-foreground">
-                {prosePreferenceDetail.spec}
               </TableCell>
             </TableRow>
             <TableRow className="border-b border-border/50">

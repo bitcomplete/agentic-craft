@@ -233,14 +233,6 @@ export function ConfidenceDisplaySection() {
           </TableBody>
         </Table>
       </div>
-
-      {/* Callout */}
-      <div className="mt-8 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Confidence indicators should never be hidden from the user. Even when
-        the agent is highly confident, showing the source builds trust over
-        time. Low-confidence responses must always offer a path to human
-        verification.
-      </div>
     </section>
   )
 }
