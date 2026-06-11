@@ -203,13 +203,15 @@
 }
 
 /* Agent prose — single source of truth for serif agent text */
-.agent-prose {
-  font-family: var(--font-serif);
-  font-size: 16px;
-  line-height: 26px;
-  letter-spacing: -0.4px;
-  font-variation-settings: "opsz" 12;
-  -webkit-font-smoothing: antialiased;
+@layer components {
+  .agent-prose {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    line-height: 26px;
+    letter-spacing: -0.4px;
+    font-variation-settings: "opsz" 12;
+    -webkit-font-smoothing: antialiased;
+  }
 }
 
 /* Editorial page rhythm */
