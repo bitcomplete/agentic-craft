@@ -118,7 +118,6 @@ export function ParallelAgentsSection() {
           </div>
         </div>
       </div>
-
     </section>
   )
 }

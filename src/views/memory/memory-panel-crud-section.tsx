@@ -331,7 +331,6 @@ export function MemoryPanelCrudSection() {
             )}
           </div>
         </div>
-
       </section>
 
       {/* ============================================================ */}
@@ -550,7 +549,6 @@ export function MemoryPanelCrudSection() {
             ))}
           </TableBody>
         </Table>
-
       </section>
     </>
   )

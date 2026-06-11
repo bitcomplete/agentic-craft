@@ -278,7 +278,6 @@ export function FeedbackHistorySection() {
           ))}
         </TableBody>
       </Table>
-
     </section>
   )
 }

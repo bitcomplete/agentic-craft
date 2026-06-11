@@ -330,7 +330,6 @@ export function ThumbsFeedbackSection() {
           ))}
         </TableBody>
       </Table>
-
     </section>
   )
 }

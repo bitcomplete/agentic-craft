@@ -251,7 +251,6 @@ export function ParallelSection() {
           ))}
         </TableBody>
       </Table>
-
     </section>
   )
 }

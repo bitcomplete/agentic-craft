@@ -521,7 +521,8 @@ export function ApprovalGateSection() {
       </div>
 
       <p className="mt-8 text-sm text-muted-foreground">
-        Approve uses primary fill; deny uses ghost/outline. Outcomes use primary or destructive border with a reset button.
+        Approve uses primary fill; deny uses ghost/outline. Outcomes use primary
+        or destructive border with a reset button.
       </p>
     </section>
   )

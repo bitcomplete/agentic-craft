@@ -386,7 +386,6 @@ export function MessagesProgressSection() {
             </li>
           </ul>
         </div>
-
       </section>
 
       {/* ─── Progress Steps ─── */}

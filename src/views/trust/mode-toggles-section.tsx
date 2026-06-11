@@ -150,7 +150,6 @@ export function ModeTogglesSection() {
           </div>
         </div>
       </div>
-
     </section>
   )
 }

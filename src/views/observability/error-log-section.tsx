@@ -206,7 +206,6 @@ export function ErrorLogSection() {
           </TableRow>
         </TableBody>
       </Table>
-
     </section>
   )
 }

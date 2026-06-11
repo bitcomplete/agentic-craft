@@ -161,7 +161,6 @@ export function InlineCorrectionSection() {
           ))}
         </TableBody>
       </Table>
-
     </section>
   )
 }

@@ -136,7 +136,6 @@ export function AuditTrailSection() {
           </div>
         </div>
       </div>
-
     </section>
   )
 }

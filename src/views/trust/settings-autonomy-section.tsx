@@ -229,7 +229,6 @@ export function SettingsAutonomySection() {
         </FieldGroup>
 
         <EffectivePolicyPreview className="mt-4" policies={effectivePolicies} />
-
       </section>
 
       {/* ============================================================ */}

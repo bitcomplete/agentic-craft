@@ -183,7 +183,6 @@ export function CitationsSection() {
           ))}
         </TableBody>
       </Table>
-
     </section>
   )
 }

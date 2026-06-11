@@ -210,7 +210,6 @@ export function TokenUsageSection() {
           </TableRow>
         </TableBody>
       </Table>
-
     </section>
   )
 }

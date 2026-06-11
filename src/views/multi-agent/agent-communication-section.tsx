@@ -249,7 +249,6 @@ export function AgentCommunicationSection() {
           </TableRow>
         </TableBody>
       </Table>
-
     </section>
   )
 }

@@ -165,7 +165,6 @@ export function ContextScopeSection() {
           </div>
         </div>
       </div>
-
     </section>
   )
 }

@@ -190,7 +190,6 @@ export function DataProvenanceSection() {
           </div>
         </div>
       </div>
-
     </section>
   )
 }

@@ -717,7 +717,6 @@ export function TemplatesContent() {
           </FieldSet>
         </FieldGroup>
       </section>
-
     </article>
   )
 }

@@ -262,7 +262,6 @@ export function SubagentsSection() {
           ))}
         </TableBody>
       </Table>
-
     </section>
   )
 }

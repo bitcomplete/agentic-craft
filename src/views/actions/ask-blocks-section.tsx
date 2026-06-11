@@ -242,7 +242,6 @@ export function AskBlocksSection() {
           ))}
         </TableBody>
       </Table>
-
     </section>
   )
 }

@@ -191,7 +191,6 @@ export function SessionTimelineSection() {
           </TableRow>
         </TableBody>
       </Table>
-
     </section>
   )
 }

@@ -282,7 +282,6 @@ export function PlansSection() {
           ))}
         </TableBody>
       </Table>
-
     </section>
   )
 }

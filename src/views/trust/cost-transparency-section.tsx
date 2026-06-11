@@ -162,7 +162,6 @@ export function CostTransparencySection() {
           </div>
         </div>
       </div>
-
     </section>
   )
 }

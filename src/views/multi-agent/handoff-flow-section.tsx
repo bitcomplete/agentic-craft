@@ -160,7 +160,6 @@ export function HandoffFlowSection() {
           </div>
         </div>
       </div>
-
     </section>
   )
 }

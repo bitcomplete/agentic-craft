@@ -271,7 +271,6 @@ export function AgentCardsSection() {
           }
         />
       </div>
-
     </section>
   )
 }

@@ -176,7 +176,6 @@ export function ContextRingSection() {
           </div>
         </div>
       </div>
-
     </section>
   )
 }

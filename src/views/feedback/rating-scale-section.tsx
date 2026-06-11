@@ -196,7 +196,6 @@ export function RatingScaleSection() {
           ))}
         </TableBody>
       </Table>
-
     </section>
   )
 }

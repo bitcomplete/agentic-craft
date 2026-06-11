@@ -136,7 +136,6 @@ export function BehavioralConsequenceSection() {
           )}
         </div>
       </div>
-
     </section>
   )
 }

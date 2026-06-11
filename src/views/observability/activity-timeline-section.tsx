@@ -353,7 +353,6 @@ export function ActivityTimelineSection() {
           </TableRow>
         </TableBody>
       </Table>
-
     </section>
   )
 }

@@ -217,7 +217,6 @@ export function ToolCallsSection() {
           ))}
         </TableBody>
       </Table>
-
     </section>
   )
 }
