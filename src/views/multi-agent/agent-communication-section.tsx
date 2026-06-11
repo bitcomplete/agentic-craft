@@ -231,23 +231,6 @@ export function AgentCommunicationSection() {
         <TableBody>
           <TableRow className="border-b border-border/50">
             <TableCell className="py-3 pr-6 text-muted-foreground">
-              Direct messages
-            </TableCell>
-            <TableCell className="py-3">
-              Chat-style thread between two agents with sender/receiver labels
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Message alignment
-            </TableCell>
-            <TableCell className="py-3">
-              Alternating left/right layout based on sender, subtle background
-              tint
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
               Shared context
             </TableCell>
             <TableCell className="py-3">
@@ -267,13 +250,6 @@ export function AgentCommunicationSection() {
         </TableBody>
       </Table>
 
-      <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Agent communication patterns support the traceability requirements of
-        complex review workflows. Direct messaging creates point-to-point audit
-        trails (e.g., when the Requirements Mapper flags an requirement gap for
-        the Document Drafter), while shared context provides a workspace where
-        all agents can contribute findings visible to the project team.
-      </div>
     </section>
   )
 }

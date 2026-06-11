@@ -12,14 +12,6 @@ import {
   AgentStatusTable,
   type AgentStatusRow,
 } from "@/components/ui/agent-status-table"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -280,62 +272,6 @@ export function AgentCardsSection() {
         />
       </div>
 
-      {/* Spec table */}
-      <Table className="mt-10 w-full text-sm">
-        <TableHeader>
-          <TableRow className="border-b border-border text-left">
-            <TableHead className="pr-6 pb-3 text-xs font-medium text-muted-foreground">
-              Element
-            </TableHead>
-            <TableHead className="pb-3 text-xs font-medium text-muted-foreground">
-              Details
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Card layout
-            </TableCell>
-            <TableCell className="py-3">
-              Responsive grid, each card with avatar, name, role, and
-              state-specific details
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Active state
-            </TableCell>
-            <TableCell className="py-3">
-              Current task description and progress info
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Idle state
-            </TableCell>
-            <TableCell className="py-3">
-              Role-specific waiting note ("Waiting for a source packet to map")
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Error state
-            </TableCell>
-            <TableCell className="py-3">
-              Alert icon, error message, retry action button
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-
-      <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Agent cards provide the identity foundation for multi-agent interfaces.
-        In review workflow contexts, each card maps to a distinct review
-        activity — source collection, requirements mapping, or document
-        authoring — making it clear which agent is responsible for which
-        workstream deliverable.
-      </div>
     </section>
   )
 }

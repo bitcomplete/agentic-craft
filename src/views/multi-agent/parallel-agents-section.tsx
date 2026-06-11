@@ -5,15 +5,6 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { Robot01Icon, Tick01Icon } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
 import { Progress } from "@/components/ui/progress"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
 /* ------------------------------------------------------------------ */
@@ -128,62 +119,6 @@ export function ParallelAgentsSection() {
         </div>
       </div>
 
-      {/* Spec table */}
-      <Table className="mt-10 w-full text-sm">
-        <TableHeader>
-          <TableRow className="border-b border-border text-left">
-            <TableHead className="pr-6 pb-3 text-xs font-medium text-muted-foreground">
-              Element
-            </TableHead>
-            <TableHead className="pb-3 text-xs font-medium text-muted-foreground">
-              Details
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Agent rows
-            </TableCell>
-            <TableCell className="py-3">
-              Stacked cards with avatar, name, task description, and status
-              indicator
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Progress bars
-            </TableCell>
-            <TableCell className="py-3">
-              Animated fill to individual target width, monochrome foreground
-              tint
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Running state
-            </TableCell>
-            <TableCell className="py-3">
-              Pulsing dot, active task label, percentage complete
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Complete state
-            </TableCell>
-            <TableCell className="py-3">
-              Tick icon, results summary replaces task description, bar at 100%
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-
-      <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Parallel execution is critical for complex review workflows where
-        independent review workstreams — risk scanning (risk review), source
-        material collection (ALC), and launch policy analysis — can proceed
-        concurrently without blocking each other.
-      </div>
     </section>
   )
 }

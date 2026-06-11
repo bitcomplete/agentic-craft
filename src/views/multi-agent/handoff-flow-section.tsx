@@ -6,15 +6,6 @@ import { ArrowRight01Icon } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
 import { HandoffPacket } from "@/components/ui/handoff-packet"
 import { StatusIndicator } from "@/components/ui/status-indicator"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
 /* ------------------------------------------------------------------ */
@@ -170,62 +161,6 @@ export function HandoffFlowSection() {
         </div>
       </div>
 
-      {/* Spec table */}
-      <Table className="mt-10 w-full text-sm">
-        <TableHeader>
-          <TableRow className="border-b border-border text-left">
-            <TableHead className="pr-6 pb-3 text-xs font-medium text-muted-foreground">
-              Element
-            </TableHead>
-            <TableHead className="pb-3 text-xs font-medium text-muted-foreground">
-              Details
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Step cards
-            </TableCell>
-            <TableCell className="py-3">
-              Responsive step cards with step number, task label, and assigned
-              agent
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Connectors
-            </TableCell>
-            <TableCell className="py-3">
-              Arrow icons between steps, opacity reflects whether handoff has
-              occurred
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Pending state
-            </TableCell>
-            <TableCell className="py-3">
-              First step highlighted, remaining steps gently muted
-            </TableCell>
-          </TableRow>
-          <TableRow className="border-b border-border/50">
-            <TableCell className="py-3 pr-6 text-muted-foreground">
-              Complete state
-            </TableCell>
-            <TableCell className="py-3">
-              All steps show tick icon with subtle background tint
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-
-      <div className="mt-6 border-l-2 border-muted-foreground/15 pl-4 text-sm text-muted-foreground italic">
-        Handoff flows model the sequential dependencies in complex review
-        workflows — a project brief must be parsed before requirement coverage
-        can be mapped, and coverage must be mapped before the review report can
-        be generated. Each handoff creates an auditable transition record.
-      </div>
     </section>
   )
 }
