@@ -154,7 +154,7 @@ export function ContextRingSection() {
                   <div className="flex flex-col gap-1.5">
                     {MEMORY_ENTRIES_PREVIEW.slice(0, 4).map((e) => (
                       <div key={e.id} className="flex items-baseline gap-2">
-                        <span className="shrink-0 text-[10px] text-muted-foreground/50">
+                        <span className="shrink-0 text-[10px] text-muted-foreground/70">
                           {e.key}
                         </span>
                         <span className="truncate text-[10px] text-muted-foreground">
@@ -162,7 +162,7 @@ export function ContextRingSection() {
                         </span>
                       </div>
                     ))}
-                    <p className="text-[10px] text-muted-foreground/40">
+                    <p className="text-[10px] text-muted-foreground/70">
                       +{MEMORY_ENTRIES_PREVIEW.length - 4} more
                     </p>
                   </div>

@@ -156,14 +156,14 @@ export function DemoContent() {
                   >
                     {OBSERVABLE_WORK_TEXT}
                   </p>
-                  <p className="mt-2 text-xs text-muted-foreground/60">
+                  <p className="mt-2 text-xs text-muted-foreground/70">
                     Click to collapse
                   </p>
                 </div>
               )}
 
               {workState === "completed" && (
-                <span className="text-xs text-muted-foreground/60">
+                <span className="text-xs text-muted-foreground/70">
                   Source review completed in 3.2s
                 </span>
               )}
@@ -317,7 +317,7 @@ export function DemoContent() {
                     type="button"
                     aria-label="Reset approved action"
                     onClick={() => setApprovalState("pending")}
-                    className="text-xs text-muted-foreground/60 transition-colors hover:text-muted-foreground"
+                    className="text-xs text-muted-foreground/70 transition-colors hover:text-muted-foreground"
                   >
                     Reset
                   </button>
@@ -343,7 +343,7 @@ export function DemoContent() {
                     type="button"
                     aria-label="Reset denied action"
                     onClick={() => setApprovalState("pending")}
-                    className="text-xs text-muted-foreground/60 transition-colors hover:text-muted-foreground"
+                    className="text-xs text-muted-foreground/70 transition-colors hover:text-muted-foreground"
                   >
                     Reset
                   </button>

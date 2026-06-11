@@ -102,7 +102,7 @@ export function RatingScaleSection() {
 
             {/* Rating row */}
             <div className="mt-4 flex items-center gap-3">
-              <span className="text-xs text-muted-foreground/60">
+              <span className="text-xs text-muted-foreground/70">
                 Rate this response
               </span>
               <div className="flex items-center gap-1">
@@ -116,7 +116,7 @@ export function RatingScaleSection() {
                     className={`flex h-7 w-7 items-center justify-center rounded-md text-xs transition-colors duration-150 outline-none focus-visible:ring-3 focus-visible:ring-ring/50 ${ratingPressed === n ? "feedback-press" : ""} ${
                       selectedRating === n
                         ? "border border-foreground/20 bg-foreground/[0.06] font-medium text-foreground"
-                        : "border border-transparent text-muted-foreground/50 hover:bg-muted/50 hover:text-muted-foreground"
+                        : "border border-transparent text-muted-foreground/70 hover:bg-muted/50 hover:text-muted-foreground"
                     } `}
                   >
                     {n}
@@ -126,7 +126,7 @@ export function RatingScaleSection() {
               {ratingConfirm && (
                 <span
                   role="status"
-                  className="feedback-fade-in text-xs text-muted-foreground/60"
+                  className="feedback-fade-in text-xs text-muted-foreground/70"
                 >
                   Feedback recorded
                 </span>

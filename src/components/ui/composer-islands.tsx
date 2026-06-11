@@ -88,7 +88,7 @@ export function ComposerScope({
             type="button"
             onClick={onDismiss}
             aria-label="Dismiss scope"
-            className="shrink-0 text-muted-foreground/40 transition-colors hover:text-foreground"
+            className="shrink-0 text-muted-foreground/60 transition-colors hover:text-foreground"
           >
             <HugeiconsIcon icon={Cancel01Icon} size={14} strokeWidth={1.5} />
           </button>

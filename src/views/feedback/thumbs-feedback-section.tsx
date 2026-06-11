@@ -177,7 +177,7 @@ export function ThumbsFeedbackSection() {
                 variant="ghost"
                 size="icon-sm"
                 className={cn(
-                  "text-muted-foreground/50 hover:text-muted-foreground",
+                  "text-muted-foreground/70 hover:text-muted-foreground",
                   thumbsSelection === "up" &&
                     "feedback-press bg-foreground/[0.06] text-foreground"
                 )}
@@ -192,7 +192,7 @@ export function ThumbsFeedbackSection() {
                 variant="ghost"
                 size="icon-sm"
                 className={cn(
-                  "text-muted-foreground/50 hover:text-muted-foreground",
+                  "text-muted-foreground/70 hover:text-muted-foreground",
                   thumbsSelection === "down" &&
                     "feedback-press bg-foreground/[0.06] text-foreground"
                 )}

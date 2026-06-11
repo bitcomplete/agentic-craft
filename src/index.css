@@ -27,6 +27,8 @@
   --ring: oklch(0.708 0 0);
   --success-highlight: oklch(0.54 0.14 155 / 10%);
   --success-flash: oklch(0.54 0.14 155 / 16%);
+  --status-ok: oklch(0.54 0.14 155);
+  --status-warn: oklch(0.72 0.14 85);
   --chart-1: oklch(0.809 0.105 251.813);
   --chart-2: oklch(0.623 0.214 259.815);
   --chart-3: oklch(0.546 0.245 262.881);
@@ -65,6 +67,8 @@
   --ring: oklch(0.556 0 0);
   --success-highlight: oklch(0.72 0.15 155 / 10%);
   --success-flash: oklch(0.72 0.15 155 / 16%);
+  --status-ok: oklch(0.72 0.15 155);
+  --status-warn: oklch(0.82 0.14 85);
   --chart-1: oklch(0.809 0.105 251.813);
   --chart-2: oklch(0.623 0.214 259.815);
   --chart-3: oklch(0.546 0.245 262.881);

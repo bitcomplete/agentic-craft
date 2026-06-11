@@ -68,7 +68,7 @@ export function ConfidenceDisplaySection() {
                 <div className="mb-3 flex items-center justify-end gap-1.5">
                   <span
                     aria-hidden="true"
-                    className="size-2 rounded-full bg-[oklch(0.62_0.14_155)]"
+                    className="size-2 rounded-full bg-[var(--status-ok)]"
                   />
                   <span className="text-xs text-muted-foreground">
                     High confidence
@@ -103,7 +103,7 @@ export function ConfidenceDisplaySection() {
                 <div className="mb-3 flex items-center justify-end gap-1.5">
                   <span
                     aria-hidden="true"
-                    className="size-2 rounded-full bg-[oklch(0.75_0.13_85)]"
+                    className="size-2 rounded-full bg-[var(--status-warn)]"
                   />
                   <span className="text-xs text-muted-foreground">
                     Medium confidence
@@ -140,7 +140,7 @@ export function ConfidenceDisplaySection() {
                 <div className="mb-3 flex items-center justify-end gap-1.5">
                   <span
                     aria-hidden="true"
-                    className="size-2 rounded-full bg-[oklch(0.6_0.19_25)]"
+                    className="size-2 rounded-full bg-[var(--destructive)]"
                   />
                   <span className="text-xs text-muted-foreground">
                     Low confidence

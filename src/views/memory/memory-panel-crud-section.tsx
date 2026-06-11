@@ -424,7 +424,7 @@ export function MemoryPanelCrudSection() {
               {crudState.view && (
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="text-xs text-muted-foreground/60">
+                    <span className="text-xs text-muted-foreground/70">
                       Preferred release tier
                     </span>
                     <p className="text-sm text-foreground/85">{savedValue}</p>
@@ -460,7 +460,7 @@ export function MemoryPanelCrudSection() {
                   <Field>
                     <FieldLabel
                       htmlFor="memory-edit-value"
-                      className="text-xs text-muted-foreground/60"
+                      className="text-xs text-muted-foreground/70"
                     >
                       Preferred release tier
                     </FieldLabel>
@@ -506,7 +506,7 @@ export function MemoryPanelCrudSection() {
               {crudState.delete && (
                 <div className="flex flex-col gap-3">
                   <div>
-                    <span className="text-xs text-muted-foreground/60">
+                    <span className="text-xs text-muted-foreground/70">
                       Preferred release tier
                     </span>
                     <p className="text-sm text-foreground/85">{savedValue}</p>

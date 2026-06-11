@@ -116,7 +116,7 @@ export function ParallelAgentsSection() {
                     />
 
                     {activeParallel === "running" && (
-                      <p className="text-[10px] text-muted-foreground/60">
+                      <p className="text-[10px] text-muted-foreground/70">
                         {agent.progress}% complete
                       </p>
                     )}

@@ -158,7 +158,7 @@ export function HandoffFlowSection() {
                           activeHandoff === "complete" ||
                           (activeHandoff === "inprogress" && i === 0)
                             ? "text-foreground/50"
-                            : "text-muted-foreground/50"
+                            : "text-muted-foreground/70"
                         }`}
                       />
                     </div>

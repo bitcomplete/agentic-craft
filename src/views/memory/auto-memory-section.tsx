@@ -131,7 +131,7 @@ export function AutoMemorySection() {
           {/* Dismissed — banner gone, just the message */}
           {autoState.dismissed && (
             <div className="memory-fade-in flex items-center gap-2 rounded-md px-4 py-2">
-              <p className="text-xs text-muted-foreground/50 italic">
+              <p className="text-xs text-muted-foreground/70 italic">
                 Suggestion dismissed — the agent will not ask about this
                 preference again.
               </p>

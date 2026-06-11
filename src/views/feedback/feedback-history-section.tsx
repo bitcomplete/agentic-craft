@@ -169,7 +169,7 @@ export function FeedbackHistorySection() {
                     {/* Content */}
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-muted-foreground/60">
+                        <span className="text-xs text-muted-foreground/70">
                           <HugeiconsIcon
                             icon={Clock01Icon}
                             size={10}
@@ -189,7 +189,7 @@ export function FeedbackHistorySection() {
                       icon={isExpanded ? ArrowDown01Icon : ArrowRight01Icon}
                       size={12}
                       strokeWidth={1.5}
-                      className="mt-1.5 shrink-0 text-muted-foreground/40"
+                      className="mt-1.5 shrink-0 text-muted-foreground/70"
                     />
                   </button>
 
@@ -216,7 +216,7 @@ export function FeedbackHistorySection() {
                 onClick={() => handleHistoryToggle("all")}
                 variant="ghost"
                 size="xs"
-                className="w-fit text-muted-foreground/60 hover:text-muted-foreground"
+                className="w-fit text-muted-foreground/70 hover:text-muted-foreground"
               >
                 Show all {FEEDBACK_HISTORY.length} entries
               </Button>

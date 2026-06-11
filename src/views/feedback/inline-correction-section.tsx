@@ -108,7 +108,7 @@ export function InlineCorrectionSection() {
                     />
                     Applied
                   </Badge>
-                  <span className="text-xs text-muted-foreground/60">
+                  <span className="text-xs text-muted-foreground/70">
                     dedicated support plan → standard support plan
                   </span>
                 </div>
