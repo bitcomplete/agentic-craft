@@ -474,6 +474,18 @@ details[data-slot="observable-work-step"][open]
   }
 }
 
+@keyframes wf-phase-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.85);
+  }
+}
+
 @keyframes mon-sparkline-draw {
   from {
     stroke-dashoffset: 200;
@@ -572,6 +584,10 @@ details[data-slot="observable-work-step"][open]
   animation: route-pulse 1.5s ease-in-out 3;
 }
 
+.wf-phase-pulse {
+  animation: wf-phase-pulse 1.8s ease-in-out infinite;
+}
+
 .ma-progress {
   transform-origin: left;
   animation: route-progress 0.6s ease-out forwards;
@@ -621,7 +637,8 @@ details[data-slot="observable-work-step"][open]
   .trust-fade-in,
   .trust-expand,
   .trust-pulse,
-  .trust-press {
+  .trust-press,
+  .wf-phase-pulse {
     animation: none;
   }
 
