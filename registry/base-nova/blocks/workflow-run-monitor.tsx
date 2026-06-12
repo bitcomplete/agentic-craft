@@ -1025,6 +1025,10 @@ function WorkflowRunMonitorBlock() {
   const [retried, setRetried] = React.useState(false)
   const [planOpen, setPlanOpen] = React.useState(false)
   const statusRef = React.useRef<HTMLParagraphElement>(null)
+  // Outcomes receive focus when the triggering control unmounts
+  const stopRef = React.useRef<HTMLButtonElement>(null)
+  const resumeRef = React.useRef<HTMLButtonElement>(null)
+  const completedChipRef = React.useRef<HTMLButtonElement>(null)
 
   const phases = getPhasesForState(runState, retried)
   // Fleet-dot minimaps, derived from the same agent lists the table renders
@@ -1104,12 +1108,15 @@ function WorkflowRunMonitorBlock() {
     announce(
       "Retrying phase — cached agents replay, failed agents re-run in full"
     )
+    // The recovery banner unmounts — hand focus to the live Stop control
+    setTimeout(() => stopRef.current?.focus(), 0)
   }
 
   function handleSkipAndContinue() {
     setRunState("completed")
     setActivePhaseId("draft")
     announce("Skipped failed phase — continuing to draft report")
+    setTimeout(() => completedChipRef.current?.focus(), 0)
   }
 
   function handleStop() {
@@ -1117,6 +1124,8 @@ function WorkflowRunMonitorBlock() {
     announce(
       "Run stopped — the journal keeps completed agents; resume re-runs the rest"
     )
+    // Stop unmounts itself — Resume is the outcome
+    setTimeout(() => resumeRef.current?.focus(), 0)
   }
 
   function handleResume() {
@@ -1159,6 +1168,7 @@ function WorkflowRunMonitorBlock() {
             (s) => (
               <button
                 key={s}
+                ref={s === "completed" ? completedChipRef : undefined}
                 type="button"
                 data-compact-touch
                 aria-pressed={runState === s}
@@ -1174,6 +1184,7 @@ function WorkflowRunMonitorBlock() {
         {/* Stop button — visible whenever agents are live, including a retry */}
         {(runState === "running" || (runState === "failed" && retried)) && (
           <Button
+            ref={stopRef}
             variant="destructive"
             size="sm"
             className="ml-auto"
@@ -1216,13 +1227,13 @@ function WorkflowRunMonitorBlock() {
               strokeWidth={1.5}
               aria-hidden="true"
               className={cn(
-                "size-3.5 shrink-0 transition-transform duration-200",
+                "size-3.5 shrink-0 transition-transform duration-200 motion-reduce:transition-none",
                 !planOpen && "-rotate-90"
               )}
             />
             <span className="font-medium tracking-widest uppercase">Plan</span>
-            <span className="font-mono text-[11px]">
-              {"workflow script · 8 lines"}
+            <span className="font-mono text-[11px] tabular-nums">
+              {`workflow script · ${PLAN_LINES.length} lines`}
             </span>
           </button>
           {planOpen && (
@@ -1237,7 +1248,7 @@ function WorkflowRunMonitorBlock() {
         </div>
 
         {/* Narrator line — what the script's log() calls surface */}
-        <p className="mt-3 flex items-baseline gap-2 border-t border-border/40 pt-3 text-xs text-muted-foreground">
+        <p className="mt-3 flex items-baseline gap-2 border-t border-border/40 pt-3 text-xs text-muted-foreground tabular-nums">
           <span className="shrink-0 font-mono text-[11px]" aria-hidden="true">
             log
           </span>
@@ -1251,7 +1262,12 @@ function WorkflowRunMonitorBlock() {
           <p className="text-sm text-muted-foreground">
             Paused — 9 completed agents cached in the journal
           </p>
-          <Button variant="outline" size="sm" onClick={handleResume}>
+          <Button
+            ref={resumeRef}
+            variant="outline"
+            size="sm"
+            onClick={handleResume}
+          >
             Resume
           </Button>
         </div>
