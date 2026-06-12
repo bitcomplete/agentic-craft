@@ -300,7 +300,7 @@ describe("workflow-run-monitor block", () => {
     expect(root.getByText(/completed with verify skipped/i)).toBeInTheDocument()
     expect(root.getByText(/10 \/ 14/)).toBeInTheDocument()
     expect(
-      root.getByText(/report drafted from partial verification/i)
-    ).toBeInTheDocument()
+      root.getAllByText(/report drafted from partial verification/i).length
+    ).toBeGreaterThan(0)
   })
 })

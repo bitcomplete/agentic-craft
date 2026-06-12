@@ -209,7 +209,6 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     status: "complete",
     task: "Catalogued 143 direct and transitive dependencies",
     progress: 100,
-    confidence: 97,
     cost: "$0.03",
     updated: "4m ago",
     detail: {
@@ -227,7 +226,6 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     status: "complete",
     task: "Read 6 policy documents — 29 requirements parsed",
     progress: 100,
-    confidence: 92,
     cost: "$0.04",
     updated: "4m ago",
     detail: {
@@ -246,7 +244,6 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     status: "complete",
     task: "Collected 18 of 18 source artifacts for scope",
     progress: 100,
-    confidence: 94,
     cost: "$0.04",
     updated: "3m ago",
     detail: {
@@ -264,7 +261,6 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     status: "complete",
     task: "Parsed 47 commits since last audit baseline",
     progress: 100,
-    confidence: 89,
     cost: "$0.02",
     updated: "4m ago",
     detail: {
@@ -282,7 +278,6 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     status: "complete",
     task: "Scanned 847 incidents — 0 critical blockers flagged",
     progress: 100,
-    confidence: 98,
     cost: "$0.03",
     updated: "3m ago",
     detail: {
@@ -301,7 +296,6 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     status: "complete",
     task: "All 143 dependency licences cleared for distribution",
     progress: 100,
-    confidence: 96,
     cost: "$0.02",
     updated: "4m ago",
     detail: { model: "haiku", tokens: "1,384", tools: 8, elapsed: "0:36" },
@@ -313,7 +307,6 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     status: "complete",
     task: "Compared staging and production configs — 2 drifts noted",
     progress: 100,
-    confidence: 90,
     cost: "$0.01",
     updated: "3m ago",
     detail: { model: "haiku", tokens: "1,096", tools: 6, elapsed: "0:29" },
@@ -325,7 +318,6 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     status: "complete",
     task: "Mapped 61 public endpoints against the export spec",
     progress: 100,
-    confidence: 93,
     cost: "$0.02",
     updated: "4m ago",
     detail: { model: "haiku", tokens: "1,440", tools: 11, elapsed: "0:33" },
@@ -349,7 +341,6 @@ function getVerifyAgents(
         status: "complete",
         task: "Verified 14 of 29 requirements against source artifacts",
         progress: 100,
-        confidence: 91,
         cost: "$0.06",
         updated: "43s ago",
         detail: {
@@ -367,7 +358,6 @@ function getVerifyAgents(
         status: "working",
         task: "Correlating 12 open deltas with requirements list",
         progress: 61,
-        confidence: 84,
         cost: "$0.07",
         updated: "now",
         detail: {
@@ -386,7 +376,6 @@ function getVerifyAgents(
         status: "working",
         task: "Mapping export workflow to internal control library",
         progress: 48,
-        confidence: 79,
         cost: "$0.05",
         updated: "now",
         detail: {
@@ -432,7 +421,6 @@ function getVerifyAgents(
         status: "complete",
         task: "Verified 14 of 29 requirements — journaled",
         progress: 100,
-        confidence: 91,
         cost: "$0.06",
         updated: "cached",
         detail: {
@@ -513,7 +501,6 @@ function getVerifyAgents(
         status: "complete",
         task: "Verified 14 of 29 requirements — journaled",
         progress: 100,
-        confidence: 91,
         cost: "$0.06",
         updated: "cached",
         detail: {
@@ -589,7 +576,6 @@ function getVerifyAgents(
         status: "complete",
         task: "Verified all 29 requirements — 3 gaps flagged",
         progress: 100,
-        confidence: 91,
         cost: "$0.06",
         updated: "2m ago",
         detail: {
@@ -607,7 +593,6 @@ function getVerifyAgents(
         status: "complete",
         task: "4 unresolved deltas escalated for review",
         progress: 100,
-        confidence: 87,
         cost: "$0.09",
         updated: "3m ago",
         detail: {
@@ -626,7 +611,6 @@ function getVerifyAgents(
         status: "complete",
         task: "29 requirements mapped — export workflow coverage confirmed",
         progress: 100,
-        confidence: 93,
         cost: "$0.07",
         updated: "3m ago",
         detail: {
@@ -645,7 +629,6 @@ function getVerifyAgents(
         status: "complete",
         task: "Scored 3 gaps: 2 medium, 1 low — no critical risks",
         progress: 100,
-        confidence: 88,
         cost: "$0.05",
         updated: "2m ago",
         detail: {
@@ -663,7 +646,6 @@ function getVerifyAgents(
         status: "complete",
         task: "Phase summary ready — 3 gaps, 0 blockers",
         progress: 100,
-        confidence: 95,
         cost: "$0.04",
         updated: "2m ago",
         detail: {
@@ -688,7 +670,6 @@ function getVerifyAgents(
         status: "complete",
         task: "Verified 14 of 29 requirements — replayed from the journal",
         progress: 100,
-        confidence: 91,
         cost: "$0.06",
         updated: "cached",
         detail: {
@@ -761,7 +742,6 @@ function getVerifyAgents(
       status: "complete",
       task: "Verified 14 of 29 requirements — journaled, survives retry",
       progress: 100,
-      confidence: 91,
       cost: "$0.06",
       updated: "cached",
       detail: {
@@ -840,7 +820,6 @@ const DRAFT_AGENTS_COMPLETE: AgentStatusRow[] = [
     status: "complete",
     task: "Launch readiness report drafted — 7 sections, 3 annexes",
     progress: 100,
-    confidence: 94,
     cost: "$0.11",
     updated: "1m ago",
     detail: {
@@ -863,7 +842,6 @@ const DRAFT_AGENTS_SKIPPED: AgentStatusRow[] = [
     status: "complete",
     task: "Report drafted from partial verification — gap annex added",
     progress: 100,
-    confidence: 74,
     cost: "$0.11",
     updated: "1m ago",
     detail: {
@@ -1132,18 +1110,24 @@ function PlanScript({
 
 const DENSITY_THRESHOLD = 5
 
+/* The collapsed-fleet roll-up is a real disclosure: the summary line is the
+   control that reveals the rows it counts */
 function CollapsedAgentSummary({
   done,
   queued,
   running,
   failed,
   tokens,
+  expanded,
+  onToggle,
 }: {
   done: number
   queued: number
   running: number
   failed: number
   tokens?: string
+  expanded: boolean
+  onToggle: () => void
 }) {
   const parts: string[] = []
   if (done > 0) parts.push(`${done} done`)
@@ -1152,14 +1136,28 @@ function CollapsedAgentSummary({
   if (queued > 0) parts.push(`${queued} queued`)
   if (tokens) parts.push(`${tokens} tokens`)
   return (
-    <tr>
-      <td
-        colSpan={7}
-        className="px-3 py-2 text-sm text-muted-foreground tabular-nums"
-      >
-        +{done + queued + running + failed} more: {parts.join(" · ")}
-      </td>
-    </tr>
+    <button
+      type="button"
+      data-compact-touch
+      aria-expanded={expanded}
+      onClick={onToggle}
+      className="flex min-h-9 w-full items-center gap-1.5 border-t border-border/40 px-3 py-2 text-left text-sm text-muted-foreground tabular-nums transition-colors duration-150 outline-none hover:bg-muted/50 hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
+    >
+      <HugeiconsIcon
+        icon={ArrowDown01Icon}
+        strokeWidth={1.5}
+        aria-hidden="true"
+        className={cn(
+          "size-3.5 shrink-0 transition-transform duration-200 motion-reduce:transition-none",
+          !expanded && "-rotate-90"
+        )}
+      />
+      <span>
+        {expanded
+          ? "Show fewer"
+          : `+${done + queued + running + failed} more: ${parts.join(" · ")}`}
+      </span>
+    </button>
   )
 }
 
@@ -1175,6 +1173,7 @@ function WorkflowRunMonitorBlock() {
   const [retried, setRetried] = React.useState(false)
   const [skipped, setSkipped] = React.useState(false)
   const [planOpen, setPlanOpen] = React.useState(false)
+  const [fleetExpanded, setFleetExpanded] = React.useState(false)
   const statusRef = React.useRef<HTMLParagraphElement>(null)
   // Outcomes receive focus when the triggering control unmounts
   const stopRef = React.useRef<HTMLButtonElement>(null)
@@ -1213,7 +1212,9 @@ function WorkflowRunMonitorBlock() {
 
   // For density rule: cap at DENSITY_THRESHOLD visible rows. The summary row
   // carries its own roll-up so collapsed work still counts.
-  const visibleAgents = agentsToShow.slice(0, DENSITY_THRESHOLD)
+  const visibleAgents = fleetExpanded
+    ? agentsToShow
+    : agentsToShow.slice(0, DENSITY_THRESHOLD)
   const hiddenAgents = agentsToShow.slice(DENSITY_THRESHOLD)
   const hiddenCount = hiddenAgents.length
   const hiddenDone = hiddenAgents.filter((a) => a.status === "complete").length
@@ -1241,6 +1242,7 @@ function WorkflowRunMonitorBlock() {
     setRunState(state)
     setRetried(false)
     setSkipped(false)
+    setFleetExpanded(false)
     // Set sensible default phase selection per state
     if (state === "running" || state === "paused") {
       setActivePhaseId("verify")
@@ -1369,7 +1371,10 @@ function WorkflowRunMonitorBlock() {
         <WorkflowPhases
           phases={phasesWithDots}
           activePhaseId={activePhaseId}
-          onPhaseSelect={setActivePhaseId}
+          onPhaseSelect={(phaseId) => {
+            setActivePhaseId(phaseId)
+            setFleetExpanded(false)
+          }}
           aria-label="Launch readiness audit phases"
           className={cn(
             runState === "paused" &&
@@ -1468,20 +1473,26 @@ function WorkflowRunMonitorBlock() {
             Queued — agents start when this phase begins
           </p>
         ) : (
-          <div className="overflow-x-auto rounded-lg border border-border/40">
-            <AgentStatusTable agents={visibleAgents} />
+          <div className="rounded-lg border border-border/40">
+            <AgentStatusTable
+              agents={visibleAgents}
+              aria-label={`${
+                activePhaseId
+                  ? (phases.find((p) => p.id === activePhaseId)?.title ??
+                    "Phase")
+                  : "All"
+              } agents`}
+            />
             {hiddenCount > 0 && (
-              <table className="w-full border-t border-border/40">
-                <tbody>
-                  <CollapsedAgentSummary
-                    done={hiddenDone}
-                    queued={hiddenQueued}
-                    running={hiddenRunning}
-                    failed={hiddenFailed}
-                    tokens={hiddenTokens}
-                  />
-                </tbody>
-              </table>
+              <CollapsedAgentSummary
+                done={hiddenDone}
+                queued={hiddenQueued}
+                running={hiddenRunning}
+                failed={hiddenFailed}
+                tokens={hiddenTokens}
+                expanded={fleetExpanded}
+                onToggle={() => setFleetExpanded((open) => !open)}
+              />
             )}
           </div>
         )}

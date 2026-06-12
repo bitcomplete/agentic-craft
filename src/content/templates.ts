@@ -219,7 +219,7 @@ export const templateDetails: TemplateDetail[] = [
     whenToUse:
       "Use for long-running jobs, scheduled work, review tasks, and multi-source scans.",
     humanControl:
-      "Users can inspect progress, cost, confidence, blockers, and cancellation points.",
+      "Users can inspect progress, cost, blockers, and cancellation points.",
     failureMode:
       "The run stalls silently, exceeds budget, or hides which source caused the block.",
     recovery:
@@ -228,7 +228,7 @@ export const templateDetails: TemplateDetail[] = [
     states: [
       {
         state: "Running",
-        userSees: "Progress, cost, confidence, and current task.",
+        userSees: "Progress, cost, and current task.",
         systemDoes: "Updates status without shifting layout.",
       },
       {

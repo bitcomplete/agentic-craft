@@ -15,7 +15,6 @@ const AGENTS: AgentStatusRow[] = [
     status: "complete",
     task: "Verified 14 of 29 requirements",
     progress: 100,
-    confidence: 91,
     cost: "$0.06",
     updated: "43s ago",
     detail: {
@@ -51,7 +50,9 @@ describe("AgentStatusTable detail disclosure", () => {
 
   it("expands and collapses the detail row on toggle", async () => {
     const { container } = render(<AgentStatusTable agents={AGENTS} />)
-    const root = within(container)
+    const table = within(
+      container.querySelector("[data-slot='table-container']") as HTMLElement
+    )
     const toggle = container.querySelector(
       "[data-slot='agent-detail-toggle']"
     ) as HTMLButtonElement
@@ -59,14 +60,16 @@ describe("AgentStatusTable detail disclosure", () => {
     await userEvent.click(toggle)
     expect(toggle.getAttribute("aria-expanded")).toBe("true")
     expect(
-      root.getByText(/verified 14 of 29 requirements against source artifacts/i)
+      table.getByText(
+        /verified 14 of 29 requirements against source artifacts/i
+      )
     ).toBeInTheDocument()
-    expect(root.getByText(/1,872 tokens · 13 tools/)).toBeInTheDocument()
+    expect(table.getByText(/1,872 tokens · 13 tools/)).toBeInTheDocument()
 
     await userEvent.click(toggle)
     expect(toggle.getAttribute("aria-expanded")).toBe("false")
     expect(
-      root.queryByText(
+      table.queryByText(
         /verified 14 of 29 requirements against source artifacts/i
       )
     ).toBeNull()
@@ -95,13 +98,15 @@ describe("AgentStatusTable detail disclosure", () => {
       },
     ]
     const { container } = render(<AgentStatusTable agents={agents} />)
-    const root = within(container)
+    const table = within(
+      container.querySelector("[data-slot='table-container']") as HTMLElement
+    )
     await userEvent.click(
       container.querySelector(
         "[data-slot='agent-detail-toggle']"
       ) as HTMLButtonElement
     )
-    const returned = root.getByText("{ deps: 143, advisories: 9 }")
+    const returned = table.getByText("{ deps: 143, advisories: 9 }")
     expect(returned.className).toContain("font-mono")
   })
 
@@ -113,5 +118,62 @@ describe("AgentStatusTable detail disclosure", () => {
     const idleRow = rows[1]
     expect(idleRow.querySelector("button")).toBeNull()
     expect(idleRow.textContent).toContain("Risk Assessor")
+  })
+
+  it("has no Confidence column — cost and progress carry the instrumentation", () => {
+    const { container } = render(<AgentStatusTable agents={AGENTS} />)
+    const headers = Array.from(container.querySelectorAll("th")).map(
+      (th) => th.textContent
+    )
+    expect(headers).toEqual([
+      "Agent",
+      "Status",
+      "Task",
+      "Progress",
+      "Cost",
+      "Updated",
+    ])
+  })
+})
+
+describe("AgentStatusTable narrow-viewport card list", () => {
+  it("renders the same fleet as a card list with full task text", () => {
+    const { container } = render(<AgentStatusTable agents={AGENTS} />)
+    const cards = container.querySelector("[data-slot='agent-status-cards']")!
+    expect(cards.querySelectorAll("li")).toHaveLength(2)
+    expect(
+      within(cards as HTMLElement).getByText(/waiting for delta audit results/i)
+    ).toBeInTheDocument()
+  })
+
+  it("card disclosure expands its own detail panel", async () => {
+    const { container } = render(<AgentStatusTable agents={AGENTS} />)
+    const cards = container.querySelector(
+      "[data-slot='agent-status-cards']"
+    ) as HTMLElement
+    const toggle = cards.querySelector(
+      "[data-slot='agent-card-toggle']"
+    ) as HTMLButtonElement
+    await userEvent.click(toggle)
+    expect(toggle.getAttribute("aria-expanded")).toBe("true")
+    const controlsId = toggle.getAttribute("aria-controls")!
+    expect(document.getElementById(controlsId)).not.toBeNull()
+    expect(
+      within(cards).getByText(
+        /verified 14 of 29 requirements against source artifacts/i
+      )
+    ).toBeInTheDocument()
+  })
+
+  it("the table's scroll container is a labelled focusable region", () => {
+    const { container } = render(
+      <AgentStatusTable agents={AGENTS} aria-label="Verify agents" />
+    )
+    const region = container.querySelector(
+      "[data-slot='agent-status-table-region']"
+    )!
+    expect(region.getAttribute("role")).toBe("region")
+    expect(region.getAttribute("tabindex")).toBe("0")
+    expect(region.getAttribute("aria-label")).toBe("Verify agents")
   })
 })
