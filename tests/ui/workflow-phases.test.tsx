@@ -116,6 +116,20 @@ describe("WorkflowPhases", () => {
     expect(container.textContent).toContain("3:24")
   })
 
+  it("keeps aria-current unique when a pipelined run holds two active phases", () => {
+    const twoActive: WorkflowPhase[] = [
+      { id: "review", title: "Review", status: "active", agentCount: 3 },
+      { id: "verify", title: "Verify", status: "active", agentCount: 2 },
+      { id: "report", title: "Report", status: "queued", agentCount: 1 },
+    ]
+    const { container } = render(<WorkflowPhases phases={twoActive} />)
+    const withAriaCurrent = container.querySelectorAll(
+      "[data-slot='workflow-phase-button'][aria-current='step']"
+    )
+    expect(withAriaCurrent).toHaveLength(1)
+    expect(withAriaCurrent[0].textContent).toContain("Review")
+  })
+
   it("renders with group role and aria-label", () => {
     render(
       <WorkflowPhases

@@ -81,6 +81,29 @@ describe("AgentStatusTable detail disclosure", () => {
     expect(document.getElementById(controlsId)).not.toBeNull()
   })
 
+  it("renders a schema-validated return value as mono data", async () => {
+    const agents: AgentStatusRow[] = [
+      {
+        id: "scanner",
+        name: "Dependency Scanner",
+        status: "complete",
+        detail: {
+          tokens: "1,742",
+          returned: "{ deps: 143, advisories: 9 }",
+        },
+      },
+    ]
+    const { container } = render(<AgentStatusTable agents={agents} />)
+    const root = within(container)
+    await userEvent.click(
+      container.querySelector(
+        "[data-slot='agent-detail-toggle']"
+      ) as HTMLButtonElement
+    )
+    const returned = root.getByText("{ deps: 143, advisories: 9 }")
+    expect(returned.className).toContain("font-mono")
+  })
+
   it("rows without detail render plain content with no button", () => {
     const { container } = render(<AgentStatusTable agents={AGENTS} />)
     const rows = container.querySelectorAll("tbody tr")

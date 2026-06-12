@@ -35,7 +35,9 @@ type AgentDetail = {
   tokens?: string
   /** Formatted elapsed duration, e.g. "1:42" */
   elapsed?: string
-  /** The agent's own words — rendered in the serif voice */
+  /** Schema-validated return value — rendered as data, in mono */
+  returned?: string
+  /** A plain-text return — the agent's own words, rendered in the serif voice */
   output?: string
 }
 
@@ -237,6 +239,11 @@ function AgentStatusTable({
                       {detailMeta.length > 0 && (
                         <p className="text-xs text-muted-foreground tabular-nums">
                           {detailMeta.join(" · ")}
+                        </p>
+                      )}
+                      {agent.detail.returned && (
+                        <p className="font-mono text-xs text-foreground">
+                          {agent.detail.returned}
                         </p>
                       )}
                       {agent.detail.output && (

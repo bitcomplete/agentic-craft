@@ -9,23 +9,27 @@ import { WorkflowRunMonitorBlock } from "../../../registry/base-nova/blocks/work
 const SPEC_ROWS = [
   {
     contract: "Phase status vocabulary",
-    rule: "done = tick (complete), active = pulse dot + aria-current=step, queued = dashed circle (pending), failed = alert (error)",
+    rule: 'done = tick (complete), active = pulse dot, queued = dashed circle (pending), failed = alert (error); aria-current="step" marks at most one phase',
+  },
+  {
+    contract: "Phase anatomy",
+    rule: "Phases are display groups, not barriers — the script declares them up front, which is why the rail can show queued phases before any agent runs; barriers come from parallel(), so a pipelined run can hold two active phases at once",
   },
   {
     contract: "Density threshold",
-    rule: "≤ 5 agent rows visible per phase; 6+ agents collapse the remainder into a single +N summary row showing queued and running counts",
+    rule: "≤ 5 agent rows visible per phase; 6+ agents collapse into a +N summary row that carries its own roll-up — status counts and tokens — so hidden work still counts",
   },
   {
     contract: "Agent detail disclosure",
-    rule: "A fleet row expands inline only when the agent has detail to show — chevron + aria-expanded on the agent cell, nothing on rows without detail; the excerpt is the agent's own words, set in the serif voice",
+    rule: "A fleet row expands inline only when the agent has detail to show — chevron + aria-expanded on the agent cell, nothing on rows without detail; the result renders as the agent returned it: schema-validated data in mono, plain text in the serif voice",
   },
   {
     contract: "Roll-up math",
-    rule: "Phase tokens = Σ agent tokens for that phase; run total = Σ phase tokens across all phases",
+    rule: "Phase tokens = Σ agent tokens for that phase (visible rows + the collapsed summary); run total = Σ phase tokens across all phases",
   },
   {
-    contract: "Pause semantics",
-    rule: "Pause retains cached results on all in-progress agents; resume re-runs only agents that had not completed; cached agents labeled accordingly",
+    contract: "Pause and resume",
+    rule: 'The journal caches completed agent calls only — resume replays them instantly (labelled "cached") and re-runs in-flight agents from the start; partial progress inside an agent is never cached',
   },
   {
     contract: "Stop reachability",
@@ -33,7 +37,7 @@ const SPEC_ROWS = [
   },
   {
     contract: "Failed phase recovery",
-    rule: "Never return empty — progress made is kept; failed phase shows partial counts; Retry re-runs only incomplete agents using cached results from completed ones",
+    rule: "Agents self-retry up to 3× before a phase fails; the run never returns empty — completed agents stay cached, the failed phase shows what finished, and Retry re-runs only the agents that didn't",
   },
   {
     contract: "Ambient motion",
@@ -51,10 +55,10 @@ export function WorkflowRunsSection() {
       <p className="section-label mb-3">Orchestration</p>
       <h2 className="text-xl font-semibold tracking-tight">Workflow Runs</h2>
       <p className="mt-2 max-w-[600px] text-sm leading-relaxed text-muted-foreground">
-        Monitor a script-orchestrated run: sequential phases each fanning out to
-        parallel agents. Answers "is this run healthy, where is it, and what is
-        it costing?" — then lets you drill from phase to agent to recovery
-        without losing the whole-run picture.
+        Monitor a script-orchestrated run: phases the script declares up front,
+        each fanning out to parallel agents. Answers "is this run healthy, where
+        is it, and what is it costing?" — then lets you drill from phase to
+        agent to recovery without losing the whole-run picture.
       </p>
 
       <div className="mt-10">

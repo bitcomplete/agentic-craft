@@ -55,11 +55,15 @@ function phaseToIndicatorStatus(status: PhaseStatus): StatusIndicatorStatus {
 function PhaseButton({
   phase,
   isSelected,
+  isCurrent,
   onSelect,
   isLast,
 }: {
   phase: WorkflowPhase
   isSelected: boolean
+  /** Carries aria-current="step" — at most one phase, even when a pipelined
+      run holds several active phases at once */
+  isCurrent: boolean
   onSelect: () => void
   isLast: boolean
 }) {
@@ -81,7 +85,7 @@ function PhaseButton({
         type="button"
         data-compact-touch
         data-slot="workflow-phase-button"
-        aria-current={isActive ? "step" : undefined}
+        aria-current={isCurrent ? "step" : undefined}
         aria-pressed={isSelected}
         onClick={onSelect}
         className={cn(
@@ -178,6 +182,7 @@ function WorkflowPhases({
           key={phase.id}
           phase={phase}
           isSelected={activePhaseId === phase.id}
+          isCurrent={phase.id === phases.find((p) => p.status === "active")?.id}
           onSelect={() => {
             if (onPhaseSelect) {
               onPhaseSelect(activePhaseId === phase.id ? null : phase.id)

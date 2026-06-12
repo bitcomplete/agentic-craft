@@ -35,8 +35,46 @@ const PLAN_LINES = [
   { code: "await agent(`Draft report: ${verified}`)", phaseId: "draft" },
 ]
 
+// Narrator lines — what the script surfaces via log() at each point
+const LOG_LINES: Record<RunState, string> = {
+  running: "14 of 29 requirements verified — delta audit one round behind",
+  paused: "paused at 4:32 — journal holds 9 completed agents",
+  completed: "all phases complete — 3 gaps, 0 blockers, report ready",
+  failed: "verify failed after 3 automatic retries — recovery available",
+}
+
 // Phase data per run state
-function getPhasesForState(state: RunState): WorkflowPhase[] {
+function getPhasesForState(
+  state: RunState,
+  retried?: boolean
+): WorkflowPhase[] {
+  // A retried phase is live again: cached agents replayed, failed ones re-run
+  if (state === "failed" && retried) {
+    return [
+      {
+        id: "scan",
+        title: "Scan sources",
+        status: "done",
+        agentCount: 8,
+        tokens: "12,450",
+        elapsed: "3:24",
+      },
+      {
+        id: "verify",
+        title: "Verify findings",
+        status: "active",
+        agentCount: 5,
+        tokens: "4,213",
+        elapsed: "1:08",
+      },
+      {
+        id: "draft",
+        title: "Draft report",
+        status: "queued",
+        agentCount: 1,
+      },
+    ]
+  }
   switch (state) {
     case "running":
       return [
@@ -144,7 +182,9 @@ function getPhasesForState(state: RunState): WorkflowPhase[] {
 }
 
 // Agents for the "Scan sources" phase (phase 1 — always done).
-// Per-agent tokens sum to the phase roll-up: 12,450.
+// Eight agents to match the rail; rows beyond the density threshold collapse
+// into the +N summary. Per-agent tokens sum to the phase roll-up:
+// 8,530 visible + 3,920 collapsed = 12,450.
 const SCAN_AGENTS: AgentStatusRow[] = [
   {
     id: "dep-scanner",
@@ -158,10 +198,9 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     updated: "4m ago",
     detail: {
       model: "haiku",
-      tokens: "2,317",
+      tokens: "1,742",
       elapsed: "0:41",
-      output:
-        "Catalogued 143 dependencies. Nine carry known advisories, none above moderate severity; the two flagged in the last audit were upgraded.",
+      returned: "{ deps: 143, advisories: 9, critical: 0 }",
     },
   },
   {
@@ -176,7 +215,7 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     updated: "4m ago",
     detail: {
       model: "sonnet",
-      tokens: "3,108",
+      tokens: "2,201",
       elapsed: "1:12",
       output:
         "Parsed 29 launch requirements from 6 policy documents. Export controls appear twice with conflicting thresholds — flagged for the verify phase.",
@@ -194,10 +233,9 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     updated: "3m ago",
     detail: {
       model: "haiku",
-      tokens: "2,194",
+      tokens: "1,408",
       elapsed: "0:58",
-      output:
-        "Collected all 18 artifacts in scope. Build manifests were stale by two commits and were re-fetched before handoff.",
+      returned: "{ artifacts: 18, refetched: 2 }",
     },
   },
   {
@@ -212,10 +250,9 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     updated: "4m ago",
     detail: {
       model: "haiku",
-      tokens: "1,983",
+      tokens: "1,217",
       elapsed: "0:47",
-      output:
-        "47 commits since the audit baseline; 12 touch the export workflow and feed directly into the delta audit.",
+      returned: "{ commits: 47, exportTouching: 12 }",
     },
   },
   {
@@ -230,11 +267,47 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     updated: "3m ago",
     detail: {
       model: "sonnet",
-      tokens: "2,848",
+      tokens: "1,962",
       elapsed: "1:03",
       output:
         "Reviewed 847 incidents. No critical blockers; one recurring timeout cluster in the incident archive noted as a risk to later phases.",
     },
+  },
+  {
+    id: "license-auditor",
+    name: "License Auditor",
+    role: "Checks licence compatibility",
+    status: "complete",
+    task: "All 143 dependency licences cleared for distribution",
+    progress: 100,
+    confidence: 96,
+    cost: "$0.02",
+    updated: "4m ago",
+    detail: { model: "haiku", tokens: "1,384", elapsed: "0:36" },
+  },
+  {
+    id: "config-differ",
+    name: "Config Differ",
+    role: "Diffs environment configs",
+    status: "complete",
+    task: "Compared staging and production configs — 2 drifts noted",
+    progress: 100,
+    confidence: 90,
+    cost: "$0.01",
+    updated: "3m ago",
+    detail: { model: "haiku", tokens: "1,096", elapsed: "0:29" },
+  },
+  {
+    id: "api-surface-mapper",
+    name: "API Surface Mapper",
+    role: "Maps public API surface",
+    status: "complete",
+    task: "Mapped 61 public endpoints against the export spec",
+    progress: 100,
+    confidence: 93,
+    cost: "$0.02",
+    updated: "4m ago",
+    detail: { model: "haiku", tokens: "1,440", elapsed: "0:33" },
   },
 ]
 
@@ -258,8 +331,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
           model: "sonnet",
           tokens: "1,872",
           elapsed: "0:52",
-          output:
-            "Verified 14 of 29 requirements against source artifacts. Export workflow coverage holds against Launch Policy v2 so far.",
+          returned: "{ verified: 14, of: 29 }",
         },
       },
       {
@@ -323,22 +395,23 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
 
   if (state === "paused") {
     return [
+      // The journal caches completed agent() calls only — in-flight agents
+      // re-run from the start on resume; partial progress is never cached.
       {
         id: "coverage-verifier",
         name: "Coverage Verifier",
         role: "Cross-checks requirement coverage",
         status: "complete",
-        task: "Verified 14 of 29 requirements — results cached",
+        task: "Verified 14 of 29 requirements — journaled",
         progress: 100,
         confidence: 91,
         cost: "$0.06",
-        updated: "paused",
+        updated: "cached",
         detail: {
           model: "sonnet",
           tokens: "1,872",
           elapsed: "0:52",
-          output:
-            "Verified 14 of 29 requirements against source artifacts. Export workflow coverage holds against Launch Policy v2 so far.",
+          returned: "{ verified: 14, of: 29 }",
         },
       },
       {
@@ -346,7 +419,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         name: "Delta Auditor",
         role: "Flags unresolved changes",
         status: "idle",
-        task: "Paused at 61% — cached partial results retained",
+        task: "Was in flight at 61% — re-runs from the start on resume",
         progress: 61,
         cost: "$0.07",
         updated: "paused",
@@ -355,7 +428,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
           tokens: "1,204",
           elapsed: "1:08",
           output:
-            "Cached at 61%: 7 of 12 deltas correlated. Resume continues from here without re-running completed work.",
+            "Partial progress isn't journaled — only completed agents are cached. On resume this agent re-runs its full prompt.",
         },
       },
       {
@@ -363,7 +436,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         name: "Requirements Mapper",
         role: "Map requirements to controls",
         status: "idle",
-        task: "Paused at 48% — cached partial results retained",
+        task: "Was in flight at 48% — re-runs from the start on resume",
         progress: 48,
         cost: "$0.05",
         updated: "paused",
@@ -372,7 +445,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
           tokens: "1,137",
           elapsed: "1:02",
           output:
-            "Cached at 48%: 11 of 29 requirements matched to the control library. Resume picks up at requirement 12.",
+            "Partial progress isn't journaled — only completed agents are cached. On resume this agent re-runs its full prompt.",
         },
       },
       {
@@ -380,7 +453,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         name: "Risk Assessor",
         role: "Rates unverified items",
         status: "idle",
-        task: "Hold — waiting for delta audit on resume",
+        task: "Queued — starts on resume",
         progress: 0,
         cost: "$0.00",
         updated: "paused",
@@ -390,7 +463,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         name: "Findings Summariser",
         role: "Prepares phase summary",
         status: "idle",
-        task: "Hold — waiting on all verifiers on resume",
+        task: "Queued — starts on resume",
         progress: 0,
         cost: "$0.00",
         updated: "paused",
@@ -415,8 +488,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
           model: "sonnet",
           tokens: "1,872",
           elapsed: "0:52",
-          output:
-            "Verified all 29 requirements. Three gaps flagged, all in export logging coverage; none block the launch on their own.",
+          returned: "{ verified: 29, gaps: 3, blockers: 0 }",
         },
       },
       {
@@ -469,8 +541,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
           model: "haiku",
           tokens: "1,517",
           elapsed: "0:46",
-          output:
-            "Scored 3 gaps: 2 medium, 1 low. No critical risk; the export logging gap carries the highest exposure.",
+          returned: "{ medium: 2, low: 1, critical: 0 }",
         },
       },
       {
@@ -502,53 +573,45 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         name: "Coverage Verifier",
         role: "Cross-checks requirement coverage",
         status: "complete",
-        task: "Verified 14 of 29 requirements — held from prior run",
+        task: "Verified 14 of 29 requirements — replayed from the journal",
         progress: 100,
         confidence: 91,
         cost: "$0.06",
-        updated: "retried",
+        updated: "cached",
         detail: {
           model: "sonnet",
           tokens: "1,872",
           elapsed: "0:52",
           output:
-            "Results held from the prior run — 14 of 29 requirements verified. Not re-run on retry.",
+            "Returned instantly from the run journal — completed agents are never re-run on retry.",
         },
       },
       {
         id: "delta-auditor",
         name: "Delta Auditor",
         role: "Flags unresolved changes",
-        status: "complete",
-        task: "Correlating deltas — held from prior run",
-        progress: 100,
-        confidence: 84,
-        cost: "$0.07",
-        updated: "retried",
+        status: "working",
+        task: "Re-running in full — the archive is reachable again",
+        progress: 38,
+        cost: "$0.03",
+        updated: "now",
         detail: {
           model: "sonnet",
-          tokens: "1,204",
-          elapsed: "1:08",
+          tokens: "486",
+          elapsed: "0:19",
           output:
-            "Cached correlations re-used; the remaining 5 deltas resolved against the refreshed incident archive.",
+            "Re-running from the start — a failed agent keeps nothing. Correlating the 12 deltas again against the recovered archive.",
         },
       },
       {
         id: "requirements-mapper",
         name: "Requirements Mapper",
         role: "Map requirements to controls",
-        status: "working",
-        task: "Retrying: mapping export workflow to control library",
-        progress: 31,
-        cost: "$0.02",
-        updated: "now",
-        detail: {
-          model: "sonnet",
-          tokens: "412",
-          elapsed: "0:14",
-          output:
-            "Retrying with cached delta results — re-mapping export workflow controls from requirement 12.",
-        },
+        status: "idle",
+        task: "Queued — waits on delta results before re-running",
+        progress: 0,
+        cost: "$0.00",
+        updated: "just now",
       },
       {
         id: "risk-assessor",
@@ -573,24 +636,24 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
     ]
   }
 
-  // failed, not retried — show the 3 completed + error
+  // failed, not retried — completed agents stay cached; failed agents
+  // exhausted their 3 automatic retries and re-run on Retry phase
   return [
     {
       id: "coverage-verifier",
       name: "Coverage Verifier",
       role: "Cross-checks requirement coverage",
       status: "complete",
-      task: "Verified 14 of 29 requirements — progress retained",
+      task: "Verified 14 of 29 requirements — journaled, survives retry",
       progress: 100,
       confidence: 91,
       cost: "$0.06",
-      updated: "1m ago",
+      updated: "cached",
       detail: {
         model: "sonnet",
         tokens: "1,872",
         elapsed: "0:52",
-        output:
-          "Verified 14 of 29 requirements before the phase failed. Results are cached and survive a retry.",
+        returned: "{ verified: 14, of: 29 }",
       },
     },
     {
@@ -598,7 +661,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
       name: "Delta Auditor",
       role: "Flags unresolved changes",
       status: "error",
-      task: "Failed: source unavailable after 30s timeout — 3 of 5 verified",
+      task: "Failed: incident archive unavailable — 3 automatic retries exhausted",
       progress: 61,
       cost: "$0.07",
       updated: "just now",
@@ -607,7 +670,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         tokens: "1,204",
         elapsed: "1:08",
         output:
-          "Incident archive unavailable after a 30-second timeout. Seven of 12 delta correlations were already complete and are cached for retry.",
+          "Incident archive timed out after 30 seconds, three times. An agent re-runs whole or not at all — Retry phase starts this one over.",
       },
     },
     {
@@ -624,8 +687,28 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         tokens: "1,137",
         elapsed: "1:02",
         output:
-          "Mapping stopped at requirement 11 — the remaining controls depend on delta results. The partial map is cached for retry.",
+          "Mapping needs delta results that never arrived. This agent re-runs in full when the phase is retried.",
       },
+    },
+    {
+      id: "risk-assessor",
+      name: "Risk Assessor",
+      role: "Rates unverified items",
+      status: "idle",
+      task: "Queued — never started, no tokens spent",
+      progress: 0,
+      cost: "$0.00",
+      updated: "1m ago",
+    },
+    {
+      id: "findings-summariser",
+      name: "Findings Summariser",
+      role: "Prepares phase summary",
+      status: "idle",
+      task: "Queued — never started, no tokens spent",
+      progress: 0,
+      cost: "$0.00",
+      updated: "1m ago",
     },
   ]
 }
@@ -653,7 +736,32 @@ const DRAFT_AGENTS_COMPLETE: AgentStatusRow[] = [
 ]
 
 // Usage meter data by state
-function getUsageItems(state: RunState) {
+function getUsageItems(state: RunState, retried?: boolean) {
+  if (state === "failed" && retried) {
+    return [
+      {
+        id: "tokens",
+        label: "Tokens used",
+        value: 55,
+        valueLabel: "17,149",
+        limitLabel: "31k run budget",
+      },
+      {
+        id: "cost",
+        label: "Cost",
+        value: 32,
+        valueLabel: "$0.38",
+        limitLabel: "$1.20 run cap",
+      },
+      {
+        id: "agents",
+        label: "Agents complete",
+        value: 69,
+        valueLabel: "9 / 13",
+        limitLabel: "1 cached replay · 1 re-running",
+      },
+    ]
+  }
   if (state === "running") {
     return [
       {
@@ -673,9 +781,9 @@ function getUsageItems(state: RunState) {
       {
         id: "agents",
         label: "Agents complete",
-        value: 62,
-        valueLabel: "8 / 13",
-        limitLabel: "5 still active",
+        value: 69,
+        valueLabel: "9 / 13",
+        limitLabel: "2 running · 2 queued",
       },
     ]
   }
@@ -698,9 +806,9 @@ function getUsageItems(state: RunState) {
       {
         id: "agents",
         label: "Agents complete",
-        value: 62,
-        valueLabel: "8 / 13",
-        limitLabel: "5 hold cached results",
+        value: 69,
+        valueLabel: "9 / 13",
+        limitLabel: "2 in-flight re-run on resume",
       },
     ]
   }
@@ -748,8 +856,8 @@ function getUsageItems(state: RunState) {
     {
       id: "agents",
       label: "Agents complete",
-      value: 38,
-      valueLabel: "5 / 13",
+      value: 69,
+      valueLabel: "9 / 13",
       limitLabel: "2 failed — recovery available",
     },
   ]
@@ -796,22 +904,28 @@ function PlanCode({ activePhaseId }: { activePhaseId: string | null }) {
 const DENSITY_THRESHOLD = 5
 
 function CollapsedAgentSummary({
+  done,
   queued,
   running,
+  tokens,
 }: {
+  done: number
   queued: number
   running: number
+  tokens?: string
 }) {
   const parts: string[] = []
-  if (queued > 0) parts.push(`${queued} queued`)
+  if (done > 0) parts.push(`${done} done`)
   if (running > 0) parts.push(`${running} running`)
+  if (queued > 0) parts.push(`${queued} queued`)
+  if (tokens) parts.push(`${tokens} tokens`)
   return (
     <tr>
       <td
         colSpan={7}
         className="px-3 py-2 text-xs text-muted-foreground tabular-nums"
       >
-        +{queued + running} more: {parts.join(" · ")}
+        +{done + queued + running} more: {parts.join(" · ")}
       </td>
     </tr>
   )
@@ -829,7 +943,7 @@ function WorkflowRunMonitorBlock() {
   const [retried, setRetried] = React.useState(false)
   const statusRef = React.useRef<HTMLParagraphElement>(null)
 
-  const phases = getPhasesForState(runState)
+  const phases = getPhasesForState(runState, retried)
 
   // Determine which agents to show based on selected phase filter
   const agentsToShow: AgentStatusRow[] = React.useMemo(() => {
@@ -848,15 +962,24 @@ function WorkflowRunMonitorBlock() {
     return getVerifyAgents(runState, retried)
   }, [activePhaseId, runState, retried])
 
-  // For density rule: cap at DENSITY_THRESHOLD visible rows
+  // For density rule: cap at DENSITY_THRESHOLD visible rows. The summary row
+  // carries its own roll-up so collapsed work still counts.
   const visibleAgents = agentsToShow.slice(0, DENSITY_THRESHOLD)
-  const hiddenCount = agentsToShow.length - visibleAgents.length
-  const hiddenQueued = agentsToShow
-    .slice(DENSITY_THRESHOLD)
-    .filter((a) => a.status === "idle").length
-  const hiddenRunning = agentsToShow
-    .slice(DENSITY_THRESHOLD)
-    .filter((a) => a.status === "working").length
+  const hiddenAgents = agentsToShow.slice(DENSITY_THRESHOLD)
+  const hiddenCount = hiddenAgents.length
+  const hiddenDone = hiddenAgents.filter((a) => a.status === "complete").length
+  const hiddenQueued = hiddenAgents.filter((a) => a.status === "idle").length
+  const hiddenRunning = hiddenAgents.filter(
+    (a) => a.status === "working"
+  ).length
+  const hiddenTokenSum = hiddenAgents.reduce(
+    (sum, a) =>
+      sum +
+      (a.detail?.tokens ? parseInt(a.detail.tokens.replace(/,/g, ""), 10) : 0),
+    0
+  )
+  const hiddenTokens =
+    hiddenTokenSum > 0 ? hiddenTokenSum.toLocaleString("en-US") : undefined
 
   function announce(msg: string) {
     if (statusRef.current) {
@@ -876,18 +999,21 @@ function WorkflowRunMonitorBlock() {
       setActivePhaseId("verify")
     }
     const labels: Record<RunState, string> = {
-      running: "Run resumed — live agents active",
-      paused: "Run paused — 5 agents hold cached results",
+      running:
+        "Run resumed — cached agents replayed instantly, the rest run live",
+      paused:
+        "Run paused — 9 completed agents stay cached; in-flight agents re-run on resume",
       completed: "Run completed — all phases finished",
-      failed: "Phase 2 failed — 3 of 5 verified — recovery available",
+      failed: "Phase 2 failed — completed agents cached, recovery available",
     }
     announce(labels[state])
   }
 
   function handleRetry() {
     setRetried(true)
-    setRunState("running")
-    announce("Retrying phase — incomplete agents re-running")
+    announce(
+      "Retrying phase — cached agents replay, failed agents re-run in full"
+    )
   }
 
   function handleSkipAndContinue() {
@@ -898,12 +1024,19 @@ function WorkflowRunMonitorBlock() {
 
   function handleStop() {
     setRunState("paused")
-    announce("Run stopped — agents hold cached results")
+    announce(
+      "Run stopped — the journal keeps completed agents; resume re-runs the rest"
+    )
   }
 
   function handleResume() {
     handleStateChange("running")
   }
+
+  const logLine =
+    runState === "failed" && retried
+      ? "retrying verify — cached agents replayed instantly, 1 re-running"
+      : LOG_LINES[runState]
 
   // The plan strip tracks where the script is: the active phase, or — when a
   // run fails — the phase it stopped in
@@ -948,8 +1081,8 @@ function WorkflowRunMonitorBlock() {
           )}
         </div>
 
-        {/* Stop button — visible while running */}
-        {runState === "running" && (
+        {/* Stop button — visible whenever agents are live, including a retry */}
+        {(runState === "running" || (runState === "failed" && retried)) && (
           <Button
             variant="destructive"
             size="sm"
@@ -983,13 +1116,21 @@ function WorkflowRunMonitorBlock() {
           </p>
           <PlanCode activePhaseId={effectiveActivePhaseId} />
         </div>
+
+        {/* Narrator line — what the script's log() calls surface */}
+        <p className="mt-3 flex items-baseline gap-2 border-t border-border/40 pt-3 text-xs text-muted-foreground">
+          <span className="shrink-0 font-mono text-[11px]" aria-hidden="true">
+            log
+          </span>
+          <span>{logLine}</span>
+        </p>
       </div>
 
       {/* Paused banner */}
       {runState === "paused" && (
         <div className="flex items-center justify-between gap-4 rounded-md border border-border/60 px-4 py-3">
           <p className="text-sm text-muted-foreground">
-            Paused — 5 agents hold cached results
+            Paused — 9 completed agents cached in the journal
           </p>
           <Button variant="outline" size="sm" onClick={handleResume}>
             Resume
@@ -1001,7 +1142,8 @@ function WorkflowRunMonitorBlock() {
       {runState === "failed" && !retried && (
         <div className="flex flex-col gap-3 rounded-md border border-destructive/20 bg-destructive/5 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-destructive">
-            Phase 2 failed — 3 of 5 verified · progress retained
+            Phase 2 failed — 14 of 29 requirements verified · completed agents
+            cached
           </p>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" onClick={handleRetry}>
@@ -1033,8 +1175,10 @@ function WorkflowRunMonitorBlock() {
               <table className="w-full border-t border-border/40">
                 <tbody>
                   <CollapsedAgentSummary
+                    done={hiddenDone}
                     queued={hiddenQueued}
                     running={hiddenRunning}
+                    tokens={hiddenTokens}
                   />
                 </tbody>
               </table>
@@ -1055,7 +1199,7 @@ function WorkflowRunMonitorBlock() {
                 ? "Partial cost — recovery will add to this total"
                 : "Live — updating as agents complete"
         }
-        items={getUsageItems(runState)}
+        items={getUsageItems(runState, retried)}
       />
 
       {/* Accessibility live region */}

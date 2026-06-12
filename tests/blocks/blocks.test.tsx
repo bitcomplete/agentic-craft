@@ -196,9 +196,25 @@ describe("workflow-run-monitor block", () => {
     )!
     await userEvent.click(pausedToggle)
     expect(
-      root.getAllByText(/5 agents hold cached results/i).length
+      root.getAllByText(/9 completed agents cached in the journal/i).length
     ).toBeGreaterThan(0)
     expect(root.getByRole("button", { name: /resume/i })).toBeInTheDocument()
+  })
+
+  it("scan phase collapses agents past the density threshold with a roll-up", async () => {
+    const { container } = render(<WorkflowRunMonitorBlock />)
+    const root = within(container)
+    // Select the Scan sources phase
+    const scanBtn = container.querySelector(
+      "[data-slot='workflow-phase-button']"
+    ) as HTMLButtonElement
+    await userEvent.click(scanBtn)
+    // 8 agents, threshold 5 → "+3 more" summary carrying done count + tokens
+    expect(
+      root.getByText(/\+3 more: 3 done · 3,920 tokens/)
+    ).toBeInTheDocument()
+    // Hidden rows are not rendered
+    expect(root.queryByText(/API Surface Mapper/)).toBeNull()
   })
 
   it("switching to Failed state shows recovery options", async () => {
