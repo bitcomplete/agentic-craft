@@ -25,7 +25,7 @@ const SPEC_ROWS = [
   },
   {
     contract: "Agent detail disclosure",
-    rule: "A fleet row expands inline only when the agent has detail to show — chevron + aria-expanded on the agent cell, nothing on rows without detail; inside: model · tokens · tool calls · elapsed and the result as the agent returned it — schema-validated data in mono, plain text in the serif voice. Detail adds what the row can't show; it never repeats the row",
+    rule: "A fleet row expands inline only when the agent has detail to show — chevron + aria-expanded on the agent cell, nothing on rows without detail; inside: model · tokens · tool calls · elapsed and the result as the agent returned it — schema-validated data in mono, plain text in the serif voice. Runtime semantics (journal, replay, re-runs) speak as the system, in a muted sans annotation — never as the agent. Detail adds what the row can’t show; it never repeats the row",
   },
   {
     contract: "Roll-up math",
@@ -41,11 +41,11 @@ const SPEC_ROWS = [
   },
   {
     contract: "Failed phase recovery",
-    rule: "Agents self-retry up to 3× before a phase fails; the run never returns empty — completed agents stay cached, the failed phase shows what finished, and Retry re-runs only the agents that didn't. Skip moves on without rewriting the record: the phase stays failed and the report carries the gap",
+    rule: "Agents self-retry up to 3× before a phase fails; the run never returns empty — completed agents stay cached, the failed phase shows what finished, and Retry re-runs only the agents that didn’t. Skip moves on without rewriting the record: the phase stays failed and the report carries the gap",
   },
   {
     contract: "Ambient motion",
-    rule: "Active phase pulse is the page's only ambient loop; pausing the run freezes it; prefers-reduced-motion disables it; all other state transitions run 150–200 ms",
+    rule: "Active phase pulse is the page’s only ambient loop; pausing the run freezes it; prefers-reduced-motion disables it; all other state transitions run 150–200 ms",
   },
 ]
 

@@ -110,6 +110,35 @@ describe("AgentStatusTable detail disclosure", () => {
     expect(returned.className).toContain("font-mono")
   })
 
+  it("renders a runtime note as a system annotation, never in the agent voice", async () => {
+    const agents: AgentStatusRow[] = [
+      {
+        id: "auditor",
+        name: "Delta Auditor",
+        status: "idle",
+        detail: {
+          tokens: "1,204",
+          note: "Partial progress isn’t journaled — only completed agents are cached.",
+        },
+      },
+    ]
+    const { container } = render(<AgentStatusTable agents={agents} />)
+    const table = within(
+      container.querySelector(
+        "[data-slot='agent-status-table-region']"
+      ) as HTMLElement
+    )
+    await userEvent.click(
+      container.querySelector(
+        "[data-slot='agent-detail-toggle']"
+      ) as HTMLButtonElement
+    )
+    const note = table.getByText(/partial progress isn’t journaled/i)
+    expect(note.getAttribute("data-slot")).toBe("agent-detail-note")
+    expect(note.className).not.toContain("agent-prose")
+    expect(note.className).toContain("text-muted-foreground")
+  })
+
   it("rows without detail render plain content with no button", () => {
     const { container } = render(<AgentStatusTable agents={AGENTS} />)
     const rows = container.querySelectorAll("tbody tr")

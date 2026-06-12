@@ -41,6 +41,9 @@ type AgentDetail = {
   returned?: string
   /** A plain-text return — the agent's own words, rendered in the serif voice */
   output?: string
+  /** The apparatus explaining itself — runtime semantics in the system's
+      voice (muted sans annotation), never the agent's words */
+  note?: string
 }
 
 type AgentStatusRow = {
@@ -111,6 +114,14 @@ function AgentDetailBody({ detail }: { detail: AgentDetail }) {
       {detail.output && (
         <p className="agent-detail-reveal agent-prose max-w-[65ch] text-sm [animation-delay:60ms] [animation-fill-mode:both] motion-reduce:animate-none">
           {detail.output}
+        </p>
+      )}
+      {detail.note && (
+        <p
+          data-slot="agent-detail-note"
+          className="agent-detail-reveal max-w-[65ch] text-xs text-muted-foreground italic [animation-delay:60ms] [animation-fill-mode:both] motion-reduce:animate-none"
+        >
+          {detail.note}
         </p>
       )}
     </>

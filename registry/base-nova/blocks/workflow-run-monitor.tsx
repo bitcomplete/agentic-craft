@@ -445,8 +445,7 @@ function getVerifyAgents(
           tokens: "1,204",
           tools: 16,
           elapsed: "1:08",
-          output:
-            "Partial progress isn't journaled — only completed agents are cached. On resume this agent re-runs its full prompt.",
+          note: "Partial progress isn’t journaled — only completed agents are cached. On resume this agent re-runs its full prompt.",
         },
       },
       {
@@ -463,8 +462,7 @@ function getVerifyAgents(
           tokens: "1,137",
           tools: 9,
           elapsed: "1:02",
-          output:
-            "Partial progress isn't journaled — only completed agents are cached. On resume this agent re-runs its full prompt.",
+          note: "Partial progress isn’t journaled — only completed agents are cached. On resume this agent re-runs its full prompt.",
         },
       },
       {
@@ -677,8 +675,8 @@ function getVerifyAgents(
           tokens: "1,872",
           tools: 13,
           elapsed: "0:52",
-          output:
-            "Returned instantly from the run journal — completed agents are never re-run on retry.",
+          returned: "{ verified: 14, of: 29 }",
+          note: "Replayed instantly from the run journal — completed agents are never re-run on retry.",
         },
       },
       {
@@ -695,8 +693,7 @@ function getVerifyAgents(
           tokens: "486",
           tools: 4,
           elapsed: "0:19",
-          output:
-            "A failed agent keeps nothing — this run starts from the original prompt.",
+          note: "A failed agent keeps nothing — this run starts over from the original prompt.",
         },
       },
       {
@@ -766,8 +763,7 @@ function getVerifyAgents(
         tokens: "1,204",
         tools: 16,
         elapsed: "1:08",
-        output:
-          "An agent re-runs whole or not at all — Retry phase starts this one over.",
+        note: "An agent re-runs whole or not at all — Retry phase starts this one over.",
       },
     },
     {
@@ -784,8 +780,7 @@ function getVerifyAgents(
         tokens: "1,137",
         tools: 9,
         elapsed: "1:02",
-        output:
-          "Re-runs in full when the phase is retried — a failed agent keeps nothing.",
+        note: "Re-runs in full when the phase is retried — a failed agent keeps nothing.",
       },
     },
     {
