@@ -1,6 +1,13 @@
-import { render, screen, within } from "@testing-library/react"
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-import { describe, it, expect } from "vitest"
+import { describe, it, expect, vi } from "vitest"
 
 import { AgentSettingsBlock } from "../../registry/base-nova/blocks/agent-settings"
 import { ApprovalWorkflowBlock } from "../../registry/base-nova/blocks/approval-workflow"
@@ -274,19 +281,21 @@ describe("workflow-run-monitor block", () => {
     expect(scanBtn.getAttribute("aria-pressed")).toBe("true")
   })
 
-  it("deselecting the active phase shows every phase's agents", async () => {
+  it("the whole fleet is one visible control away, grouped by phase", async () => {
     const { container } = render(<WorkflowRunMonitorBlock />)
     const root = within(container)
-    // Verify is selected by default — clicking it again clears the filter
-    const phaseBtns = container.querySelectorAll(
-      "[data-slot='workflow-phase-button']"
+    // Verify is selected by default — "Show all agents" clears the filter
+    await userEvent.click(
+      root.getByRole("button", { name: /show all agents/i })
     )
-    await userEvent.click(phaseBtns[1] as HTMLButtonElement)
     expect(root.getByText(/^all agents$/i)).toBeInTheDocument()
-    // Scan agents now join the verify fleet in one list
+    // Scan agents join the verify fleet, grouped under phase headers
     expect(root.getAllByText(/dependency scanner/i).length).toBeGreaterThan(0)
-    // 13 started agents → 5 visible + 8 collapsed into the roll-up
-    expect(root.getByText(/\+8 more:/)).toBeInTheDocument()
+    expect(
+      container.querySelectorAll("[data-slot='agent-group-header']").length
+    ).toBeGreaterThan(0)
+    // All 14 agents counted: 5 visible + 9 collapsed into the roll-up
+    expect(root.getByText(/\+9 more:/)).toBeInTheDocument()
   })
 
   it("skip and continue keeps the failed phase's record", async () => {
@@ -302,5 +311,52 @@ describe("workflow-run-monitor block", () => {
     expect(
       root.getAllByText(/report drafted from partial verification/i).length
     ).toBeGreaterThan(0)
+  })
+
+  it("recovery banner prices both paths before commitment", async () => {
+    const { container } = render(<WorkflowRunMonitorBlock />)
+    const root = within(container)
+    await userEvent.click(root.getByRole("button", { name: /failed/i }))
+    expect(
+      root.getByText(/retry replays 1 cached agent and re-runs 2 failed/i)
+    ).toBeInTheDocument()
+    expect(
+      root.getByText(/skipping\s+flags the 15 unverified requirements/i)
+    ).toBeInTheDocument()
+  })
+
+  it("pause and resume hand focus to each other", async () => {
+    const { container } = render(<WorkflowRunMonitorBlock />)
+    const root = within(container)
+    await userEvent.click(root.getByRole("button", { name: /pause run/i }))
+    const resume = root.getByRole("button", { name: /resume/i })
+    await waitFor(() => expect(document.activeElement).toBe(resume))
+    await userEvent.click(resume)
+    const pause = root.getByRole("button", { name: /pause run/i })
+    await waitFor(() => expect(document.activeElement).toBe(pause))
+  })
+
+  it("retry resolves — the re-run completes and the run finishes", () => {
+    vi.useFakeTimers()
+    try {
+      const { container } = render(<WorkflowRunMonitorBlock />)
+      const root = within(container)
+      fireEvent.click(root.getByRole("button", { name: /failed/i }))
+      fireEvent.click(root.getByRole("button", { name: /retry phase/i }))
+      // Mid-retry the run is live: Pause is reachable
+      expect(
+        root.getByRole("button", { name: /pause run/i })
+      ).toBeInTheDocument()
+      act(() => {
+        vi.advanceTimersByTime(3100)
+      })
+      // The retry pays off — full completion, canonical totals
+      expect(root.getByText(/14 \/ 14/)).toBeInTheDocument()
+      expect(root.getAllByText(/all phases complete/i).length).toBeGreaterThan(
+        0
+      )
+    } finally {
+      vi.useRealTimers()
+    }
   })
 })

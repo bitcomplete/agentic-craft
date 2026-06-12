@@ -203,7 +203,7 @@ describe("AgentStatusTable narrow-viewport card list", () => {
     ).toBeInTheDocument()
   })
 
-  it("the table's scroll container is a labelled focusable region", () => {
+  it("the table's scroll container is a labelled region, a tab stop only when it scrolls", () => {
     const { container } = render(
       <AgentStatusTable agents={AGENTS} aria-label="Verify agents" />
     )
@@ -211,7 +211,24 @@ describe("AgentStatusTable narrow-viewport card list", () => {
       "[data-slot='agent-status-table-region']"
     )!
     expect(region.getAttribute("role")).toBe("region")
-    expect(region.getAttribute("tabindex")).toBe("0")
     expect(region.getAttribute("aria-label")).toBe("Verify agents")
+    // jsdom never overflows (scrollWidth 0), so the region must NOT be a
+    // tab stop here — tabindex flips to 0 only when content overflows
+    expect(region.getAttribute("tabindex")).toBe("-1")
+  })
+
+  it("renders group header rows where the group changes, in both views", () => {
+    const grouped = AGENTS.map((agent, i) => ({
+      ...agent,
+      group: i === 0 ? "Verify findings" : "Draft report",
+    }))
+    const { container } = render(<AgentStatusTable agents={grouped} />)
+    const headers = container.querySelectorAll(
+      "[data-slot='agent-group-header']"
+    )
+    // one header per group per view (table + card list)
+    expect(headers).toHaveLength(4)
+    expect(headers[0].textContent).toBe("Verify findings")
+    expect(headers[1].textContent).toBe("Draft report")
   })
 })

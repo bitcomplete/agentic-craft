@@ -57,6 +57,9 @@ type AgentStatusRow = {
   updated?: string
   /** When present, the row gains a disclosure that expands an inline detail panel */
   detail?: AgentDetail
+  /** Optional subgroup label — a header row renders wherever the group
+      changes between consecutive rows (e.g. phase names in an all-agents view) */
+  group?: string
 }
 
 const statusCopy: Record<AgentStatus, string> = {
@@ -172,6 +175,20 @@ function AgentStatusTable({
   )
   const hasAnyDetail = agents.some((agent) => agent.detail)
 
+  // The scroll region is a tab stop only while it actually scrolls —
+  // a focusable region with nothing to scroll is an empty keystroke
+  const regionRef = React.useRef<HTMLDivElement>(null)
+  const [scrollable, setScrollable] = React.useState(false)
+  React.useEffect(() => {
+    const el = regionRef.current
+    if (!el || typeof ResizeObserver === "undefined") return
+    const check = () => setScrollable(el.scrollWidth > el.clientWidth)
+    check()
+    const observer = new ResizeObserver(check)
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [agents])
+
   function toggleDetail(id: string) {
     setExpandedIds((prev) => {
       const next = new Set(prev)
@@ -190,7 +207,8 @@ function AgentStatusTable({
           labelled, focusable region so a keyboard can reach columns past
           the fold; the stock table container inside it stops scrolling. */}
       <div
-        tabIndex={0}
+        ref={regionRef}
+        tabIndex={scrollable ? 0 : -1}
         role="region"
         aria-label={ariaLabel}
         data-slot="agent-status-table-region"
@@ -209,13 +227,27 @@ function AgentStatusTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {agents.map((agent) => {
+            {agents.map((agent, i) => {
               const isExpanded = agent.detail
                 ? expandedIds.has(agent.id)
                 : false
               const detailId = `${detailIdBase}-${agent.id}`
+              const startsGroup =
+                agent.group !== undefined &&
+                agent.group !== agents[i - 1]?.group
               return (
                 <React.Fragment key={agent.id}>
+                  {startsGroup && (
+                    <TableRow className="border-b-0 hover:bg-transparent">
+                      <TableCell
+                        colSpan={6}
+                        data-slot="agent-group-header"
+                        className="pt-3 pb-1 text-[11px] font-medium tracking-widest text-muted-foreground uppercase"
+                      >
+                        {agent.group}
+                      </TableCell>
+                    </TableRow>
+                  )}
                   <TableRow className={cn(isExpanded && "border-b-0")}>
                     <TableCell className="max-w-48 min-w-32">
                       {agent.detail ? (
@@ -331,91 +363,100 @@ function AgentStatusTable({
       {/* < md: the same fleet as a hairline-divided list — nothing clips,
           nothing scrolls sideways, every column survives the collapse */}
       <ul data-slot="agent-status-cards" className="flex flex-col md:hidden">
-        {agents.map((agent) => {
+        {agents.map((agent, i) => {
           const isExpanded = agent.detail ? expandedIds.has(agent.id) : false
           const detailId = `${detailIdBase}-card-${agent.id}`
+          const startsGroup =
+            agent.group !== undefined && agent.group !== agents[i - 1]?.group
           return (
-            <li
-              key={agent.id}
-              className="flex flex-col gap-2 border-b border-border/40 px-3 py-3 last:border-0"
-            >
-              <div className="flex items-start justify-between gap-3">
-                {agent.detail ? (
-                  <button
-                    type="button"
-                    data-compact-touch
-                    data-slot="agent-card-toggle"
-                    aria-expanded={isExpanded}
-                    aria-controls={detailId}
-                    onClick={() => toggleDetail(agent.id)}
-                    className="flex min-w-0 items-center gap-1.5 rounded-sm text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
-                  >
-                    <DisclosureChevron open={isExpanded} />
-                    <span className="min-w-0">
-                      <span className="block truncate font-medium">
-                        {agent.name}
-                      </span>
-                      {agent.role && (
-                        <span className="mt-0.5 block truncate text-xs text-muted-foreground">
-                          {agent.role}
+            <React.Fragment key={agent.id}>
+              {startsGroup && (
+                <li
+                  data-slot="agent-group-header"
+                  className="px-3 pt-3 pb-1 text-[11px] font-medium tracking-widest text-muted-foreground uppercase"
+                >
+                  {agent.group}
+                </li>
+              )}
+              <li className="flex flex-col gap-2 border-b border-border/40 px-3 py-3 last:border-0">
+                <div className="flex items-start justify-between gap-3">
+                  {agent.detail ? (
+                    <button
+                      type="button"
+                      data-compact-touch
+                      data-slot="agent-card-toggle"
+                      aria-expanded={isExpanded}
+                      aria-controls={detailId}
+                      onClick={() => toggleDetail(agent.id)}
+                      className="flex min-w-0 items-center gap-1.5 rounded-sm text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+                    >
+                      <DisclosureChevron open={isExpanded} />
+                      <span className="min-w-0">
+                        <span className="block truncate font-medium">
+                          {agent.name}
                         </span>
+                        {agent.role && (
+                          <span className="mt-0.5 block truncate text-xs text-muted-foreground">
+                            {agent.role}
+                          </span>
+                        )}
+                      </span>
+                    </button>
+                  ) : (
+                    <div className={cn("min-w-0", hasAnyDetail && "pl-5")}>
+                      <p className="truncate font-medium">{agent.name}</p>
+                      {agent.role && (
+                        <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                          {agent.role}
+                        </p>
                       )}
-                    </span>
-                  </button>
-                ) : (
-                  <div className={cn("min-w-0", hasAnyDetail && "pl-5")}>
-                    <p className="truncate font-medium">{agent.name}</p>
-                    {agent.role && (
-                      <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                        {agent.role}
-                      </p>
+                    </div>
+                  )}
+                  <AgentStatusCell status={agent.status} className="shrink-0" />
+                </div>
+                {agent.task && (
+                  <p
+                    className={cn(
+                      "text-sm text-muted-foreground",
+                      hasAnyDetail && "pl-5"
                     )}
-                  </div>
+                  >
+                    {agent.task}
+                  </p>
                 )}
-                <AgentStatusCell status={agent.status} className="shrink-0" />
-              </div>
-              {agent.task && (
-                <p
+                <div
                   className={cn(
-                    "text-sm text-muted-foreground",
+                    "flex items-center justify-between gap-3",
                     hasAnyDetail && "pl-5"
                   )}
                 >
-                  {agent.task}
-                </p>
-              )}
-              <div
-                className={cn(
-                  "flex items-center justify-between gap-3",
-                  hasAnyDetail && "pl-5"
-                )}
-              >
-                {typeof agent.progress === "number" ? (
-                  <div className="flex min-w-0 items-center gap-2">
-                    <Progress
-                      value={agent.progress}
-                      className="w-24"
-                      aria-label={`${agent.name} progress`}
-                    />
-                    <span className="text-muted-foreground tabular-nums">
-                      {formatPercent(agent.progress)}
-                    </span>
-                  </div>
-                ) : (
-                  <span className="text-muted-foreground">—</span>
-                )}
-                <span className="shrink-0 text-muted-foreground tabular-nums">
-                  {[agent.cost, agent.updated]
-                    .filter((part): part is string => Boolean(part))
-                    .join(" · ")}
-                </span>
-              </div>
-              {agent.detail && isExpanded && (
-                <div id={detailId} className="flex flex-col gap-1.5 pl-5">
-                  <AgentDetailBody detail={agent.detail} />
+                  {typeof agent.progress === "number" ? (
+                    <div className="flex min-w-0 items-center gap-2">
+                      <Progress
+                        value={agent.progress}
+                        className="w-24"
+                        aria-label={`${agent.name} progress`}
+                      />
+                      <span className="text-muted-foreground tabular-nums">
+                        {formatPercent(agent.progress)}
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="text-muted-foreground">—</span>
+                  )}
+                  <span className="shrink-0 text-muted-foreground tabular-nums">
+                    {[agent.cost, agent.updated]
+                      .filter((part): part is string => Boolean(part))
+                      .join(" · ")}
+                  </span>
                 </div>
-              )}
-            </li>
+                {agent.detail && isExpanded && (
+                  <div id={detailId} className="flex flex-col gap-1.5 pl-5">
+                    <AgentDetailBody detail={agent.detail} />
+                  </div>
+                )}
+              </li>
+            </React.Fragment>
           )
         })}
       </ul>

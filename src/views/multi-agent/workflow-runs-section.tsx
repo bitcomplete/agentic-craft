@@ -29,19 +29,19 @@ const SPEC_ROWS = [
   },
   {
     contract: "Roll-up math",
-    rule: "Phase tokens = Σ agent tokens for that phase (visible rows + the collapsed summary); run total = Σ phase tokens across all phases",
+    rule: "Phase tokens = Σ agent tokens for that phase (visible rows + the collapsed summary); run total = Σ phase tokens. A retried phase restarts its roll-up with the current attempt — spend from failed attempts stays on the run meter only",
   },
   {
     contract: "Pause and resume",
     rule: 'The journal caches completed agent calls only — resume replays them instantly (labelled "cached") and re-runs in-flight agents from the start; partial progress inside an agent is never cached',
   },
   {
-    contract: "Stop reachability",
-    rule: "Stop control is visible and reachable in ≤ 1 click while the run is in Running state",
+    contract: "Pause reachability",
+    rule: "Pause is visible and reachable in ≤ 1 click whenever agents are live; the verb is honest — nothing is destroyed, the journal keeps completed agents and resume replays them",
   },
   {
     contract: "Failed phase recovery",
-    rule: "Agents self-retry up to 3× before a phase fails; the run never returns empty — completed agents stay cached, the failed phase shows what finished, and Retry re-runs only the agents that didn’t. Skip moves on without rewriting the record: the phase stays failed and the report carries the gap",
+    rule: "Agents self-retry up to 3× before a phase fails; the run never returns empty — completed agents stay cached, the failed phase shows what finished, and Retry re-runs only the agents that didn’t. Skip moves on without rewriting the record: the phase stays failed and the report carries the gap. Both paths price themselves in the banner before commitment",
   },
   {
     contract: "Ambient motion",
@@ -94,8 +94,11 @@ export function WorkflowRunsSection() {
                 <td className="py-2 pr-6 align-top text-xs font-medium whitespace-nowrap">
                   {row.contract}
                 </td>
-                <td className="max-w-[70ch] py-2 align-top text-xs text-muted-foreground">
-                  {row.rule}
+                <td className="py-2 align-top text-xs text-muted-foreground">
+                  {/* max-width on a td is ignored by auto table layout — the
+                      cap lives on a block child. 55ch of the "0"-width unit
+                      ≈ 75 proportional characters per line */}
+                  <p className="max-w-[55ch]">{row.rule}</p>
                 </td>
               </tr>
             ))}

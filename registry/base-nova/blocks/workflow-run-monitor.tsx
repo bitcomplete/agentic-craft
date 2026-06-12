@@ -53,7 +53,9 @@ function getPhasesForState(
   retried?: boolean,
   skipped?: boolean
 ): WorkflowPhase[] {
-  // A retried phase is live again: cached agents replayed, failed ones re-run
+  // A retried phase is live again: cached agents replayed, failed ones
+  // re-run. Its roll-up restarts with the current attempt (1,872 cached +
+  // 486 re-run = 2,358) — the failed attempt's spend lives on the meter only.
   if (state === "failed" && retried) {
     return [
       {
@@ -69,8 +71,8 @@ function getPhasesForState(
         title: "Verify findings",
         status: "active",
         agentCount: 5,
-        tokens: "4,213",
-        elapsed: "1:08",
+        tokens: "2,358",
+        elapsed: "0:19",
       },
       {
         id: "draft",
@@ -828,6 +830,21 @@ const DRAFT_AGENTS_COMPLETE: AgentStatusRow[] = [
   },
 ]
 
+// Before the draft phase starts, its one agent is still a real, countable
+// member of the fleet — the all-agents view and the meter agree on 14
+const DRAFT_AGENTS_QUEUED: AgentStatusRow[] = [
+  {
+    id: "document-drafter",
+    name: "Document Drafter",
+    role: "Prepares final summary",
+    status: "idle",
+    task: "Queued — starts when verify completes",
+    progress: 0,
+    cost: "$0.00",
+    updated: "—",
+  },
+]
+
 // Draft phase after a skipped verify — the report is honest about the gap
 const DRAFT_AGENTS_SKIPPED: AgentStatusRow[] = [
   {
@@ -1020,11 +1037,13 @@ function getPhaseAgentStatuses(
   if (phaseId === "scan") return SCAN_AGENTS.map((a) => a.status)
   if (phaseId === "verify")
     return getVerifyAgents(state, retried, skipped).map((a) => a.status)
-  if (state === "completed")
-    return (skipped ? DRAFT_AGENTS_SKIPPED : DRAFT_AGENTS_COMPLETE).map(
-      (a) => a.status
-    )
-  return ["idle"]
+  return getDraftAgents(state, skipped).map((a) => a.status)
+}
+
+// Agents for phase 3 (draft) — queued until the run completes
+function getDraftAgents(state: RunState, skipped?: boolean): AgentStatusRow[] {
+  if (state !== "completed") return DRAFT_AGENTS_QUEUED
+  return skipped ? DRAFT_AGENTS_SKIPPED : DRAFT_AGENTS_COMPLETE
 }
 
 const AGENT_DOT: Record<AgentStatusRow["status"], WorkflowAgentDot> = {
@@ -1049,12 +1068,7 @@ function PlanScript({
   paused: boolean
 }) {
   return (
-    <div
-      className={cn(
-        "font-mono text-xs leading-5 text-muted-foreground",
-        paused && "[&_.wf-phase-pulse]:[animation-play-state:paused]"
-      )}
-    >
+    <div className="font-mono text-xs leading-5 text-muted-foreground">
       {PLAN_LINES.map((line, i) => {
         const isHighlighted =
           line.phaseId !== null && line.phaseId === effectiveActivePhaseId
@@ -1078,7 +1092,7 @@ function PlanScript({
             )}
           >
             {phase ? (
-              <WorkflowPhaseGlyph status={phase.status} />
+              <WorkflowPhaseGlyph status={phase.status} paused={paused} />
             ) : (
               <span className="size-5 shrink-0" aria-hidden="true" />
             )}
@@ -1104,6 +1118,9 @@ function PlanScript({
 /* ──────────────────────────────────────────────────────────────────────── */
 
 const DENSITY_THRESHOLD = 5
+
+// How long the demo retry runs before it succeeds
+const RETRY_RESOLVE_MS = 3000
 
 /* The collapsed-fleet roll-up is a real disclosure: the summary line is the
    control that reveals the rows it counts */
@@ -1171,9 +1188,20 @@ function WorkflowRunMonitorBlock() {
   const [fleetExpanded, setFleetExpanded] = React.useState(false)
   const statusRef = React.useRef<HTMLParagraphElement>(null)
   // Outcomes receive focus when the triggering control unmounts
-  const stopRef = React.useRef<HTMLButtonElement>(null)
+  const pauseRef = React.useRef<HTMLButtonElement>(null)
   const resumeRef = React.useRef<HTMLButtonElement>(null)
-  const completedChipRef = React.useRef<HTMLButtonElement>(null)
+  const logRef = React.useRef<HTMLParagraphElement>(null)
+  // The demo retry resolves after a beat — kept cancellable so pausing or
+  // switching scenarios never races a stale transition
+  const retryTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const clearRetryTimer = React.useCallback(() => {
+    if (retryTimerRef.current !== null) {
+      clearTimeout(retryTimerRef.current)
+      retryTimerRef.current = null
+    }
+  }, [])
+  React.useEffect(() => clearRetryTimer, [clearRetryTimer])
 
   const phases = getPhasesForState(runState, retried, skipped)
   // Fleet-dot minimaps, derived from the same agent lists the table renders
@@ -1186,22 +1214,22 @@ function WorkflowRunMonitorBlock() {
 
   // Determine which agents to show based on selected phase filter.
   // No selection means all of them — the heading says "All agents" and the
-  // table has to honor it, errored rows included.
+  // table has to honor it: all 14, errored rows included, grouped by phase.
   const agentsToShow: AgentStatusRow[] = React.useMemo(() => {
-    const draftAgents =
-      runState === "completed"
-        ? skipped
-          ? DRAFT_AGENTS_SKIPPED
-          : DRAFT_AGENTS_COMPLETE
-        : []
     if (activePhaseId === "scan") return SCAN_AGENTS
     if (activePhaseId === "verify")
       return getVerifyAgents(runState, retried, skipped)
-    if (activePhaseId === "draft") return draftAgents
+    if (activePhaseId === "draft") return getDraftAgents(runState, skipped)
     return [
-      ...SCAN_AGENTS,
-      ...getVerifyAgents(runState, retried, skipped),
-      ...draftAgents,
+      ...SCAN_AGENTS.map((a) => ({ ...a, group: "Scan sources" })),
+      ...getVerifyAgents(runState, retried, skipped).map((a) => ({
+        ...a,
+        group: "Verify findings",
+      })),
+      ...getDraftAgents(runState, skipped).map((a) => ({
+        ...a,
+        group: "Draft report",
+      })),
     ]
   }, [activePhaseId, runState, retried, skipped])
 
@@ -1234,6 +1262,7 @@ function WorkflowRunMonitorBlock() {
   }
 
   function handleStateChange(state: RunState) {
+    clearRetryTimer()
     setRunState(state)
     setRetried(false)
     setSkipped(false)
@@ -1252,7 +1281,8 @@ function WorkflowRunMonitorBlock() {
       paused:
         "Run paused — 9 completed agents stay cached; in-flight agents re-run on resume",
       completed: "Run completed — all phases finished",
-      failed: "Phase 2 failed — completed agents cached, recovery available",
+      failed:
+        "Verify findings failed — completed agents cached, recovery available",
     }
     announce(labels[state])
   }
@@ -1262,8 +1292,24 @@ function WorkflowRunMonitorBlock() {
     announce(
       "Retrying phase — cached agents replay, failed agents re-run in full"
     )
-    // The recovery banner unmounts — hand focus to the live Stop control
-    setTimeout(() => stopRef.current?.focus(), 0)
+    // The recovery banner unmounts — hand focus to the live Pause control
+    setTimeout(() => pauseRef.current?.focus(), 0)
+    // The retry resolves: the re-run completes and the run finishes — the
+    // journal/replay lesson gets its payoff instead of hanging mid-flight
+    retryTimerRef.current = setTimeout(() => {
+      retryTimerRef.current = null
+      const pauseHadFocus = document.activeElement === pauseRef.current
+      setRunState("completed")
+      setRetried(false)
+      setSkipped(false)
+      setFleetExpanded(false)
+      setActivePhaseId("draft")
+      announce("Retry succeeded — verify completed, report drafted")
+      // Pause unmounts on completion — the log line is the outcome
+      if (pauseHadFocus) {
+        setTimeout(() => logRef.current?.focus(), 0)
+      }
+    }, RETRY_RESOLVE_MS)
   }
 
   function handleSkipAndContinue() {
@@ -1273,20 +1319,25 @@ function WorkflowRunMonitorBlock() {
     announce(
       "Skipped failed phase — report drafted from the 14 verified requirements"
     )
-    setTimeout(() => completedChipRef.current?.focus(), 0)
+    // The outcome is the record itself — focus the log line, which now
+    // carries the skipped-completion entry
+    setTimeout(() => logRef.current?.focus(), 0)
   }
 
-  function handleStop() {
+  function handlePause() {
+    clearRetryTimer()
     setRunState("paused")
     announce(
-      "Run stopped — the journal keeps completed agents; resume re-runs the rest"
+      "Run paused — the journal keeps completed agents; resume re-runs the rest"
     )
-    // Stop unmounts itself — Resume is the outcome
+    // Pause unmounts itself — Resume is the outcome
     setTimeout(() => resumeRef.current?.focus(), 0)
   }
 
   function handleResume() {
     handleStateChange("running")
+    // Resume unmounts itself — the live Pause control is the outcome
+    setTimeout(() => pauseRef.current?.focus(), 0)
   }
 
   const logLine =
@@ -1329,7 +1380,6 @@ function WorkflowRunMonitorBlock() {
             (s) => (
               <button
                 key={s}
-                ref={s === "completed" ? completedChipRef : undefined}
                 type="button"
                 data-compact-touch
                 aria-pressed={runState === s}
@@ -1342,17 +1392,18 @@ function WorkflowRunMonitorBlock() {
           )}
         </div>
 
-        {/* Stop button — visible whenever agents are live, including a retry */}
+        {/* Pause button — visible whenever agents are live, including a
+            retry. An honest verb: nothing is destroyed, the journal keeps
+            completed agents and Resume replays them */}
         {(runState === "running" || (runState === "failed" && retried)) && (
           <Button
-            ref={stopRef}
-            variant="destructive"
+            ref={pauseRef}
+            variant="outline"
             size="sm"
             className="ml-auto"
-            onClick={handleStop}
-            aria-label="Stop run"
+            onClick={handlePause}
           >
-            Stop run
+            Pause run
           </Button>
         )}
       </div>
@@ -1360,9 +1411,16 @@ function WorkflowRunMonitorBlock() {
       {/* Phases, humanized — the run reads as phases and agents; the script
           is provenance, one disclosure away */}
       <div className="rounded-lg border border-border/40 p-4">
-        <p className="mb-3 text-xs font-medium tracking-widest text-muted-foreground uppercase">
-          Phases
-        </p>
+        {/* The run gets a visible name — a monitor should say what it's
+            monitoring, not keep it in an aria-label */}
+        <div className="mb-3 flex items-baseline justify-between gap-3">
+          <p className="text-xs font-medium tracking-widest text-muted-foreground uppercase">
+            Phases
+          </p>
+          <p className="truncate text-xs text-muted-foreground">
+            Launch readiness audit
+          </p>
+        </div>
         <WorkflowPhases
           phases={phasesWithDots}
           activePhaseId={activePhaseId}
@@ -1370,11 +1428,8 @@ function WorkflowRunMonitorBlock() {
             setActivePhaseId(phaseId)
             setFleetExpanded(false)
           }}
+          paused={runState === "paused"}
           aria-label="Launch readiness audit phases"
-          className={cn(
-            runState === "paused" &&
-              "[&_.wf-phase-pulse]:[animation-play-state:paused]"
-          )}
         />
 
         {/* Plan disclosure — like the TUI's prompt expand */}
@@ -1411,8 +1466,15 @@ function WorkflowRunMonitorBlock() {
           )}
         </div>
 
-        {/* Narrator line — what the script's log() calls surface */}
-        <p className="mt-3 flex items-baseline gap-2 border-t border-border/40 pt-3 text-xs text-muted-foreground tabular-nums">
+        {/* Narrator line — what the script's log() calls surface. Also a
+            programmatic focus target (tabIndex -1, no tab stop): when Skip
+            or a resolved retry ends the run, the record itself is the
+            outcome that receives focus */}
+        <p
+          ref={logRef}
+          tabIndex={-1}
+          className="mt-3 flex items-baseline gap-2 rounded-sm border-t border-border/40 pt-3 text-xs text-muted-foreground tabular-nums outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+        >
           <span className="shrink-0 font-mono text-[11px]" aria-hidden="true">
             log
           </span>
@@ -1437,15 +1499,22 @@ function WorkflowRunMonitorBlock() {
         </div>
       )}
 
-      {/* Failed recovery banner */}
+      {/* Failed recovery banner — both paths price themselves before the
+          click; Retry carries the primary weight as the recommended path */}
       {runState === "failed" && !retried && (
         <div className="flex flex-col gap-3 rounded-md border border-destructive/20 bg-destructive/5 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-destructive">
-            Phase 2 failed — 14 of 29 requirements verified · completed agents
-            cached
-          </p>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={handleRetry}>
+          <div className="min-w-0">
+            <p className="text-sm text-destructive">
+              Verify findings failed — 14 of 29 requirements verified ·
+              completed agents cached
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Retry replays 1 cached agent and re-runs 2 failed · skipping flags
+              the 15 unverified requirements in the report
+            </p>
+          </div>
+          <div className="flex shrink-0 gap-2">
+            <Button size="sm" onClick={handleRetry}>
               Retry phase
             </Button>
             <Button variant="outline" size="sm" onClick={handleSkipAndContinue}>
@@ -1457,11 +1526,28 @@ function WorkflowRunMonitorBlock() {
 
       {/* Fleet table */}
       <div>
-        <p className="mb-2 text-xs font-medium tracking-widest text-muted-foreground uppercase">
-          {activePhaseId
-            ? `${phases.find((p) => p.id === activePhaseId)?.title ?? "Phase"} — agents`
-            : "All agents"}
-        </p>
+        <div className="mb-2 flex items-baseline justify-between gap-3">
+          <p className="text-xs font-medium tracking-widest text-muted-foreground uppercase">
+            {activePhaseId
+              ? `${phases.find((p) => p.id === activePhaseId)?.title ?? "Phase"} — agents`
+              : "All agents"}
+          </p>
+          {/* The re-click-to-deselect gesture is real but undiscoverable —
+              this is the visible path to the whole fleet */}
+          {activePhaseId && (
+            <button
+              type="button"
+              data-compact-touch
+              onClick={() => {
+                setActivePhaseId(null)
+                setFleetExpanded(false)
+              }}
+              className="shrink-0 rounded-sm text-xs text-muted-foreground transition-colors duration-150 outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
+            >
+              Show all agents
+            </button>
+          )}
+        </div>
 
         {agentsToShow.length === 0 ? (
           <p className="py-3 text-sm text-muted-foreground">

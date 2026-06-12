@@ -32,6 +32,8 @@ type WorkflowPhasesProps = {
   /** Currently selected phase id — controls the fleet table below */
   activePhaseId?: string | null
   onPhaseSelect?: (phaseId: string | null) => void
+  /** Freezes the active phase's pulse — set while the run is paused */
+  paused?: boolean
   className?: string
   "aria-label"?: string
 }
@@ -58,13 +60,22 @@ function phaseToIndicatorStatus(status: PhaseStatus): StatusIndicatorStatus {
 /* ──────────────────────────────────────────────────────────────────────── */
 
 /** The phase status glyph — the active phase carries the page's only
-    ambient loop; everything else is a static StatusIndicator */
-function WorkflowPhaseGlyph({ status }: { status: PhaseStatus }) {
+    ambient loop; everything else is a static StatusIndicator.
+    `paused` freezes the loop via an inline play-state, which outranks any
+    cascade layer the animation shorthand lives in. */
+function WorkflowPhaseGlyph({
+  status,
+  paused,
+}: {
+  status: PhaseStatus
+  paused?: boolean
+}) {
   if (status === "active") {
     return (
       <span className="relative flex size-5 shrink-0 items-center justify-center">
         <span
           className="wf-phase-pulse absolute size-2 rounded-full bg-foreground/70"
+          style={paused ? { animationPlayState: "paused" } : undefined}
           aria-hidden="true"
         />
         <span className="sr-only">Active</span>
@@ -111,6 +122,7 @@ function PhaseRow({
   index,
   isSelected,
   isCurrent,
+  paused,
   onSelect,
 }: {
   phase: WorkflowPhase
@@ -119,6 +131,7 @@ function PhaseRow({
   /** Carries aria-current="step" — at most one phase, even when a pipelined
       run holds several active phases at once */
   isCurrent: boolean
+  paused?: boolean
   onSelect: () => void
 }) {
   const isFailed = phase.status === "failed"
@@ -157,7 +170,7 @@ function PhaseRow({
         {index + 1}
       </span>
       <span className="mt-0.5">
-        <WorkflowPhaseGlyph status={phase.status} />
+        <WorkflowPhaseGlyph status={phase.status} paused={paused} />
       </span>
       <span className="min-w-0 flex-1">
         <span className="flex items-center justify-between gap-2">
@@ -215,6 +228,7 @@ function WorkflowPhases({
   phases,
   activePhaseId,
   onPhaseSelect,
+  paused,
   className,
   "aria-label": ariaLabel = "Workflow phases",
 }: WorkflowPhasesProps) {
@@ -232,6 +246,7 @@ function WorkflowPhases({
           index={i}
           isSelected={activePhaseId === phase.id}
           isCurrent={phase.id === phases.find((p) => p.status === "active")?.id}
+          paused={paused}
           onSelect={() => {
             if (onPhaseSelect) {
               onPhaseSelect(activePhaseId === phase.id ? null : phase.id)
