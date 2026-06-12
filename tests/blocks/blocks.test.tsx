@@ -10,6 +10,7 @@ import { MultiAgentHandoffBlock } from "../../registry/base-nova/blocks/multi-ag
 import { ReviewWorkflowBlock } from "../../registry/base-nova/blocks/review-workflow"
 import { RunMonitorBlock } from "../../registry/base-nova/blocks/run-monitor"
 import { SourceBackedArtifact } from "../../registry/base-nova/blocks/source-backed-artifact"
+import { WorkflowRunMonitorBlock } from "../../registry/base-nova/blocks/workflow-run-monitor"
 
 describe("agent-settings block", () => {
   it("renders and shows agent settings content", () => {
@@ -163,5 +164,83 @@ describe("source-backed-artifact block", () => {
     await userEvent.click(secondSource)
     // the SourcePreview should now show source 2's title
     expect(root.getAllByText(/issue triage policy/i).length).toBeGreaterThan(0)
+  })
+})
+
+describe("workflow-run-monitor block", () => {
+  it("renders and shows workflow run monitor content", () => {
+    const { container } = render(<WorkflowRunMonitorBlock />)
+    const root = within(container)
+    expect(root.getAllByText(/workflow run monitor/i).length).toBeGreaterThan(0)
+    // Phase names
+    expect(root.getAllByText(/scan sources/i).length).toBeGreaterThan(0)
+    expect(root.getAllByText(/verify findings/i).length).toBeGreaterThan(0)
+    expect(root.getAllByText(/draft report/i).length).toBeGreaterThan(0)
+  })
+
+  it("renders agent rows for the default active phase (verify)", () => {
+    const { container } = render(<WorkflowRunMonitorBlock />)
+    const root = within(container)
+    // Running state shows verify agents by default
+    expect(root.getAllByText(/coverage verifier/i).length).toBeGreaterThan(0)
+    expect(root.getAllByText(/delta auditor/i).length).toBeGreaterThan(0)
+  })
+
+  it("switching to Paused state shows paused banner", async () => {
+    const { container } = render(<WorkflowRunMonitorBlock />)
+    const root = within(container)
+    // Use aria-pressed to find the "Paused" toggle button specifically
+    const allBtns = root.getAllByRole("button", { name: /paused/i })
+    const pausedToggle = allBtns.find(
+      (b) => b.getAttribute("aria-pressed") !== null
+    )!
+    await userEvent.click(pausedToggle)
+    expect(
+      root.getAllByText(/5 agents hold cached results/i).length
+    ).toBeGreaterThan(0)
+    expect(root.getByRole("button", { name: /resume/i })).toBeInTheDocument()
+  })
+
+  it("switching to Failed state shows recovery options", async () => {
+    const { container } = render(<WorkflowRunMonitorBlock />)
+    const root = within(container)
+    const failedBtn = root.getByRole("button", { name: /failed/i })
+    await userEvent.click(failedBtn)
+    expect(
+      root.getByRole("button", { name: /retry phase/i })
+    ).toBeInTheDocument()
+    expect(
+      root.getByRole("button", { name: /skip and continue/i })
+    ).toBeInTheDocument()
+  })
+
+  it("clicking Retry phase changes visible state", async () => {
+    const { container } = render(<WorkflowRunMonitorBlock />)
+    const root = within(container)
+    // Go to failed
+    await userEvent.click(root.getByRole("button", { name: /failed/i }))
+    // Click retry
+    await userEvent.click(root.getByRole("button", { name: /retry phase/i }))
+    // Recovery banner should be gone; running state active
+    expect(root.queryByRole("button", { name: /retry phase/i })).toBeNull()
+  })
+
+  it("role=status element is present in the DOM", () => {
+    const { container } = render(<WorkflowRunMonitorBlock />)
+    const statusEl = container.querySelector("[role='status']")
+    expect(statusEl).not.toBeNull()
+  })
+
+  it("phase button click changes aria-pressed to true", async () => {
+    const { container } = render(<WorkflowRunMonitorBlock />)
+    // Click on the Scan sources phase button
+    const phaseBtns = container.querySelectorAll(
+      "[data-slot='workflow-phase-button']"
+    )
+    expect(phaseBtns.length).toBeGreaterThan(0)
+    const scanBtn = phaseBtns[0] as HTMLButtonElement
+    await userEvent.click(scanBtn)
+    // Scan should now be pressed
+    expect(scanBtn.getAttribute("aria-pressed")).toBe("true")
   })
 })
