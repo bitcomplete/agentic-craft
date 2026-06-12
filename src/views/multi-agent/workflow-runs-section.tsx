@@ -9,11 +9,15 @@ import { WorkflowRunMonitorBlock } from "../../../registry/base-nova/blocks/work
 const SPEC_ROWS = [
   {
     contract: "Phase status vocabulary",
-    rule: 'done = tick (complete), active = pulse dot, queued = dashed circle (pending), failed = alert (error); aria-current="step" marks at most one phase',
+    rule: 'done = tick (complete), active = pulse dot, queued = dashed circle (pending), failed = alert (error); aria-current="step" marks at most one phase; each row adds a per-agent dot minimap (done / running / queued / failed) with a done/total count',
   },
   {
     contract: "Phase anatomy",
-    rule: "Phases are display groups, not barriers — the script declares them up front, which is why the rail can show queued phases before any agent runs; barriers come from parallel(), so a pipelined run can hold two active phases at once",
+    rule: "Phases are display groups, not barriers — the script declares them up front, which is why the list shows queued phases before any agent runs; barriers come from parallel(), so a pipelined run can hold two active phases at once",
+  },
+  {
+    contract: "Script as provenance",
+    rule: "The run is humanized into phases and agents — the orchestration script never renders ambiently; it stays one disclosure away (Plan), where a gutter of phase glyphs and a highlight band track the live phase",
   },
   {
     contract: "Density threshold",

@@ -10,6 +10,9 @@ import type { StatusIndicatorStatus } from "@/components/ui/status-indicator"
 
 export type PhaseStatus = "done" | "active" | "queued" | "failed"
 
+/** Per-agent status for the fleet-dot minimap on a phase row */
+export type WorkflowAgentDot = "done" | "running" | "queued" | "failed"
+
 export type WorkflowPhase = {
   id: string
   title: string
@@ -20,6 +23,8 @@ export type WorkflowPhase = {
   tokens?: string
   /** Formatted elapsed duration, e.g. "3:24" */
   elapsed?: string
+  /** One entry per agent — renders the fleet-dot minimap and done/total count */
+  agentDots?: WorkflowAgentDot[]
 }
 
 type WorkflowPhasesProps = {
@@ -49,26 +54,71 @@ function phaseToIndicatorStatus(status: PhaseStatus): StatusIndicatorStatus {
 }
 
 /* ──────────────────────────────────────────────────────────────────────── */
-/*  Phase button                                                           */
+/*  Glyph + fleet dots                                                     */
 /* ──────────────────────────────────────────────────────────────────────── */
 
-function PhaseButton({
+/** The phase status glyph — the active phase carries the page's only
+    ambient loop; everything else is a static StatusIndicator */
+function WorkflowPhaseGlyph({ status }: { status: PhaseStatus }) {
+  if (status === "active") {
+    return (
+      <span className="relative flex size-5 shrink-0 items-center justify-center">
+        <span
+          className="wf-phase-pulse absolute size-2 rounded-full bg-foreground/70"
+          aria-hidden="true"
+        />
+        <span className="sr-only">Active</span>
+      </span>
+    )
+  }
+  return (
+    <StatusIndicator
+      status={phaseToIndicatorStatus(status)}
+      label={
+        status === "done" ? "Done" : status === "queued" ? "Queued" : "Failed"
+      }
+    />
+  )
+}
+
+function PhaseDots({ dots }: { dots: WorkflowAgentDot[] }) {
+  return (
+    <span className="flex shrink-0 items-center gap-[3px]" aria-hidden="true">
+      {dots.map((dot, i) => (
+        <span
+          key={i}
+          className={cn(
+            "size-1.5 rounded-full",
+            dot === "done" && "bg-foreground/75",
+            dot === "running" && "bg-foreground/35",
+            dot === "failed" && "bg-destructive",
+            dot === "queued" && "border border-muted-foreground/50"
+          )}
+        />
+      ))}
+    </span>
+  )
+}
+
+/* ──────────────────────────────────────────────────────────────────────── */
+/*  Phase row                                                              */
+/* ──────────────────────────────────────────────────────────────────────── */
+
+function PhaseRow({
   phase,
+  index,
   isSelected,
   isCurrent,
   onSelect,
-  isLast,
 }: {
   phase: WorkflowPhase
+  index: number
   isSelected: boolean
   /** Carries aria-current="step" — at most one phase, even when a pipelined
       run holds several active phases at once */
   isCurrent: boolean
   onSelect: () => void
-  isLast: boolean
 }) {
-  const indicatorStatus = phaseToIndicatorStatus(phase.status)
-  const isActive = phase.status === "active"
   const isFailed = phase.status === "failed"
 
   const metaGroups = [
@@ -79,61 +129,55 @@ function PhaseButton({
     phase.elapsed ?? null,
   ].filter((group): group is string => group !== null)
 
+  const doneCount = phase.agentDots?.filter((dot) => dot === "done").length
+
   return (
-    <div className="relative flex min-w-40 flex-1 items-center">
-      <button
-        type="button"
-        data-compact-touch
-        data-slot="workflow-phase-button"
-        aria-current={isCurrent ? "step" : undefined}
-        aria-pressed={isSelected}
-        onClick={onSelect}
-        className={cn(
-          "group/phase relative flex min-h-[44px] w-full min-w-0 flex-col items-start gap-1 rounded-md px-3 py-2 text-left transition-colors duration-150",
-          "outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
-          "hover:bg-muted/50",
-          isSelected && "bg-foreground/[0.04]",
-          isFailed && "bg-destructive/5 hover:bg-destructive/8"
-        )}
-      >
-        {/* Status + title row */}
-        <div className="flex w-full min-w-0 items-center gap-2">
-          {/* Active phase: ambient pulse dot; others: static StatusIndicator */}
-          {isActive ? (
-            <span className="relative flex size-5 shrink-0 items-center justify-center">
-              <span
-                className="wf-phase-pulse absolute size-2 rounded-full bg-foreground/70"
-                aria-hidden="true"
-              />
-              <span className="sr-only">Active</span>
-            </span>
-          ) : (
-            <StatusIndicator
-              status={indicatorStatus}
-              label={
-                phase.status === "done"
-                  ? "Done"
-                  : phase.status === "queued"
-                    ? "Queued"
-                    : "Failed"
-              }
-            />
-          )}
+    <button
+      type="button"
+      data-compact-touch
+      data-slot="workflow-phase-button"
+      aria-current={isCurrent ? "step" : undefined}
+      aria-pressed={isSelected}
+      onClick={onSelect}
+      className={cn(
+        "flex min-h-[44px] w-full items-start gap-2 rounded-md px-2 py-2 text-left transition-colors duration-150",
+        "outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
+        "hover:bg-muted/50",
+        isSelected && "bg-foreground/[0.04]",
+        isFailed && "bg-destructive/5 hover:bg-destructive/8"
+      )}
+    >
+      <span className="w-3 shrink-0 pt-0.5 text-right font-mono text-[11px] text-muted-foreground tabular-nums">
+        {index + 1}
+      </span>
+      <span className="mt-0.5">
+        <WorkflowPhaseGlyph status={phase.status} />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="flex items-center justify-between gap-2">
           <span
             className={cn(
-              "min-w-0 text-sm leading-snug font-medium [text-wrap:balance]",
+              "block truncate text-sm leading-snug font-medium",
               phase.status === "queued" && "text-muted-foreground",
               isFailed && "text-destructive"
             )}
           >
             {phase.title}
           </span>
-        </div>
+          {phase.agentDots && phase.agentDots.length > 0 && (
+            <span className="flex shrink-0 items-center gap-2">
+              <span className="font-mono text-[11px] text-muted-foreground tabular-nums">
+                {doneCount}/{phase.agentDots.length}
+              </span>
+              <PhaseDots dots={phase.agentDots} />
+            </span>
+          )}
+        </span>
 
         {/* Roll-up metadata — separator stays attached to the preceding group
             so narrow containers wrap between groups, never mid-pair */}
         {metaGroups.length > 0 && (
-          <p className="pl-7 text-[11px] leading-4 text-muted-foreground tabular-nums">
+          <span className="block text-[11px] leading-4 text-muted-foreground tabular-nums">
             {metaGroups.map((group, gi) => [
               gi > 0 ? " " : null,
               <span key={group} className="whitespace-nowrap">
@@ -141,18 +185,10 @@ function PhaseButton({
                 {gi < metaGroups.length - 1 ? " ·" : null}
               </span>,
             ])}
-          </p>
+          </span>
         )}
-      </button>
-
-      {/* Connector between phases — aligned to the status-glyph row */}
-      {!isLast && (
-        <span
-          className="mx-1 mt-[17px] h-px w-4 shrink-0 self-start bg-border/60"
-          aria-hidden="true"
-        />
-      )}
-    </div>
+      </span>
+    </button>
   )
 }
 
@@ -160,6 +196,9 @@ function PhaseButton({
 /*  WorkflowPhases                                                        */
 /* ──────────────────────────────────────────────────────────────────────── */
 
+/** Humanized phase list — runs render as numbered phases with fleet-dot
+    minimaps, the way Claude's own surfaces draw them; the orchestration
+    script never appears here (keep it one disclosure away) */
 function WorkflowPhases({
   phases,
   activePhaseId,
@@ -172,15 +211,13 @@ function WorkflowPhases({
       role="group"
       aria-label={ariaLabel}
       data-slot="workflow-phases"
-      className={cn(
-        "-m-1 flex min-w-0 items-stretch overflow-x-auto p-1",
-        className
-      )}
+      className={cn("flex min-w-0 flex-col gap-0.5", className)}
     >
       {phases.map((phase, i) => (
-        <PhaseButton
+        <PhaseRow
           key={phase.id}
           phase={phase}
+          index={i}
           isSelected={activePhaseId === phase.id}
           isCurrent={phase.id === phases.find((p) => p.status === "active")?.id}
           onSelect={() => {
@@ -188,11 +225,10 @@ function WorkflowPhases({
               onPhaseSelect(activePhaseId === phase.id ? null : phase.id)
             }
           }}
-          isLast={i === phases.length - 1}
         />
       ))}
     </div>
   )
 }
 
-export { WorkflowPhases, type WorkflowPhasesProps }
+export { WorkflowPhases, WorkflowPhaseGlyph, type WorkflowPhasesProps }

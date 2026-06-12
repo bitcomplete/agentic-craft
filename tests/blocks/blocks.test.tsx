@@ -201,6 +201,20 @@ describe("workflow-run-monitor block", () => {
     expect(root.getByRole("button", { name: /resume/i })).toBeInTheDocument()
   })
 
+  it("plan script is collapsed by default and expands on disclosure", async () => {
+    const { container } = render(<WorkflowRunMonitorBlock />)
+    const root = within(container)
+    // The script is provenance, not surface — hidden until disclosed
+    expect(root.queryByText(/parallel\(scanners\)/)).toBeNull()
+    const planBtn = root
+      .getByText(/workflow script · 8 lines/)
+      .closest("button") as HTMLButtonElement
+    expect(planBtn.getAttribute("aria-expanded")).toBe("false")
+    await userEvent.click(planBtn)
+    expect(planBtn.getAttribute("aria-expanded")).toBe("true")
+    expect(root.getByText(/parallel\(scanners\)/)).toBeInTheDocument()
+  })
+
   it("scan phase collapses agents past the density threshold with a roll-up", async () => {
     const { container } = render(<WorkflowRunMonitorBlock />)
     const root = within(container)

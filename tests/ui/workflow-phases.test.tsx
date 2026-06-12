@@ -130,6 +130,19 @@ describe("WorkflowPhases", () => {
     expect(withAriaCurrent[0].textContent).toContain("Review")
   })
 
+  it("renders fleet dots with a done/total count when agentDots provided", () => {
+    const withDots: WorkflowPhase[] = [
+      {
+        id: "scan",
+        title: "Scan sources",
+        status: "done",
+        agentDots: ["done", "done", "running", "queued"],
+      },
+    ]
+    const { container } = render(<WorkflowPhases phases={withDots} />)
+    expect(container.textContent).toContain("2/4")
+  })
+
   it("renders with group role and aria-label", () => {
     render(
       <WorkflowPhases

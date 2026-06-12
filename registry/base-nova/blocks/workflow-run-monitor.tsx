@@ -1,12 +1,16 @@
 "use client"
 
 import * as React from "react"
+import { HugeiconsIcon } from "@hugeicons/react"
+import { ArrowDown01Icon } from "@hugeicons/core-free-icons"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { UsageMeter } from "@/components/ui/usage-meter"
 import {
   WorkflowPhases,
+  WorkflowPhaseGlyph,
   type WorkflowPhase,
+  type WorkflowAgentDot,
 } from "@/components/ui/workflow-phases"
 import {
   AgentStatusTable,
@@ -864,36 +868,92 @@ function getUsageItems(state: RunState, retried?: boolean) {
 }
 
 /* ──────────────────────────────────────────────────────────────────────── */
-/*  Plan-as-code inset                                                    */
+/*  Plan-as-provenance                                                     */
 /* ──────────────────────────────────────────────────────────────────────── */
 
-function PlanCode({ activePhaseId }: { activePhaseId: string | null }) {
+// One dot per agent in the phase — the fleet minimap Claude's own surfaces
+// draw on each phase row. Derived from the real agent lists.
+function getPhaseAgentStatuses(
+  phaseId: string,
+  state: RunState,
+  retried: boolean
+): AgentStatusRow["status"][] {
+  if (phaseId === "scan") return SCAN_AGENTS.map((a) => a.status)
+  if (phaseId === "verify")
+    return getVerifyAgents(state, retried).map((a) => a.status)
+  if (state === "completed") return DRAFT_AGENTS_COMPLETE.map((a) => a.status)
+  return ["idle"]
+}
+
+const AGENT_DOT: Record<AgentStatusRow["status"], WorkflowAgentDot> = {
+  complete: "done",
+  working: "running",
+  handoff: "running",
+  idle: "queued",
+  blocked: "queued",
+  error: "failed",
+}
+
+/* The orchestration script — provenance, not surface. Rendered only inside
+   the Plan disclosure, with phase glyphs in the gutter and a band tracking
+   the live phase. */
+function PlanScript({
+  phases,
+  effectiveActivePhaseId,
+  paused,
+}: {
+  phases: WorkflowPhase[]
+  effectiveActivePhaseId: string | null
+  paused: boolean
+}) {
   return (
-    <pre className="overflow-x-auto font-mono text-xs leading-5 text-muted-foreground">
+    <div
+      className={cn(
+        "font-mono text-xs leading-5 text-muted-foreground",
+        paused && "[&_.wf-phase-pulse]:[animation-play-state:paused]"
+      )}
+    >
       {PLAN_LINES.map((line, i) => {
         const isHighlighted =
-          line.phaseId !== null && line.phaseId === activePhaseId
-        // Round only the outer corners so consecutive lines of one phase
-        // read as a single band
+          line.phaseId !== null && line.phaseId === effectiveActivePhaseId
         const startsBand =
           isHighlighted && PLAN_LINES[i - 1]?.phaseId !== line.phaseId
         const endsBand =
           isHighlighted && PLAN_LINES[i + 1]?.phaseId !== line.phaseId
+        const startsPhase =
+          line.phaseId !== null && PLAN_LINES[i - 1]?.phaseId !== line.phaseId
+        const phase = startsPhase
+          ? phases.find((p) => p.id === line.phaseId)
+          : undefined
         return (
           <div
             key={i}
             className={cn(
-              "px-2 transition-colors duration-150",
+              "flex items-center gap-2 px-2",
               isHighlighted && "bg-muted",
               startsBand && "rounded-t-sm",
               endsBand && "rounded-b-sm"
             )}
           >
-            {line.code || " "}
+            {phase ? (
+              <WorkflowPhaseGlyph status={phase.status} />
+            ) : (
+              <span className="size-5 shrink-0" aria-hidden="true" />
+            )}
+            <span
+              className={cn(
+                phase &&
+                  (phase.status === "failed"
+                    ? "text-destructive"
+                    : "text-foreground")
+              )}
+            >
+              {line.code || "\u00A0"}
+            </span>
           </div>
         )
       })}
-    </pre>
+    </div>
   )
 }
 
@@ -941,9 +1001,17 @@ function WorkflowRunMonitorBlock() {
     "verify"
   )
   const [retried, setRetried] = React.useState(false)
+  const [planOpen, setPlanOpen] = React.useState(false)
   const statusRef = React.useRef<HTMLParagraphElement>(null)
 
   const phases = getPhasesForState(runState, retried)
+  // Fleet-dot minimaps, derived from the same agent lists the table renders
+  const phasesWithDots = phases.map((phase) => ({
+    ...phase,
+    agentDots: getPhaseAgentStatuses(phase.id, runState, retried).map(
+      (status) => AGENT_DOT[status]
+    ),
+  }))
 
   // Determine which agents to show based on selected phase filter
   const agentsToShow: AgentStatusRow[] = React.useMemo(() => {
@@ -1095,13 +1163,14 @@ function WorkflowRunMonitorBlock() {
         )}
       </div>
 
-      {/* Phase rail with the plan-as-code strip beneath it — one instrument */}
+      {/* Phases, humanized — the run reads as phases and agents; the script
+          is provenance, one disclosure away */}
       <div className="rounded-lg border border-border/40 p-4">
         <p className="mb-3 text-xs font-medium tracking-widest text-muted-foreground uppercase">
           Phases
         </p>
         <WorkflowPhases
-          phases={phases}
+          phases={phasesWithDots}
           activePhaseId={activePhaseId}
           onPhaseSelect={setActivePhaseId}
           aria-label="Launch readiness audit phases"
@@ -1110,11 +1179,39 @@ function WorkflowRunMonitorBlock() {
               "[&_.wf-phase-pulse]:[animation-play-state:paused]"
           )}
         />
-        <div className="mt-4 border-t border-border/40 pt-3">
-          <p className="mb-2 text-xs font-medium tracking-widest text-muted-foreground uppercase">
-            Plan
-          </p>
-          <PlanCode activePhaseId={effectiveActivePhaseId} />
+
+        {/* Plan disclosure — like the TUI's prompt expand */}
+        <div className="mt-3 border-t border-border/40 pt-2">
+          <button
+            type="button"
+            data-compact-touch
+            aria-expanded={planOpen}
+            onClick={() => setPlanOpen((open) => !open)}
+            className="flex min-h-8 w-full items-center gap-1.5 rounded-sm text-left text-xs text-muted-foreground transition-colors duration-150 outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
+          >
+            <HugeiconsIcon
+              icon={ArrowDown01Icon}
+              strokeWidth={1.5}
+              aria-hidden="true"
+              className={cn(
+                "size-3.5 shrink-0 transition-transform duration-200",
+                !planOpen && "-rotate-90"
+              )}
+            />
+            <span className="font-medium tracking-widest uppercase">Plan</span>
+            <span className="font-mono text-[11px]">
+              {"workflow script · 8 lines"}
+            </span>
+          </button>
+          {planOpen && (
+            <div className="agent-detail-reveal mt-2 motion-reduce:animate-none">
+              <PlanScript
+                phases={phases}
+                effectiveActivePhaseId={effectiveActivePhaseId}
+                paused={runState === "paused"}
+              />
+            </div>
+          )}
         </div>
 
         {/* Narrator line — what the script's log() calls surface */}
