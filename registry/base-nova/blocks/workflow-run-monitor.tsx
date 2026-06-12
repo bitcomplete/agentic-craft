@@ -1005,7 +1005,7 @@ function CollapsedAgentSummary({
     <tr>
       <td
         colSpan={7}
-        className="px-3 py-2 text-xs text-muted-foreground tabular-nums"
+        className="px-3 py-2 text-sm text-muted-foreground tabular-nums"
       >
         +{done + queued + running} more: {parts.join(" · ")}
       </td>

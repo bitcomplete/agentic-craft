@@ -200,7 +200,7 @@ function AgentStatusTable({
                       status={indicatorStatus[agent.status]}
                       label={statusCopy[agent.status]}
                     />
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-muted-foreground">
                       {statusCopy[agent.status]}
                     </span>
                   </span>
@@ -208,7 +208,7 @@ function AgentStatusTable({
                 {/* One line per task keeps the row rhythm even — the full
                     text lives in the detail panel and the title attribute */}
                 <TableCell
-                  className="max-w-48 min-w-36 truncate text-muted-foreground"
+                  className="max-w-44 min-w-36 truncate text-muted-foreground"
                   title={agent.task}
                 >
                   {agent.task ?? "No active task"}
@@ -221,7 +221,7 @@ function AgentStatusTable({
                         className="min-w-12"
                         aria-label={`${agent.name} progress`}
                       />
-                      <span className="text-xs text-muted-foreground tabular-nums">
+                      <span className="text-muted-foreground tabular-nums">
                         {formatPercent(agent.progress)}
                       </span>
                     </div>
@@ -286,9 +286,7 @@ function AgentStatusCell({
         status={indicatorStatus[status]}
         label={statusCopy[status]}
       />
-      <span className="text-xs text-muted-foreground">
-        {statusCopy[status]}
-      </span>
+      <span className="text-muted-foreground">{statusCopy[status]}</span>
     </span>
   )
 }
