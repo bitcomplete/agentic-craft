@@ -147,7 +147,11 @@ function PhaseRow({
         isFailed && "bg-destructive/5 hover:bg-destructive/8"
       )}
     >
-      <span className="w-3 shrink-0 pt-0.5 text-right font-mono text-[11px] text-muted-foreground tabular-nums">
+      {/* Visual ordering only — DOM order already conveys sequence */}
+      <span
+        aria-hidden="true"
+        className="w-3 shrink-0 pt-0.5 text-right font-mono text-[11px] text-muted-foreground tabular-nums"
+      >
         {index + 1}
       </span>
       <span className="mt-0.5">
@@ -166,8 +170,14 @@ function PhaseRow({
           </span>
           {phase.agentDots && phase.agentDots.length > 0 && (
             <span className="flex shrink-0 items-center gap-2">
-              <span className="font-mono text-[11px] text-muted-foreground tabular-nums">
+              <span
+                aria-hidden="true"
+                className="font-mono text-[11px] text-muted-foreground tabular-nums"
+              >
                 {doneCount}/{phase.agentDots.length}
+              </span>
+              <span className="sr-only">
+                {doneCount} of {phase.agentDots.length} agents done
               </span>
               <PhaseDots dots={phase.agentDots} />
             </span>
