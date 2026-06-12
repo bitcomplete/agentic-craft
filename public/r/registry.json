@@ -524,6 +524,42 @@
           "type": "registry:block"
         }
       ]
+    },
+    {
+      "name": "workflow-phases",
+      "type": "registry:ui",
+      "title": "Workflow Phases",
+      "description": "A sequential phase rail for orchestrated agent runs — status glyphs, agent-count/token/elapsed roll-ups, and phase-select filtering. Reuses the status-indicator vocabulary.",
+      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "registryDependencies": [
+        "bitcomplete/agentic-craft/status-indicator"
+      ],
+      "files": [
+        {
+          "path": "registry/base-nova/ui/workflow-phases.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "workflow-run-monitor",
+      "type": "registry:block",
+      "title": "Workflow Run Monitor",
+      "description": "A multi-phase agent-fleet monitor block for script-orchestrated runs — phase rail, plan-as-code inset, per-phase fleet table with density collapse, run budget meter, pause/resume/stop, and failed-phase recovery.",
+      "registryDependencies": [
+        "badge",
+        "button",
+        "bitcomplete/agentic-craft/workflow-phases",
+        "bitcomplete/agentic-craft/agent-status-table",
+        "bitcomplete/agentic-craft/tool-tree",
+        "bitcomplete/agentic-craft/usage-meter"
+      ],
+      "files": [
+        {
+          "path": "registry/base-nova/blocks/workflow-run-monitor.tsx",
+          "type": "registry:block"
+        }
+      ]
     }
   ]
 }

@@ -113,6 +113,8 @@ Current registry items:
 - `run-monitor` as a background-work `registry:block`
 - `multi-agent-handoff` as an ownership-transfer `registry:block`
 - `agent-settings` as a policy-settings `registry:block`
+- `workflow-phases` as a phase-rail `registry:ui`
+- `workflow-run-monitor` as a multi-phase fleet-monitor `registry:block`
 
 Validate the source registry locally with:
 
