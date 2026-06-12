@@ -12,6 +12,7 @@ import {
   AgentStatusTable,
   type AgentStatusRow,
 } from "@/components/ui/agent-status-table"
+import { cn } from "@/lib/utils"
 
 /* ──────────────────────────────────────────────────────────────────────── */
 /*  Types                                                                  */
@@ -24,19 +25,14 @@ type RunState = "running" | "paused" | "completed" | "failed"
 /* ──────────────────────────────────────────────────────────────────────── */
 
 const PLAN_LINES = [
-  { code: `const run = workflow('launch-audit');`, phaseId: null },
-  { code: ``, phaseId: null },
-  { code: `await phase('Scan sources', async () => {`, phaseId: "scan" },
-  { code: `  return await parallel(scanners);`, phaseId: "scan" },
-  { code: `});`, phaseId: "scan" },
-  { code: ``, phaseId: null },
-  { code: `await phase('Verify findings', async () => {`, phaseId: "verify" },
-  { code: `  return await parallel(verifiers);`, phaseId: "verify" },
-  { code: `});`, phaseId: "verify" },
-  { code: ``, phaseId: null },
-  { code: `await phase('Draft report', async () => {`, phaseId: "draft" },
-  { code: `  return await drafter.run(verified);`, phaseId: "draft" },
-  { code: `});`, phaseId: "draft" },
+  { code: "phase('Scan sources')", phaseId: "scan" },
+  { code: "const findings = await parallel(scanners)", phaseId: "scan" },
+  { code: "", phaseId: null },
+  { code: "phase('Verify findings')", phaseId: "verify" },
+  { code: "const verified = await parallel(verifiers)", phaseId: "verify" },
+  { code: "", phaseId: null },
+  { code: "phase('Draft report')", phaseId: "draft" },
+  { code: "await agent(`Draft report: ${verified}`)", phaseId: "draft" },
 ]
 
 // Phase data per run state
@@ -147,7 +143,8 @@ function getPhasesForState(state: RunState): WorkflowPhase[] {
   }
 }
 
-// Agents for the "Scan sources" phase (phase 1 — always done)
+// Agents for the "Scan sources" phase (phase 1 — always done).
+// Per-agent tokens sum to the phase roll-up: 12,450.
 const SCAN_AGENTS: AgentStatusRow[] = [
   {
     id: "dep-scanner",
@@ -159,6 +156,13 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     confidence: 97,
     cost: "$0.03",
     updated: "4m ago",
+    detail: {
+      model: "haiku",
+      tokens: "2,317",
+      elapsed: "0:41",
+      output:
+        "Catalogued 143 dependencies. Nine carry known advisories, none above moderate severity; the two flagged in the last audit were upgraded.",
+    },
   },
   {
     id: "policy-reader",
@@ -170,6 +174,13 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     confidence: 92,
     cost: "$0.04",
     updated: "4m ago",
+    detail: {
+      model: "sonnet",
+      tokens: "3,108",
+      elapsed: "1:12",
+      output:
+        "Parsed 29 launch requirements from 6 policy documents. Export controls appear twice with conflicting thresholds — flagged for the verify phase.",
+    },
   },
   {
     id: "source-collector",
@@ -181,6 +192,13 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     confidence: 94,
     cost: "$0.04",
     updated: "3m ago",
+    detail: {
+      model: "haiku",
+      tokens: "2,194",
+      elapsed: "0:58",
+      output:
+        "Collected all 18 artifacts in scope. Build manifests were stale by two commits and were re-fetched before handoff.",
+    },
   },
   {
     id: "change-log-reader",
@@ -192,6 +210,13 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     confidence: 89,
     cost: "$0.02",
     updated: "4m ago",
+    detail: {
+      model: "haiku",
+      tokens: "1,983",
+      elapsed: "0:47",
+      output:
+        "47 commits since the audit baseline; 12 touch the export workflow and feed directly into the delta audit.",
+    },
   },
   {
     id: "incident-checker",
@@ -203,11 +228,20 @@ const SCAN_AGENTS: AgentStatusRow[] = [
     confidence: 98,
     cost: "$0.03",
     updated: "3m ago",
+    detail: {
+      model: "sonnet",
+      tokens: "2,848",
+      elapsed: "1:03",
+      output:
+        "Reviewed 847 incidents. No critical blockers; one recurring timeout cluster in the incident archive noted as a risk to later phases.",
+    },
   },
 ]
 
 // Agents for phase 2 (verify) — varies by state
 function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
+  // Working and complete agents carry detail; idle agents have nothing to
+  // reveal yet, so their rows render no disclosure. Tokens sum to 4,213.
   if (state === "running") {
     return [
       {
@@ -220,6 +254,13 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         confidence: 91,
         cost: "$0.06",
         updated: "43s ago",
+        detail: {
+          model: "sonnet",
+          tokens: "1,872",
+          elapsed: "0:52",
+          output:
+            "Verified 14 of 29 requirements against source artifacts. Export workflow coverage holds against Launch Policy v2 so far.",
+        },
       },
       {
         id: "delta-auditor",
@@ -231,6 +272,13 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         confidence: 84,
         cost: "$0.07",
         updated: "now",
+        detail: {
+          model: "sonnet",
+          tokens: "1,204",
+          elapsed: "1:08",
+          output:
+            "Correlating 12 open deltas: 7 map cleanly, 3 wait on the conflicting export thresholds Policy Reader flagged.",
+        },
       },
       {
         id: "requirements-mapper",
@@ -242,6 +290,13 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         confidence: 79,
         cost: "$0.05",
         updated: "now",
+        detail: {
+          model: "sonnet",
+          tokens: "1,137",
+          elapsed: "1:02",
+          output:
+            "11 of 29 requirements matched to the internal control library; export workflow mapping in progress.",
+        },
       },
       {
         id: "risk-assessor",
@@ -278,6 +333,13 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         confidence: 91,
         cost: "$0.06",
         updated: "paused",
+        detail: {
+          model: "sonnet",
+          tokens: "1,872",
+          elapsed: "0:52",
+          output:
+            "Verified 14 of 29 requirements against source artifacts. Export workflow coverage holds against Launch Policy v2 so far.",
+        },
       },
       {
         id: "delta-auditor",
@@ -288,6 +350,13 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         progress: 61,
         cost: "$0.07",
         updated: "paused",
+        detail: {
+          model: "sonnet",
+          tokens: "1,204",
+          elapsed: "1:08",
+          output:
+            "Cached at 61%: 7 of 12 deltas correlated. Resume continues from here without re-running completed work.",
+        },
       },
       {
         id: "requirements-mapper",
@@ -298,6 +367,13 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         progress: 48,
         cost: "$0.05",
         updated: "paused",
+        detail: {
+          model: "sonnet",
+          tokens: "1,137",
+          elapsed: "1:02",
+          output:
+            "Cached at 48%: 11 of 29 requirements matched to the control library. Resume picks up at requirement 12.",
+        },
       },
       {
         id: "risk-assessor",
@@ -322,6 +398,7 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
     ]
   }
 
+  // Completed phase: tokens sum to the 8,907 roll-up.
   if (state === "completed") {
     return [
       {
@@ -334,6 +411,13 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         confidence: 91,
         cost: "$0.06",
         updated: "2m ago",
+        detail: {
+          model: "sonnet",
+          tokens: "1,872",
+          elapsed: "0:52",
+          output:
+            "Verified all 29 requirements. Three gaps flagged, all in export logging coverage; none block the launch on their own.",
+        },
       },
       {
         id: "delta-auditor",
@@ -345,6 +429,13 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         confidence: 87,
         cost: "$0.09",
         updated: "3m ago",
+        detail: {
+          model: "sonnet",
+          tokens: "2,318",
+          elapsed: "1:21",
+          output:
+            "All 12 deltas correlated. Four unresolved changes escalated for human review; the rest reconcile against the requirements list.",
+        },
       },
       {
         id: "requirements-mapper",
@@ -356,6 +447,13 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         confidence: 93,
         cost: "$0.07",
         updated: "3m ago",
+        detail: {
+          model: "sonnet",
+          tokens: "2,094",
+          elapsed: "1:14",
+          output:
+            "All 29 requirements mapped to the internal control library. Export workflow coverage confirmed, including both threshold variants.",
+        },
       },
       {
         id: "risk-assessor",
@@ -367,6 +465,13 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         confidence: 88,
         cost: "$0.05",
         updated: "2m ago",
+        detail: {
+          model: "haiku",
+          tokens: "1,517",
+          elapsed: "0:46",
+          output:
+            "Scored 3 gaps: 2 medium, 1 low. No critical risk; the export logging gap carries the highest exposure.",
+        },
       },
       {
         id: "findings-summariser",
@@ -378,6 +483,13 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         confidence: 95,
         cost: "$0.04",
         updated: "2m ago",
+        detail: {
+          model: "haiku",
+          tokens: "1,106",
+          elapsed: "0:38",
+          output:
+            "Phase summary ready: 3 gaps, 0 blockers. Recommends a conditional go with the logging gap closed before launch.",
+        },
       },
     ]
   }
@@ -395,6 +507,13 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         confidence: 91,
         cost: "$0.06",
         updated: "retried",
+        detail: {
+          model: "sonnet",
+          tokens: "1,872",
+          elapsed: "0:52",
+          output:
+            "Results held from the prior run — 14 of 29 requirements verified. Not re-run on retry.",
+        },
       },
       {
         id: "delta-auditor",
@@ -406,6 +525,13 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         confidence: 84,
         cost: "$0.07",
         updated: "retried",
+        detail: {
+          model: "sonnet",
+          tokens: "1,204",
+          elapsed: "1:08",
+          output:
+            "Cached correlations re-used; the remaining 5 deltas resolved against the refreshed incident archive.",
+        },
       },
       {
         id: "requirements-mapper",
@@ -416,6 +542,13 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
         progress: 31,
         cost: "$0.02",
         updated: "now",
+        detail: {
+          model: "sonnet",
+          tokens: "412",
+          elapsed: "0:14",
+          output:
+            "Retrying with cached delta results — re-mapping export workflow controls from requirement 12.",
+        },
       },
       {
         id: "risk-assessor",
@@ -452,6 +585,13 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
       confidence: 91,
       cost: "$0.06",
       updated: "1m ago",
+      detail: {
+        model: "sonnet",
+        tokens: "1,872",
+        elapsed: "0:52",
+        output:
+          "Verified 14 of 29 requirements before the phase failed. Results are cached and survive a retry.",
+      },
     },
     {
       id: "delta-auditor",
@@ -462,6 +602,13 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
       progress: 61,
       cost: "$0.07",
       updated: "just now",
+      detail: {
+        model: "sonnet",
+        tokens: "1,204",
+        elapsed: "1:08",
+        output:
+          "Incident archive unavailable after a 30-second timeout. Seven of 12 delta correlations were already complete and are cached for retry.",
+      },
     },
     {
       id: "requirements-mapper",
@@ -472,6 +619,13 @@ function getVerifyAgents(state: RunState, retried?: boolean): AgentStatusRow[] {
       progress: 48,
       cost: "$0.05",
       updated: "just now",
+      detail: {
+        model: "sonnet",
+        tokens: "1,137",
+        elapsed: "1:02",
+        output:
+          "Mapping stopped at requirement 11 — the remaining controls depend on delta results. The partial map is cached for retry.",
+      },
     },
   ]
 }
@@ -488,6 +642,13 @@ const DRAFT_AGENTS_COMPLETE: AgentStatusRow[] = [
     confidence: 94,
     cost: "$0.11",
     updated: "1m ago",
+    detail: {
+      model: "sonnet",
+      tokens: "3,129",
+      elapsed: "0:47",
+      output:
+        "Launch readiness report drafted: 7 sections, 3 annexes. Recommends a conditional go — close the export logging gap before launch, owner assigned.",
+    },
   },
 ]
 
@@ -600,25 +761,31 @@ function getUsageItems(state: RunState) {
 
 function PlanCode({ activePhaseId }: { activePhaseId: string | null }) {
   return (
-    <div className="overflow-hidden rounded-md border border-border/40 bg-muted/30">
-      <p className="border-b border-border/40 px-3 py-2 text-[10px] font-medium tracking-widest text-muted-foreground uppercase">
-        Plan
-      </p>
-      <pre className="overflow-x-auto p-3 font-mono text-xs leading-5 text-muted-foreground">
-        {PLAN_LINES.map((line, i) => (
+    <pre className="overflow-x-auto font-mono text-xs leading-5 text-muted-foreground">
+      {PLAN_LINES.map((line, i) => {
+        const isHighlighted =
+          line.phaseId !== null && line.phaseId === activePhaseId
+        // Round only the outer corners so consecutive lines of one phase
+        // read as a single band
+        const startsBand =
+          isHighlighted && PLAN_LINES[i - 1]?.phaseId !== line.phaseId
+        const endsBand =
+          isHighlighted && PLAN_LINES[i + 1]?.phaseId !== line.phaseId
+        return (
           <div
             key={i}
-            className={
-              line.phaseId !== null && line.phaseId === activePhaseId
-                ? "-mx-3 bg-muted px-3"
-                : undefined
-            }
+            className={cn(
+              "px-2 transition-colors duration-150",
+              isHighlighted && "bg-muted",
+              startsBand && "rounded-t-sm",
+              endsBand && "rounded-b-sm"
+            )}
           >
             {line.code || " "}
           </div>
-        ))}
-      </pre>
-    </div>
+        )
+      })}
+    </pre>
   )
 }
 
@@ -738,7 +905,11 @@ function WorkflowRunMonitorBlock() {
     handleStateChange("running")
   }
 
-  const activePhase = phases.find((p) => p.status === "active")
+  // The plan strip tracks where the script is: the active phase, or — when a
+  // run fails — the phase it stopped in
+  const activePhase =
+    phases.find((p) => p.status === "active") ??
+    phases.find((p) => p.status === "failed")
   const effectiveActivePhaseId = activePhase?.id ?? null
 
   return (
@@ -791,20 +962,25 @@ function WorkflowRunMonitorBlock() {
         )}
       </div>
 
-      {/* Phase rail + plan code */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
-        <div className="min-w-0 flex-1 rounded-lg border border-border/40 p-4">
-          <p className="mb-3 text-xs font-medium tracking-widest text-muted-foreground uppercase">
-            Phases
+      {/* Phase rail with the plan-as-code strip beneath it — one instrument */}
+      <div className="rounded-lg border border-border/40 p-4">
+        <p className="mb-3 text-xs font-medium tracking-widest text-muted-foreground uppercase">
+          Phases
+        </p>
+        <WorkflowPhases
+          phases={phases}
+          activePhaseId={activePhaseId}
+          onPhaseSelect={setActivePhaseId}
+          aria-label="Launch readiness audit phases"
+          className={cn(
+            runState === "paused" &&
+              "[&_.wf-phase-pulse]:[animation-play-state:paused]"
+          )}
+        />
+        <div className="mt-4 border-t border-border/40 pt-3">
+          <p className="mb-2 text-xs font-medium tracking-widest text-muted-foreground uppercase">
+            Plan
           </p>
-          <WorkflowPhases
-            phases={phases}
-            activePhaseId={activePhaseId}
-            onPhaseSelect={setActivePhaseId}
-            aria-label="Launch readiness audit phases"
-          />
-        </div>
-        <div className="w-full shrink-0 sm:w-64 lg:w-72">
           <PlanCode activePhaseId={effectiveActivePhaseId} />
         </div>
       </div>

@@ -67,8 +67,16 @@ function PhaseButton({
   const isActive = phase.status === "active"
   const isFailed = phase.status === "failed"
 
+  const metaGroups = [
+    phase.agentCount !== undefined
+      ? `${phase.agentCount} agent${phase.agentCount === 1 ? "" : "s"}`
+      : null,
+    phase.tokens ? `${phase.tokens} tokens` : null,
+    phase.elapsed ?? null,
+  ].filter((group): group is string => group !== null)
+
   return (
-    <div className="relative flex min-w-0 flex-1 items-center">
+    <div className="relative flex min-w-40 flex-1 items-center">
       <button
         type="button"
         data-compact-touch
@@ -118,33 +126,25 @@ function PhaseButton({
           </span>
         </div>
 
-        {/* Roll-up metadata */}
-        {(phase.agentCount !== undefined || phase.tokens || phase.elapsed) && (
-          <p
-            className={cn(
-              "pl-7 text-[11px] leading-none tabular-nums",
-              phase.status === "queued"
-                ? "text-muted-foreground/60"
-                : "text-muted-foreground"
-            )}
-          >
-            {[
-              phase.agentCount !== undefined
-                ? `${phase.agentCount} agent${phase.agentCount === 1 ? "" : "s"}`
-                : null,
-              phase.tokens ? `${phase.tokens} tokens` : null,
-              phase.elapsed ?? null,
-            ]
-              .filter(Boolean)
-              .join(" · ")}
+        {/* Roll-up metadata — separator stays attached to the preceding group
+            so narrow containers wrap between groups, never mid-pair */}
+        {metaGroups.length > 0 && (
+          <p className="pl-7 text-[11px] leading-4 text-muted-foreground tabular-nums">
+            {metaGroups.map((group, gi) => [
+              gi > 0 ? " " : null,
+              <span key={group} className="whitespace-nowrap">
+                {group}
+                {gi < metaGroups.length - 1 ? " ·" : null}
+              </span>,
+            ])}
           </p>
         )}
       </button>
 
-      {/* Connector between phases */}
+      {/* Connector between phases — aligned to the status-glyph row */}
       {!isLast && (
         <span
-          className="mx-1 h-px w-4 shrink-0 bg-border/60"
+          className="mx-1 mt-[17px] h-px w-4 shrink-0 self-start bg-border/60"
           aria-hidden="true"
         />
       )}
@@ -168,7 +168,10 @@ function WorkflowPhases({
       role="group"
       aria-label={ariaLabel}
       data-slot="workflow-phases"
-      className={cn("flex min-w-0 items-stretch overflow-x-auto", className)}
+      className={cn(
+        "-m-1 flex min-w-0 items-stretch overflow-x-auto p-1",
+        className
+      )}
     >
       {phases.map((phase, i) => (
         <PhaseButton

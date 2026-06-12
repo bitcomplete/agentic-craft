@@ -16,6 +16,10 @@ const SPEC_ROWS = [
     rule: "≤ 5 agent rows visible per phase; 6+ agents collapse the remainder into a single +N summary row showing queued and running counts",
   },
   {
+    contract: "Agent detail disclosure",
+    rule: "A fleet row expands inline only when the agent has detail to show — chevron + aria-expanded on the agent cell, nothing on rows without detail; the excerpt is the agent's own words, set in the serif voice",
+  },
+  {
     contract: "Roll-up math",
     rule: "Phase tokens = Σ agent tokens for that phase; run total = Σ phase tokens across all phases",
   },
@@ -33,7 +37,7 @@ const SPEC_ROWS = [
   },
   {
     contract: "Ambient motion",
-    rule: "Active phase pulse is the page's only ambient loop; prefers-reduced-motion disables it; all other state transitions are 150 ms",
+    rule: "Active phase pulse is the page's only ambient loop; pausing the run freezes it; prefers-reduced-motion disables it; all other state transitions run 150–200 ms",
   },
 ]
 

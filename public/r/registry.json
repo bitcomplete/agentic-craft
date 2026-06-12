@@ -13,7 +13,11 @@
         "@hugeicons/core-free-icons",
         "@base-ui/react"
       ],
-      "registryDependencies": ["dropdown-menu", "textarea", "tooltip"],
+      "registryDependencies": [
+        "dropdown-menu",
+        "textarea",
+        "tooltip"
+      ],
       "files": [
         {
           "path": "registry/base-nova/ui/composer.tsx",
@@ -120,7 +124,10 @@
       "type": "registry:ui",
       "title": "Tool Call",
       "description": "Universal tool call component with running/completed/failed status states. Works standalone for sequential calls or inside ToolTree for parallel execution.",
-      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
       "files": [
         {
           "path": "registry/base-nova/ui/tool-call.tsx",
@@ -133,8 +140,13 @@
       "type": "registry:ui",
       "title": "Tool Tree",
       "description": "A composable tree visualization for parallel tool calls with L-connectors, expandable children, and hover timestamps. Wraps ToolCall children.",
-      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
-      "registryDependencies": ["bitcomplete/agentic-craft/tool-call"],
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
+      "registryDependencies": [
+        "bitcomplete/agentic-craft/tool-call"
+      ],
       "files": [
         {
           "path": "registry/base-nova/ui/tool-tree.tsx",
@@ -158,8 +170,11 @@
       "name": "status-indicator",
       "type": "registry:ui",
       "title": "Status Indicator",
-      "description": "The product-wide status vocabulary: one shape per state — check for complete, spinner for active, dashed circle for pending, clock for blocked, alert for warning and error — with sr-only labels.",
-      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "description": "The product-wide status vocabulary: one shape per state \u2014 check for complete, spinner for active, dashed circle for pending, clock for blocked, alert for warning and error \u2014 with sr-only labels.",
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
       "files": [
         {
           "path": "registry/base-nova/ui/status-indicator.tsx",
@@ -172,8 +187,13 @@
       "type": "registry:ui",
       "title": "Observable Work",
       "description": "A step disclosure pattern for showing visible agent work, touched sources, state, and completion without exposing hidden reasoning traces.",
-      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
-      "registryDependencies": ["bitcomplete/agentic-craft/status-indicator"],
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
+      "registryDependencies": [
+        "bitcomplete/agentic-craft/status-indicator"
+      ],
       "files": [
         {
           "path": "registry/base-nova/ui/observable-work.tsx",
@@ -186,7 +206,10 @@
       "type": "registry:ui",
       "title": "Decision Surface",
       "description": "A composable confirmation surface for approvals, risky actions, clarifying interruptions, and rollback decisions.",
-      "registryDependencies": ["button", "dialog"],
+      "registryDependencies": [
+        "button",
+        "dialog"
+      ],
       "files": [
         {
           "path": "registry/base-nova/ui/decision-surface.tsx",
@@ -199,8 +222,15 @@
       "type": "registry:ui",
       "title": "File Lifecycle",
       "description": "A file attachment lifecycle pattern for drag states, validation, upload progress, rejection, retry, and removal.",
-      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
-      "registryDependencies": ["badge", "button", "progress"],
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
+      "registryDependencies": [
+        "badge",
+        "button",
+        "progress"
+      ],
       "files": [
         {
           "path": "registry/base-nova/ui/file-lifecycle.tsx",
@@ -223,7 +253,27 @@
           "path": "registry/base-nova/ui/agent-status-table.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "css": {
+        "@keyframes agent-detail-reveal": {
+          "from": {
+            "opacity": "0",
+            "transform": "translateY(-4px)"
+          },
+          "to": {
+            "opacity": "1",
+            "transform": "translateY(0)"
+          }
+        },
+        ".agent-detail-reveal": {
+          "animation": "agent-detail-reveal 0.2s cubic-bezier(0.22, 1, 0.36, 1)"
+        },
+        "@media (prefers-reduced-motion: reduce)": {
+          ".agent-detail-reveal": {
+            "animation": "none"
+          }
+        }
+      }
     },
     {
       "name": "clarifying-questions",
@@ -248,7 +298,10 @@
       "type": "registry:ui",
       "title": "Action Preview",
       "description": "A locked consequence preview for approvals, external actions, document changes, and rollback-aware agent work.",
-      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
       "files": [
         {
           "path": "registry/base-nova/ui/action-preview.tsx",
@@ -266,7 +319,9 @@
         "@hugeicons/react",
         "@hugeicons/core-free-icons"
       ],
-      "registryDependencies": ["button"],
+      "registryDependencies": [
+        "button"
+      ],
       "files": [
         {
           "path": "registry/base-nova/ui/source-preview.tsx",
@@ -279,8 +334,14 @@
       "type": "registry:ui",
       "title": "Artifact Document",
       "description": "A source-backed output document surface with cited sections, missing-source states, version metadata, and review status.",
-      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
-      "registryDependencies": ["badge", "button"],
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
+      "registryDependencies": [
+        "badge",
+        "button"
+      ],
       "files": [
         {
           "path": "registry/base-nova/ui/artifact-document.tsx",
@@ -293,7 +354,9 @@
       "type": "registry:ui",
       "title": "Usage Meter",
       "description": "A compact token, cost, limit, and coverage meter for visible agent run budgets.",
-      "registryDependencies": ["progress"],
+      "registryDependencies": [
+        "progress"
+      ],
       "files": [
         {
           "path": "registry/base-nova/ui/usage-meter.tsx",
@@ -306,8 +369,16 @@
       "type": "registry:ui",
       "title": "Contextual Workbench",
       "description": "A responsive agent workbench that keeps chat visible while opening an inspectable browser, source, diff, or artifact surface beside it.",
-      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
-      "registryDependencies": ["button", "resizable", "tabs", "toggle-group"],
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
+      "registryDependencies": [
+        "button",
+        "resizable",
+        "tabs",
+        "toggle-group"
+      ],
       "files": [
         {
           "path": "registry/base-nova/ui/contextual-workbench.tsx",
@@ -320,8 +391,13 @@
       "type": "registry:ui",
       "title": "Effective Policy Preview",
       "description": "A compact settings summary showing the agent policy currently produced by autonomy, approval, notification, and memory controls.",
-      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
-      "registryDependencies": ["bitcomplete/agentic-craft/status-indicator"],
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
+      "registryDependencies": [
+        "bitcomplete/agentic-craft/status-indicator"
+      ],
       "files": [
         {
           "path": "registry/base-nova/ui/effective-policy-preview.tsx",
@@ -334,7 +410,10 @@
       "type": "registry:ui",
       "title": "Memory Ledger Item",
       "description": "A provenance-rich memory row with scope, expiry, last-used metadata, source inspection, edit, and removal actions.",
-      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
       "registryDependencies": [
         "badge",
         "button",
@@ -352,7 +431,10 @@
       "type": "registry:ui",
       "title": "Run Trace",
       "description": "A dense operational trace for background runs with source touches, status, warnings, timing metadata, and expandable recovery detail.",
-      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
       "files": [
         {
           "path": "registry/base-nova/ui/run-trace.tsx",
@@ -365,7 +447,10 @@
       "type": "registry:ui",
       "title": "Handoff Packet",
       "description": "An ownership-transfer surface for multi-agent workflows with sender, receiver, payload, source basis, receiver action, and recovery path.",
-      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
       "registryDependencies": [
         "button",
         "bitcomplete/agentic-craft/status-indicator"
@@ -439,7 +524,9 @@
       "type": "registry:block",
       "title": "Source-Backed Artifact",
       "description": "A provenance workflow block that pairs a source-backed output document with source previews and usage budget.",
-      "dependencies": ["@hugeicons/core-free-icons"],
+      "dependencies": [
+        "@hugeicons/core-free-icons"
+      ],
       "registryDependencies": [
         "bitcomplete/agentic-craft/artifact-document",
         "bitcomplete/agentic-craft/source-preview",
@@ -529,8 +616,11 @@
       "name": "workflow-phases",
       "type": "registry:ui",
       "title": "Workflow Phases",
-      "description": "A sequential phase rail for orchestrated agent runs — status glyphs, agent-count/token/elapsed roll-ups, and phase-select filtering. Reuses the status-indicator vocabulary.",
-      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons"],
+      "description": "A sequential phase rail for orchestrated agent runs \u2014 status glyphs, agent-count/token/elapsed roll-ups, and phase-select filtering. Reuses the status-indicator vocabulary.",
+      "dependencies": [
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
       "registryDependencies": [
         "bitcomplete/agentic-craft/status-indicator"
       ],
@@ -539,13 +629,33 @@
           "path": "registry/base-nova/ui/workflow-phases.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "css": {
+        "@keyframes wf-phase-pulse": {
+          "0%, 100%": {
+            "opacity": "1",
+            "transform": "scale(1)"
+          },
+          "50%": {
+            "opacity": "0.45",
+            "transform": "scale(0.85)"
+          }
+        },
+        ".wf-phase-pulse": {
+          "animation": "wf-phase-pulse 1.8s ease-in-out infinite"
+        },
+        "@media (prefers-reduced-motion: reduce)": {
+          ".wf-phase-pulse": {
+            "animation": "none"
+          }
+        }
+      }
     },
     {
       "name": "workflow-run-monitor",
       "type": "registry:block",
       "title": "Workflow Run Monitor",
-      "description": "A multi-phase agent-fleet monitor block for script-orchestrated runs — phase rail, plan-as-code inset, per-phase fleet table with density collapse, run budget meter, pause/resume/stop, and failed-phase recovery.",
+      "description": "A multi-phase agent-fleet monitor block for script-orchestrated runs \u2014 phase rail, plan-as-code inset, per-phase fleet table with density collapse, run budget meter, pause/resume/stop, and failed-phase recovery.",
       "registryDependencies": [
         "badge",
         "button",
