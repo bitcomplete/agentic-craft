@@ -123,7 +123,7 @@ function SourcePreview({
       <div className="px-3 py-2.5">
         <p className="text-[13px] leading-5 text-white/88">“{excerpt}”</p>
         <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-white/12 px-2 py-1 text-[11px] text-white/75">
+          <div className="inline-flex items-center gap-1.5 rounded-md bg-white/12 px-2 py-1 text-[11px] text-white/75">
             <HugeiconsIcon icon={File01Icon} size={12} strokeWidth={1.5} />
             {location}
           </div>
@@ -134,7 +134,7 @@ function SourcePreview({
               onClick={onOpenSource}
               variant="ghost"
               size="sm"
-              className="h-6 rounded-full bg-white/12 px-2 text-[11px] font-medium text-white hover:bg-white/18 focus-visible:ring-white/40"
+              className="h-6 rounded-md bg-white/12 px-2 text-[11px] font-medium text-white hover:bg-white/18 focus-visible:ring-white/40"
             >
               View source
               <HugeiconsIcon
@@ -143,10 +143,6 @@ function SourcePreview({
                 data-icon="inline-end"
               />
             </Button>
-          ) : source ? (
-            <span className="inline-flex h-6 items-center rounded-full bg-white/12 px-2 text-[11px] font-medium text-white">
-              View source
-            </span>
           ) : null}
         </div>
         {source && (
