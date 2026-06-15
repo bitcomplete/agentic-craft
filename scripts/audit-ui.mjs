@@ -1,4 +1,4 @@
-import { readFileSync, realpathSync } from "node:fs"
+import { existsSync, readFileSync, realpathSync } from "node:fs"
 import { basename, relative, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 import { execFileSync } from "node:child_process"
@@ -22,17 +22,41 @@ try {
   srcUiBasenames = new Set()
 }
 
-const rawFiles = execFileSync("git", [
-  "ls-files",
-  "app",
-  "src",
-  "registry",
-], {
+const rawFiles = execFileSync("git", ["ls-files", "app", "src", "registry"], {
   cwd: root,
   encoding: "utf8",
 })
   .split("\n")
   .filter((file) => /\.(tsx|ts|css)$/.test(file))
+  .filter((file) => existsSync(resolve(root, file)))
+
+const registryFiles = rawFiles.filter((file) => file.startsWith("registry/"))
+
+const forbiddenRegistryClasses = [
+  "agent-prose",
+  "section-label",
+  "principle-num",
+  "page-section",
+  "agent-detail-reveal",
+  "wf-phase-pulse",
+  "actions-slide-in",
+  "route-expand",
+  "feedback-flash",
+  "memory-press",
+  "memory-ring-fill",
+  "conv-slide-in",
+  "demo-slide-in",
+  "trust-press",
+  "ma-pulse",
+  "mon-pulse",
+]
+
+const forbiddenRegistryClassPattern = new RegExp(
+  `\\b(?:${forbiddenRegistryClasses
+    .map((className) => className.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    .join("|")})\\b`,
+  "g"
+)
 
 // Deduplicate: skip registry/base-nova/ui/ entries whose basename also exists
 // in src/components/ui/ (handles both symlink and real-file-copy cases).
@@ -40,7 +64,10 @@ const seenRealPaths = new Set()
 const files = rawFiles.filter((file) => {
   const abs = resolve(root, file)
   // Skip registry/base-nova/ui/ files if a counterpart exists under src/components/ui/
-  if (file.startsWith("registry/base-nova/ui/") && srcUiBasenames.has(basename(file))) {
+  if (
+    file.startsWith("registry/base-nova/ui/") &&
+    srcUiBasenames.has(basename(file))
+  ) {
     return false
   }
   // Skip files that resolve to a real path we have already seen (symlink dedup)
@@ -84,6 +111,21 @@ const checks = [
 ]
 
 const findings = []
+
+for (const file of registryFiles) {
+  const abs = resolve(root, file)
+  const source = readFileSync(abs, "utf8")
+
+  for (const match of source.matchAll(forbiddenRegistryClassPattern)) {
+    const line = source.slice(0, match.index).split("\n").length
+    findings.push({
+      file: relative(root, abs),
+      line,
+      id: "no-site-only-registry-classes",
+      message: `Registry files must not reference site-only class "${match[0]}".`,
+    })
+  }
+}
 
 for (const file of files) {
   const abs = resolve(root, file)

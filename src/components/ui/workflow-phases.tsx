@@ -74,7 +74,8 @@ function WorkflowPhaseGlyph({
     return (
       <span className="relative flex size-5 shrink-0 items-center justify-center">
         <span
-          className="wf-phase-pulse absolute size-2 rounded-full bg-foreground/70"
+          data-slot="workflow-phase-pulse"
+          className="absolute size-2 animate-pulse rounded-full bg-foreground/70 motion-reduce:animate-none"
           style={paused ? { animationPlayState: "paused" } : undefined}
           aria-hidden="true"
         />

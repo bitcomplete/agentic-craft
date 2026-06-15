@@ -1,309 +1,627 @@
 ---
 name: Agentic Craft
-description: Monochrome instrument panel with a serif voice — the reference system for agentic product UI
-colors:
-  ink: "oklch(0.145 0 0)"
-  carbon: "oklch(0.205 0 0)"
-  graphite: "oklch(0.556 0 0)"
-  ash: "oklch(0.708 0 0)"
-  hairline: "oklch(0.922 0 0)"
-  fog: "oklch(0.97 0 0)"
-  off-white: "oklch(0.985 0 0)"
-  white: "oklch(1 0 0)"
-  verified-green: "oklch(0.54 0.14 155)"
-  caution-amber: "oklch(0.72 0.14 85)"
-  signal-red: "oklch(0.577 0.245 27.325)"
-typography:
-  display:
-    fontFamily: "Signifier, serif"
-    fontSize: "2.25rem"
-    fontWeight: 300
-    lineHeight: 1.15
-    letterSpacing: "-0.025em"
-  headline:
-    fontFamily: "PP Neue Montreal, sans-serif"
-    fontSize: "1.25rem"
-    fontWeight: 600
-    letterSpacing: "-0.025em"
-  body:
-    fontFamily: "PP Neue Montreal, sans-serif"
-    fontSize: "0.875rem"
-    fontWeight: 400
-    lineHeight: 1.43
-  agent-prose:
-    fontFamily: "Signifier, serif"
-    fontSize: "16px"
-    fontWeight: 400
-    lineHeight: "26px"
-    letterSpacing: "-0.4px"
-    fontVariation: '"opsz" 12'
-  label:
-    fontFamily: "PP Neue Montreal, sans-serif"
-    fontSize: "11px"
-    fontWeight: 500
-    letterSpacing: "0.08em"
-rounded:
-  sm: "6px"
-  md: "8px"
-  lg: "10px"
-  xl: "14px"
-spacing:
-  frame-sm: "1rem"
-  frame: "1.5rem"
-  demo-gap: "2.5rem"
-  section: "3rem"
-  section-lg: "4rem"
-components:
-  button-primary:
-    backgroundColor: "{colors.carbon}"
-    textColor: "{colors.off-white}"
-    rounded: "{rounded.lg}"
-    height: "32px"
-    padding: "0 10px"
-  button-outline:
-    backgroundColor: "{colors.white}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.lg}"
-    height: "32px"
-    padding: "0 10px"
-  button-ghost:
-    textColor: "{colors.ink}"
-    rounded: "{rounded.lg}"
-    height: "32px"
-    padding: "0 10px"
-  demo-frame:
-    backgroundColor: "{colors.white}"
-    rounded: "{rounded.lg}"
-    padding: "{spacing.frame-sm}"
+description: Reference guide for agentic product UI with a downstream-safe shadcn registry
+scopes:
+  cross_cutting: Product and behavior principles shared by the site and registry
+  registry: Redistributable shadcn components that inherit the consumer's theme
+  site: Agentic Craft's own editorial visual identity
+site_identity:
+  name: The Galley Proof
+  typography: Signifier for authored agent prose, PP Neue Montreal for product apparatus
+  color: Achromatic ink-on-white or dark equivalent; chroma reserved for state semantics
+registry_contract:
+  default_custom_color_tokens: 0
+  default_custom_font_tokens: 0
+  distribution: npx shadcn add
 ---
 
-# Design System: Agentic Craft
+# Design: Agentic Craft
 
-## 1. Overview
+Agentic Craft has two surfaces that must not be treated as one design system.
 
-**Creative North Star: "The Galley Proof"**
+- **The site** is the reference guide: pages, IA, demos, callouts, kickers,
+  editorial rhythm, and the Galley Proof visual language.
+- **The registry** is the redistributable shadcn package: components installed
+  into another team's repository, where their theme, radius, fonts, motion
+  preferences, and icon conventions are the source of truth.
+
+The site may have a strong visual point of view. The registry must be a
+well-mannered guest. Shared rules are behavioral: what the interface reveals,
+which affordances are honest, how work is made observable, and what contracts
+users can trust.
+
+## A. Cross-Cutting Product Principles
+
+These principles apply to Agentic Craft as a reference guide and to the
+registry components as product patterns. They are not visual prescriptions for
+downstream shadcn consumers.
+
+### A1. The AX Shift
+
+This is a design system for the apparatus around an agent, not just the
+surface of a feature. The core design problem is **agent experience**: how a
+human understands, directs, constrains, verifies, and interrupts work performed
+by software with partial autonomy.
+
+Agent UI is therefore judged by whether the user can answer five questions:
+
+- What is the agent doing now?
+- What evidence or memory is it using?
+- What will happen if I let it continue?
+- What can I change before the action becomes real?
+- What did this cost, and how confident should I be?
+
+### A2. Honest Affordances
+
+Nothing may look interactive that is not interactive. No dead rows with
+`cursor-pointer`, no hover treatment on non-links, no disclosure chrome on
+empty payloads, and no demo controls that leave the specimen unchanged.
+
+Controls must state their real scope. A "retry" control retries a named step,
+not an invisible chain of side effects. A "send" control submits the visible
+composer payload, not hidden attachments the user cannot inspect.
+
+### A3. Observable Work
+
+Agent work is a first-class interface object. Tool calls, queued work, running
+steps, blocked steps, completion, error, elapsed time, and parallel children
+must be visible in a stable structure.
+
+The signature behavior is quiet but explicit:
+
+- Queued, running, blocked, complete, and error states use distinct shape or
+  copy; color alone never carries status.
+- Tool rows expose details only when details exist.
+- Parallel work uses explicit child structure, not a flattened log.
+- Timestamps, token counts, costs, and durations use tabular numerals.
+- Ambient progress is finite and reduced-motion safe.
+
+### A4. Locked Previews
+
+An agent may draft, stage, or preview work without making it real. The preview
+must show what is locked, what can still change, and what action will commit it.
+
+Locked previews are not disabled-looking screenshots. They are inspectable
+payloads with clear ownership: pending action, affected object, reversible or
+irreversible consequence, rollback path when available, and a visible commit or
+reject control.
+
+### A5. Autonomy Is a Contract
+
+Autonomy is not a vague setting. It is a contract between user and system.
+Every autonomous mode should say what the agent may do, what it must ask before
+doing, what evidence it must show, and how the user can interrupt it.
+
+Use explicit levels when the surface benefits from a spectrum:
+
+- Suggest: the agent proposes, the user acts.
+- Recommend: the agent ranks options and explains tradeoffs.
+- Execute with confirm: the agent prepares the action and asks.
+- Execute: the agent acts inside known bounds.
+- Initiate: the agent starts work proactively under a standing policy.
+
+Higher autonomy requires stronger observability, stronger provenance, and more
+obvious interruption.
+
+### A6. Provenance Is Part of the Answer
+
+Sources, artifacts, connector state, and cited memory should be attached to the
+work they support. A claim without a reachable source is a weaker claim.
+
+Provenance should be inspectable without becoming decorative chrome. Prefer
+compact source rows, artifact summaries, and source-backed excerpts over large
+badges or ornamental "trusted" marks.
+
+### A7. Memory Is a Ledger
+
+Memory surfaces must distinguish working context, session memory, and durable
+memory. Users need to see what was remembered, why it matters, where it came
+from, and how to remove or correct it.
+
+Do not render memory as magic. A memory item is a record with provenance,
+freshness, scope, and consequence.
+
+### A8. Cost Is Telemetry
+
+Cost and usage are not billing afterthoughts; they are operational telemetry.
+Show them where they help users steer work: before expensive actions, during
+long-running work, and after completion.
+
+Cost surfaces default to quiet presentation: tabular numerals, right-aligned
+when in tables, muted by default, and precise enough to be credible. Use alarm
+treatment only when a threshold or budget state has actually been crossed.
+
+### A9. Confidence Is Qualitative First
+
+Confidence is most useful as a decision aid, not a decorative percentage.
+Prefer qualitative states tied to next actions: low confidence asks for review,
+medium confidence asks for confirmation or evidence expansion, high confidence
+can proceed inside the autonomy contract.
+
+Numeric confidence appears only when the underlying system provides a real
+score and the UI explains what the score means.
+
+### A10. Multi-Agent Identity
+
+Multiple agents are identified by name, role, and a monochrome mark or monogram,
+not by color alone. Color is too overloaded with state semantics and too brittle
+across themes.
+
+An agent identity should stay stable across status changes. Status belongs to
+the row, glyph, copy, or progress surface; identity belongs to the actor.
+
+## B. Registry Contract
+
+The registry ships through shadcn into someone else's application. Components
+in `registry/base-nova/` must inherit the consumer's shadcn configuration:
+their tokens, fonts, radii, dark mode, icon library, and motion preferences.
+
+This section is the review checklist for every registry change.
+
+### B1. Downstream-Safe Defaults
+
+Registry components may use these shadcn semantic tokens and their foreground
+variants:
+
+- `--background`, `--foreground`
+- `--card`, `--card-foreground`
+- `--popover`, `--popover-foreground`
+- `--primary`, `--primary-foreground`
+- `--secondary`, `--secondary-foreground`
+- `--muted`, `--muted-foreground`
+- `--accent`, `--accent-foreground`
+- `--destructive`, `--destructive-foreground`
+- `--border`, `--input`, `--ring`
+- `--chart-*` and `--sidebar-*` only when the component is truly a chart or
+  sidebar surface
+
+Use Tailwind utilities that resolve through those tokens: `bg-background`,
+`text-foreground`, `border-border`, `text-muted-foreground`, `bg-muted`,
+`ring-ring`, and equivalent semantic classes.
+
+Default custom token budget:
+
+- **Zero custom color tokens.**
+- **Zero custom font tokens.**
+- **No custom radius tokens.**
+
+If a state can be expressed by shape, copy, weight, order, motion, or a base
+shadcn token, do that instead of adding a token.
+
+### B2. Forbidden Registry Leaks
+
+Registry components must not import from site code or depend on site utilities.
+
+Allowed imports:
+
+- `@/components/ui/*`
+- `@/lib/utils`
+- local files inside the same registry item or registry family
+
+Forbidden imports:
+
+- `src/views/*`
+- `src/content/*`
+- site components outside `src/components/ui/*`
+- site-only helpers that encode page IA or editorial styling
+
+Forbidden site-only classes in `registry/`:
+
+- `.agent-prose`
+- `.section-label`
+- `.principle-num`
+- `.page-section`
+- `.agent-detail-reveal`
+- `.wf-phase-pulse`
+- `.actions-slide-in`
+- `.route-expand`
+- `.feedback-flash`
+- `.memory-press`
+- `.memory-ring-fill`
+- `.conv-slide-in`
+- `.demo-slide-in`
+- `.trust-press`
+- `.ma-pulse`
+- `.mon-pulse`
+
+If a registry item needs a class, the class must ship with that registry item
+through `css` or be replaced by semantic Tailwind utilities.
+
+### B3. `cssVars` and `css`
+
+Custom CSS is allowed only when the component cannot be expressed with base
+shadcn tokens and utilities.
+
+Use `cssVars` for genuine variables:
+
+```json
+{
+  "cssVars": {
+    "light": {
+      "--agentic-example": "var(--muted-foreground)"
+    },
+    "dark": {
+      "--agentic-example": "var(--muted-foreground)"
+    }
+  }
+}
+```
+
+Reference custom variables with a fallback to a base token:
+
+```tsx
+<span
+  style={{ background: "var(--agentic-example, var(--muted-foreground))" }}
+/>
+```
+
+Use `css` for registry-shipped keyframes, layers, and component-scoped
+utilities:
+
+```json
+{
+  "css": {
+    "@keyframes agentic-status-pulse": {
+      "0%, 100%": { "opacity": "1" },
+      "50%": { "opacity": "0.4" }
+    }
+  }
+}
+```
+
+Every named animation must include a reduced-motion path in the installed CSS
+or in the component classes.
+
+### B4. Wrap shadcn Primitives
+
+If shadcn already provides the primitive, wrap or compose it instead of
+reimplementing it. Add the primitive to `registryDependencies` so installation
+brings the dependency along.
+
+Expected wrappers include:
+
+- `Button`
+- `Dialog`
+- `Collapsible`
+- `Progress`
+- `Table`
+- `Tabs`
+- `ToggleGroup`
+- `Tooltip`
+- `DropdownMenu`
+- `Sheet`
+- `Field`
+- `InputGroup`
+- `Textarea`
+- `Switch`
+- `Badge`
+- `Alert`
+
+Custom primitives are appropriate only when shadcn does not own the behavior
+or when the component is an Agentic Craft pattern primitive, such as
+`StatusIndicator`, `ReferenceItem`, or `ObservableWork`.
+
+### B5. The `observable-work` Details Exception
+
+`observable-work` may use native `<details>` by design. This is the signature
+JS-free disclosure primitive: it remains accessible, works without client
+state, and exposes the open state to CSS.
+
+The exception is narrow:
+
+- Use `<details>` only for observable-work style step details.
+- Render a plain non-interactive row when no detail content exists.
+- Keep focus, hover, and pointer treatment off empty rows.
+- Move any animation needed for the open state into that registry item's
+  `css` block.
+
+Other disclosure components should wrap shadcn `Collapsible`.
+
+### B6. Generative UI Discipline
+
+Registry components are intended to be safe building blocks for agent-authored
+or schema-authored UI. That requires structured contracts.
+
+Required:
+
+- Prefer typed data props over arbitrary `children` slots.
+- Keep rendering deterministic for the same props.
+- Avoid hidden state that changes the meaning of the component across renders.
+- Make default empty, loading, error, and complete states explicit.
+- Provide accessible labels for generated controls.
+- Degrade to useful text if rich content is unavailable.
+
+Avoid broad "bring any JSX" APIs unless the component is explicitly a layout
+shell. Generative systems can fill a schema; they cannot reliably author an
+opaque component tree.
+
+### B7. Composer Architecture
+
+The composer is the primary input surface and should remain a composed system
+of islands:
+
+- **Input:** the text area or prompt field, with auto-grow and stable submit
+  behavior.
+- **Attachments:** files, sources, connectors, and staged context.
+- **Toolbar:** mode, model, autonomy, and tool controls.
+- **Suggestions:** follow-ups, completions, or repair prompts.
+
+Each island must be independently dismissable when dismissing is supported.
+When an island appears, focus stays in the input unless the user explicitly
+opens the island. Dynamic additions should be announced through `aria-live`
+without stealing focus.
+
+Keyboard behavior is part of the component contract: submit, newline, escape,
+tab order, and disabled states must be documented in props or examples.
+
+### B8. Multi-Agent Identity Prop Contract
+
+Multi-agent registry components should use a structured identity object:
+
+```ts
+type AgentIdentity = {
+  id: string
+  name: string
+  role?: string
+  mark?: React.ComponentType<{ className?: string; "aria-hidden"?: true }>
+  initials?: string
+}
+```
+
+Rules:
+
+- `name` is the accessible identity.
+- `role` explains responsibility, not current status.
+- `mark` or `initials` is monochrome by default and inherits current text color.
+- Status is a separate prop or field, never encoded only in the identity mark.
+- Components may accept icon slots; they must not require the site's icon
+  family or stroke width.
+
+### B9. Cost, Confidence, and Empty States
+
+Cost props should be structured when the component formats values, or explicit
+formatted strings when an upstream system owns formatting. Display cost with
+tabular numerals, quiet contrast, and alignment that supports comparison.
+
+Confidence props should prefer qualitative states:
+
+```ts
+type ConfidenceLevel = "low" | "medium" | "high"
+```
+
+Numeric confidence is optional and source-backed:
+
+```ts
+type Confidence = {
+  level: ConfidenceLevel
+  score?: number
+  explanation?: string
+}
+```
+
+Empty states inside registry components use:
+
+- optional kicker
+- short heading
+- one-line muted description
+- optional single primary action
+
+Do not use large illustrations, large decorative icons, or marketing-style
+empty-state copy inside registry components.
+
+### B10. Theme, Type, Radius, Icons, and Motion
+
+Registry components must not assume the Agentic Craft site theme.
+
+Required:
+
+- Use semantic radius classes (`rounded-sm`, `rounded-md`, `rounded-lg`) rather
+  than `rounded-[10px]` or other fixed radii.
+- Use the consumer's font stack. `font-serif` and `font-mono` are allowed only
+  when the component explicitly opts into that voice through a documented prop
+  or a narrow semantic role such as code, timestamps, or tabular telemetry.
+- Use the consumer's icon library conventions when icons are provided as slots.
+  Do not hardcode the site's icon stroke width as a registry rule.
+- Use Tailwind transition and duration utilities rather than inline transition
+  literals.
+- Use visible focus rings based on `--ring`.
+- Respect `prefers-reduced-motion` for every animation.
+
+Forbidden:
+
+- raw `oklch()` or hex color literals in component code
+- site-only `dark:` color overrides that bypass tokens
+- `transition-all`
+- clickable `<div>`s
+- decorative gradient text, glow, glassmorphism, or AI-demo chrome
+
+### B11. Registry Fixture Data
+
+Registry demos and block fixtures should read like plausible telemetry:
+staggered durations, odd counts, believable names, source paths or page
+references that match the medium, and no placeholder company names such as
+ACME.
+
+Example data is part of the contract because it teaches consumers what the
+component is for.
+
+## C. Site Visual Identity
+
+This section applies to `app/`, `src/views/`, `src/content/`,
+`src/components/app-sidebar.tsx`, and site-only portions of `src/index.css`.
+It does not apply to redistributable registry components unless those
+components are being rendered on the Agentic Craft site.
+
+### C1. Creative North Star: The Galley Proof
 
 A publication at final proofing: monochrome ink on white, every claim checked,
 every numeral tabular, the author's voice set in serif against the apparatus
-of sans-serif instrumentation. The interface is the proofing table — quiet,
-flat, ruled with hairlines and dashed section breaks — and the agent's words
-are the manuscript on it. Two voices, one page: the product speaks PP Neue
-Montreal; the agent speaks Signifier. Nothing glows, nothing bounces,
-nothing pretends.
+of sans-serif instrumentation. The interface is the proofing table: quiet,
+flat, ruled with hairlines and dashed section breaks. The agent's words are
+the manuscript on it. Two voices, one page: the product speaks PP Neue
+Montreal; the agent speaks Signifier. Nothing glows, nothing bounces, nothing
+pretends.
 
-This system explicitly rejects **AI-demo chrome** — glowing gradients,
-sparkle icons, chat-bubble theater, spinners on tool calls, oversized rounded
-everything (PRODUCT.md's confirmed anti-reference). It also rejects the
-fabricated-demo tell: round numbers, identical timestamps, placeholder
-company names. Demo data is part of the design and must read like real
-telemetry. Density is editorial, not dashboard: one interactive specimen per
-section, generous section rhythm (48–64px breaks with dashed rules), prose
-capped at comfortable measures (section intros at 600px).
+The site explicitly rejects AI-demo chrome: glowing gradients, sparkle icons,
+chat-bubble theater, spinners on tool calls, oversized rounded everything, and
+fabricated demo tells such as round numbers, identical timestamps, and
+placeholder company names.
 
-**Key Characteristics:**
-- Achromatic surface; color exists only as state semantics
-- Two-voice typography: sans for the interface, serif for the agent
-- Flat depth — drawn with 1px lines and tone, never cast with shadows
-- Calibrated motion: 150–250ms, exponential ease-outs, press floor at 0.95
-- Honest affordances: every control works; nothing looks expandable that isn't
+### C2. Two Voices
 
-## 2. Colors
+PP Neue Montreal carries the apparatus: navigation, controls, labels, tables,
+metadata, forms, sidebars, and page chrome.
 
-An achromatic instrument ramp from white to ink, with exactly three chromatic
-voices reserved for state.
+Signifier appears in two roles:
 
-### Primary
-- **Carbon** (`oklch(0.205 0 0)`): the action color. Primary buttons, active
-  control chips, selected states, the filled end of progress. In dark mode it
-  inverts to **Hairline** (`oklch(0.922 0 0)`) — the action color is always
-  the pole of the ramp nearest the opposite theme.
+- page-title display
+- authored agent prose via `.agent-prose`
 
-### Neutral
-- **Ink** (`oklch(0.145 0 0)`): body text and headings on light; the page
-  background in dark mode.
-- **Graphite** (`oklch(0.556 0 0)`): muted text — descriptions, spec-table
-  prose, metadata. Always at full opacity for informational and interactive
-  use; opacity reduction is reserved for decorative, aria-hidden, or disabled
-  elements only (see Don'ts).
-- **Ash** (`oklch(0.708 0 0)`): the focus-ring base and dark-mode muted text.
-- **Hairline** (`oklch(0.922 0 0)`): every border, divider, and input stroke
-  on light. Dark mode draws lines with `white/10` instead.
-- **Fog** (`oklch(0.97 0 0)`): the only surface tint — hover washes,
-  secondary buttons, muted panels. Dark equivalent `oklch(0.269 0 0)`.
-- **Off-white** (`oklch(0.985 0 0)`) / **White** (`oklch(1 0 0)`): sidebar
-  vs. content canvas; the one-step tonal seam that separates chrome from page.
+The serif is a voice, not a garnish. Do not set product chrome in serif. Do not
+set authored agent prose in sans. Do not introduce a third family.
 
-### Tertiary (state voices — the only chroma in the system)
-- **Verified Green** (`oklch(0.54 0.14 155)`, dark `oklch(0.72 0.15 155)`):
-  confirmation dots, success flashes (used as 10–16% washes via
-  `--success-highlight` / `--success-flash`).
-- **Caution Amber** (`oklch(0.72 0.14 85)`, dark `oklch(0.82 0.14 85)`):
-  medium-confidence and warning dots.
-- **Signal Red** (`oklch(0.577 0.245 27.325)`, dark `oklch(0.704 0.191 22.216)`):
-  destructive actions and error states, almost always as a 10–20% tinted
-  background with full-strength text, not a filled red.
+Site hierarchy:
 
-### Named Rules
-**The Ink Rule.** The interface is achromatic. Chroma is semantics: if an
-element is colored, it is making a claim about state (ok / caution /
-destructive). Decorative color is prohibited — including on icons, which are
-always monochrome line icons at strokeWidth 1.5.
+- Display: page titles only, light serif, balanced wrapping.
+- Headline: sans section headings.
+- Title: compact sans titles inside demos.
+- Body: sans interface prose.
+- Agent prose: serif, readable measure, used only for the agent's own words.
+- Label: uppercase sans kicker through `.section-label`.
 
-**The Tokens-Only Rule.** No raw hex or oklch literal ever appears in a
-component. Status colors come from `--status-ok`, `--status-warn`,
-`--destructive`; everything else from the semantic ramp. Both themes are
-defined at the token layer, never via per-component `dark:` overrides for new
-work.
+### C3. Ink Rule
 
-## 3. Typography
+The site is achromatic. Chroma is semantics: if an element is colored, it is
+making a claim about state such as ok, caution, destructive, or budget
+threshold.
 
-**Display Font:** Signifier (serif fallback)
-**Body Font:** PP Neue Montreal (sans-serif fallback)
+Decorative color is prohibited on the site. Icons are monochrome. State colors
+are tokenized at the site layer and should not be scattered as raw color
+literals.
 
-**Character:** A working pairing, not a decorative one — the serif is a
-voice, not a garnish. PP Neue Montreal carries every part of the apparatus
-(navigation, controls, labels, tables, data); Signifier appears in
-exactly two roles: page-title display and the agent's own prose.
+This is a site editorial rule. Registry consumers are allowed to have their
+own color voice; registry components must render correctly inside it.
 
-### Hierarchy
-- **Display** (300, 2.25rem, 1.15): page titles only (`h1`). Light weight,
-  slight negative tracking, `text-wrap: balance`.
-- **Headline** (600, 1.25rem, tight tracking): section headings (`h2`).
-- **Title** (500, 0.875rem): component and row titles inside demos.
-- **Body** (400, 0.875rem, 1.43): all interface prose. Section intros are
-  measure-capped at 600px (`mt-2 max-w-[600px]` after the heading).
-- **Agent prose** (400, 16px/26px, -0.4px, `"opsz" 12`): the `.agent-prose`
-  class — the single source of truth for serif agent text. Defined in
-  `@layer components` so size utilities (`text-sm`) can override it where a
-  compact variant is intentional.
-- **Label** (500, 11px, +0.08em, uppercase): the `.section-label` category
-  kicker. Tables set `font-variant-numeric: tabular-nums` always.
+### C4. Hairline Rule
 
-### Named Rules
-**The Two Voices Rule.** Sans is the product speaking; serif is the agent
-speaking. Never set UI chrome in serif, never set agent responses in sans,
-and never introduce a third family.
+Site depth is drawn, not cast. Hierarchy comes from 1px hairline borders,
+one-step tonal seams, dashed section rules, spacing, and typography.
 
-**The One Kicker Rule.** The uppercase section-label is the system's single
-eyebrow device, tied to the section-rhythm system. It earns its place by
-being a navigation anchor (every label matches a sidebar subsection); do not
-add second-tier eyebrows, numbered markers, or badge-kickers above headings.
+Shadows are reserved for real overlays: dropdown menus, dialogs, popovers, and
+temporary floating surfaces. Demo frames, cards, tables, and at-rest content
+surfaces are shadowless.
 
-## 4. Elevation
+Use a 1px rule or a tonal step before reaching for heavier borders. A thicker
+left rule may be used only as a deliberate editorial callout recipe, not as a
+default structural accent.
 
-Flat; depth is drawn, not cast. Hierarchy comes from 1px hairline borders,
-one-step tonal seams (white content / off-white sidebar; fog washes on
-hover), spacing, and the dashed rule between page sections
-(`1px dashed` at 72% border strength). Shadows are reserved for true
-overlays — dropdown menus, dialogs, popovers — where physical detachment is
-real, and even there they stay at the small ambient end of the shadcn scale
-(`shadow-md` ceiling). Demo frames, cards, tables, and every at-rest surface
-are shadowless.
+### C5. Calibrated Motion
 
-### Named Rules
-**The Hairline Rule.** If a boundary needs marking, draw a 1px line or step
-the background one tone; never cast a shadow to separate two flat surfaces.
-A `border-left` thicker than 1px as a colored accent is prohibited.
+Site motion is precise and quiet:
 
-## 5. Components
+- state transitions: 150ms
+- reveals and entrances: 180-300ms
+- easing: `cubic-bezier(0.22, 1, 0.36, 1)`
+- press feedback: never scale below 0.95
+- ambient loops: rare, finite, and reduced-motion safe
 
-Quiet instruments: controls read as calibrated equipment — small, precise,
-honest about state, never decorative. Every interactive component ships all
-of its states (default, hover, focus-visible, active, disabled), and the
-focus treatment is universal.
+The highest-frequency action, such as send, gets no flourish. Motion clarifies
+state; it does not entertain.
 
-### Buttons
-- **Shape:** gently rounded (10px), 32px tall, `px-2.5`, text-sm/500.
-- **Primary:** Carbon fill, off-white text.
-- **Outline:** white fill, hairline border, fog wash on hover.
-- **Ghost:** transparent, fog wash on hover; used for icon-only controls
-  (with `aria-label`, mandatory).
-- **Destructive:** Signal Red at 10% background with full-strength red text —
-  never a solid red fill.
-- **Hover / Focus / Active:** color transitions at 150ms; the house focus
-  ring `focus-visible:ring-3 ring-ring/50` (3px, 50% Ash); `active:translate-y-px`
-  press. On coarse pointers every control reaches a 44px hit target
-  (`data-compact-touch` expands small instruments invisibly).
+### C6. Buttons, Inputs, and Controls
 
-### Chips (pattern controls)
-- **Style:** borderless toggle items, 28px min-height, text-xs Graphite.
-- **State:** active = 4% ink wash + full-strength text via `aria-pressed`;
-  exclusive groups animate their demo with a replay key on change.
+Site controls read as calibrated instruments: small, precise, honest about
+state, and never decorative.
 
-### Cards / Containers (the demo frame)
-- **Corner Style:** 10px.
-- **Background:** white (transparent in dark), `border-border/40` hairline.
-- **Shadow Strategy:** none — Hairline Rule.
-- **Internal Padding:** 16px, stepping to 24px at `sm:` (`p-4 sm:p-6`).
-- Demo frames sit exactly 40px (`mt-10`) below their section intro, sitewide.
+- Buttons are compact, gently rounded, and use the site action color.
+- Ghost buttons are appropriate for icon-only header or tool controls and
+  require `aria-label`.
+- Destructive actions use restrained destructive treatment, not a solid red
+  marketing button.
+- Inputs use hairline strokes, transparent backgrounds, iOS-safe text sizing,
+  and visible focus rings.
+- Pattern controls use compact chips or segmented controls whose active state
+  visibly changes the specimen.
 
-### Inputs / Fields
-- **Style:** hairline stroke, transparent background, 10px radius, 16px text
-  on mobile (`text-base md:text-sm` — iOS zoom guard).
-- **Focus:** border shifts to ring color + the house 3px ring at 50%.
-- **Placeholder:** Plain `text-muted-foreground` — no opacity modifier (must
-  meet the 4.5:1 placeholder contrast requirement).
+The registry may wrap the same shadcn primitives, but these visual recipes are
+site recipes.
 
-### Navigation
-- Off-white sidebar with hairline seam; collapsible sections; 11px uppercase
-  labels for categories; active item = fog wash + ink text. Mobile: sheet
-  that closes on every navigation tap. Keyboard shortcut `d` toggles theme.
+### C7. Callouts and Kickers
 
-### Signature: Observable Work / Tool Tree
-The system's most distinctive components render agent activity as quiet rows:
-monochrome status glyphs (dashed circle = queued, spinning = running),
-tabular timestamps that reveal on hover (150ms fade), L-connectors for
-parallel children, and `<details>` disclosure **only when content exists** —
-a row with nothing to reveal renders as a plain div with no pointer, no
-hover, no focus stop.
+The `.section-label` kicker is the site's single eyebrow device. It should map
+to real navigation or page structure, not act as generic ornament.
 
-### Named Rules
-**The Honest Affordance Rule.** Nothing may look interactive that isn't:
-no cursor-pointer on dead rows, no hover treatment on non-links, no
-expandable chrome on empty disclosures, and every demo control visibly
-changes the demo it claims to control.
+Allowed kicker uses:
 
-**The Calibrated Motion Rule.** State transitions run 150ms; reveals and
-entrances 180–300ms on `cubic-bezier(0.22, 1, 0.36, 1)`; press feedback
-never scales below 0.95; ambient loops (shimmer, pulse) are rare and finite.
-Every animation has a `prefers-reduced-motion` alternative. The
-highest-frequency action (send) gets no flourish at all.
+- top-of-section labels that match sidebar or page structure
+- compact table or specimen labels where the label clarifies the apparatus
 
-## 6. Do's and Don'ts
+Forbidden kicker uses:
 
-### Do:
-- **Do** keep icons monochrome, line-style, `strokeWidth={1.5}`, one meaning
-  per glyph (robot = agent, brain = memory, waveform = activity feed).
-- **Do** use plain `text-muted-foreground` (no opacity modifier) for all
-  informational text and interactive glyphs; 4.5:1 body contrast is
-  non-negotiable (WCAG 2.1 AA). Opacity-reduced muted-foreground is
-  permitted only on decorative, `aria-hidden`, or disabled elements.
-- **Do** write demo data as plausible telemetry: staggered durations, odd
-  numbers (92,500 not 100,000), believable product names (Meridian, never
-  ACME), section-style locations for path sources, "Page N" only for PDFs.
-- **Do** use typographic quotes in all rendered copy (' " ").
-- **Do** give every outcome a `role="status"` and move focus to it when the
-  triggering control unmounts.
-- **Do** end sections with a spec table **only** when it encodes non-visible
-  contract (timings, keyboard behavior, state rules), and an italic callout
-  **only** when it states a rule the demo cannot show — most sections need
-  neither (≤2 callouts per page, hard cap).
+- stacked eyebrows above every heading
+- fake numbered markers
+- decorative badges that duplicate nearby copy
 
-### Don't:
-- **Don't** ship AI-demo chrome: glowing gradients, sparkle icons,
-  chat-bubble theater, spinners on tool calls, success/failure icons on tool
-  calls, oversized rounded everything (PRODUCT.md anti-reference, verbatim).
-- **Don't** use pill shapes — `rounded-md`/`rounded-lg` consistently, never
-  full-radius capsules.
-- **Don't** inject `<style>` tags, use `transition-all`, `space-x/y-*`
-  utilities, clickable `<div>`s, or raw status colors — all five are
-  hard-failed by `scripts/audit-ui.mjs` in CI.
-- **Don't** use `border-left` > 1px as a colored accent, gradient text, or
-  decorative glassmorphism, ever.
-- **Don't** add per-component `dark:` color overrides for new work; both
-  themes live at the token layer.
-- **Don't** animate layout properties, bounce, or scale presses below 0.95;
-  don't gate content visibility on a reveal animation.
-- **Don't** let any text clip or overflow: table prose cells wrap
-  (`whitespace-nowrap` is header-only), headings balance, long prose sets
-  `text-wrap: pretty`.
+Italic callouts are allowed when they state a rule the specimen cannot show.
+They should be rare, short, and editorial. A page should not lean on callouts
+to explain what the visual example failed to teach.
+
+### C8. Page Rhythm
+
+The site teaches through one strong specimen at a time. Sections should have
+generous rhythm, comfortable prose measure, and a clear relationship between
+principle, example, and code.
+
+Default page pattern:
+
+- short thesis
+- interactive specimen or worked example
+- concise explanation
+- anti-patterns or tradeoffs when useful
+- components or registry links when relevant
+
+Spec tables appear only when they encode non-visible contract: timings,
+keyboard behavior, state rules, installation details, or accessibility rules.
+
+### C9. IA Direction
+
+The site is a reference guide with code distribution, not a component catalog.
+
+Target IA:
+
+- **Thesis:** the homepage states what the guide is and points into the system.
+- **Principles:** the cross-cutting ideas from the research, short and
+  citable.
+- **Patterns:** visual cards for concepts such as Observable Work, Locked
+  Preview, Autonomy Contract, Provenance, Memory Ledger, Composer, Confidence,
+  Cost, and Multi-Agent Identity.
+- **Use Cases:** composed product surfaces that show patterns working together.
+- **Registry:** searchable code distribution, linked from pattern cards and use
+  cases.
+
+Pattern cards should be visual-first. The worked example carries the argument;
+prose supports it.
+
+### C10. Site Demo Data
+
+Demo data is part of the design. It must read like real telemetry: staggered
+durations, plausible names, odd counts, believable paths, source locations that
+match the artifact type, and copy that sounds like product work rather than a
+placeholder script.
+
+Avoid generic AI copy, repeated CTA roles, exposed internal craft rules on
+public pages, redundant provenance strips, and anything that makes the page
+feel like a fixture dump.
+
+## Changelog
+
+### 2026-06-15
+
+- Split `DESIGN.md` into cross-cutting product principles, a downstream-safe
+  registry contract, and site-only visual identity.
+- Moved the Galley Proof, Two Voices, Ink, Hairline, and Calibrated Motion
+  rules to the site scope so they cannot be mistaken for registry constraints.
+- Added the registry checklist for shadcn-safe tokens, `cssVars`/`css`,
+  primitive wrapping, generative UI, composer architecture, multi-agent
+  identity, cost, confidence, empty states, and the `observable-work`
+  `<details>` exception.

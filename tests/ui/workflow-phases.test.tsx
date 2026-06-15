@@ -157,10 +157,12 @@ describe("WorkflowPhases", () => {
 
   it("paused freezes the active pulse via inline play-state", () => {
     const { container } = render(<WorkflowPhases phases={PHASES} paused />)
-    const pulse = container.querySelector(".wf-phase-pulse") as HTMLElement
+    const pulse = container.querySelector(
+      "[data-slot='workflow-phase-pulse']"
+    ) as HTMLElement
     expect(pulse).not.toBeNull()
-    // Inline style outranks the cascade layer the animation shorthand
-    // lives in — a class-based override silently loses that fight
+    // Inline style outranks the animation shorthand, so paused runs freeze the
+    // loop without reintroducing a registry-unsafe custom class.
     expect(pulse.style.animationPlayState).toBe("paused")
   })
 })

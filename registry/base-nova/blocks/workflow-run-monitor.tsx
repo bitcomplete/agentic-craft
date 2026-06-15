@@ -1374,7 +1374,9 @@ function WorkflowRunMonitorBlock() {
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         {/* "Scenario", not "State" — the chips pick which run to demo; live
             status belongs to the phases, the log line, and the meter */}
-        <span className="section-label">Scenario</span>
+        <span className="text-[11px] font-medium tracking-[0.08em] text-muted-foreground uppercase">
+          Scenario
+        </span>
         <div className="flex flex-wrap gap-1">
           {(["running", "paused", "completed", "failed"] as RunState[]).map(
             (s) => (
@@ -1456,7 +1458,7 @@ function WorkflowRunMonitorBlock() {
             </span>
           </button>
           {planOpen && (
-            <div className="agent-detail-reveal mt-2 motion-reduce:animate-none">
+            <div className="mt-2">
               <PlanScript
                 phases={phases}
                 effectiveActivePhaseId={effectiveActivePhaseId}

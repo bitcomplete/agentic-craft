@@ -48,6 +48,18 @@ export const sections: NavigationSection[] = [
     ],
   },
   {
+    title: "Patterns",
+    path: "/patterns/autonomy-contract",
+    icon: GridIcon,
+    subs: [
+      { title: "Autonomy Contract", id: "autonomy-contract" },
+      { title: "Why It Matters", id: "why-it-matters" },
+      { title: "Principles", id: "principles-defended" },
+      { title: "Components Used", id: "components-used" },
+      { title: "Composition Recipe", id: "composition-recipe" },
+    ],
+  },
+  {
     title: "Conversation",
     path: "/conversation",
     icon: BubbleChatIcon,

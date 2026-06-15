@@ -39,7 +39,7 @@ type AgentDetail = {
   elapsed?: string
   /** Schema-validated return value — rendered as data, in mono */
   returned?: string
-  /** A plain-text return — the agent's own words, rendered in the serif voice */
+  /** A plain-text return — the agent's own words, rendered as readable prose */
   output?: string
   /** The apparatus explaining itself — runtime semantics in the system's
       voice (muted sans annotation), never the agent's words */
@@ -112,30 +112,24 @@ function AgentDetailBody({
   const meta = getDetailMeta(detail)
   return (
     <>
-      {task && (
-        <p className="agent-detail-reveal text-sm text-muted-foreground motion-reduce:animate-none">
-          {task}
-        </p>
-      )}
+      {task && <p className="text-sm text-muted-foreground">{task}</p>}
       {meta.length > 0 && (
-        <p className="agent-detail-reveal text-xs text-muted-foreground tabular-nums motion-reduce:animate-none">
+        <p className="text-xs text-muted-foreground tabular-nums">
           {meta.join(" · ")}
         </p>
       )}
       {detail.returned && (
-        <p className="agent-detail-reveal font-mono text-xs text-foreground [animation-delay:60ms] [animation-fill-mode:both] motion-reduce:animate-none">
-          {detail.returned}
-        </p>
+        <p className="font-mono text-xs text-foreground">{detail.returned}</p>
       )}
       {detail.output && (
-        <p className="agent-detail-reveal agent-prose max-w-[65ch] text-sm [animation-delay:60ms] [animation-fill-mode:both] motion-reduce:animate-none">
+        <p className="max-w-[65ch] text-sm leading-6 text-foreground">
           {detail.output}
         </p>
       )}
       {detail.note && (
         <p
           data-slot="agent-detail-note"
-          className="agent-detail-reveal max-w-[65ch] text-xs text-muted-foreground italic [animation-delay:60ms] [animation-fill-mode:both] motion-reduce:animate-none"
+          className="max-w-[65ch] text-xs text-muted-foreground italic"
         >
           {detail.note}
         </p>
