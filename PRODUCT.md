@@ -39,7 +39,7 @@ it should be because the pattern is right, not because the page is loud.
   oversized rounded everything — the default look of 2025 AI startups. The
   site teaches agent UX; looking like an AI demo would forfeit the argument.
 - Repo-codified bans that operationalize this (enforced by
-  `scripts/audit-ui.mjs` and INTERACTIVE_SPEC.md): no pill shapes, no
+  `scripts/audit-ui.mjs` and documented in `AGENTS.md`): no pill shapes, no
   success/failure icons on tool calls, monochrome icons only, no injected
   style tags, no clickable divs, no raw status colors outside tokens.
 - The fabricated-demo tell: round numbers, identical timestamps, "ACME"
