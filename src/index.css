@@ -65,7 +65,7 @@
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --ring: oklch(0.7 0 0);
   --success-highlight: oklch(0.72 0.15 155 / 10%);
   --success-flash: oklch(0.72 0.15 155 / 16%);
   --status-ok: oklch(0.72 0.15 155);
