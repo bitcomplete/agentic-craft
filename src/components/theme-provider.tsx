@@ -73,13 +73,13 @@ function disableTransitionsTemporarily() {
     return () => {}
   }
 
-  document.documentElement.dataset.disableTransitions = "true"
+  document.documentElement.classList.add("theme-flipping")
 
   return () => {
     window.getComputedStyle(document.body)
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        delete document.documentElement.dataset.disableTransitions
+        document.documentElement.classList.remove("theme-flipping")
       })
     })
   }

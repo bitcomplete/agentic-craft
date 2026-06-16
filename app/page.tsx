@@ -1,12 +1,13 @@
 import type { Metadata } from "next"
-import { DemoContent } from "@/views/demo-content"
+
+import { LandingContent } from "@/views/landing/landing-content"
 
 export const metadata: Metadata = {
-  title: "Agentic Craft",
+  title: "Agentic Craft — interface patterns for agents beyond chat",
   description:
-    "Reference guide for designing agentic product interfaces beyond chat",
+    "A set of carefully designed interaction patterns for agentic products, grounded in research and shipped as installable shadcn registry components.",
 }
 
 export default function HomePage() {
-  return <DemoContent />
+  return <LandingContent />
 }

@@ -566,6 +566,10 @@ Italic callouts are allowed when they state a rule the specimen cannot show.
 They should be rare, short, and editorial. A page should not lean on callouts
 to explain what the visual example failed to teach.
 
+There is no numeric hard cap. The old "two callouts per page" rule is now a
+review heuristic, not a failing condition: if a page needs many callouts, the
+specimen or page structure is probably not teaching clearly enough.
+
 ### C8. Page Rhythm
 
 The site teaches through one strong specimen at a time. Sections should have
@@ -608,6 +612,11 @@ Demo data is part of the design. It must read like real telemetry: staggered
 durations, plausible names, odd counts, believable paths, source locations that
 match the artifact type, and copy that sounds like product work rather than a
 placeholder script.
+
+Pattern cards and use-case pages keep narrative fixtures in colocated
+`data.ts` files. Inline fixture arrays are acceptable only for tiny local state
+lists; worked examples that teach a pattern should name and export their data
+so reviewers can audit realism separately from rendering.
 
 Avoid generic AI copy, repeated CTA roles, exposed internal craft rules on
 public pages, redundant provenance strips, and anything that makes the page

@@ -1,0 +1,82 @@
+/* Landing page — bespoke surfaces the utility layer can't express.
+   Everything monochrome and drawn-not-cast except the one image-like
+   surface: the atmosphere sky behind the hero shot and approvals demo. */
+
+/* ── Paper grain — monochrome film grain over the whole sheet ── */
+
+.landing-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 220px 220px;
+}
+
+.dark .landing-grain {
+  opacity: 0.07;
+}
+
+/* ── The shared atmosphere — the one image-like surface on the page ── */
+
+.atmosphere-bg {
+  background: linear-gradient(
+    168deg,
+    oklch(0.88 0.025 240) 0%,
+    oklch(0.82 0.04 235) 38%,
+    oklch(0.87 0.02 220) 70%,
+    oklch(0.93 0.012 90) 100%
+  );
+}
+
+/* ── Calibrated scroll reveals ──
+   .will-reveal is added by JS only (and only when motion is allowed),
+   so no-JS, print, and reduced-motion always show content. */
+
+.landing .will-reveal {
+  opacity: 0.6;
+  transform: translateY(4px);
+  transition:
+    opacity 280ms cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+    transform 280ms cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms);
+}
+
+.landing .will-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered cascade on the pattern-index ledger rows. */
+.landing-pattern-index > .will-reveal:nth-child(2) {
+  --reveal-delay: 25ms;
+}
+.landing-pattern-index > .will-reveal:nth-child(3) {
+  --reveal-delay: 50ms;
+}
+.landing-pattern-index > .will-reveal:nth-child(4) {
+  --reveal-delay: 75ms;
+}
+.landing-pattern-index > .will-reveal:nth-child(5) {
+  --reveal-delay: 100ms;
+}
+.landing-pattern-index > .will-reveal:nth-child(6) {
+  --reveal-delay: 125ms;
+}
+.landing-pattern-index > .will-reveal:nth-child(7) {
+  --reveal-delay: 150ms;
+}
+.landing-pattern-index > .will-reveal:nth-child(8) {
+  --reveal-delay: 175ms;
+}
+.landing-pattern-index > .will-reveal:nth-child(9) {
+  --reveal-delay: 200ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing .will-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
