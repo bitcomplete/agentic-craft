@@ -29,6 +29,7 @@ dist-backup
 .next/
 next-env.d.ts
 tsconfig.tsbuildinfo
+.vercel/
 
 # Test artifacts
 test-results/
