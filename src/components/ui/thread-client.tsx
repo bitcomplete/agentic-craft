@@ -2,6 +2,8 @@
 
 import * as React from "react"
 
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Collapsible,
   CollapsibleContent,
@@ -42,6 +44,7 @@ type ThreadRootProps = React.ComponentProps<"section"> & {
   stream?: ThreadStreamSource | null
   streamRole?: ThreadMessageRole
   streamLabel?: string
+  scrollToBottomIcon?: React.ReactNode
   renderStream?: (
     content: string,
     state: ThreadStreamRenderState
@@ -68,6 +71,10 @@ type ThreadToolCallProps = Omit<React.ComponentProps<"div">, "title"> & {
   state?: ThreadToolCallState
   duration?: React.ReactNode
   summary?: React.ReactNode
+  icon?: React.ReactNode
+  disclosureIcon?:
+    | React.ReactNode
+    | ((state: { open: boolean }) => React.ReactNode)
   defaultOpen?: boolean
   open?: boolean
   onOpenChange?: (open: boolean) => void
@@ -123,6 +130,7 @@ function ThreadRoot({
   stream,
   streamRole = "assistant",
   streamLabel,
+  scrollToBottomIcon,
   renderStream,
   onStreamComplete,
   onStreamError,
@@ -381,18 +389,24 @@ function ThreadRoot({
         </div>
       </div>
       {!anchored ? (
-        <button
+        <Button
           type="button"
           data-slot="thread-scroll-bottom"
+          data-compact-touch
+          size="icon-lg"
+          variant="outline"
           aria-label="Scroll to bottom"
-          className="absolute bottom-3 left-1/2 z-10 grid size-9 -translate-x-1/2 place-items-center rounded-full border border-border bg-background text-muted-foreground shadow-sm transition-[background-color,color,box-shadow,transform] outline-none after:absolute after:-inset-1 after:content-[''] focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 [@media(hover:hover)_and_(pointer:fine)]:hover:bg-muted [@media(hover:hover)_and_(pointer:fine)]:hover:text-foreground"
           onClick={() => {
             stickToBottomRef.current = true
             scrollToBottom(isReducedMotion() ? "auto" : "smooth")
           }}
         >
-          <ArrowDownIcon />
-        </button>
+          {scrollToBottomIcon ?? (
+            <span data-slot="thread-scroll-bottom-label" aria-hidden="true">
+              End
+            </span>
+          )}
+        </Button>
       ) : null}
     </section>
   )
@@ -440,12 +454,13 @@ function ThreadMessage({
               <span className="font-medium text-foreground">{name}</span>
             ) : null}
             {streaming ? (
-              <span
+              <Badge
+                data-slot="thread-message-streaming"
+                variant="secondary"
                 aria-label="Streaming"
-                className="rounded-full bg-muted px-1.5 py-0.5 text-[11px] text-muted-foreground"
               >
                 streaming
-              </span>
+              </Badge>
             ) : null}
             {timestamp ? (
               <span className="text-muted-foreground tabular-nums">
@@ -508,114 +523,15 @@ function ThreadStatus({
             <p className="truncate text-xs text-muted-foreground">{detail}</p>
           ) : null}
         </div>
-        <span
-          className={cn(
-            "shrink-0 rounded-md border border-border px-2 py-0.5 text-xs text-muted-foreground",
-            state === "error" && "text-destructive"
-          )}
+        <Badge
+          data-slot="thread-status-badge"
+          data-state={state}
+          variant={state === "error" ? "destructive" : "outline"}
         >
           {statusLabels[state]}
-        </span>
+        </Badge>
       </div>
     </div>
-  )
-}
-
-function ChevronIcon({ open }: { open: boolean }) {
-  return (
-    <svg
-      viewBox="0 0 16 16"
-      width="14"
-      height="14"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      className={cn(
-        "shrink-0 transition-transform duration-150",
-        open && "rotate-90"
-      )}
-    >
-      <path d="m6 4 4 4-4 4" />
-    </svg>
-  )
-}
-
-function ArrowDownIcon() {
-  return (
-    <svg
-      viewBox="0 0 16 16"
-      width="14"
-      height="14"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M8 3.5v8" />
-      <path d="m4.5 8.5 3.5 3.5 3.5-3.5" />
-    </svg>
-  )
-}
-
-function ToolCallIcon({ state }: { state: ThreadToolCallState }) {
-  if (state === "done") {
-    return (
-      <svg
-        viewBox="0 0 16 16"
-        width="14"
-        height="14"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden="true"
-      >
-        <rect x="1.5" y="1.5" width="13" height="13" rx="3" />
-        <path d="M5 8.2l2.1 2.1L11 6.2" />
-      </svg>
-    )
-  }
-
-  if (state === "error") {
-    return (
-      <svg
-        viewBox="0 0 16 16"
-        width="14"
-        height="14"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden="true"
-      >
-        <path d="M8 1.8 1.6 13h12.8L8 1.8Z" />
-        <path d="M8 6.4v3.1" />
-        <path d="M8 11.4h.01" />
-      </svg>
-    )
-  }
-
-  if (state === "running") {
-    return (
-      <span
-        aria-hidden="true"
-        className="size-3.5 animate-spin rounded-full border border-foreground/70 border-t-transparent motion-reduce:animate-none"
-      />
-    )
-  }
-
-  return (
-    <span
-      aria-hidden="true"
-      className="size-3 animate-[thread-pending-pulse_1.8s_cubic-bezier(0.45,0,0.55,1)_infinite] rounded-full border border-dashed border-muted-foreground motion-reduce:animate-none"
-    />
   )
 }
 
@@ -637,6 +553,8 @@ function ThreadToolCallHeader({
   state,
   duration,
   summary,
+  icon,
+  disclosureIcon,
   open,
   hasDetails,
 }: {
@@ -644,39 +562,40 @@ function ThreadToolCallHeader({
   state: ThreadToolCallState
   duration?: React.ReactNode
   summary?: React.ReactNode
+  icon?: React.ReactNode
+  disclosureIcon?: ThreadToolCallProps["disclosureIcon"]
   open: boolean
   hasDetails: boolean
 }) {
   return (
     <>
-      <span
-        className={cn(
-          "grid size-5 shrink-0 place-items-center rounded-sm bg-background text-muted-foreground shadow-[0_0_0_1px_var(--border)]",
-          state === "done" && "text-foreground/70",
-          state === "error" && "text-destructive"
-        )}
-      >
-        <ToolCallIcon state={state} />
-      </span>
+      {icon ? <span data-slot="thread-tool-call-icon">{icon}</span> : null}
       <span className="min-w-0 flex-1">
         <span className="block truncate text-sm font-medium text-foreground">
           {title}
         </span>
         {summary ? (
-          <span className="block truncate text-xs text-muted-foreground">
+          <span className="block truncate text-xs font-normal text-muted-foreground">
             {summary}
           </span>
         ) : null}
       </span>
-      <span
-        className={cn(
-          "shrink-0 text-xs text-muted-foreground",
-          duration && "tabular-nums"
-        )}
+      <Badge
+        data-slot="thread-tool-call-meta"
+        variant={state === "error" ? "destructive" : "outline"}
       >
         {duration ?? toolCallStateLabel[state]}
-      </span>
-      {hasDetails ? <ChevronIcon open={open} /> : null}
+      </Badge>
+      {hasDetails && disclosureIcon ? (
+        <span
+          data-slot="thread-tool-call-disclosure"
+          data-open={open ? "" : undefined}
+        >
+          {typeof disclosureIcon === "function"
+            ? disclosureIcon({ open })
+            : disclosureIcon}
+        </span>
+      ) : null}
     </>
   )
 }
@@ -686,6 +605,8 @@ function ThreadToolCall({
   state = "pending",
   duration,
   summary,
+  icon,
+  disclosureIcon,
   defaultOpen,
   open: openProp,
   onOpenChange,
@@ -717,6 +638,8 @@ function ThreadToolCall({
             state={state}
             duration={duration}
             summary={summary}
+            icon={icon}
+            disclosureIcon={disclosureIcon}
             open={open}
             hasDetails={hasDetails}
           />
@@ -737,30 +660,27 @@ function ThreadToolCall({
         {...props}
       >
         <CollapsibleTrigger
-          type="button"
-          disabled={!hasDetails}
-          render={(triggerProps) => (
-            <button
-              {...triggerProps}
-              aria-expanded={hasDetails ? open : undefined}
-              aria-label={hasDetails ? toolCallToggleLabel(title) : undefined}
-              className={cn(
-                "flex min-h-11 w-full min-w-0 items-center gap-2.5 px-3 py-2 text-left transition-[background-color,box-shadow] outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
-                hasDetails &&
-                  "[@media(hover:hover)_and_(pointer:fine)]:hover:bg-muted/60"
-              )}
-            >
-              <ThreadToolCallHeader
-                title={title}
-                state={state}
-                duration={duration}
-                summary={summary}
-                open={open}
-                hasDetails={hasDetails}
-              />
-            </button>
-          )}
-        />
+          aria-label={toolCallToggleLabel(title)}
+          render={
+            <Button
+              data-slot="thread-tool-call-trigger"
+              type="button"
+              variant="ghost"
+              size="lg"
+            />
+          }
+        >
+          <ThreadToolCallHeader
+            title={title}
+            state={state}
+            duration={duration}
+            summary={summary}
+            icon={icon}
+            disclosureIcon={disclosureIcon}
+            open={open}
+            hasDetails={hasDetails}
+          />
+        </CollapsibleTrigger>
         {hasDetails ? (
           <CollapsibleContent className="border-t border-border bg-background/45 px-3 py-3 text-sm leading-6 text-muted-foreground">
             {children}

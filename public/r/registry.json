@@ -128,7 +128,7 @@
       "type": "registry:ui",
       "title": "Thread",
       "description": "A composable agent thread with message slots, streaming async iterable support, tool-call disclosure, status hairline, scroll anchoring, and a scroll-to-bottom affordance.",
-      "registryDependencies": ["collapsible"],
+      "registryDependencies": ["badge", "button", "collapsible"],
       "files": [
         {
           "path": "registry/base-nova/ui/thread.tsx",
@@ -140,12 +140,50 @@
         }
       ],
       "css": {
+        "[data-slot='thread-scroll-bottom']": {
+          "position": "absolute",
+          "bottom": "0.75rem",
+          "left": "50%",
+          "transform": "translateX(-50%)"
+        },
+        "button[data-slot='thread-scroll-bottom']:active": {
+          "transform": "translateX(-50%) scale(0.97)"
+        },
+        "[data-slot='thread-status-badge'][data-state='streaming']": {
+          "animation": "thread-pending-pulse 1.8s cubic-bezier(0.45, 0, 0.55, 1) infinite"
+        },
+        "[data-slot='thread-tool-call-meta']": {
+          "font-variant-numeric": "tabular-nums"
+        },
+        "[data-slot='thread-tool-call-trigger']": {
+          "height": "auto",
+          "min-height": "2.75rem",
+          "width": "100%",
+          "min-width": "0",
+          "justify-content": "flex-start",
+          "text-align": "left"
+        },
+        "button[data-slot='thread-tool-call-trigger']:active": {
+          "transform": "none"
+        },
+        "[data-slot='thread-tool-call-disclosure']": {
+          "display": "inline-flex",
+          "flex-shrink": "0"
+        },
+        "[data-slot='thread-tool-call-disclosure'][data-open]": {
+          "transform": "rotate(90deg)"
+        },
         "@keyframes thread-pending-pulse": {
           "0%, 100%": {
             "opacity": "0.55"
           },
           "50%": {
             "opacity": "1"
+          }
+        },
+        "@media (prefers-reduced-motion: reduce)": {
+          "[data-slot='thread-status-badge'][data-state='streaming']": {
+            "animation": "none"
           }
         }
       }

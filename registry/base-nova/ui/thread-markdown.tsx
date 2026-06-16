@@ -50,7 +50,7 @@ const threadMarkdownComponents: Components = {
   ul: ({ className, ...props }) => (
     <ul
       className={cn(
-        "my-3 list-disc space-y-1.5 pl-5 marker:text-muted-foreground first:mt-0 last:mb-0",
+        "my-3 list-disc pl-5 marker:text-muted-foreground first:mt-0 last:mb-0 [&>li+li]:mt-1.5",
         className
       )}
       {...withoutNode(props)}
@@ -59,7 +59,7 @@ const threadMarkdownComponents: Components = {
   ol: ({ className, ...props }) => (
     <ol
       className={cn(
-        "my-3 list-decimal space-y-1 pl-5 first:mt-0 last:mb-0",
+        "my-3 list-decimal pl-5 first:mt-0 last:mb-0 [&>li+li]:mt-1",
         className
       )}
       {...withoutNode(props)}

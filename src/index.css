@@ -220,6 +220,53 @@
     font-variation-settings: "opsz" 12;
     -webkit-font-smoothing: antialiased;
   }
+
+  [data-slot="thread-scroll-bottom"] {
+    position: absolute;
+    bottom: 0.75rem;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  button[data-slot="thread-scroll-bottom"]:active {
+    transform: translateX(-50%) scale(0.97);
+  }
+
+  [data-slot="thread-status-badge"][data-state="streaming"] {
+    animation: thread-pending-pulse 1.8s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  }
+
+  [data-slot="thread-tool-call-meta"] {
+    font-variant-numeric: tabular-nums;
+  }
+
+  [data-slot="thread-tool-call-trigger"] {
+    height: auto;
+    min-height: 2.75rem;
+    width: 100%;
+    min-width: 0;
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  button[data-slot="thread-tool-call-trigger"]:active {
+    transform: none;
+  }
+
+  [data-slot="thread-tool-call-disclosure"] {
+    display: inline-flex;
+    flex-shrink: 0;
+  }
+
+  [data-slot="thread-tool-call-disclosure"][data-open] {
+    transform: rotate(90deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-slot="thread-status-badge"][data-state="streaming"] {
+    animation: none;
+  }
 }
 
 /* Editorial page rhythm */

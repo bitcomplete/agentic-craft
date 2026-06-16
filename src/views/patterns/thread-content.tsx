@@ -2,11 +2,20 @@
 
 import * as React from "react"
 import {
+  ArrowDown01Icon,
+  ArrowRight01Icon,
   ComputerTerminal01Icon,
   Copy01Icon,
+  DocumentValidationIcon,
+  FileSearchIcon,
+  Loading03Icon,
+  Note01Icon,
+  TestTube01Icon,
+  CheckmarkSquare02Icon,
   Tick02Icon,
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
+import type { IconSvgElement } from "@hugeicons/react"
 
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -27,6 +36,29 @@ type PackageManager = keyof typeof installCommands
 
 const packageManagers = Object.keys(installCommands) as PackageManager[]
 const autoReplayStorageKey = "agentic-craft-thread-demo-auto-replayed:v1"
+
+function ThreadDemoIcon({
+  icon,
+  placement = "inline-start",
+  className,
+}: {
+  icon: IconSvgElement
+  placement?: "inline-start" | "inline-end"
+  className?: string
+}) {
+  return (
+    <HugeiconsIcon
+      icon={icon}
+      data-icon={placement}
+      aria-hidden="true"
+      className={className}
+    />
+  )
+}
+
+function renderToolDisclosureIcon() {
+  return <ThreadDemoIcon icon={ArrowRight01Icon} placement="inline-end" />
+}
 
 function wait(ms: number) {
   return new Promise((resolve) => window.setTimeout(resolve, ms))
@@ -230,6 +262,7 @@ export function ThreadContent() {
           onStreamComplete={() => {
             setComplete(true)
           }}
+          scrollToBottomIcon={<ThreadDemoIcon icon={ArrowDown01Icon} />}
           className="h-[500px] shadow-[0_22px_64px_-52px_rgb(12_12_12/0.72)]"
         >
           <Thread.Status
@@ -253,6 +286,8 @@ export function ThreadContent() {
             title="Search workspace"
             summary="12 files scanned · 3 matches"
             duration="1.1s"
+            icon={<ThreadDemoIcon icon={FileSearchIcon} />}
+            disclosureIcon={renderToolDisclosureIcon}
             open={searchOpen}
             onOpenChange={setSearchOpen}
           >
@@ -279,6 +314,8 @@ export function ThreadContent() {
               </>
             }
             duration="2.0s"
+            icon={<ThreadDemoIcon icon={DocumentValidationIcon} />}
+            disclosureIcon={renderToolDisclosureIcon}
           >
             The mutation creates the retry key before invoice creation and exits
             early when the key already exists.
@@ -295,6 +332,8 @@ export function ThreadContent() {
               </>
             }
             duration="2.8s"
+            icon={<ThreadDemoIcon icon={TestTube01Icon} />}
+            disclosureIcon={renderToolDisclosureIcon}
           >
             The duplicate submission test asserts idempotency keys before the
             mutation writes.
@@ -304,6 +343,8 @@ export function ThreadContent() {
             title="Check rollout notes"
             summary="No schema blocker in release notes"
             duration="3.6s"
+            icon={<ThreadDemoIcon icon={Note01Icon} />}
+            disclosureIcon={renderToolDisclosureIcon}
           >
             The rollout notes only call out cache warmup retries; no downstream
             invoice consumer depends on the old branch.
@@ -313,6 +354,16 @@ export function ThreadContent() {
             title="Synthesize answer"
             summary={complete ? "Final recommendation ready" : "Writing"}
             duration={complete ? "4.2s" : undefined}
+            icon={
+              complete ? (
+                <ThreadDemoIcon icon={CheckmarkSquare02Icon} />
+              ) : (
+                <ThreadDemoIcon
+                  icon={Loading03Icon}
+                  className="animate-spin motion-reduce:animate-none"
+                />
+              )
+            }
           />
         </Thread>
 
