@@ -7,14 +7,14 @@ blocks, or generated registry output.
 
 - Edit UI primitives in `src/components/ui/*`.
 - `registry/base-nova/ui/*` is sync output from `node scripts/sync-registry.mjs`.
-- `public/r/*` is build output from `npm run registry:build`.
+- `public/r/*` is build output from `pnpm run registry:build`.
 - Do not edit sync or build output directly.
 
 When `src/components/ui/*` changes:
 
 ```bash
 node scripts/sync-registry.mjs
-npm run registry:build
+pnpm run registry:build
 ```
 
 Commit the source, synced registry copy, `registry.json`, and `public/r/*`
@@ -57,11 +57,11 @@ For registry changes, run:
 ```bash
 node scripts/sync-registry.mjs --check
 node scripts/check-registry-deps.mjs
-npm run registry:build
+pnpm run registry:build
 ```
 
 Before shipping a registry item, test install in a scratch app:
 
 ```bash
-npx shadcn@latest add http://localhost:3000/r/<item-name>.json
+pnpm dlx shadcn@latest add http://localhost:3000/r/<item-name>.json
 ```

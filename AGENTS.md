@@ -18,7 +18,7 @@ Keep this file short. Read only the task-specific docs you need.
 - Animation is CSS-only in `src/index.css` or registry item `css`; every
   animation needs a reduced-motion path.
 - Preserve the dirty worktree. Do not revert unrelated user changes.
-- Run the smallest relevant verification while working; run `npm run verify`
+- Run the smallest relevant verification while working; run `pnpm run verify`
   before a PR or handoff that claims the full repo is clean.
 
 ## Ask First

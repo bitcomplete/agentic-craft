@@ -9,14 +9,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npm run verify
-      - run: npm test
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run verify
+      - run: pnpm test
       - name: Registry output is committed and fresh
         run: git diff --exit-code -- public/r registry.json
       - name: Registry manifest validates
-        run: npx shadcn@latest registry validate ./registry.json
+        run: pnpm dlx shadcn@latest registry validate ./registry.json

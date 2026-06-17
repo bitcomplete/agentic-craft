@@ -5,17 +5,17 @@ Use this file when deciding what to run or when reporting verification.
 ## Standard Commands
 
 ```bash
-npm run lint
-npm run typecheck
-npm run format:check
+pnpm run lint
+pnpm run typecheck
+pnpm run format:check
 node scripts/audit-ui.mjs --fail
 node scripts/sync-registry.mjs --check
 node scripts/check-registry-deps.mjs
-npm run build
-npm run registry:build
+pnpm run build
+pnpm run registry:build
 ```
 
-`npm run verify` runs the full chain.
+`pnpm run verify` runs the full chain.
 
 ## Scope The Checks
 

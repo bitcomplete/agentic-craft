@@ -55,11 +55,11 @@ Claude-Code-specific notes. For design and product rationale see
 [docs/research.md](./docs/research.md).
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
-npm is the supported package manager (see `packageManager` in package.json).
+pnpm is the supported package manager (see `packageManager` in package.json).
 
 By default, the app runs at:
 
@@ -72,7 +72,7 @@ http://localhost:3000
 Build the shadcn registry artifacts with:
 
 ```bash
-npm run registry:build
+pnpm run registry:build
 ```
 
 The source registry lives in `registry.json` and is designed for GitHub
@@ -124,22 +124,22 @@ Current registry items:
 Validate the source registry locally with:
 
 ```bash
-npx shadcn@latest registry validate ./registry.json
+pnpm dlx shadcn@latest registry validate ./registry.json
 ```
 
 Inspect the generated local JSON registry with:
 
 ```bash
-npx shadcn@latest list http://localhost:3000/r/registry.json
-npx shadcn@latest view http://localhost:3000/r/review-workflow.json
-npx shadcn@latest view http://localhost:3000/r/approval-workflow.json
-npx shadcn@latest view http://localhost:3000/r/clarifying-workflow.json
-npx shadcn@latest view http://localhost:3000/r/memory-review.json
-npx shadcn@latest view http://localhost:3000/r/run-trace.json
-npx shadcn@latest view http://localhost:3000/r/handoff-packet.json
-npx shadcn@latest view http://localhost:3000/r/run-monitor.json
-npx shadcn@latest view http://localhost:3000/r/multi-agent-handoff.json
-npx shadcn@latest view http://localhost:3000/r/agent-settings.json
+pnpm dlx shadcn@latest list http://localhost:3000/r/registry.json
+pnpm dlx shadcn@latest view http://localhost:3000/r/review-workflow.json
+pnpm dlx shadcn@latest view http://localhost:3000/r/approval-workflow.json
+pnpm dlx shadcn@latest view http://localhost:3000/r/clarifying-workflow.json
+pnpm dlx shadcn@latest view http://localhost:3000/r/memory-review.json
+pnpm dlx shadcn@latest view http://localhost:3000/r/run-trace.json
+pnpm dlx shadcn@latest view http://localhost:3000/r/handoff-packet.json
+pnpm dlx shadcn@latest view http://localhost:3000/r/run-monitor.json
+pnpm dlx shadcn@latest view http://localhost:3000/r/multi-agent-handoff.json
+pnpm dlx shadcn@latest view http://localhost:3000/r/agent-settings.json
 ```
 
 Use the GitHub source-registry address for real installs. The generated local
@@ -150,7 +150,7 @@ JSON is useful for previewing payloads while developing the site.
 Run the full verification suite before publishing changes:
 
 ```bash
-npm run verify
+pnpm run verify
 ```
 
 CI runs this command on every PR and push to main. For visual QA, check both

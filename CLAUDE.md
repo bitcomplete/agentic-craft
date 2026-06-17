@@ -19,7 +19,7 @@ on `AGENTS.md`.
   call:
 
   ```bash
-  node scripts/sync-registry.mjs && npm run registry:build
+  node scripts/sync-registry.mjs && pnpm run registry:build
   ```
 
 - For animation work, read `src/index.css` before changing keyframes; the shared
@@ -62,7 +62,7 @@ when starting and completed when done. Do not batch all updates at the end.
 Before declaring a task done, run:
 
 ```bash
-npm run verify
+pnpm run verify
 ```
 
 If it fails, the task is not done. Surface the exact failure; do not silently

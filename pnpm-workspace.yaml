@@ -1,0 +1,10 @@
+# Packages explicitly approved to run build scripts. In pnpm 11 this
+# replaces the legacy onlyBuiltDependencies setting.
+#   true  -> run the package's build scripts (postinstall, etc.)
+#   false -> explicitly declined (silences the ERR_PNPM_IGNORED_BUILDS warning)
+allowBuilds:
+  # transitive dep of next; native binaries needed for next/image optimization
+  sharp: true
+  # transitive dep of vitest/shadcn; this project doesn't use msw mocking,
+  # so the service-worker init script is intentionally declined
+  msw: false
