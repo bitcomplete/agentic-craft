@@ -14,6 +14,7 @@ import { PatternSection } from "@/components/reference/pattern-section"
 import { PatternSpecTable } from "@/components/reference/pattern-spec-table"
 import { ActionPreview } from "@/components/ui/action-preview"
 import { Button } from "@/components/ui/button"
+import { Slider } from "@/components/ui/slider"
 import { DecisionSurface } from "@/components/ui/decision-surface"
 import { EffectivePolicyPreview } from "@/components/ui/effective-policy-preview"
 import { cn } from "@/lib/utils"
@@ -184,20 +185,17 @@ function AutonomySpectrum({
         </div>
       </div>
 
-      <label htmlFor="autonomy-contract-range" className="sr-only">
-        Autonomy contract level
-      </label>
-      <input
-        id="autonomy-contract-range"
-        type="range"
+      <Slider
+        value={activeIndex}
         min={0}
         max={AUTONOMY_LEVELS.length - 1}
         step={1}
-        value={activeIndex}
+        aria-label="Autonomy contract level"
         aria-describedby="autonomy-spectrum-description"
-        aria-valuetext={activeLevel.label}
-        onChange={(event) => onChange(Number(event.currentTarget.value))}
-        className="mt-4 h-10 w-full cursor-pointer accent-foreground"
+        onValueChange={(value) =>
+          onChange(Array.isArray(value) ? value[0] : value)
+        }
+        className="mt-4 h-10 w-full"
       />
 
       <div className="mt-3 grid gap-2 sm:grid-cols-5">

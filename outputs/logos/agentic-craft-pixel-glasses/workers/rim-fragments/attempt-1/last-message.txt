@@ -1,0 +1,5 @@
+Failed to save the generated PNG because `image_gen.imagegen` returned the image in-session without a filesystem path or save handle I could copy to the required location.
+
+Wrote the required failure JSON to:
+
+`outputs/logos/agentic-craft-pixel-glasses/workers/rim-fragments/attempt-1/result.json`

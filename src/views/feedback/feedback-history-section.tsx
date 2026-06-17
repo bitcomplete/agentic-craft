@@ -14,6 +14,12 @@ import { PatternControls as Controls } from "@/components/pattern-controls"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+import { cn } from "@/lib/utils"
+import {
   Table,
   TableBody,
   TableCell,
@@ -118,18 +124,18 @@ export function FeedbackHistorySection() {
             {visibleHistory.map((entry, i) => {
               const isExpanded = expandedRow === entry.id
               return (
-                <div
+                <Collapsible
                   key={entry.id}
-                  className={
-                    i < visibleHistory.length - 1
-                      ? "border-b border-border/40"
-                      : ""
+                  open={isExpanded}
+                  onOpenChange={(open) =>
+                    setExpandedRow(open ? entry.id : null)
                   }
+                  className={cn(
+                    i < visibleHistory.length - 1 && "border-b border-border/40"
+                  )}
                 >
-                  <button
-                    type="button"
+                  <CollapsibleTrigger
                     aria-label={`Toggle feedback history entry: ${entry.message}`}
-                    onClick={() => setExpandedRow(isExpanded ? null : entry.id)}
                     className="flex w-full items-start gap-3 rounded-md px-2 py-3 text-left transition-colors outline-none hover:bg-muted/30 focus-visible:ring-3 focus-visible:ring-ring/50"
                   >
                     {/* Type indicator */}
@@ -191,19 +197,17 @@ export function FeedbackHistorySection() {
                       strokeWidth={1.5}
                       className="mt-1.5 shrink-0 text-muted-foreground"
                     />
-                  </button>
+                  </CollapsibleTrigger>
 
                   {/* Expanded detail */}
-                  {isExpanded && (
-                    <div className="feedback-expand mb-3 ml-8 px-2">
-                      <div className="feedback-slide-in border-l border-border/60 bg-foreground/[0.01] py-2 pl-3">
-                        <p className="text-sm text-muted-foreground">
-                          {entry.detail}
-                        </p>
-                      </div>
+                  <CollapsibleContent className="feedback-expand mb-3 ml-8 px-2">
+                    <div className="feedback-slide-in border-l border-border/60 bg-foreground/[0.01] py-2 pl-3">
+                      <p className="text-sm text-muted-foreground">
+                        {entry.detail}
+                      </p>
                     </div>
-                  )}
-                </div>
+                  </CollapsibleContent>
+                </Collapsible>
               )
             })}
           </div>

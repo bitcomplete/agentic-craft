@@ -65,6 +65,15 @@ const forbiddenRegistryClassPattern = new RegExp(
 const darkColorOverridePattern =
   /\b(?:[\w-]+:)*dark:(?:[\w-]+:)*(?:bg|text|border|ring|fill|stroke|outline|decoration|divide|placeholder|caret|accent|from|via|to)-[^\s"'`<>}]+/g
 
+// Shadcn base primitives vendored pristine into the registry (kept in sync
+// with upstream via `shadcn add` + sync-registry.mjs) carry shadcn's
+// standard `dark:` token variants (dark:bg-input/30, etc.). Those reference
+// the consumer's semantic tokens, so they stay theme-portable and are
+// exempted here. Repo-authored agentic primitives (tool-call, observable-work,
+// composer, ...) are still audited and must hold to the stricter token-only
+// standard.
+const pristineShadcnRegistryFiles = new Set(["textarea.tsx"])
+
 // Deduplicate: skip registry/base-nova/ui/ entries whose basename also exists
 // in src/components/ui/ (handles both symlink and real-file-copy cases).
 const seenRealPaths = new Set()
@@ -135,6 +144,12 @@ for (const file of registryFiles) {
 }
 
 for (const file of darkOverrideFiles) {
+  if (
+    file.startsWith("registry/base-nova/ui/") &&
+    pristineShadcnRegistryFiles.has(basename(file))
+  ) {
+    continue
+  }
   const abs = resolve(root, file)
   const source = readFileSync(abs, "utf8")
 
@@ -150,6 +165,15 @@ for (const file of darkOverrideFiles) {
 }
 
 for (const file of files) {
+  // src/components/ui/ holds CLI-installed shadcn primitives that are kept
+  // pristine and overwritten via `shadcn add` (e.g. button.tsx's upstream
+  // `transition-all`, input-group.tsx's clickable wrapper). Project style
+  // rules can't be enforced there without diverging from upstream, so they
+  // are exempted. Registry-specific architectural checks below
+  // (no-site-only-registry-classes, no-dark-color-overrides) run on their
+  // own file sets and still apply.
+  if (file.startsWith("src/components/ui/")) continue
+
   const abs = resolve(root, file)
   const source = readFileSync(abs, "utf8")
 

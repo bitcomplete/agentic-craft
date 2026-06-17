@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="512" height="512" role="img" aria-label="Agentic Craft pixel glasses icon draft">
+  <rect width="32" height="32" fill="none"/>
+  <path fill="#252726" d="M12 1h8v1h4v2h2v2h2v4h2v12h-2v4h-2v2h-2v2h-4v1h-8v-1H8v-2H6v-2H4v-4H2V10h2V6h2V4h2V2h4z"/>
+  <path fill="#fbfaf8" d="M12 5h8v1h3v2h2v3h2v10h-2v3h-2v2h-3v1h-8v-1H9v-2H7v-3H5V11h2V8h2V6h3z"/>
+  <path fill="#020202" d="M7 14h8v1h1v4h-1v1H8v-1H7v-1H5v-1H4v-2h3zm10 0h8v1h3v2h-1v1h-1v1h-1v1h-7v-1h-1v-4h-1v-1zm-1 2h1v1h-1z"/>
+  <path fill="#1b1d1c" d="M8 15h7v4H8zm10 0h7v4h-7z"/>
+</svg>

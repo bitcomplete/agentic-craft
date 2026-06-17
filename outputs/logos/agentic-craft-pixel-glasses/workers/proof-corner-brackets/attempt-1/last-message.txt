@@ -1,0 +1,1 @@
+Complete. Generated one image and wrote the result JSON at the requested paths.

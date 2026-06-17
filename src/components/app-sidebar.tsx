@@ -104,23 +104,23 @@ export function AppSidebar() {
               Agentic Craft
             </span>
           </div>
-          <button
+          <Button
             type="button"
+            variant="outline"
             aria-label="Search patterns"
             onClick={() => setPaletteOpen(true)}
-            className="flex h-8 w-full items-center gap-2 rounded-lg border border-sidebar-border/70 bg-transparent px-2 text-sm text-muted-foreground transition-colors outline-none hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
+            className="w-full justify-start text-muted-foreground"
           >
             <HugeiconsIcon
               icon={Search01Icon}
-              size={14}
-              strokeWidth={1.5}
+              data-icon="inline-start"
               aria-hidden="true"
             />
             <span className="flex-1 text-left">Search</span>
             <kbd className="shrink-0 rounded border border-border bg-muted/50 px-1 text-[11px] text-muted-foreground">
               ⌘K
             </kbd>
-          </button>
+          </Button>
         </SidebarHeader>
         <SidebarContent>
           {sections.map((section) => {

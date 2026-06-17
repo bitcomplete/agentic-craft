@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { HugeiconsIcon } from "@hugeicons/react"
@@ -13,6 +13,12 @@ import {
   ArrowDown01Icon,
 } from "@hugeicons/core-free-icons"
 import { Button } from "@/components/ui/button"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+import { cn } from "@/lib/utils"
 import { EmbeddedComposerDemo } from "../components/InteractiveComposer"
 import {
   ToolTree,
@@ -151,14 +157,15 @@ export function DemoContent() {
         {/*  Message 2: Observable work disclosure                     */}
         {/* -------------------------------------------------------- */}
         <div className="flex justify-start">
-          <div className="w-full max-w-[85%]">
+          <Collapsible
+            open={workExpanded}
+            onOpenChange={setWorkExpanded}
+            className="w-full max-w-[85%]"
+          >
             <div className="flex items-center justify-between">
-              <button
-                type="button"
-                aria-expanded={workExpanded}
+              <CollapsibleTrigger
                 aria-label="Toggle observable work details"
-                onClick={() => setWorkExpanded((prev) => !prev)}
-                className="flex cursor-pointer items-center gap-1.5 px-1 py-2 text-left"
+                className="flex items-center gap-1.5 px-1 py-2 text-left"
               >
                 <span className="text-xs text-muted-foreground">
                   Reviewed 6 sources · 3.2s
@@ -167,24 +174,25 @@ export function DemoContent() {
                   icon={ArrowDown01Icon}
                   size={14}
                   strokeWidth={1.5}
-                  className={`shrink-0 text-muted-foreground transition-transform duration-150 ${workExpanded ? "rotate-180" : ""}`}
+                  className={cn(
+                    "shrink-0 text-muted-foreground transition-transform duration-150",
+                    workExpanded && "rotate-180"
+                  )}
                 />
-              </button>
+              </CollapsibleTrigger>
               <DemoCaption href="/conversation#progress-steps">
                 Progress Steps
               </DemoCaption>
             </div>
-            {workExpanded && (
-              <div className="demo-slide-in px-1 pb-2">
-                <p
-                  className="text-sm text-muted-foreground italic"
-                  style={{ lineHeight: "22px" }}
-                >
-                  {OBSERVABLE_WORK_TEXT}
-                </p>
-              </div>
-            )}
-          </div>
+            <CollapsibleContent className="demo-slide-in px-1 pb-2">
+              <p
+                className="text-sm text-muted-foreground italic"
+                style={{ lineHeight: "22px" }}
+              >
+                {OBSERVABLE_WORK_TEXT}
+              </p>
+            </CollapsibleContent>
+          </Collapsible>
         </div>
 
         {/* -------------------------------------------------------- */}

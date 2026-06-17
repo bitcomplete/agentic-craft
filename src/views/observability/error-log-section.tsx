@@ -11,6 +11,12 @@ import {
 import { PatternControls as Controls } from "@/components/pattern-controls"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+import { cn } from "@/lib/utils"
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -82,58 +88,61 @@ export function ErrorLogSection() {
             </div>
           ) : (
             <div className="divide-y divide-border/40">
-              {ERROR_LIST.map((err, i) => (
-                <div
-                  key={i}
-                  className="mon-slide-in"
-                  style={{ animationDelay: `${i * 60}ms` }}
-                >
-                  <button
-                    type="button"
-                    aria-label={`Toggle error details: ${err.title}`}
-                    aria-expanded={expandedErr === i}
-                    onClick={() => setExpandedErr(expandedErr === i ? null : i)}
-                    className="flex w-full items-start gap-3 py-3 text-left transition-colors hover:bg-muted/30 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+              {ERROR_LIST.map((err, i) => {
+                const isOpen = expandedErr === i
+                return (
+                  <Collapsible
+                    key={i}
+                    open={isOpen}
+                    onOpenChange={(open) => setExpandedErr(open ? i : null)}
+                    className="mon-slide-in"
+                    style={{ animationDelay: `${i * 60}ms` }}
                   >
-                    <div className="mt-0.5 shrink-0">
-                      <HugeiconsIcon
-                        icon={
-                          err.severity === "error" ? Cancel01Icon : Alert01Icon
-                        }
-                        size={14}
-                        strokeWidth={1.5}
-                        className="text-muted-foreground"
-                      />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm">{err.title}</p>
-                        <Badge variant="secondary">{err.severity}</Badge>
+                    <CollapsibleTrigger
+                      aria-label={`Toggle error details: ${err.title}`}
+                      className="flex w-full items-start gap-3 py-3 text-left transition-colors hover:bg-muted/30 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+                    >
+                      <div className="mt-0.5 shrink-0">
+                        <HugeiconsIcon
+                          icon={
+                            err.severity === "error"
+                              ? Cancel01Icon
+                              : Alert01Icon
+                          }
+                          size={14}
+                          strokeWidth={1.5}
+                          className="text-muted-foreground"
+                        />
                       </div>
-                      <p className="mt-0.5 text-xs text-muted-foreground">
-                        {err.time}
-                      </p>
-                    </div>
-                    <HugeiconsIcon
-                      icon={ArrowDown01Icon}
-                      size={12}
-                      strokeWidth={1.5}
-                      className={`mt-1 shrink-0 text-muted-foreground transition-transform duration-200 motion-reduce:transition-none ${
-                        expandedErr === i ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm">{err.title}</p>
+                          <Badge variant="secondary">{err.severity}</Badge>
+                        </div>
+                        <p className="mt-0.5 text-xs text-muted-foreground">
+                          {err.time}
+                        </p>
+                      </div>
+                      <HugeiconsIcon
+                        icon={ArrowDown01Icon}
+                        size={12}
+                        strokeWidth={1.5}
+                        className={cn(
+                          "mt-1 shrink-0 text-muted-foreground transition-transform duration-200 motion-reduce:transition-none",
+                          isOpen && "rotate-180"
+                        )}
+                      />
+                    </CollapsibleTrigger>
 
-                  {expandedErr === i && (
-                    <div className="mon-expand px-4 py-3">
+                    <CollapsibleContent className="mon-expand px-4 py-3">
                       <Separator className="mb-3" />
                       <p className="text-xs leading-relaxed text-muted-foreground">
                         {err.detail}
                       </p>
-                    </div>
-                  )}
-                </div>
-              ))}
+                    </CollapsibleContent>
+                  </Collapsible>
+                )
+              })}
             </div>
           )}
         </div>

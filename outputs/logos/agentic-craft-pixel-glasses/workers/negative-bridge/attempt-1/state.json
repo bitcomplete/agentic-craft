@@ -1,0 +1,8 @@
+{
+  "id": "negative-bridge",
+  "status": "failed",
+  "attempt": 1,
+  "pid": 25604,
+  "startedAt": "2026-06-16T11:38:12.736122+00:00",
+  "lastHeartbeatAt": "2026-06-16T11:39:08.050940+00:00"
+}

@@ -8,6 +8,7 @@ import {
   Robot01Icon,
 } from "@hugeicons/core-free-icons"
 import { PatternControls as Controls } from "@/components/pattern-controls"
+import { Button } from "@/components/ui/button"
 import {
   AgentStatusTable,
   type AgentStatusRow,
@@ -237,18 +238,19 @@ export function AgentCardsSection() {
                       Failed to connect to project source repository — timeout
                       after 30s
                     </p>
-                    <button
+                    <Button
                       type="button"
+                      variant="outline"
+                      size="xs"
                       aria-label={`Retry ${agent.name}`}
-                      className="inline-flex items-center gap-1.5 rounded-md border border-border px-2 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
+                      className="text-xs text-muted-foreground hover:text-foreground"
                     >
                       <HugeiconsIcon
                         icon={RefreshIcon}
-                        size={10}
-                        strokeWidth={1.5}
+                        data-icon="inline-start"
                       />
                       Retry
-                    </button>
+                    </Button>
                   </div>
                 )}
               </div>

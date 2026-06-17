@@ -1,0 +1,51 @@
+{
+  "status": "complete",
+  "total": 6,
+  "complete": 5,
+  "failed": 0,
+  "pending": 0,
+  "results": [
+    {
+      "id": "favicon-32-grid",
+      "status": "complete",
+      "image_path": "outputs/logos/agentic-craft-pixel-glasses/01-favicon-32-grid.png",
+      "error": null,
+      "caveats": ""
+    },
+    {
+      "id": "ink-stamp-rim",
+      "status": "complete",
+      "image_path": "outputs/logos/agentic-craft-pixel-glasses/02-ink-stamp-rim.png",
+      "error": null,
+      "caveats": ""
+    },
+    {
+      "id": "flat-agent-shades",
+      "status": "complete",
+      "image_path": "outputs/logos/agentic-craft-pixel-glasses/03-flat-agent-shades.png",
+      "error": null,
+      "caveats": ""
+    },
+    {
+      "id": "terminal-mask",
+      "status": "complete",
+      "image_path": "outputs/logos/agentic-craft-pixel-glasses/04-terminal-mask.png",
+      "error": null,
+      "caveats": ""
+    },
+    {
+      "id": "negative-bridge",
+      "status": "complete",
+      "image_path": "outputs/logos/agentic-craft-pixel-glasses/05-negative-bridge.png",
+      "error": null,
+      "caveats": "Recovered from the Codex generated-images cache after both worker attempts failed to expose a filesystem path."
+    },
+    {
+      "id": "proof-disc",
+      "status": "complete",
+      "image_path": "outputs/logos/agentic-craft-pixel-glasses/06-proof-disc.png",
+      "error": null,
+      "caveats": ""
+    }
+  ]
+}

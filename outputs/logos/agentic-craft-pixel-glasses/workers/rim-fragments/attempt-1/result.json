@@ -1,0 +1,7 @@
+{
+  "id": "rim-fragments",
+  "status": "failed",
+  "image_path": null,
+  "error": "Native image generation returned an image in-session, but no filesystem path or save handle was available to write the required PNG.",
+  "caveats": ""
+}

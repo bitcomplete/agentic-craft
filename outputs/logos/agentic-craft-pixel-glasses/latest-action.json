@@ -1,0 +1,14 @@
+{
+  "id": "review-renderer-materialized",
+  "action": "write_moodboard_widget_payload",
+  "label": "Materialized Creative Production image review",
+  "createdAt": "2026-06-16T12:51:44.692308Z",
+  "timestamp": "2026-06-16T12:51:44.692308Z",
+  "title": "Agentic Craft pixel glasses logo exploration",
+  "summary": "Ten black-and-white pixel-art icon routes based on the supplied sunglasses sketch, including a second pass that removes or breaks the circular container.",
+  "itemCount": 10,
+  "runDirectory": "/Users/arielconti/workspace/agentic-craft/outputs/logos/agentic-craft-pixel-glasses",
+  "streamPath": "/Users/arielconti/workspace/agentic-craft/outputs/logos/agentic-craft-pixel-glasses/data/stream.json",
+  "runStatePath": "/Users/arielconti/workspace/agentic-craft/outputs/logos/agentic-craft-pixel-glasses/run-state.json",
+  "latestActionPath": "/Users/arielconti/workspace/agentic-craft/outputs/logos/agentic-craft-pixel-glasses/latest-action.json"
+}

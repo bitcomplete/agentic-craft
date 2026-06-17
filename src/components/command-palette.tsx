@@ -1,12 +1,16 @@
 "use client"
 
 import * as React from "react"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { ArrowRight01Icon, Search01Icon } from "@hugeicons/core-free-icons"
 import { useRouter } from "next/navigation"
-import { Dialog, DialogPortal, DialogOverlay } from "@/components/ui/dialog"
-import { Dialog as DialogPrimitive } from "@base-ui/react/dialog"
-import { cn } from "@/lib/utils"
+import {
+  Command,
+  CommandDialog,
+  CommandInput,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+  CommandShortcut,
+} from "@/components/ui/command"
 import { sections } from "@/content/navigation"
 import { templateDetails } from "@/content/templates"
 import { useTheme } from "@/components/theme-provider"
@@ -22,12 +26,14 @@ type PaletteItem =
       kind: "nav-section"
       groupLabel: string
       title: string
+      value: string
       sectionPath: string
     }
   | {
       kind: "nav-sub"
       groupLabel: string
       title: string
+      value: string
       sectionPath: string
       subId: string
     }
@@ -35,12 +41,14 @@ type PaletteItem =
       kind: "template"
       groupLabel: string
       title: string
+      value: string
       slug: string
     }
   | {
       kind: "action"
       groupLabel: string
       title: string
+      value: string
       hint: string
       onActivate: () => void
     }
@@ -64,6 +72,7 @@ function buildIndex(toggleTheme: () => void): PaletteItem[] {
       kind: "nav-section",
       groupLabel: "Sections",
       title: section.title,
+      value: `nav-section:${section.path}`,
       sectionPath: section.path,
     })
     for (const sub of section.subs) {
@@ -71,6 +80,7 @@ function buildIndex(toggleTheme: () => void): PaletteItem[] {
         kind: "nav-sub",
         groupLabel: section.title,
         title: sub.title,
+        value: `nav-sub:${section.path}:${sub.id}`,
         sectionPath: section.path,
         subId: sub.id,
       })
@@ -85,6 +95,7 @@ function buildIndex(toggleTheme: () => void): PaletteItem[] {
       kind: "template",
       groupLabel: "Templates",
       title: tpl.title,
+      value: `template:${tpl.slug}`,
       slug: tpl.slug,
     })
   }
@@ -94,6 +105,7 @@ function buildIndex(toggleTheme: () => void): PaletteItem[] {
     kind: "action",
     groupLabel: "Actions",
     title: "Toggle theme",
+    value: "action:toggle-theme",
     hint: "d",
     onActivate: toggleTheme,
   })
@@ -161,15 +173,7 @@ function groupResults(items: PaletteItem[]): Group[] {
 }
 
 // ---------------------------------------------------------------------------
-// Unique item id (for aria-activedescendant)
-// ---------------------------------------------------------------------------
-
-function itemId(_item: PaletteItem, index: number): string {
-  return `cmd-item-${index}`
-}
-
-// ---------------------------------------------------------------------------
-// CommandPaletteContent  (the inner listbox rendered inside the dialog)
+// CommandPaletteContent  (the inner list rendered inside the dialog)
 // ---------------------------------------------------------------------------
 
 interface CommandPaletteContentProps {
@@ -190,7 +194,6 @@ function CommandPaletteContent({ onClose }: CommandPaletteContentProps) {
   const allItems = React.useMemo(() => buildIndex(toggleTheme), [toggleTheme])
 
   const [query, setQuery] = React.useState("")
-  const [activeIndex, setActiveIndex] = React.useState(0)
 
   const results = React.useMemo(
     () => filterItems(allItems, query),
@@ -198,17 +201,6 @@ function CommandPaletteContent({ onClose }: CommandPaletteContentProps) {
   )
 
   const groups = React.useMemo(() => groupResults(results), [results])
-
-  // Reset active index when results change
-  React.useEffect(() => {
-    setActiveIndex(0)
-  }, [query])
-
-  // When nothing matches, the "Browse templates" row is the active option.
-  const activeItemId =
-    results.length > 0
-      ? itemId(results[activeIndex], activeIndex)
-      : "cmd-item-browse"
 
   const activate = React.useCallback(
     (item: PaletteItem) => {
@@ -233,141 +225,49 @@ function CommandPaletteContent({ onClose }: CommandPaletteContentProps) {
     router.push("/templates")
   }, [onClose, router, setOpenMobile])
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "ArrowDown") {
-      e.preventDefault()
-      setActiveIndex((prev) => (prev + 1) % Math.max(results.length, 1))
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault()
-      setActiveIndex((prev) =>
-        prev === 0 ? Math.max(results.length - 1, 0) : prev - 1
-      )
-    } else if (e.key === "Enter") {
-      e.preventDefault()
-      if (results.length === 0) {
-        browseTemplates()
-      } else if (results[activeIndex]) {
-        activate(results[activeIndex])
-      }
-    }
-  }
-
-  // Scroll active row into view
-  const listRef = React.useRef<HTMLUListElement>(null)
-  React.useEffect(() => {
-    if (!listRef.current) return
-    const el = listRef.current.querySelector(
-      `[data-active="true"]`
-    ) as HTMLElement | null
-    el?.scrollIntoView({ block: "nearest" })
-  }, [activeIndex])
-
   return (
-    <div className="flex flex-col overflow-hidden">
-      {/* Search input */}
-      <div className="flex items-center gap-2 border-b border-border px-3 py-2.5">
-        <HugeiconsIcon
-          icon={Search01Icon}
-          size={14}
-          strokeWidth={1.5}
-          className="shrink-0 text-muted-foreground"
-          aria-hidden="true"
-        />
-        <input
-          aria-label="Search patterns"
-          aria-controls="cmd-listbox"
-          aria-activedescendant={activeItemId}
-          role="combobox"
-          aria-expanded="true"
-          aria-autocomplete="list"
-          autoComplete="off"
-          autoFocus
-          placeholder="Search…"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={handleKeyDown}
-          className="flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
-        />
-      </div>
-
-      {/* Results */}
-      <ul
-        id="cmd-listbox"
-        role="listbox"
-        aria-label="Search results"
-        ref={listRef}
-        className="max-h-72 overflow-y-auto overscroll-contain p-1.5"
-      >
+    <Command shouldFilter={false} className="rounded-none!">
+      <CommandInput
+        placeholder="Search…"
+        value={query}
+        onValueChange={setQuery}
+      />
+      <CommandList>
         {results.length === 0 ? (
           <>
-            <li
-              role="presentation"
-              className="px-3 py-2 text-sm text-muted-foreground"
-            >
+            <div className="px-3 py-2 text-sm text-muted-foreground">
               No matches
-            </li>
-            <li
-              id="cmd-item-browse"
-              role="option"
-              aria-selected={true}
-              data-active={true}
-              onClick={browseTemplates}
-              className="flex cursor-pointer items-center justify-between rounded-md bg-muted px-3 py-1.5 text-sm text-foreground"
-            >
-              <span className="truncate">Browse templates</span>
-              <HugeiconsIcon
-                icon={ArrowRight01Icon}
-                size={14}
-                strokeWidth={1.5}
-                className="ml-2 shrink-0 text-muted-foreground"
-                aria-hidden="true"
-              />
-            </li>
+            </div>
+            <CommandGroup>
+              <CommandItem
+                value="browse-templates"
+                onSelect={() => browseTemplates()}
+              >
+                Browse templates
+                <CommandShortcut>↵</CommandShortcut>
+              </CommandItem>
+            </CommandGroup>
           </>
         ) : (
           groups.map((group) => (
-            <li key={group.label} role="presentation">
-              <div
-                role="presentation"
-                className="px-2 py-1 text-[11px] font-medium tracking-wider text-muted-foreground uppercase"
-              >
-                {group.label}
-              </div>
-              <ul role="presentation">
-                {group.items.map((item) => {
-                  const globalIndex = results.indexOf(item)
-                  const isActive = globalIndex === activeIndex
-                  return (
-                    <li
-                      key={itemId(item, globalIndex)}
-                      id={itemId(item, globalIndex)}
-                      role="option"
-                      aria-selected={isActive}
-                      data-active={isActive}
-                      onMouseEnter={() => setActiveIndex(globalIndex)}
-                      onClick={() => activate(item)}
-                      className={cn(
-                        "flex cursor-pointer items-center justify-between rounded-md px-3 py-1.5 text-sm text-foreground transition-colors duration-75",
-                        isActive
-                          ? "bg-muted text-foreground"
-                          : "hover:bg-muted/60"
-                      )}
-                    >
-                      <span className="truncate">{item.title}</span>
-                      {item.kind === "action" && (
-                        <kbd className="ml-2 shrink-0 rounded border border-border bg-muted/50 px-1 text-[11px] text-muted-foreground">
-                          {item.hint}
-                        </kbd>
-                      )}
-                    </li>
-                  )
-                })}
-              </ul>
-            </li>
+            <CommandGroup key={group.label} heading={group.label}>
+              {group.items.map((item) => (
+                <CommandItem
+                  key={item.value}
+                  value={item.value}
+                  onSelect={() => activate(item)}
+                >
+                  {item.title}
+                  {item.kind === "action" && (
+                    <CommandShortcut>{item.hint}</CommandShortcut>
+                  )}
+                </CommandItem>
+              ))}
+            </CommandGroup>
           ))
         )}
-      </ul>
-    </div>
+      </CommandList>
+    </Command>
   )
 }
 
@@ -382,19 +282,15 @@ export interface CommandPaletteProps {
 
 export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogPortal>
-        <DialogOverlay />
-        <DialogPrimitive.Popup
-          data-slot="dialog-content"
-          className={cn(
-            "fixed top-[20%] left-1/2 z-50 w-full max-w-[calc(100%-2rem)] -translate-x-1/2 overflow-hidden rounded-lg bg-background text-sm ring-1 ring-foreground/10 duration-150 outline-none motion-reduce:animate-none motion-reduce:transition-none sm:max-w-md data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95"
-          )}
-        >
-          <CommandPaletteContent onClose={() => onOpenChange(false)} />
-        </DialogPrimitive.Popup>
-      </DialogPortal>
-    </Dialog>
+    <CommandDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Command palette"
+      description="Search sections, templates, and actions."
+      className="sm:max-w-md"
+    >
+      <CommandPaletteContent onClose={() => onOpenChange(false)} />
+    </CommandDialog>
   )
 }
 

@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "runDirectory": "/Users/arielconti/workspace/agentic-craft/outputs/logos/agentic-craft-pixel-glasses",
+  "streamPath": "/Users/arielconti/workspace/agentic-craft/outputs/logos/agentic-craft-pixel-glasses/data/stream.json",
+  "runStatePath": "/Users/arielconti/workspace/agentic-craft/outputs/logos/agentic-craft-pixel-glasses/run-state.json",
+  "latestActionPath": "/Users/arielconti/workspace/agentic-craft/outputs/logos/agentic-craft-pixel-glasses/latest-action.json",
+  "paths": {
+    "streamPath": "/Users/arielconti/workspace/agentic-craft/outputs/logos/agentic-craft-pixel-glasses/data/stream.json",
+    "runStatePath": "/Users/arielconti/workspace/agentic-craft/outputs/logos/agentic-craft-pixel-glasses/run-state.json",
+    "latestActionPath": "/Users/arielconti/workspace/agentic-craft/outputs/logos/agentic-craft-pixel-glasses/latest-action.json"
+  },
+  "itemCount": 10,
+  "items": [
+    {
+      "id": "favicon-32-grid",
+      "title": "32px Favicon Grid",
+      "caption": "Most literal small-size translation of the sketch.",
+      "tone": "favicon-first",
+      "prompt": "Create one square logo exploration tile for Agentic Craft: a black-and-white 8-bit pixel-art app icon based on a simple scratch of a circular pale field with a thick dark rim and narrow rectangular black sunglasses. Favicon-first, 32x32 pixel grid feel, hard square pixels, no antialiasing look, no text. Keep it original: anonymous secret-agent sunglasses as a motif, not a movie character likeness, no Matrix branding, no green code rain, no actor face. White inspection background, centered icon, high contrast, readable at 16px.",
+      "imageUrl": "/generated/mcp-thumbs/favicon-32-grid.jpg",
+      "previewImageUrl": "/generated/mcp-thumbs/favicon-32-grid.jpg",
+      "sourceImageUrl": "/generated/favicon-32-grid.png"
+    },
+    {
+      "id": "ink-stamp-rim",
+      "title": "Ink Stamp Rim",
+      "caption": "Connects the mark to the Galley Proof ink language.",
+      "tone": "proof-sheet",
+      "prompt": "Create one square logo exploration tile for Agentic Craft: black-and-white pixel-art circular icon with an ink-stamp-like dark rim made from stepped one-bit pixels, pale inner disc, and narrow rectangular sunglasses connected by a simple bridge. Preserve the user's sketch silhouette: circle, rim, glasses, anonymous face field. No text, no gradients, no color, no Matrix branding, no green code rain, no actor or character likeness. It should feel like Agentic Craft's achromatic proof-sheet identity translated into an 8-bit favicon.",
+      "imageUrl": "/generated/mcp-thumbs/ink-stamp-rim.jpg",
+      "previewImageUrl": "/generated/mcp-thumbs/ink-stamp-rim.jpg",
+      "sourceImageUrl": "/generated/ink-stamp-rim.png"
+    },
+    {
+      "id": "flat-agent-shades",
+      "title": "Flat Agent Shades",
+      "caption": "Makes the sunglasses the most recognizable cue.",
+      "tone": "iconic",
+      "prompt": "Create one square logo exploration tile for Agentic Craft: a minimal black-and-white pixel-art symbol where rectangular black sunglasses are the hero shape inside a pale circular disc with a thick dark outer ring. Keep the glasses low and narrow, connected by a blocky bridge, with tiny side arms. 8-bit, hard-edged, no text, no facial features, no glossy rendering. Inspired by generic secret-agent shades and terminal noir, but original and not any specific movie character, actor, or Matrix asset. White inspection background.",
+      "imageUrl": "/generated/mcp-thumbs/flat-agent-shades.jpg",
+      "previewImageUrl": "/generated/mcp-thumbs/flat-agent-shades.jpg",
+      "sourceImageUrl": "/generated/flat-agent-shades.png"
+    },
+    {
+      "id": "terminal-mask",
+      "title": "Terminal Mask",
+      "caption": "Pushes the glasses toward command-surface apparatus.",
+      "tone": "developer-facing",
+      "prompt": "Create one square logo exploration tile for Agentic Craft: black-and-white 8-bit icon that abstracts the user's sunglasses sketch into a terminal mask. Circular badge with thick dark rim, pale center, two dark rectangular lens blocks, and a simple pixel bridge that feels like a command-line cursor or agent apparatus. No readable text, no letters, no code rain, no green, no movie branding, no character likeness. Prioritize small-size recognition, high contrast, and clean one-bit geometry on a white inspection background.",
+      "imageUrl": "/generated/mcp-thumbs/terminal-mask.jpg",
+      "previewImageUrl": "/generated/mcp-thumbs/terminal-mask.jpg",
+      "sourceImageUrl": "/generated/terminal-mask.png"
+    },
+    {
+      "id": "negative-bridge",
+      "title": "Negative Bridge",
+      "caption": "Uses the white bridge gap as the signature geometry.",
+      "tone": "severe",
+      "prompt": "Create one square logo exploration tile for Agentic Craft: a severe geometric black-and-white pixel-art circular icon. Use two dark block lenses and a white negative-space bridge cut between them, with a thick dark outer circle and pale inner field. No text, no gradients, no antialiasing softness, no face details. It should feel like a compact 8-bit brand mark for agent product UI, original secret-agent sunglasses motif only, not a Matrix logo or any recognizable film character.",
+      "imageUrl": "/generated/mcp-thumbs/negative-bridge.jpg",
+      "previewImageUrl": "/generated/mcp-thumbs/negative-bridge.jpg",
+      "sourceImageUrl": "/generated/negative-bridge.png"
+    },
+    {
+      "id": "proof-disc",
+      "title": "Proof Disc",
+      "caption": "Best bridge between favicon and broader brand asset.",
+      "tone": "logo-system",
+      "prompt": "Create one square logo exploration tile for Agentic Craft: a refined black-and-white pixel-art proof disc icon, centered on a white inspection background. Preserve the user's idea: thick dark circular rim, off-white inner disc, compact rectangular sunglasses, straight bridge, tiny side arms. Make it suitable as a project logo, app icon, favicon, and social avatar. 8-bit hard-pixel construction with careful proportions, no text, no colors, no Matrix branding, no green code, no actor likeness, no detailed face.",
+      "imageUrl": "/generated/mcp-thumbs/proof-disc.jpg",
+      "previewImageUrl": "/generated/mcp-thumbs/proof-disc.jpg",
+      "sourceImageUrl": "/generated/proof-disc.png"
+    },
+    {
+      "id": "proof-corner-brackets",
+      "title": "Proof Corner Brackets",
+      "caption": "Replaces the face circle with inspection-frame corners.",
+      "tone": "circle-free",
+      "prompt": "Create one square logo exploration tile for Agentic Craft: black-and-white 8-bit pixel-art sunglasses from the supplied circular-glasses sketch, but remove the full circle completely. Center compact rectangular dark sunglasses with a simple block bridge and tiny side arms. Around them use only four sparse pixel proof/crop corner brackets, like a print inspection frame or registration marks, not a face, not a circular badge. White inspection background, high contrast, no text, no letters, no Matrix branding, no green code rain, no actor or character likeness. It must work as a favicon and app icon.",
+      "imageUrl": "/generated/mcp-thumbs/proof-corner-brackets.jpg",
+      "previewImageUrl": "/generated/mcp-thumbs/proof-corner-brackets.jpg",
+      "sourceImageUrl": "/generated/proof-corner-brackets.png"
+    },
+    {
+      "id": "terminal-viewport",
+      "title": "Terminal Viewport",
+      "caption": "Frames the glasses with a command-window rail and cursor fragment.",
+      "tone": "circle-free",
+      "prompt": "Create one square logo exploration tile for Agentic Craft: a black-and-white 8-bit pixel-art app icon made from compact rectangular secret-agent sunglasses inside a broken terminal panel. Absolutely no circular rim, no face, no crop-corner brackets, no four L-shaped corners. Use a minimal command-window frame instead: one short top horizontal pixel bar, one left vertical pixel rail, and one bottom-right stepped prompt-cursor mark. The glasses are centered and remain the hero shape with dark block lenses, tiny side arms, and a simple bridge. White inspection background, high contrast, hard pixels, no text, no letters, no Matrix branding, no green code rain, no actor likeness. Favicon-first, original Agentic Craft terminal apparatus feel.",
+      "imageUrl": "/generated/mcp-thumbs/terminal-viewport.jpg",
+      "previewImageUrl": "/generated/mcp-thumbs/terminal-viewport.jpg",
+      "sourceImageUrl": "/generated/terminal-viewport.png"
+    },
+    {
+      "id": "standalone-shades",
+      "title": "Standalone Shades",
+      "caption": "Tests whether the glasses can carry the whole mark alone.",
+      "tone": "circle-free",
+      "prompt": "Create one square logo exploration tile for Agentic Craft: pure black-and-white 8-bit pixel-art sunglasses only, no circle, no face, no badge, no frame. Preserve the supplied sketch's compact rectangular lenses, simple central bridge, and tiny side arms, but make the glasses themselves distinctive enough to be the full icon. White inspection background, centered with generous padding, hard pixel edges, no text, no letters, no Matrix branding, no green code rain, no actor or character likeness. Favicon-first and app-icon-ready.",
+      "imageUrl": "/generated/mcp-thumbs/standalone-shades.jpg",
+      "previewImageUrl": "/generated/mcp-thumbs/standalone-shades.jpg",
+      "sourceImageUrl": "/generated/standalone-shades.png"
+    },
+    {
+      "id": "rim-fragments",
+      "title": "Rim Fragments",
+      "caption": "Keeps only broken rim gestures instead of a full badge.",
+      "tone": "reduced-container",
+      "prompt": "Create one square logo exploration tile for Agentic Craft: black-and-white 8-bit pixel-art sunglasses based on the supplied sketch, but replace the full circular ring with only two or three separated pixel rim fragments, like broken parentheses or proof-frame arcs. The mark should not read as a complete face or avatar. Keep compact rectangular dark lenses, simple bridge, tiny side arms, white inspection background, high contrast, hard pixels. No text, no Matrix branding, no green code, no actor likeness, no detailed facial features. Must remain readable at favicon size.",
+      "imageUrl": "/generated/mcp-thumbs/rim-fragments.jpg",
+      "previewImageUrl": "/generated/mcp-thumbs/rim-fragments.jpg",
+      "sourceImageUrl": "/generated/rim-fragments.png"
+    }
+  ],
+  "visibleItemIds": [
+    "favicon-32-grid",
+    "ink-stamp-rim",
+    "flat-agent-shades",
+    "terminal-mask",
+    "negative-bridge",
+    "proof-disc",
+    "proof-corner-brackets",
+    "terminal-viewport",
+    "standalone-shades",
+    "rim-fragments"
+  ],
+  "hiddenImageIds": [],
+  "selectedImageIds": [],
+  "currentImageId": "favicon-32-grid",
+  "updatedAt": "2026-06-16T12:51:44.692308Z"
+}

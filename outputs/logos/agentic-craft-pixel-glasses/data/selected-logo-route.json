@@ -1,0 +1,23 @@
+{
+  "status": "recommended",
+  "selected_route_id": "standalone-shades",
+  "selected_route_label": "Standalone Shades",
+  "reason": "The second pass shows the glasses are strong enough without the circular face container. This route keeps the idea sharp, less avatar-like, and most usable at favicon size.",
+  "preserve": [
+    "compact rectangular sunglasses",
+    "straight bridge and tiny side arms",
+    "black-and-white pixel-art construction"
+  ],
+  "avoid": [
+    "green code rain or Matrix-specific branding",
+    "actor or character likeness",
+    "readable text or initials",
+    "soft gradients and details that fail at 16px"
+  ],
+  "next_step": "Vectorize the standalone glasses on a fixed pixel grid, then test a secondary proof-corner lockup for larger editorial surfaces.",
+  "source_image": "09-standalone-shades.png",
+  "implemented_path": "app/icon.svg",
+  "secondary_route_id": "proof-corner-brackets",
+  "secondary_route_label": "Proof Corner Brackets",
+  "review_board": "review-board.html"
+}

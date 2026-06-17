@@ -1,0 +1,11 @@
+{
+  "title": "Agentic Craft pixel glasses logo exploration",
+  "summary": "Ten black-and-white pixel-art icon routes based on the supplied sunglasses sketch, including a second pass that removes or breaks the circular container.",
+  "preset": "image-wall",
+  "showCaptions": true,
+  "showControls": true,
+  "contactSheetOutput": "contact-sheet.png",
+  "contactSheetColumns": 5,
+  "contactSheetThumb": 320,
+  "minTileWidth": 260
+}

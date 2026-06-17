@@ -667,6 +667,7 @@ function ThreadToolCall({
               type="button"
               variant="ghost"
               size="lg"
+              className="transition-none"
             />
           }
         >

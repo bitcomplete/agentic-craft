@@ -18,6 +18,12 @@ import { StatusIndicator } from "@/components/ui/status-indicator"
 import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
 import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+import { cn } from "@/lib/utils"
+import {
   Table,
   TableBody,
   TableCell,
@@ -136,39 +142,38 @@ function SubagentSection() {
       />
 
       <div className="rounded-lg border border-border/40 p-4 sm:p-6">
-        <button
-          type="button"
-          aria-label="Toggle Source Collector details"
-          onClick={() => setSubagentOpen(!subagentOpen)}
-          className="flex w-full items-center gap-2.5 py-2.5 text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
-        >
-          <HugeiconsIcon
-            icon={Robot01Icon}
-            size={14}
-            strokeWidth={1.5}
-            className="shrink-0 text-muted-foreground"
-          />
-          <span className="text-sm font-normal">Source Collector</span>
-          {subagentProgress < 8 && (
-            <span className="text-xs text-muted-foreground tabular-nums">
-              {subagentProgress} of 8 review areas
-            </span>
-          )}
-          <StatusIndicator
-            status={subagentProgress >= 8 ? "complete" : "active"}
-          />
-          <HugeiconsIcon
-            icon={ArrowDown01Icon}
-            size={12}
-            strokeWidth={1.5}
-            className={`ml-auto shrink-0 text-muted-foreground transition-transform duration-200 ${
-              subagentOpen ? "rotate-180" : ""
-            }`}
-          />
-        </button>
+        <Collapsible open={subagentOpen} onOpenChange={setSubagentOpen}>
+          <CollapsibleTrigger
+            aria-label="Toggle Source Collector details"
+            className="flex w-full items-center gap-2.5 py-2.5 text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+          >
+            <HugeiconsIcon
+              icon={Robot01Icon}
+              size={14}
+              strokeWidth={1.5}
+              className="shrink-0 text-muted-foreground"
+            />
+            <span className="text-sm font-normal">Source Collector</span>
+            {subagentProgress < 8 && (
+              <span className="text-xs text-muted-foreground tabular-nums">
+                {subagentProgress} of 8 review areas
+              </span>
+            )}
+            <StatusIndicator
+              status={subagentProgress >= 8 ? "complete" : "active"}
+            />
+            <HugeiconsIcon
+              icon={ArrowDown01Icon}
+              size={12}
+              strokeWidth={1.5}
+              className={cn(
+                "ml-auto shrink-0 text-muted-foreground transition-transform duration-200",
+                subagentOpen && "rotate-180"
+              )}
+            />
+          </CollapsibleTrigger>
 
-        {subagentOpen && (
-          <div className="actions-expand flex flex-col gap-2 py-3 pl-6">
+          <CollapsibleContent className="actions-expand flex flex-col gap-2 py-3 pl-6">
             <Separator />
             <p className="text-xs text-muted-foreground">
               Validating completeness and traceability of review source material
@@ -202,8 +207,8 @@ function SubagentSection() {
                 </ToolCall>
               ))}
             </div>
-          </div>
-        )}
+          </CollapsibleContent>
+        </Collapsible>
       </div>
     </>
   )

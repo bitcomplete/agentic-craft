@@ -1,0 +1,7 @@
+Complete. Generated one PNG and wrote:
+
+`outputs/logos/agentic-craft-pixel-glasses/workers/terminal-viewport/attempt-1/image.png`
+
+Result JSON is at:
+
+`outputs/logos/agentic-craft-pixel-glasses/workers/terminal-viewport/attempt-1/result.json`

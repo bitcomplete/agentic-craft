@@ -1,0 +1,7 @@
+Complete.
+
+Image saved to:
+`outputs/logos/agentic-craft-pixel-glasses/workers/proof-disc/attempt-1/image.png`
+
+Result JSON saved to:
+`outputs/logos/agentic-craft-pixel-glasses/workers/proof-disc/attempt-1/result.json`

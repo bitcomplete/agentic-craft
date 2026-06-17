@@ -1,0 +1,7 @@
+{
+  "id": "terminal-viewport",
+  "status": "complete",
+  "image_path": "outputs/logos/agentic-craft-pixel-glasses/workers/terminal-viewport/attempt-1/image.png",
+  "error": null,
+  "caveats": "Generated image includes additional viewport corner segments beyond the requested top-left and bottom-right partial segments."
+}

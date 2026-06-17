@@ -1,0 +1,7 @@
+Complete. Generated exactly one image and wrote:
+
+`outputs/logos/agentic-craft-pixel-glasses/workers/terminal-mask/attempt-1/image.png`
+
+Result JSON written to:
+
+`outputs/logos/agentic-craft-pixel-glasses/workers/terminal-mask/attempt-1/result.json`

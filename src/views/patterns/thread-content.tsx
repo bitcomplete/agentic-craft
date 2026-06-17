@@ -8,7 +8,6 @@ import {
   Copy01Icon,
   DocumentValidationIcon,
   FileSearchIcon,
-  Loading03Icon,
   Note01Icon,
   TestTube01Icon,
   CheckmarkSquare02Icon,
@@ -18,6 +17,7 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import type { IconSvgElement } from "@hugeicons/react"
 
 import { Button } from "@/components/ui/button"
+import { Spinner } from "@/components/ui/spinner"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Thread, type ThreadStreamChunk } from "@/components/ui/thread"
 import { ThreadMarkdown } from "@/components/ui/thread-markdown"
@@ -238,13 +238,14 @@ export function ThreadContent() {
             hairline, and scroll anchoring that respects the reader.
           </p>
         </div>
-        <button
+        <Button
           type="button"
-          className="inline-flex min-h-10 w-fit items-center rounded-md border border-border bg-background px-3 text-sm font-medium text-foreground shadow-sm transition-[background-color,box-shadow,transform] outline-none focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 [@media(hover:hover)_and_(pointer:fine)]:hover:bg-muted"
+          variant="outline"
+          className="w-fit"
           onClick={restartDemo}
         >
           Replay demo
-        </button>
+        </Button>
       </header>
 
       <section className="grid gap-4">
@@ -263,7 +264,6 @@ export function ThreadContent() {
             setComplete(true)
           }}
           scrollToBottomIcon={<ThreadDemoIcon icon={ArrowDown01Icon} />}
-          className="h-[500px] shadow-[0_22px_64px_-52px_rgb(12_12_12/0.72)]"
         >
           <Thread.Status
             state={complete ? "complete" : "streaming"}
@@ -358,10 +358,7 @@ export function ThreadContent() {
               complete ? (
                 <ThreadDemoIcon icon={CheckmarkSquare02Icon} />
               ) : (
-                <ThreadDemoIcon
-                  icon={Loading03Icon}
-                  className="animate-spin motion-reduce:animate-none"
-                />
+                <Spinner />
               )
             }
           />
@@ -398,16 +395,9 @@ export function ThreadContent() {
                   />
                 </div>
                 <div className="min-w-0 flex-1 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                  <TabsList
-                    aria-label="Package manager"
-                    className="h-8 min-w-max rounded-none bg-transparent p-0"
-                  >
+                  <TabsList aria-label="Package manager" className="min-w-max">
                     {packageManagers.map((manager) => (
-                      <TabsTrigger
-                        key={manager}
-                        value={manager}
-                        className="h-7 flex-none rounded-md border border-transparent px-3 pt-0.5 shadow-none data-active:border-input data-active:bg-background data-active:shadow-[0_0_0_1px_var(--border)]"
-                      >
+                      <TabsTrigger key={manager} value={manager}>
                         {manager}
                       </TabsTrigger>
                     ))}
@@ -440,7 +430,7 @@ export function ThreadContent() {
               size="icon-sm"
               variant="ghost"
               aria-label={copied ? "Install command copied" : "Copy command"}
-              className="absolute top-2 right-2 z-10 opacity-70 transition-[background-color,color,opacity,box-shadow,transform] active:translate-y-0 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 [@media(hover:hover)_and_(pointer:fine)]:hover:opacity-100"
+              className="absolute top-2 right-2"
               onClick={copyInstallCommand}
             >
               <span className="sr-only">

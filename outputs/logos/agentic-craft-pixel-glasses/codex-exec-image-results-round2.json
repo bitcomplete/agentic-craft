@@ -1,0 +1,37 @@
+{
+  "status": "complete",
+  "total": 4,
+  "complete": 4,
+  "failed": 0,
+  "pending": 0,
+  "results": [
+    {
+      "id": "proof-corner-brackets",
+      "status": "complete",
+      "image_path": "outputs/logos/agentic-craft-pixel-glasses/07-proof-corner-brackets.png",
+      "error": null,
+      "caveats": ""
+    },
+    {
+      "id": "terminal-viewport",
+      "status": "complete",
+      "image_path": "outputs/logos/agentic-craft-pixel-glasses/08-terminal-viewport.png",
+      "error": null,
+      "caveats": "Generated image includes additional viewport corner segments beyond the requested top-left and bottom-right partial segments."
+    },
+    {
+      "id": "standalone-shades",
+      "status": "complete",
+      "image_path": "outputs/logos/agentic-craft-pixel-glasses/09-standalone-shades.png",
+      "error": null,
+      "caveats": ""
+    },
+    {
+      "id": "rim-fragments",
+      "status": "complete",
+      "image_path": "outputs/logos/agentic-craft-pixel-glasses/10-rim-fragments.png",
+      "error": null,
+      "caveats": ""
+    }
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "meta": {
+    "title": "Logo exploration for Agentic Craft pixel glasses icon",
+    "stage": "Logo exploration",
+    "brand_name": "Agentic Craft",
+    "anchor": "Reference guide and shadcn registry for agent product UI",
+    "summary": "A favicon-first black-and-white pixel icon based on the user's scratch: circular field, thick dark rim, rectangular sunglasses, and small-size legibility.",
+    "base_asset": "/var/folders/td/989t15h14w71_0szzfvmjdyw0000gn/T/codex-clipboard-d49f0c2a-55dc-46d1-b5d2-e2a62dd05f3a.png"
+  },
+  "constraints": {
+    "preserve": [
+      "black and white only",
+      "8-bit or low-resolution pixel-art feel",
+      "circular app-icon silhouette with thick dark outer rim",
+      "narrow rectangular sunglasses connected by a simple bridge",
+      "small-size/favicon readability",
+      "Agentic Craft's achromatic Galley Proof identity"
+    ],
+    "avoid": [
+      "direct Matrix branding, green code rain, movie logos, character likeness, or actor likeness",
+      "readable text, initials, taglines, fake certification marks, or partner marks",
+      "soft gradients, glossy 3D effects, neon cyberpunk color, and detailed facial features",
+      "thin details that disappear at 16px"
+    ]
+  },
+  "routes": [
+    {
+      "id": "favicon-32-grid",
+      "label": "32px Favicon Grid",
+      "family": "utility",
+      "usage_contexts": ["favicon", "app icon", "social avatar"],
+      "rationale": "Tests the most literal small-size translation of the sketch.",
+      "best_for": "Replacing the current generic favicon with a sharper icon.",
+      "decision_advice": "Use if the mark should read instantly at browser-tab size.",
+      "watch_out": "May feel intentionally crude at larger sizes unless paired with a refined SVG version.",
+      "next_step": "Vectorize on a 32px grid and test at 16px, 24px, and 48px.",
+      "final_owner": "external-production-identity"
+    },
+    {
+      "id": "ink-stamp-rim",
+      "label": "Ink Stamp Rim",
+      "family": "heritage",
+      "usage_contexts": ["website header", "deck cover", "Open Graph"],
+      "rationale": "Connects the pixel glasses to Agentic Craft's proof-sheet and ink language.",
+      "best_for": "A site mark that feels authored and less software-generic.",
+      "decision_advice": "Use if the mark should retain a handmade proof-stamp quality.",
+      "watch_out": "The rim texture must stay restrained so it does not become noisy at favicon size.",
+      "next_step": "Simplify the texture into one-bit edge steps for production.",
+      "final_owner": "external-production-identity"
+    },
+    {
+      "id": "flat-agent-shades",
+      "label": "Flat Agent Shades",
+      "family": "symbol",
+      "usage_contexts": ["app icon", "README badge", "GitHub avatar"],
+      "rationale": "Prioritizes the sunglasses as the main symbol while keeping the face field anonymous.",
+      "best_for": "A memorable standalone project icon.",
+      "decision_advice": "Use if the glasses should be the recognizable brand cue.",
+      "watch_out": "Avoid making the lens shape too close to a specific film character prop.",
+      "next_step": "Tune the lens width and bridge into a distinct Agentic Craft silhouette.",
+      "final_owner": "external-production-identity"
+    },
+    {
+      "id": "terminal-mask",
+      "label": "Terminal Mask",
+      "family": "tech",
+      "usage_contexts": ["CLI docs", "registry examples", "developer surfaces"],
+      "rationale": "Makes the glasses feel like a terminal apparatus rather than a face.",
+      "best_for": "Developer-facing surfaces where the mark should feel system-like.",
+      "decision_advice": "Use if the identity should reference agents, tools, and command surfaces more than pop culture.",
+      "watch_out": "Too much terminal detail can weaken the icon silhouette.",
+      "next_step": "Reduce to a single bridge line and two block lenses before vectorizing.",
+      "final_owner": "external-production-identity"
+    },
+    {
+      "id": "negative-bridge",
+      "label": "Negative Bridge",
+      "family": "geometric",
+      "usage_contexts": ["favicon", "button icon", "monochrome mark"],
+      "rationale": "Uses negative space and block geometry to make the bridge distinctive.",
+      "best_for": "A crisp, compact mark that can survive tiny sizes.",
+      "decision_advice": "Use if the mark should be most graphic and least illustrative.",
+      "watch_out": "Needs careful pixel alignment or it can read as two unrelated bars.",
+      "next_step": "Draft as pure one-bit SVG paths on a square grid.",
+      "final_owner": "external-production-identity"
+    },
+    {
+      "id": "proof-disc",
+      "label": "Proof Disc",
+      "family": "adaptive",
+      "usage_contexts": ["site icon", "Open Graph", "presentation mark"],
+      "rationale": "Balances the circular field and glasses into a mark that can scale into larger brand assets.",
+      "best_for": "A logo-system route that can support both icon and editorial usage.",
+      "decision_advice": "Use if Agentic Craft needs a mark that works beyond favicon scale.",
+      "watch_out": "The face-like circle should stay anonymous and abstract.",
+      "next_step": "Create favicon, app icon, and header-lockup variants from the same geometry.",
+      "final_owner": "external-production-identity"
+    }
+  ],
+  "handoff": {
+    "default_owner": "external-production-identity"
+  }
+}

@@ -20,6 +20,12 @@ import {
   ToolCallLabel,
   ToolCallContent,
 } from "@/components/ui/tool-call"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+import { cn } from "@/lib/utils"
 import { PatternControls as Controls } from "@/components/pattern-controls"
 import {
   Table,
@@ -93,10 +99,6 @@ export function ParallelSection() {
     setTreeOpen(true)
     setChildExpanded({})
     setParallelAnim((p) => p + 1)
-  }, [])
-
-  const toggleChildExpand = useCallback((idx: number) => {
-    setChildExpanded((prev) => ({ ...prev, [idx]: !prev[idx] }))
   }, [])
 
   return (
@@ -179,11 +181,15 @@ export function ParallelSection() {
 
               <div className="flex flex-col gap-1">
                 {PARALLEL_TASKS.map((task, i) => (
-                  <div key={task.label}>
-                    <button
-                      type="button"
+                  <Collapsible
+                    key={task.label}
+                    open={Boolean(childExpanded[i])}
+                    onOpenChange={(open) =>
+                      setChildExpanded((prev) => ({ ...prev, [i]: open }))
+                    }
+                  >
+                    <CollapsibleTrigger
                       aria-label={`Toggle task details: ${task.label}`}
-                      onClick={() => toggleChildExpand(i)}
                       className="flex w-full items-center gap-2.5 border-l border-border/60 px-3 py-2.5 text-left transition-colors hover:bg-accent/50 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
                     >
                       <HugeiconsIcon
@@ -199,26 +205,25 @@ export function ParallelSection() {
                         icon={ArrowRight01Icon}
                         size={11}
                         strokeWidth={1.5}
-                        className={`ml-auto shrink-0 text-muted-foreground transition-transform duration-200 ${
-                          childExpanded[i] ? "rotate-90" : ""
-                        }`}
+                        className={cn(
+                          "ml-auto shrink-0 text-muted-foreground transition-transform duration-200",
+                          childExpanded[i] && "rotate-90"
+                        )}
                       />
-                    </button>
-                    {childExpanded[i] && (
-                      <div className="actions-expand mt-1 mb-1 ml-[21px]">
-                        <div className="flex flex-col gap-1 border-l border-border/60 py-2 pl-3">
-                          {task.details.map((d) => (
-                            <div key={d.key} className="flex gap-2 text-xs">
-                              <span className="text-muted-foreground">
-                                {d.key}:
-                              </span>
-                              <span className="text-foreground">{d.value}</span>
-                            </div>
-                          ))}
-                        </div>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="actions-expand mt-1 mb-1 ml-[21px]">
+                      <div className="flex flex-col gap-1 border-l border-border/60 py-2 pl-3">
+                        {task.details.map((d) => (
+                          <div key={d.key} className="flex gap-2 text-xs">
+                            <span className="text-muted-foreground">
+                              {d.key}:
+                            </span>
+                            <span className="text-foreground">{d.value}</span>
+                          </div>
+                        ))}
                       </div>
-                    )}
-                  </div>
+                    </CollapsibleContent>
+                  </Collapsible>
                 ))}
               </div>
             </div>

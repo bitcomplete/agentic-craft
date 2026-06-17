@@ -1,0 +1,3 @@
+Failed to save the generated PNG because the native image tool returned only a preview, with no accessible file path or bytes to copy into the requested destination.
+
+Wrote the required failure JSON at `outputs/logos/agentic-craft-pixel-glasses/workers/negative-bridge/attempt-2/result.json`.

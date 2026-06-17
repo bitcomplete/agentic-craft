@@ -2,6 +2,8 @@
 
 import { useState, useCallback, useEffect, useRef } from "react"
 import { PatternControls as Controls } from "@/components/pattern-controls"
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import { cn } from "@/lib/utils"
 import {
   Table,
   TableBody,
@@ -105,24 +107,32 @@ export function RatingScaleSection() {
               <span className="text-xs text-muted-foreground">
                 Rate this response
               </span>
-              <div className="flex items-center gap-1">
+              <ToggleGroup
+                value={selectedRating ? [String(selectedRating)] : []}
+                onValueChange={(values) => {
+                  const next = values[0]
+                  if (next) handleRatingClick(Number(next))
+                }}
+                spacing={1}
+                size="sm"
+              >
                 {[1, 2, 3, 4, 5].map((n) => (
-                  <button
+                  <ToggleGroupItem
                     key={n}
-                    type="button"
-                    onClick={() => handleRatingClick(n)}
+                    value={String(n)}
                     aria-label={`Rate response ${n} out of 5`}
-                    aria-pressed={selectedRating === n}
-                    className={`flex h-7 w-7 items-center justify-center rounded-md text-xs transition-colors duration-150 outline-none focus-visible:ring-3 focus-visible:ring-ring/50 ${ratingPressed === n ? "feedback-press" : ""} ${
+                    className={cn(
+                      "size-7 rounded-md p-0 text-xs",
+                      ratingPressed === n && "feedback-press",
                       selectedRating === n
                         ? "border border-foreground/20 bg-foreground/[0.06] font-medium text-foreground"
                         : "border border-transparent text-muted-foreground hover:bg-muted/50 hover:text-muted-foreground"
-                    } `}
+                    )}
                   >
                     {n}
-                  </button>
+                  </ToggleGroupItem>
                 ))}
-              </div>
+              </ToggleGroup>
               {ratingConfirm && (
                 <span
                   role="status"

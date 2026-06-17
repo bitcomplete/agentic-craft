@@ -1,0 +1,16 @@
+{
+  "status": "complete",
+  "total": 1,
+  "complete": 1,
+  "failed": 0,
+  "pending": 0,
+  "results": [
+    {
+      "id": "terminal-viewport-repair",
+      "status": "complete",
+      "image_path": "outputs/logos/agentic-craft-pixel-glasses/08-terminal-viewport.png",
+      "error": null,
+      "caveats": "Recovered from the Codex generated-images cache after the worker generated a usable image but failed to expose a filesystem save path."
+    }
+  ]
+}

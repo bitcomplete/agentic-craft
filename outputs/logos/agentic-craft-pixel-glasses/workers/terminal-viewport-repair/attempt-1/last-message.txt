@@ -1,0 +1,5 @@
+Generated exactly one image with `image_gen.imagegen`, but I could not save the returned in-chat image to the requested filesystem path because no file path or save handle was exposed.
+
+Wrote the required failed result JSON to:
+
+`outputs/logos/agentic-craft-pixel-glasses/workers/terminal-viewport-repair/attempt-1/result.json`

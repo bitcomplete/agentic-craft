@@ -146,9 +146,6 @@
           "left": "50%",
           "transform": "translateX(-50%)"
         },
-        "button[data-slot='thread-scroll-bottom']:active": {
-          "transform": "translateX(-50%) scale(0.97)"
-        },
         "[data-slot='thread-status-badge'][data-state='streaming']": {
           "animation": "thread-pending-pulse 1.8s cubic-bezier(0.45, 0, 0.55, 1) infinite"
         },
@@ -162,9 +159,6 @@
           "min-width": "0",
           "justify-content": "flex-start",
           "text-align": "left"
-        },
-        "button[data-slot='thread-tool-call-trigger']:active": {
-          "transform": "none"
         },
         "[data-slot='thread-tool-call-disclosure']": {
           "display": "inline-flex",
